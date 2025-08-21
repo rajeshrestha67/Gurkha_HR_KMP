@@ -1,0 +1,79 @@
+### General ###
+*.iml
+*.class
+*.log
+*.tmp
+*.swp
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+### Gradle ###
+.gradle/
+build/
+out/
+captures/
+local.properties
+
+# Gradle caches
+.gradle/
+**/build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Kotlin Multiplatform
+.kotlinc/
+*.kotlin_module
+*.hprof
+
+### Android ###
+*.apk
+*.aab
+*.ap_
+*.dex
+*.class
+*.so
+*.jar
+*.aar
+*.keystore
+*.jks
+*.jks.json
+.cxx/
+
+### iOS / Xcode ###
+DerivedData/
+build/
+*.xcuserstate
+*.xccheckout
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata/
+*.xcworkspace/*
+!*.xcworkspace/contents.xcworkspacedata
+Pods/
+Podfile.lock
+*.moved-aside
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Swift Package Manager
+.build/
+Package.resolved
+
+### JetBrains ###
+.idea/caches
+.idea/libraries
+.idea/modules.xml
+.idea/workspace.xml
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
+.idea/tasks.xml
+.idea/gradle.xml
+.idea/compiler.xml
+
+### macOS ###
+*.DS_Store
+.AppleDouble
+.LSOverride
