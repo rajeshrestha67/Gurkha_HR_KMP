@@ -22,6 +22,9 @@ import gurkhahr.composeapp.generated.resources.compose_multiplatform
 @Composable
 @Preview
 fun App() {
+    LaunchedEffect(Unit){
+
+    }
     MaterialTheme {
         var showContent by remember { mutableStateOf(false) }
         Column(
