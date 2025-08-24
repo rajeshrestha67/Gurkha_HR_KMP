@@ -2,7 +2,7 @@ package com.gurkha.di
 
 import org.koin.core.context.startKoin
 import org.koin.dsl.KoinAppDeclaration
-
+import org.koin.ksp.generated.module
 
 
 fun initKoin(config: KoinAppDeclaration? = null){
@@ -11,6 +11,7 @@ fun initKoin(config: KoinAppDeclaration? = null){
         config?.invoke(this)
         modules(
             //AppModule().module
+            NetworkModule().module
         )
     }
 }

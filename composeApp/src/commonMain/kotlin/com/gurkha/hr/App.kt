@@ -22,9 +22,7 @@ import gurkhahr.composeapp.generated.resources.compose_multiplatform
 @Composable
 @Preview
 fun App() {
-    LaunchedEffect(Unit){
 
-    }
     MaterialTheme {
         var showContent by remember { mutableStateOf(false) }
         Column(
@@ -34,11 +32,16 @@ fun App() {
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Button(onClick = { showContent = !showContent }) {
+            Button(onClick = {
+//                showContent = !showContent
+//                scope.launch {
+//                    request.get("https://www.google.com")
+//                }
+            }) {
                 Text("Click me!")
             }
             AnimatedVisibility(showContent) {
-                val greeting = remember { Greeting().greet() }
+                val greeting = remember { "Greeting().greet() "}
                 Column(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally,
