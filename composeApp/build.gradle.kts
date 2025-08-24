@@ -44,6 +44,7 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(project(":core:di"))
+            implementation(project(":features:auth:login"))
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

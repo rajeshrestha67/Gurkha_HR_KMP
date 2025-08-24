@@ -69,6 +69,8 @@ kotlin {
                 implementation(libs.koin.compose)
                 implementation(libs.koin.compose.viewmodel)
                 implementation(libs.koin.compose.viewmodel.navigation)
+
+
                 api(libs.koin.annotations)
 
                 implementation(libs.ktor.client.core)
@@ -77,6 +79,9 @@ kotlin {
                 implementation(libs.ktor.serialization.kotlinx.json)
 
                 implementation(project(":core:network"))
+                implementation(project(":core:data"))
+                implementation(project(":core:domain"))
+                implementation(project(":features:auth:login"))
             }
         }
 

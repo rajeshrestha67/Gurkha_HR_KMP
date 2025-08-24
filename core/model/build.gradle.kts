@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.android.kotlin.multiplatform.library)
     alias(libs.plugins.android.lint)
+    alias(libs.plugins.jetbrains.kotlin.serialization)
 }
 
 kotlin {
@@ -10,7 +11,7 @@ kotlin {
     // which platforms this KMP module supports.
     // See: https://kotlinlang.org/docs/multiplatform-discover-project.html#targets
     androidLibrary {
-        namespace = "com.gurkha.hr.domain"
+        namespace = "com.gurkha.model"
         compileSdk = 36
         minSdk = 24
 
@@ -31,7 +32,7 @@ kotlin {
     // A step-by-step guide on how to include this library in an XCode
     // project can be found here:
     // https://developer.android.com/kotlin/multiplatform/migrate
-    val xcfName = "core:domainKit"
+    val xcfName = "core:modelKit"
 
     iosX64 {
         binaries.framework {
@@ -61,8 +62,7 @@ kotlin {
             dependencies {
                 implementation(libs.kotlin.stdlib)
                 // Add KMP dependencies here
-//                implementation(project(":core:di"))
-                implementation(project(":core:model"))
+                implementation(libs.kotlinx.serialization.json)
             }
         }
 

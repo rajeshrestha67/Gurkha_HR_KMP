@@ -2,6 +2,9 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.android.kotlin.multiplatform.library)
     alias(libs.plugins.android.lint)
+    alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.composeMultiplatform)
+
 }
 
 kotlin {
@@ -10,7 +13,7 @@ kotlin {
     // which platforms this KMP module supports.
     // See: https://kotlinlang.org/docs/multiplatform-discover-project.html#targets
     androidLibrary {
-        namespace = "com.gurkha.hr.domain"
+        namespace = "com.gurkha.hr.login"
         compileSdk = 36
         minSdk = 24
 
@@ -31,7 +34,7 @@ kotlin {
     // A step-by-step guide on how to include this library in an XCode
     // project can be found here:
     // https://developer.android.com/kotlin/multiplatform/migrate
-    val xcfName = "core:domainKit"
+    val xcfName = "features:auth:loginKit"
 
     iosX64 {
         binaries.framework {
@@ -61,8 +64,16 @@ kotlin {
             dependencies {
                 implementation(libs.kotlin.stdlib)
                 // Add KMP dependencies here
-//                implementation(project(":core:di"))
-                implementation(project(":core:model"))
+                implementation(compose.runtime)
+                implementation(compose.foundation)
+                implementation(compose.material3)
+
+                implementation(libs.androidx.lifecycle.viewmodelCompose)
+                implementation(libs.androidx.lifecycle.runtimeCompose)
+
+                implementation(libs.koin.compose.viewmodel)
+
+                implementation(project(":core:domain"))
             }
         }
 
