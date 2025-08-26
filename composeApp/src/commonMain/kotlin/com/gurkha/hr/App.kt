@@ -3,13 +3,14 @@ package com.gurkha.hr
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import com.gurkha.hr.login.LoginScreen
+import com.gurkha.hr.theme.AppTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 @Preview
 fun App() {
 
-    MaterialTheme {
+    AppTheme {
         LoginScreen()
 //        var showContent by remember { mutableStateOf(false) }
 //        Column(
