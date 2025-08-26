@@ -61,7 +61,7 @@ kotlin {
             dependencies {
                 implementation(libs.kotlin.stdlib)
                 // Add KMP dependencies here
-                implementation(project(":core:network"))
+                implementation(projects.core.network)
                 implementation(libs.ktor.client.core)
             }
         }

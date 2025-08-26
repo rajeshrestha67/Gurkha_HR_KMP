@@ -32,7 +32,8 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
-            implementation(project(":core:di"))
+
+            implementation(projects.core.di)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -43,18 +44,19 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
-            implementation(project(":core:di"))
-            implementation(project(":features:auth:login"))
+
+            implementation(projects.core.di)
+            implementation(projects.features.auth.login)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
         nativeMain.dependencies {
-            implementation(project(":core:di"))
+            implementation(projects.core.di)
         }
 
         iosMain.dependencies {
-            implementation(project(":core:di"))
+            implementation(projects.core.di)
         }
 
     }

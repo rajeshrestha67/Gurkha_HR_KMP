@@ -78,12 +78,10 @@ kotlin {
                 implementation(libs.ktor.client.logging)
                 implementation(libs.ktor.serialization.kotlinx.json)
 
-                implementation(project(":core:network"))
-                implementation(project(":core:data"))
-                implementation(project(":core:domain"))
-
-
-                implementation(project(":features:auth:login"))
+                implementation(projects.core.network)
+                implementation(projects.core.data)
+                implementation(projects.core.domain)
+                implementation(projects.features.auth.login)
             }
         }
 

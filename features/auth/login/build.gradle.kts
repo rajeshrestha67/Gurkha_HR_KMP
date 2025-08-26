@@ -73,8 +73,8 @@ kotlin {
 
                 implementation(libs.koin.compose.viewmodel)
 
-                implementation(project(":core:domain"))
-                implementation(project(":core:networkHelper"))
+                implementation(projects.core.domain)
+                implementation(projects.core.networkHelper)
             }
         }
 
