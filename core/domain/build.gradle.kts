@@ -63,6 +63,7 @@ kotlin {
                 // Add KMP dependencies here
 //                implementation(project(":core:di"))
                 implementation(project(":core:model"))
+                implementation(project(":core:networkHelper"))
             }
         }
 

@@ -2,9 +2,6 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.android.kotlin.multiplatform.library)
     alias(libs.plugins.android.lint)
-    alias(libs.plugins.composeCompiler)
-    alias(libs.plugins.composeMultiplatform)
-
 }
 
 kotlin {
@@ -13,7 +10,7 @@ kotlin {
     // which platforms this KMP module supports.
     // See: https://kotlinlang.org/docs/multiplatform-discover-project.html#targets
     androidLibrary {
-        namespace = "com.gurkha.hr.login"
+        namespace = "com.gurkha.hr.networkhelper"
         compileSdk = 36
         minSdk = 24
 
@@ -34,7 +31,7 @@ kotlin {
     // A step-by-step guide on how to include this library in an XCode
     // project can be found here:
     // https://developer.android.com/kotlin/multiplatform/migrate
-    val xcfName = "features:auth:loginKit"
+    val xcfName = "core:networkHelperKit"
 
     iosX64 {
         binaries.framework {
@@ -64,17 +61,8 @@ kotlin {
             dependencies {
                 implementation(libs.kotlin.stdlib)
                 // Add KMP dependencies here
-                implementation(compose.runtime)
-                implementation(compose.foundation)
-                implementation(compose.material3)
-
-                implementation(libs.androidx.lifecycle.viewmodelCompose)
-                implementation(libs.androidx.lifecycle.runtimeCompose)
-
-                implementation(libs.koin.compose.viewmodel)
-
-                implementation(project(":core:domain"))
-                implementation(project(":core:networkHelper"))
+                implementation(project(":core:network"))
+                implementation(libs.ktor.client.core)
             }
         }
 
@@ -89,6 +77,7 @@ kotlin {
                 // Add Android-specific dependencies here. Note that this source set depends on
                 // commonMain by default and will correctly pull the Android artifacts of any KMP
                 // dependencies declared in commonMain.
+                implementation(libs.ktor.client.okhttp)
             }
         }
 
@@ -107,6 +96,7 @@ kotlin {
                 // part of KMP’s default source set hierarchy. Note that this source set depends
                 // on common by default and will correctly pull the iOS artifacts of any
                 // KMP dependencies declared in commonMain.
+                implementation(libs.ktor.client.darwin)
             }
         }
     }

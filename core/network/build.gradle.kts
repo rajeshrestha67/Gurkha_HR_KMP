@@ -1,8 +1,18 @@
+import org.gradle.internal.impldep.com.jcraft.jsch.ConfigRepository.defaultConfig
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.android.kotlin.multiplatform.library)
     alias(libs.plugins.android.lint)
 }
+val keystorePropertiesFile: File = rootProject.file("secrets.defaults.properties")
+
+val keystoreProperties = Properties()
+
+keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+
 
 kotlin {
 
@@ -23,6 +33,9 @@ kotlin {
             instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         }
     }
+    android(configure = {
+
+    })
 
     // For iOS targets, this is also where you should
     // configure native binary output. For more information, see:
@@ -80,6 +93,7 @@ kotlin {
                 // dependencies declared in commonMain.
                 implementation(libs.ktor.client.okhttp)
             }
+
         }
 
         getByName("androidDeviceTest") {
@@ -103,3 +117,4 @@ kotlin {
     }
 
 }
+
