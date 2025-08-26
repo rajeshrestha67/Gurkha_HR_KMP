@@ -1,7 +1,8 @@
 package com.gurkha.di
 
-import com.gurkha.hr.data.KtorUserRemoteRepository
-import com.gurkha.hr.domain.auth.login.UserRemoteRepository
+import com.gurkha.hr.data.login.KtorUserRemoteRepository
+import com.gurkha.hr.domain.auth.login.usecase.LoginUseCase
+import com.gurkha.hr.domain.auth.login.repository.UserRemoteRepository
 import com.gurkha.hr.login.LoginViewModel
 import io.ktor.client.HttpClient
 import org.koin.android.annotation.KoinViewModel
@@ -15,6 +16,9 @@ class AuthModule {
     @Factory(binds = [UserRemoteRepository::class])
     fun userRepository(httpClient: HttpClient) = KtorUserRemoteRepository(httpClient)
 
+    @Factory
+    fun loginUseCase(userRemoteRepository: UserRemoteRepository) =
+        LoginUseCase(userRemoteRepository)
     @KoinViewModel
-    fun loginViewModel(userRemoteRepository: UserRemoteRepository) = LoginViewModel(userRemoteRepository)
+    fun loginViewModel(loginUseCase: LoginUseCase) = LoginViewModel(loginUseCase = loginUseCase)
 }
