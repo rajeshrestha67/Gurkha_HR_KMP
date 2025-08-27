@@ -10,7 +10,9 @@ import androidx.compose.ui.Modifier
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(
+    onNavigateToDashboard: () -> Unit
+) {
 
     val loginViewModel: LoginViewModel = koinViewModel()
 
@@ -19,7 +21,9 @@ fun LoginScreen() {
         contentAlignment = Alignment.Center
     ) {
         Button(onClick = {
-            loginViewModel.login()
+           // loginViewModel.login()
+            //navController.navigate(AppRoute.Dashboard)
+            onNavigateToDashboard()
         }) {
             Text("Press")
         }

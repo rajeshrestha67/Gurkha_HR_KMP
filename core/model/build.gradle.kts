@@ -63,6 +63,7 @@ kotlin {
                 implementation(libs.kotlin.stdlib)
                 // Add KMP dependencies here
                 implementation(libs.kotlinx.serialization.json)
+                implementation(libs.org.jetbrains.navigation)
             }
         }
 
