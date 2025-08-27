@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.gurkha.hr.graph.dashboardScreenBuilder
 import com.gurkha.hr.graph.loginScreenBuilder
 import com.gurkha.hr.route.AppRoute
 import com.gurkha.hr.theme.AppTheme
@@ -38,6 +39,6 @@ fun AppScreen() {
         }
     ){
         loginScreenBuilder(navController = navController)
-
+        dashboardScreenBuilder(navController = navController)
     }
 }

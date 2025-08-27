@@ -35,6 +35,8 @@ include(":core:di")
 include(":core:data")
 include(":core:domain")
 include(":core:model")
-include(":features:auth:login")
 include(":core:networkHelper")
-include(":core:navigation")
+
+
+include(":features:auth:login")
+include(":features:dashboard")

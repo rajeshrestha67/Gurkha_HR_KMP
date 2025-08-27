@@ -52,6 +52,7 @@ kotlin {
             implementation(projects.core.di)
 
             implementation(projects.features.auth.login)
+            implementation(projects.features.dashboard)
 
         }
         commonTest.dependencies {
