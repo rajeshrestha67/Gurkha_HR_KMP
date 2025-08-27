@@ -1,7 +1,9 @@
 package com.gurkha.hr.login
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -10,6 +12,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import coil3.compose.AsyncImage
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,6 +49,17 @@ fun LoginScreen(
                 .verticalScroll(rememberScrollState()),
         ) {
 
+            AsyncImage(
+                modifier = Modifier.fillMaxWidth().background(Color.Red),
+                model = "https://images.pexels.com/photos/145939/pexels-photo-145939.jpeg",
+                contentDescription = "item.name",
+                onError = {
+                    println("Error ${it.result.throwable.message}")
+                },
+                onSuccess = {
+                    println("Success")
+                }
+            )
 
         }
 

@@ -76,7 +76,10 @@ kotlin {
                 implementation(projects.core.domain)
                 implementation(projects.core.networkHelper)
 
-
+                implementation(libs.coil.compose)
+                implementation(libs.coil.compose.core)
+                implementation(libs.coil.mp)
+                implementation(libs.coil.network.ktor3)
             }
         }
 
