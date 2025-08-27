@@ -24,14 +24,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun App() {
 
     AppTheme {
-//        AppScreen()
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ){
-
-        Text("test")
-        }
+        AppScreen()
     }
 }
 
@@ -40,7 +33,7 @@ fun AppScreen() {
 
     val navController = rememberNavController()
     NavHost(
-        modifier = Modifier.fillMaxSize().background(Color.Red),
+        modifier = Modifier.fillMaxSize(),
         navController = navController,
         startDestination = AppRoute.LoginRoute,
         popExitTransition = {

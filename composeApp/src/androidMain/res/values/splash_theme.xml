@@ -1,29 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    
-<!--    <style name="Theme.app.Splash" parent="Theme.SplashScreen">-->
-
-<!--        <item name="windowSplashScreenBackground">#F8F9CC</item>-->
-<!--        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_icon</item>-->
-<!--        <item name="postSplashScreenTheme">@android:style/Theme.Material.NoActionBar</item>-->
-<!--    </style>-->
-
-    <style name="Theme.App" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:windowTranslucentNavigation">true</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-    </style>
-
-    <style name="SplashScreenTheme" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@android:color/black</item>
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#F8F9CC</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/splash_icon</item>
-        <item name="postSplashScreenTheme">@style/Theme.App</item>
+        <item name="postSplashScreenTheme">@android:style/Theme.Material.Light.NoActionBar</item>
     </style>
-
-    <style name="SplashTheme" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:windowBackground">@drawable/splash_icon</item>
-        <item name="android:statusBarColor">@android:color/black</item>
-    </style>
-
-    
 </resources>

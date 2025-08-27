@@ -13,7 +13,7 @@ composeMultiplatform = "1.8.2"
 junit = "4.13.2"
 kotlin = "2.2.10"
 
-
+accompanistSystemuicontroller = "0.36.0"
 kotlinx-coroutines = "1.10.2"
 ksp = "2.1.21-2.0.1"
 koin-core = "4.1.0"
@@ -67,6 +67,8 @@ kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", versio
 androidx-runner = { group = "androidx.test", name = "runner", version.ref = "runner" }
 androidx-core = { group = "androidx.test", name = "core", version.ref = "core" }
 
+
+accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }

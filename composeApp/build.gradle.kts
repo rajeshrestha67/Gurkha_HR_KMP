@@ -35,6 +35,7 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.core.splashscreen)
             implementation(projects.core.di)
+            implementation("androidx.activity:activity-compose:1.10.1")
         }
         commonMain.dependencies {
             implementation(compose.runtime)

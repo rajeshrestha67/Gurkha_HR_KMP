@@ -100,6 +100,7 @@ fun AppTheme(
     )
 }
 
+
 @Composable
 fun extendedColor(light: Color, dark: Color): Color {
     return if (isSystemInDarkTheme()) dark else light
