@@ -58,7 +58,7 @@ fun LoginScreen(
                 modifier = Modifier.fillMaxWidth().padding(16.dp)
                     .weight(1f),
                 model = SharedRes.getRes("drawable/gurkha_hr.png"),
-                contentDescription = "asdfasd",
+                contentDescription = "gurkha_hr",
                 contentScale = ContentScale.FillWidth
             )
 

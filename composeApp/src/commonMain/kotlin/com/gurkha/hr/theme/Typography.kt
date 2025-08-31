@@ -3,26 +3,24 @@ package com.gurkha.hr.theme
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.font.FontFamily
-import gurkhahr.composeapp.generated.resources.Res
+import com.gurkha.hr.ui.SharedRes
 import org.jetbrains.compose.resources.Font
-import gurkhahr.composeapp.generated.resources.Poppins_Bold
-import gurkhahr.composeapp.generated.resources.Poppins_Italic
-import gurkhahr.composeapp.generated.resources.Poppins_Medium
 
-val poppinsFamily @Composable get() = FontFamily(
-    Font(
-        resource = Res.font.Poppins_Medium,
-    ),
-    Font(
-        resource = Res.font.Poppins_Bold,
-    ),
-    Font(
-        resource = Res.font.Poppins_Italic,
+val poppinsFamily
+    @Composable get() = FontFamily(
+        Font(
+            resource = SharedRes.Fonts.poppinsMedium,
+        ),
+        Font(
+            resource = SharedRes.Fonts.poppinsBold,
+        ),
+        Font(
+            resource = SharedRes.Fonts.poppinsItalic,
+        )
     )
-)
 val baseline = Typography()
 
-val AppTypography : Typography
+val AppTypography: Typography
     @Composable get() = Typography(
         displayLarge = baseline.displayLarge.copy(fontFamily = poppinsFamily),
         displayMedium = baseline.displayMedium.copy(fontFamily = poppinsFamily),
