@@ -1,6 +1,6 @@
 package com.gurkha.hr.login
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,10 +10,15 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import com.gurkha.hr.ui.SharedRes
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -50,16 +55,32 @@ fun LoginScreen(
         ) {
 
             AsyncImage(
-                modifier = Modifier.fillMaxWidth().background(Color.Red),
-                model = "https://images.pexels.com/photos/145939/pexels-photo-145939.jpeg",
-                contentDescription = "item.name",
-                onError = {
-                    println("Error ${it.result.throwable.message}")
-                },
-                onSuccess = {
-                    println("Success")
-                }
+                modifier = Modifier.fillMaxWidth().padding(16.dp)
+                    .weight(1f),
+                model = SharedRes.getRes("drawable/gurkha_hr.png"),
+                contentDescription = "asdfasd",
+                contentScale = ContentScale.FillWidth
             )
+
+
+            Column(
+                modifier = Modifier
+                    .weight(3f)
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+
+            ) {
+
+                Text(
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        color = Color.Green,
+                        fontSize = 30.sp
+                    ),
+                    text = "Welcome"
+                )
+            }
+
 
         }
 
