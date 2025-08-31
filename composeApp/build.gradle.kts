@@ -45,12 +45,12 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
-
+//            implementation(libs.compose.resources)
             implementation(libs.org.jetbrains.navigation)
             implementation(libs.kotlinx.serialization.json)
 
             implementation(projects.core.di)
-            implementation(projects.core.ui)
+            implementation(projects.core.ui.res)
 
             implementation(projects.features.auth.login)
             implementation(projects.features.dashboard)

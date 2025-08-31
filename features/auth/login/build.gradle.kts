@@ -72,10 +72,10 @@ kotlin {
                 implementation(libs.androidx.lifecycle.runtimeCompose)
 
                 implementation(libs.koin.compose.viewmodel)
-
+                implementation(compose.components.resources)
                 implementation(projects.core.domain)
                 implementation(projects.core.networkHelper)
-                implementation(projects.core.ui)
+                implementation(projects.core.ui.res)
 
                 implementation(libs.coil.compose)
                 implementation(libs.coil.compose.core)

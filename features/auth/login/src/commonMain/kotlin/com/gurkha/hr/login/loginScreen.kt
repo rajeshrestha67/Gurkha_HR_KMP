@@ -18,7 +18,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import com.gurkha.hr.ui.SharedRes
+import com.gurkha.hr.res.SharedRes
+
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -77,7 +79,7 @@ fun LoginScreen(
                         color = Color.Green,
                         fontSize = 30.sp
                     ),
-                    text = "Welcome"
+                    text = stringResource(SharedRes.Strings.welcome)
                 )
             }
 

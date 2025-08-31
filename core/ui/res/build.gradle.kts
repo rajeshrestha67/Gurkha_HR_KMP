@@ -12,7 +12,7 @@ kotlin {
     // which platforms this KMP module supports.
     // See: https://kotlinlang.org/docs/multiplatform-discover-project.html#targets
     androidLibrary {
-        namespace = "com.gurkha.hr.ui"
+        namespace = "com.gurkha.hr.res"
         compileSdk = 36
         minSdk = 24
 
@@ -24,7 +24,6 @@ kotlin {
         }.configure {
             instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         }
-
         experimentalProperties["android.experimental.kmp.enableAndroidResources"] = true
     }
 
@@ -35,7 +34,7 @@ kotlin {
     // A step-by-step guide on how to include this library in an XCode
     // project can be found here:
     // https://developer.android.com/kotlin/multiplatform/migrate
-    val xcfName = "core:uiKit"
+    val xcfName = "core:ui:resKit"
 
     iosX64 {
         binaries.framework {

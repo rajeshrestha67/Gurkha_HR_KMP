@@ -3,7 +3,8 @@ package com.gurkha.hr.theme
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.font.FontFamily
-import com.gurkha.hr.ui.SharedRes
+import com.gurkha.hr.res.SharedRes
+
 import org.jetbrains.compose.resources.Font
 
 val poppinsFamily

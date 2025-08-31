@@ -1,13 +1,15 @@
-package com.gurkha.hr.ui
+package com.gurkha.hr.res
 
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import org.junit.Assert.assertEquals
+import androidx.test.ext.junit.runners.AndroidJUnit4
+
 import org.junit.Test
 import org.junit.runner.RunWith
 
+import org.junit.Assert.*
+
 /**
- * Instrumented login, which will execute on an Android device.
+ * Instrumented test, which will execute on an Android device.
  *
  * See [testing documentation](http://d.android.com/tools/testing).
  */
@@ -15,8 +17,8 @@ import org.junit.runner.RunWith
 class ExampleInstrumentedTest {
     @Test
     fun useAppContext() {
-        // Context of the app under login.
+        // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.gurkha.hr.ui.login", appContext.packageName)
+        assertEquals("com.gurkha.hr.res.test", appContext.packageName)
     }
 }

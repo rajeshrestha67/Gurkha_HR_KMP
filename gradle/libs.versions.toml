@@ -29,7 +29,7 @@ orgJetbrainsNavigation = "2.9.0-beta05"
 coreSplashscreen = "1.0.1"
 
 coil3 = "3.3.0"
-
+compose = "1.6.11"
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-testJunit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
@@ -76,6 +76,8 @@ coil-network-ktor = { module = "io.coil-kt.coil3:coil-network-okhttp", version.r
 coil-mp = { module = "io.coil-kt.coil3:coil", version.ref = "coil3" }
 coil-network-ktor3 = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil3" }
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }
+
+compose-resources = { module = "org.jetbrains.compose.resources:resources", version.ref = "compose" }
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
