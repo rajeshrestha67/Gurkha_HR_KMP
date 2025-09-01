@@ -2,7 +2,6 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.android.kotlin.multiplatform.library)
     alias(libs.plugins.android.lint)
-    alias(libs.plugins.jetbrains.kotlin.serialization)
 }
 
 kotlin {
@@ -11,7 +10,7 @@ kotlin {
     // which platforms this KMP module supports.
     // See: https://kotlinlang.org/docs/multiplatform-discover-project.html#targets
     androidLibrary {
-        namespace = "com.gurkha.hr.datastore"
+        namespace = "com.gurkha.hr.crypto"
         compileSdk = 36
         minSdk = 24
 
@@ -32,7 +31,7 @@ kotlin {
     // A step-by-step guide on how to include this library in an XCode
     // project can be found here:
     // https://developer.android.com/kotlin/multiplatform/migrate
-    val xcfName = "core:persistance:datastoreKit"
+    val xcfName = "core:cryptoKit"
 
     iosX64 {
         binaries.framework {
@@ -62,17 +61,7 @@ kotlin {
             dependencies {
                 implementation(libs.kotlin.stdlib)
                 // Add KMP dependencies here
-
-                api(libs.androidx.datastore.core.okio)
-                api(libs.androidx.datastore.preferences.core)
-                implementation(libs.okio)
-
-                implementation(libs.koin.core)
-                implementation(libs.koin.compose)
-
                 implementation(libs.kotlinx.serialization.json)
-
-                implementation(projects.core.crypto)
             }
         }
 

@@ -2,6 +2,7 @@ package com.gurkha.hr.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gurkha.hr.domain.auth.login.usecase.ClearTokenUseCase
 import com.gurkha.hr.domain.auth.login.usecase.LoginUseCase
 import com.gurkha.hr.login.model.LoginScreenAction
 import com.gurkha.hr.login.model.LoginScreenState
@@ -11,6 +12,7 @@ import com.gurkha.hr.networkhelper.toErrorMessage
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -18,17 +20,26 @@ import kotlinx.coroutines.launch
 
 class LoginViewModel(
     private val loginUseCase: LoginUseCase,
+    private val clearTokenUseCase: ClearTokenUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(LoginScreenState())
 
     private val _errorChannel = Channel<String>()
     val errorChannel = _errorChannel.receiveAsFlow()
-    val state = _state.stateIn(
-        viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = LoginScreenState()
-    )
+
+    private val _successChannel = Channel<Boolean>()
+    val successChannel = _successChannel.receiveAsFlow()
+
+    val state = _state
+        .onStart {
+            clearToken()
+        }
+        .stateIn(
+            viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = LoginScreenState()
+        )
 
     fun onAction(action: LoginScreenAction) {
         when (action) {
@@ -62,14 +73,27 @@ class LoginViewModel(
         }
     }
 
+    private fun clearToken() = viewModelScope.launch {
+        clearTokenUseCase()
+    }
+
     private fun login() = viewModelScope.launch {
         //loginUseCase("Chirag.dangol@mbank.com.np", "OVf#9PfTs")
+        _state.update {
+            it.copy(isLoading = true)
+        }
         loginUseCase(
             username = state.value.username,
             password = state.value.password
         ).onSuccess { data ->
-
+            _state.update {
+                it.copy(isLoading = false)
+            }
+            _successChannel.send(true)
         }.onError { error ->
+            _state.update {
+                it.copy(isLoading = false)
+            }
             _errorChannel.send(error.toErrorMessage())
         }
     }

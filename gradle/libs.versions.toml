@@ -30,6 +30,10 @@ coreSplashscreen = "1.0.1"
 
 coil3 = "3.3.0"
 compose = "1.6.11"
+
+okio = "3.16.0"
+dataStore = "1.1.7"
+
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-testJunit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
@@ -78,6 +82,14 @@ coil-network-ktor3 = { module = "io.coil-kt.coil3:coil-network-ktor3", version.r
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }
 
 compose-resources = { module = "org.jetbrains.compose.resources:resources", version.ref = "compose" }
+
+
+okio = { module = "com.squareup.okio:okio", version.ref = "okio" }
+
+#datastore
+androidx-datastore-core-okio = { group = "androidx.datastore", name = "datastore-core-okio", version.ref = "dataStore" }
+androidx-datastore-preferences-core = { group = "androidx.datastore", name = "datastore-preferences-core", version.ref = "dataStore" }
+
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }

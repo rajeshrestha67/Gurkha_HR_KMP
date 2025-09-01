@@ -425,3 +425,6 @@ Package.resolved
 /.kotlin/metadata/kotlinTransformedMetadataLibraries/org.jetbrains.skiko-skiko-0.9.4.2-uikitMain-SvRtdQ.klib
 /.kotlin/metadata/kotlinTransformedMetadataLibraries/org.jetbrains.compose.material-material-icons-core-1.7.3-commonMain-OY6u5w.klib
 /.kotlin/metadata/kotlinTransformedMetadataLibraries/org.jetbrains.compose.material-material-icons-extended-1.7.3-commonMain-m2wuDA.klib
+/composeApp/release/baselineProfiles/0/composeApp-release.dm
+/composeApp/release/baselineProfiles/1/composeApp-release.dm
+/composeApp/release/output-metadata.json

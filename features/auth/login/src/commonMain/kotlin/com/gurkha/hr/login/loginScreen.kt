@@ -39,7 +39,7 @@ import com.gurkha.hr.login.model.LoginScreenAction
 import com.gurkha.hr.login.model.LoginScreenState
 import com.gurkha.hr.res.SharedRes
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.getKoin
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,10 +51,19 @@ fun LoginScreen(
     val loginViewModel: LoginViewModel = koinViewModel()
     val state by loginViewModel.state.collectAsStateWithLifecycle()
 
-    val platformMessage: PlatformMessage = getKoin().get()
+    val platformMessage: PlatformMessage = koinInject()
+
     LaunchedEffect(Unit) {
         loginViewModel.errorChannel.collect {
             platformMessage.showToast(it)
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        loginViewModel.successChannel.collect {
+            if (it) {
+                onNavigateToDashboard()
+            }
         }
     }
     LoginScreenContent(
@@ -123,6 +132,7 @@ fun LoginScreenContent(
                     },
                     value = state.username,
                     error = state.usernameError,
+                    enabled = !state.isLoading,
                     onErrorStateChange = {
                         onAction(LoginScreenAction.OnUsernameError(it?.errorMsg))
                     },
@@ -135,6 +145,7 @@ fun LoginScreenContent(
                     )
                 )
                 PasswordTextField(
+                    enabled = !state.isLoading,
                     modifier = Modifier.fillMaxWidth(),
                     label = stringResource(SharedRes.Strings.password),
                     hint = stringResource(SharedRes.Strings.enterYourPassword),
@@ -167,6 +178,7 @@ fun LoginScreenContent(
                             onAction = onAction
                         )
                     },
+                    isLoading = state.isLoading,
                     text = stringResource(SharedRes.Strings.login)
                 )
             }

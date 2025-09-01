@@ -63,6 +63,7 @@ kotlin {
                 // Add KMP dependencies here
                 implementation(projects.core.model)
                 implementation(projects.core.networkHelper)
+                implementation(projects.core.persistance.datastore)
             }
         }
 

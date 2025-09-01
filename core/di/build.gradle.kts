@@ -82,6 +82,7 @@ kotlin {
                 implementation(projects.core.domain)
                 implementation(projects.features.auth.login)
                 implementation(projects.core.ui.components)
+                implementation(projects.core.persistance.datastore)
             }
         }
 
