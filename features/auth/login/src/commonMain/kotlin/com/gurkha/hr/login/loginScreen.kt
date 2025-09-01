@@ -88,6 +88,8 @@ fun LoginScreen(
 
                 AGEmailTextField(
                     modifier = Modifier.fillMaxWidth(),
+                    label = stringResource(SharedRes.Strings.username),
+                    hint = stringResource(SharedRes.Strings.enterYourUsername),
                     onValueChange = {
                         //loginViewModel.updateEmail(it)
                     },
@@ -99,6 +101,8 @@ fun LoginScreen(
                 )
                 PasswordTextField(
                     modifier = Modifier.fillMaxWidth(),
+                    label = stringResource(SharedRes.Strings.password),
+                    hint = stringResource(SharedRes.Strings.enterYourPassword),
                     onValueChange = {
                         //loginViewModel.updateEmail(it)
                     },
@@ -106,14 +110,14 @@ fun LoginScreen(
                     onErrorStateChange = {
 
                     },
-                    rules = FormValidate.emailValidationRules
+                    rules = FormValidate.passwordValidationRules
                 )
                 ERPButton(
                     modifier = Modifier.fillMaxWidth(),
                     onClick = {
 
                     },
-                    text = "Login"
+                    text = stringResource(SharedRes.Strings.login)
                 )
             }
 
