@@ -61,7 +61,7 @@ fun EPRBaseTextField(
     showErrorMessage: Boolean = true,
     height: Dp? = null,
     bgColor: Color = Color.Green.copy(alpha = 0.1f),
-    bgShape: Shape = MaterialTheme.shapes.extraLarge,
+    bgShape: Shape = MaterialTheme.shapes.medium,
     borderEnabled: Boolean = true,
     onDropDown: (() -> Unit)? = null
 ) {
@@ -73,6 +73,7 @@ fun EPRBaseTextField(
     ) {
         label?.let {
             Text(
+                modifier = Modifier.padding(bottom = 4.dp),
                 text = it,
                 style = MaterialTheme.typography.bodySmall
 //                fontWeight = FontWeight.W400,
@@ -202,7 +203,7 @@ fun EPRTextField(
     showErrorMessage: Boolean = true,
     height: Dp? = null,
     bgColor: Color = Color.Green.copy(alpha = 0.1f),
-    bgShape: Shape = MaterialTheme.shapes.extraLarge,
+    bgShape: Shape = MaterialTheme.shapes.medium,
     borderEnabled: Boolean = true,
     onDropDown: (() -> Unit)? = null
 ) {
@@ -260,7 +261,7 @@ fun EPRTextField(
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
     height: Dp? = null,
     bgColor: Color = Color.Green.copy(alpha = 0.1f),
-    bgShape: Shape = MaterialTheme.shapes.extraLarge,
+    bgShape: Shape = MaterialTheme.shapes.medium,
     borderEnabled: Boolean = true,
     onDropDown: (() -> Unit)? = null
 ) {
@@ -400,7 +401,6 @@ fun PasswordTextField(
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     error: String? = null,
     onErrorStateChange: (ErrorStatus?) -> Unit,
-
     rules: List<Rule>,
     enabled: Boolean = true,
     showErrorMessage: Boolean = true,

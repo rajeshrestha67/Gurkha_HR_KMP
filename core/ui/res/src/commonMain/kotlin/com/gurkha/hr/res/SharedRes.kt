@@ -7,6 +7,7 @@ import gurkhahr.core.ui.res.generated.resources.Res
 import gurkhahr.core.ui.res.generated.resources.email
 import gurkhahr.core.ui.res.generated.resources.enter_your_email
 import gurkhahr.core.ui.res.generated.resources.invalid_email_address
+import gurkhahr.core.ui.res.generated.resources.login
 import gurkhahr.core.ui.res.generated.resources.required
 import gurkhahr.core.ui.res.generated.resources.welcome
 
@@ -28,5 +29,6 @@ object SharedRes {
         val invalidEmailAddress = Res.string.invalid_email_address
         val email = Res.string.email
         val enterYourEmail = Res.string.enter_your_email
+        val login = Res.string.login
     }
 }

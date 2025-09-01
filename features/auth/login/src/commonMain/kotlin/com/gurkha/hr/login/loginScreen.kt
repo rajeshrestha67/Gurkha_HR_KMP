@@ -113,7 +113,7 @@ fun LoginScreen(
                     onClick = {
 
                     },
-                    text = "test"
+                    text = "Login"
                 )
             }
 

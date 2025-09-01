@@ -26,15 +26,15 @@ fun ERPButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     text: String,
-    backgroundColor: Color = Color.Blue,
+    backgroundColor: Color = MaterialTheme.colorScheme.primary,
     textColor: Color = Color.White,
-    shape: Shape = MaterialTheme.shapes.extraLarge,
+    shape: Shape = MaterialTheme.shapes.medium,
     isLoading: Boolean = false,
     leadingIcon: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
     enabled: Boolean = true,
     disableBackgroundColor: Color = Color.Gray,
-    disableTextColor: Color = Color.White,
+    disableTextColor: Color = MaterialTheme.colorScheme.onBackground,
     border: BorderStroke = BorderStroke(0.dp, Color.Transparent),
     textStyle: TextStyle = MaterialTheme.typography.bodySmall
 ) {

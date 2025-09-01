@@ -24,11 +24,11 @@ class MainActivity : ComponentActivity() {
         setContent {
             val view = LocalView.current
             val darkTheme = isSystemInDarkTheme()
+
             if (!view.isInEditMode) {
                 SideEffect {
                     WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars =
-                        !darkTheme // negate darkTheme
-                    // window.statusBarColor = Color.Green.toArgb()
+                        !darkTheme
                 }
             }
             App()

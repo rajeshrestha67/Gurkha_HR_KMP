@@ -4,4 +4,5 @@
     <string name="required">आवश्यक छ ।</string>
     <string name="enter_your_email">आफ्नो इमेल प्रविष्ट गर्नुहोस्</string>
     <string name="email">इमेल</string>
+    <string name="login">लग इन गर्नुहोस्</string>
 </resources>

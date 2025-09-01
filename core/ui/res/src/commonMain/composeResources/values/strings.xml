@@ -4,4 +4,5 @@
     <string name="required">Required</string>
     <string name="enter_your_email">Enter your email</string>
     <string name="email">email</string>
+    <string name="login">Login</string>
 </resources>
