@@ -77,6 +77,7 @@ Package.resolved
 *.DS_Store
 .AppleDouble
 .LSOverride
+.kotlin/metadata
 /.kotlin/metadata/kotlinTransformedMetadataLibraries/androidx.annotation-annotation-1.9.1-commonMain-WmoUwA.klib
 /.kotlin/metadata/kotlinTransformedMetadataLibraries/androidx.annotation-annotation-1.9.1-nonJvmMain-WmoUwA.klib
 /.kotlin/metadata/kotlinTransformedMetadataLibraries/androidx.collection-collection-1.5.0-commonMain-j7f1lg.klib
@@ -422,3 +423,5 @@ Package.resolved
 /.kotlin/metadata/kotlinTransformedMetadataLibraries/org.jetbrains.skiko-skiko-0.9.4.2-nativeJsMain-abF9Iw.klib
 /.kotlin/metadata/kotlinTransformedMetadataLibraries/org.jetbrains.skiko-skiko-0.9.4.2-nativeMain-abF9Iw.klib
 /.kotlin/metadata/kotlinTransformedMetadataLibraries/org.jetbrains.skiko-skiko-0.9.4.2-uikitMain-SvRtdQ.klib
+/.kotlin/metadata/kotlinTransformedMetadataLibraries/org.jetbrains.compose.material-material-icons-core-1.7.3-commonMain-OY6u5w.klib
+/.kotlin/metadata/kotlinTransformedMetadataLibraries/org.jetbrains.compose.material-material-icons-extended-1.7.3-commonMain-m2wuDA.klib
