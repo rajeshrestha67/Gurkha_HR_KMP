@@ -6,25 +6,40 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.FocusManager
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.gurkha.hr.components.ERPButton
+import com.gurkha.hr.components.PlatformMessage
 import com.gurkha.hr.components.textField.AGEmailTextField
 import com.gurkha.hr.components.textField.FormValidate
 import com.gurkha.hr.components.textField.PasswordTextField
+import com.gurkha.hr.components.textField.validate
+import com.gurkha.hr.login.model.LoginScreenAction
+import com.gurkha.hr.login.model.LoginScreenState
 import com.gurkha.hr.res.SharedRes
-
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.getKoin
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -34,19 +49,32 @@ fun LoginScreen(
 ) {
 
     val loginViewModel: LoginViewModel = koinViewModel()
+    val state by loginViewModel.state.collectAsStateWithLifecycle()
 
-//    Box(
-//        modifier = Modifier.fillMaxSize(),
-//        contentAlignment = Alignment.Center
-//    ) {
-//        Button(onClick = {
-//           // loginViewModel.login()
-//            //navController.navigate(AppRoute.Dashboard)
-//            onNavigateToDashboard()
-//        }) {
-//            Text("Press")
-//        }
-//    }
+    val platformMessage: PlatformMessage = getKoin().get()
+    LaunchedEffect(Unit) {
+        loginViewModel.errorChannel.collect {
+            platformMessage.showToast(it)
+        }
+    }
+    LoginScreenContent(
+        state = state,
+        onAction = loginViewModel::onAction
+    )
+
+}
+
+@Composable
+fun LoginScreenContent(
+    state: LoginScreenState,
+    onAction: (LoginScreenAction) -> Unit
+) {
+    val focusRequester: FocusRequester = remember { FocusRequester() }
+    val focusManager = LocalFocusManager.current
+
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -87,43 +115,81 @@ fun LoginScreen(
                 )
 
                 AGEmailTextField(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
                     label = stringResource(SharedRes.Strings.username),
                     hint = stringResource(SharedRes.Strings.enterYourUsername),
                     onValueChange = {
-                        //loginViewModel.updateEmail(it)
+                        onAction(LoginScreenAction.OnUsernameChanged(it))
                     },
-                    value = "",
+                    value = state.username,
+                    error = state.usernameError,
                     onErrorStateChange = {
-
+                        onAction(LoginScreenAction.OnUsernameError(it?.errorMsg))
                     },
-                    rules = FormValidate.emailValidationRules
+                    imeAction = ImeAction.Next,
+                    rules = FormValidate.emailValidationRules,
+                    keyboardActions = KeyboardActions(
+                        onNext = {
+                            focusManager.moveFocus(FocusDirection.Down)
+                        }
+                    )
                 )
                 PasswordTextField(
                     modifier = Modifier.fillMaxWidth(),
                     label = stringResource(SharedRes.Strings.password),
                     hint = stringResource(SharedRes.Strings.enterYourPassword),
                     onValueChange = {
-                        //loginViewModel.updateEmail(it)
+                        onAction(LoginScreenAction.OnPasswordChanged(it))
                     },
-                    value = "345678",
+                    value = state.password,
+                    error = state.passwordError,
                     onErrorStateChange = {
-
+                        onAction(LoginScreenAction.OnPasswordError(it?.errorMsg))
                     },
+                    imeAction = ImeAction.Send,
+                    keyboardActions = KeyboardActions(
+                        onSend = {
+                            validate(
+                                state = state,
+                                focusManager = focusManager,
+                                onAction = onAction
+                            )
+                        }
+                    ),
                     rules = FormValidate.passwordValidationRules
                 )
                 ERPButton(
                     modifier = Modifier.fillMaxWidth(),
                     onClick = {
-
+                        validate(
+                            state = state,
+                            focusManager = focusManager,
+                            onAction = onAction
+                        )
                     },
                     text = stringResource(SharedRes.Strings.login)
                 )
             }
-
-
         }
-
     }
+}
 
+fun validate(
+    state: LoginScreenState,
+    focusManager: FocusManager,
+    onAction: (LoginScreenAction) -> Unit
+) {
+    focusManager.clearFocus(true)
+    val usernameError = FormValidate.emailValidationRules.validate(state.username)
+    val passwordError = FormValidate.passwordValidationRules.validate(state.password)
+
+    if (usernameError == null) {
+        if (passwordError == null) {
+            onAction(LoginScreenAction.LoginClicked)
+        } else {
+            onAction(LoginScreenAction.OnPasswordError(passwordError.errorMsg))
+        }
+    } else {
+        onAction(LoginScreenAction.OnUsernameError(usernameError.errorMsg))
+    }
 }

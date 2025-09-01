@@ -1,9 +1,8 @@
 package com.gurkha.hr.data.login
 
 import com.gurkha.hr.domain.auth.login.repository.UserRemoteRepository
-import com.gurkha.hr.domain.auth.login.model.LoginData
 import com.gurkha.hr.networkhelper.BaseUrl
-import com.gurkha.hr.networkhelper.ERPError
+import com.gurkha.hr.networkhelper.DataError
 import com.gurkha.hr.networkhelper.ERPResult
 import com.gurkha.hr.networkhelper.EndPoint
 import com.gurkha.hr.networkhelper.post
@@ -19,7 +18,7 @@ class KtorUserRemoteRepository(
     override suspend fun login(
         username: String,
         password: String
-    ): ERPResult<LoginResponseDto, ERPError> {
+    ): ERPResult<LoginResponseDto, DataError> {
         return safeCall {
             httpClient.post(
                 baseUrl = BaseUrl.Generic,

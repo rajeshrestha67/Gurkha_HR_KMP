@@ -7,6 +7,7 @@ import com.gurkha.model.auth.login.LoginResponseDto
 fun LoginResponseDto.toData(): LoginData {
     return LoginData(
         token = token ?: "",
-        role = role ?: ""
+        role = role ?: "",
+        message = message
     )
 }

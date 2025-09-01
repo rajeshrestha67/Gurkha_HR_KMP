@@ -35,6 +35,8 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.stringResource
 
 
 @Composable
@@ -51,7 +53,7 @@ fun EPRBaseTextField(
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     readOnly: Boolean = false,
-    error: String? = null,
+    error: StringResource? = null,
     maxLength: Int = Int.MAX_VALUE,
     singleLine: Boolean = false,
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
@@ -93,7 +95,6 @@ fun EPRBaseTextField(
             }
         } ?: Modifier
 
-        println("onDropDown $onDropDown")
         OutlinedTextField(
             enabled = enabled,
             modifier = Modifier
@@ -119,15 +120,8 @@ fun EPRBaseTextField(
             shape = bgShape,
             leadingIcon = leadingIcon,
             trailingIcon = {
-                if (error != null) {
-//                    Image(
-//                        painter = painterResource(R.drawable.ic_input_field_error),
-//                        contentDescription = error
-//                    )
-                } else {
-                    trailingIcon?.let {
-                        it()
-                    }
+                trailingIcon?.let {
+                    it()
                 }
             },
             maxLines = maxLines,
@@ -166,13 +160,15 @@ fun EPRBaseTextField(
         AnimatedVisibility(
             visible = error != null && showErrorMessage
         ) {
-            Text(
-                modifier = Modifier.padding(4.dp),
-                text = error ?: "",
-                style = MaterialTheme.typography.labelSmall.copy(
-                    color = Color.Red
+            error?.let {
+                Text(
+                    modifier = Modifier.padding(4.dp),
+                    text = stringResource(error),
+                    style = MaterialTheme.typography.labelSmall.copy(
+                        color = Color.Red
+                    )
                 )
-            )
+            }
         }
     }
 
@@ -195,7 +191,7 @@ fun EPRTextField(
     singleLine: Boolean = false,
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
     readOnly: Boolean = false,
-    error: String? = null,
+    error: StringResource? = null,
     maxLength: Int = Int.MAX_VALUE,
     rules: List<Rule> = listOf(),
     onErrorStateChange: (ErrorStatus?) -> Unit,
@@ -251,7 +247,7 @@ fun EPRTextField(
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     readOnly: Boolean = false,
-    error: String? = null,
+    error: StringResource? = null,
     maxLength: Int = Int.MAX_VALUE,
     rules: List<Rule>,
     onErrorStateChange: (ErrorStatus?) -> Unit,
@@ -314,7 +310,7 @@ fun AGMobileTextField(
     imeAction: ImeAction = ImeAction.Next,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     readOnly: Boolean = false,
-    error: String? = null,
+    error: StringResource? = null,
     onErrorStateChange: (ErrorStatus?) -> Unit,
     maxLength: Int = 10,
     rules: List<Rule>,
@@ -357,7 +353,7 @@ fun AGEmailTextField(
     imeAction: ImeAction = ImeAction.Next,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     readOnly: Boolean = false,
-    error: String? = null,
+    error: StringResource? = null,
     onErrorStateChange: (ErrorStatus?) -> Unit,
     maxLength: Int = 320,
     rules: List<Rule>,
@@ -399,7 +395,7 @@ fun PasswordTextField(
     keyboardOptions: KeyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
     imeAction: ImeAction = ImeAction.Done,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
-    error: String? = null,
+    error: StringResource? = null,
     onErrorStateChange: (ErrorStatus?) -> Unit,
     rules: List<Rule>,
     enabled: Boolean = true,
@@ -418,9 +414,8 @@ fun PasswordTextField(
         visualTransformation = if (revealed) VisualTransformation.None else PasswordVisualTransformation(),
         keyboardOptions = keyboardOptions.copy(imeAction = imeAction),
         keyboardActions = keyboardActions,
-        readOnly = true,
+        readOnly = false,
         error = error,
-        maxLength = 1,
         rules = rules,
         onErrorStateChange = onErrorStateChange,
         enabled = enabled,

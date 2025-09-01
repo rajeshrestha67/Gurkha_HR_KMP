@@ -1,5 +1,4 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
-import kotlin.jvm.java
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -82,6 +81,7 @@ kotlin {
                 implementation(projects.core.data)
                 implementation(projects.core.domain)
                 implementation(projects.features.auth.login)
+                implementation(projects.core.ui.components)
             }
         }
 

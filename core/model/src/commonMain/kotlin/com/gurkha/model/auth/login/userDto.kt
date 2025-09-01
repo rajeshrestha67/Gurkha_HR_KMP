@@ -5,12 +5,13 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class LoginRequestDto(
-    val email:String,
+    val email: String,
     val password: String
 )
 
 @Serializable
 data class LoginResponseDto(
-    val token:String? = null,
-    val role: String? = null
+    val token: String? = null,
+    val role: String? = null,
+    val message: String? = null
 )

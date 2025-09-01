@@ -13,7 +13,7 @@ sealed interface DataError : ERPError {
         data object Server : NetworkError
         data object Serialization : NetworkError
         data object DataUnknown : NetworkError
-        data class Custom(val errors: HashMap<String, List<String>>?) : NetworkError
+        data class Custom(val message: String) : NetworkError
     }
 
     sealed interface LocalError : DataError {
@@ -24,7 +24,8 @@ sealed interface DataError : ERPError {
     }
 }
 
-fun DataError.toErrorMessage(key: String = ""): String {
+fun DataError.toErrorMessage(): String {
+    println("Error $this")
     return when (this) {
         DataError.NetworkError.RequestTimeout -> "Request time out"
         DataError.NetworkError.UnAuthorized -> "Unauthorized Access"
@@ -39,20 +40,7 @@ fun DataError.toErrorMessage(key: String = ""): String {
         DataError.LocalError.NoData -> "No Data"
         DataError.LocalError.UnKnown -> "Something went wrong!"
         is DataError.NetworkError.Custom -> {
-            toErrorMessage(key) ?: "Something went wrong!"
-        }
-    }
-}
-
-fun DataError.NetworkError.Custom.toErrorMessage(key: String): String? {
-    return when (val error = errors) {
-        null -> null
-        else -> {
-            if (error.isEmpty()) {
-                return null
-            } else {
-                return error[key]?.firstOrNull()
-            }
+            this.message
         }
     }
 }

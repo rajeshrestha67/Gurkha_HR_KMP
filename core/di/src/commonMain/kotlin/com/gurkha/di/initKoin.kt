@@ -5,13 +5,14 @@ import org.koin.dsl.KoinAppDeclaration
 import org.koin.ksp.generated.module
 
 
-fun initKoin(config: KoinAppDeclaration? = null){
+fun initKoin(config: KoinAppDeclaration? = null) {
 
     startKoin {
         config?.invoke(this)
         modules(
             NetworkModule().module,
-            AuthModule().module
+            AuthModule().module,
+            PlatformMessageModule().module
         )
     }
 }
