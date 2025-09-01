@@ -1,3 +1,7 @@
 <resources>
     <string name="welcome">स्वागत छ</string>
+    <string name="invalid_email_address">अमान्य इमेल ठेगाना</string>
+    <string name="required">आवश्यक छ ।</string>
+    <string name="enter_your_email">आफ्नो इमेल प्रविष्ट गर्नुहोस्</string>
+    <string name="email">इमेल</string>
 </resources>

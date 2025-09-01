@@ -73,9 +73,11 @@ kotlin {
 
                 implementation(libs.koin.compose.viewmodel)
                 implementation(compose.components.resources)
+
                 implementation(projects.core.domain)
                 implementation(projects.core.networkHelper)
                 implementation(projects.core.ui.res)
+                implementation(projects.core.ui.components)
 
                 implementation(libs.coil.compose)
                 implementation(libs.coil.compose.core)

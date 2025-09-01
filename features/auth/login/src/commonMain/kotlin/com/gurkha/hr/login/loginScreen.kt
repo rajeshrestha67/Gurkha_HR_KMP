@@ -18,6 +18,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import com.gurkha.hr.components.ERPButton
+import com.gurkha.hr.components.textField.AGEmailTextField
+import com.gurkha.hr.components.textField.FormValidate
+import com.gurkha.hr.components.textField.PasswordTextField
 import com.gurkha.hr.res.SharedRes
 
 import org.jetbrains.compose.resources.stringResource
@@ -80,6 +84,36 @@ fun LoginScreen(
                         fontSize = 30.sp
                     ),
                     text = stringResource(SharedRes.Strings.welcome)
+                )
+
+                AGEmailTextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    onValueChange = {
+                        //loginViewModel.updateEmail(it)
+                    },
+                    value = "",
+                    onErrorStateChange = {
+
+                    },
+                    rules = FormValidate.emailValidationRules
+                )
+                PasswordTextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    onValueChange = {
+                        //loginViewModel.updateEmail(it)
+                    },
+                    value = "345678",
+                    onErrorStateChange = {
+
+                    },
+                    rules = FormValidate.emailValidationRules
+                )
+                ERPButton(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = {
+
+                    },
+                    text = "test"
                 )
             }
 
