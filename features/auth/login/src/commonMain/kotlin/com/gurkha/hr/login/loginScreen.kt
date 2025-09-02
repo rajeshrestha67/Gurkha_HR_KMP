@@ -157,11 +157,6 @@ fun LoginScreenContent(
                     imeAction = ImeAction.Send,
                     keyboardActions = KeyboardActions(
                         onSend = {
-//                            validate(
-//                                state = state,
-//                                focusManager = focusManager,
-//                                onAction = onAction
-//                            )
                             onAction(LoginScreenAction.LoginClicked)
                         }
                     ),
@@ -179,23 +174,3 @@ fun LoginScreenContent(
         }
     }
 }
-//
-//fun validate(
-//    state: LoginScreenState,
-//    focusManager: FocusManager,
-//    onAction: (LoginScreenAction) -> Unit
-//) {
-//    focusManager.clearFocus(true)
-//    val usernameError = FormValidate.emailValidationRules.validate(state.username)
-//    val passwordError = FormValidate.passwordValidationRules.validate(state.password)
-//
-//    if (usernameError == null) {
-//        if (passwordError == null) {
-//            onAction(LoginScreenAction.LoginClicked)
-//        } else {
-//            onAction(LoginScreenAction.OnPasswordError(passwordError.errorMsg))
-//        }
-//    } else {
-//        onAction(LoginScreenAction.OnUsernameError(usernameError.errorMsg))
-//    }
-//}
