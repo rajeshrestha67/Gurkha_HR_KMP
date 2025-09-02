@@ -1,4 +1,4 @@
-package com.gurkha.hr.theme
+package com.gurkha.hr.res.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme

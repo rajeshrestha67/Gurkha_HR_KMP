@@ -411,9 +411,7 @@ fun PasswordTextField(
         label = label,
         hint = hint,
         onValueChange = onValueChange,
-        visualTransformation = if (revealed) VisualTransformation.None else PasswordVisualTransformation(
-            '*'
-        ),
+        visualTransformation = if (revealed) VisualTransformation.None else PasswordVisualTransformation(),
         keyboardOptions = keyboardOptions.copy(imeAction = imeAction),
         keyboardActions = keyboardActions,
         readOnly = false,

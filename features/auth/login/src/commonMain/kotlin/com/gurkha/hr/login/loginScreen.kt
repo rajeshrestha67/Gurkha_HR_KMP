@@ -21,11 +21,9 @@ import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
@@ -38,6 +36,7 @@ import com.gurkha.hr.components.textField.validate
 import com.gurkha.hr.login.model.LoginScreenAction
 import com.gurkha.hr.login.model.LoginScreenState
 import com.gurkha.hr.res.SharedRes
+import com.gurkha.hr.res.theme.dimens
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
@@ -98,7 +97,7 @@ fun LoginScreenContent(
         ) {
 
             AsyncImage(
-                modifier = Modifier.fillMaxWidth().padding(16.dp)
+                modifier = Modifier.fillMaxWidth().padding(MaterialTheme.dimens.small3)
                     .weight(1f),
                 model = SharedRes.getRes("drawable/gurkha_hr.png"),
                 contentDescription = "gurkha_hr",
@@ -110,14 +109,14 @@ fun LoginScreenContent(
                 modifier = Modifier
                     .weight(3f)
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                    .padding(horizontal = MaterialTheme.dimens.small3),
+                verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
 
             ) {
 
                 Text(
                     style = MaterialTheme.typography.titleLarge.copy(
-                        color = Color.Green,
+                        color = MaterialTheme.colorScheme.primary,
                         fontSize = 30.sp
                     ),
                     text = stringResource(SharedRes.Strings.welcome)

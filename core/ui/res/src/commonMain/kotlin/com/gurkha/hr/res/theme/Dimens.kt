@@ -1,4 +1,4 @@
-package com.gurkha.hr.theme
+package com.gurkha.hr.res.theme
 
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp

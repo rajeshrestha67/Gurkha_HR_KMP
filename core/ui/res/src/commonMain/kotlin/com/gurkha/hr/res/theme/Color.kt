@@ -1,4 +1,5 @@
-package com.gurkha.hr.theme
+package com.gurkha.hr.res.theme
+
 import androidx.compose.ui.graphics.Color
 
 val primaryLight = Color(0xFF4B662C)
