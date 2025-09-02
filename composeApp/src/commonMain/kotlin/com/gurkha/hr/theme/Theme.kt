@@ -6,6 +6,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.graphics.Color
 
 
@@ -92,12 +94,16 @@ fun AppTheme(
 ) {
 
     val colorScheme = if (darkTheme) darkScheme else lightScheme
+    CompositionLocalProvider(
+        LocalAppDimens provides CompactDimens
+    ) {
 
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = AppTypography,
-        content = content
-    )
+        MaterialTheme(
+            colorScheme = colorScheme,
+            typography = AppTypography,
+            content = content
+        )
+    }
 }
 
 
@@ -112,3 +118,9 @@ val ColorScheme.primaryTextColor: Color
             light = Color(0xFF727272),
             dark = Color(0xFF212121)
         )
+val MaterialTheme.dimens
+    @Composable get() = LocalAppDimens.current
+
+val LocalAppDimens = compositionLocalOf {
+    CompactDimens
+}

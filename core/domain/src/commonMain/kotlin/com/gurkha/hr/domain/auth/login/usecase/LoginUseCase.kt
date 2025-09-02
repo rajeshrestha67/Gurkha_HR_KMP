@@ -21,10 +21,9 @@ class LoginUseCase(
     ): ERPResult<LoginData, DataError> {
         return userRemoteRepository.login(username, password).map {
             it.toData()
-        }.onSuccess {
+        }.onSuccess { data ->
             val token = tokenRepository.token.firstOrNull() ?: Token()
-            println("token $token")
-            tokenRepository.saveToken(token.copy("ttest"))
+            tokenRepository.saveToken(token.copy(data.token))
         }
     }
 }
