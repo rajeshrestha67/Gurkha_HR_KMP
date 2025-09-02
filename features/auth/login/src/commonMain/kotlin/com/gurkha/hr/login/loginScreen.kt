@@ -18,7 +18,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
-import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.layout.ContentScale
@@ -32,7 +31,6 @@ import com.gurkha.hr.components.PlatformMessage
 import com.gurkha.hr.components.textField.AGEmailTextField
 import com.gurkha.hr.components.textField.FormValidate
 import com.gurkha.hr.components.textField.PasswordTextField
-import com.gurkha.hr.components.textField.validate
 import com.gurkha.hr.login.model.LoginScreenAction
 import com.gurkha.hr.login.model.LoginScreenState
 import com.gurkha.hr.res.SharedRes
@@ -159,11 +157,12 @@ fun LoginScreenContent(
                     imeAction = ImeAction.Send,
                     keyboardActions = KeyboardActions(
                         onSend = {
-                            validate(
-                                state = state,
-                                focusManager = focusManager,
-                                onAction = onAction
-                            )
+//                            validate(
+//                                state = state,
+//                                focusManager = focusManager,
+//                                onAction = onAction
+//                            )
+                            onAction(LoginScreenAction.LoginClicked)
                         }
                     ),
                     rules = FormValidate.passwordValidationRules
@@ -171,11 +170,7 @@ fun LoginScreenContent(
                 ERPButton(
                     modifier = Modifier.fillMaxWidth(),
                     onClick = {
-                        validate(
-                            state = state,
-                            focusManager = focusManager,
-                            onAction = onAction
-                        )
+                        onAction(LoginScreenAction.LoginClicked)
                     },
                     isLoading = state.isLoading,
                     text = stringResource(SharedRes.Strings.login)
@@ -184,23 +179,23 @@ fun LoginScreenContent(
         }
     }
 }
-
-fun validate(
-    state: LoginScreenState,
-    focusManager: FocusManager,
-    onAction: (LoginScreenAction) -> Unit
-) {
-    focusManager.clearFocus(true)
-    val usernameError = FormValidate.emailValidationRules.validate(state.username)
-    val passwordError = FormValidate.passwordValidationRules.validate(state.password)
-
-    if (usernameError == null) {
-        if (passwordError == null) {
-            onAction(LoginScreenAction.LoginClicked)
-        } else {
-            onAction(LoginScreenAction.OnPasswordError(passwordError.errorMsg))
-        }
-    } else {
-        onAction(LoginScreenAction.OnUsernameError(usernameError.errorMsg))
-    }
-}
+//
+//fun validate(
+//    state: LoginScreenState,
+//    focusManager: FocusManager,
+//    onAction: (LoginScreenAction) -> Unit
+//) {
+//    focusManager.clearFocus(true)
+//    val usernameError = FormValidate.emailValidationRules.validate(state.username)
+//    val passwordError = FormValidate.passwordValidationRules.validate(state.password)
+//
+//    if (usernameError == null) {
+//        if (passwordError == null) {
+//            onAction(LoginScreenAction.LoginClicked)
+//        } else {
+//            onAction(LoginScreenAction.OnPasswordError(passwordError.errorMsg))
+//        }
+//    } else {
+//        onAction(LoginScreenAction.OnUsernameError(usernameError.errorMsg))
+//    }
+//}

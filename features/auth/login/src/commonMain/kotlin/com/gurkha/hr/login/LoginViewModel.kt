@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gurkha.hr.domain.auth.login.usecase.ClearTokenUseCase
 import com.gurkha.hr.domain.auth.login.usecase.LoginUseCase
+import com.gurkha.hr.domain.form.EmailValidateUseCase
+import com.gurkha.hr.domain.form.PasswordValidateUseCase
 import com.gurkha.hr.login.model.LoginScreenAction
 import com.gurkha.hr.login.model.LoginScreenState
 import com.gurkha.hr.networkhelper.onError
@@ -20,7 +22,9 @@ import kotlinx.coroutines.launch
 
 class LoginViewModel(
     private val loginUseCase: LoginUseCase,
-    private val clearTokenUseCase: ClearTokenUseCase
+    private val clearTokenUseCase: ClearTokenUseCase,
+    private val emailValidateUseCase: EmailValidateUseCase,
+    private val passwordValidateUseCase: PasswordValidateUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(LoginScreenState())
@@ -68,7 +72,19 @@ class LoginViewModel(
             }
 
             LoginScreenAction.LoginClicked -> {
-                login()
+                val usernameError = emailValidateUseCase(state.value.username)
+                val passwordError = passwordValidateUseCase(state.value.password)
+                when {
+                    usernameError != null -> {
+                        _state.update { it.copy(usernameError = usernameError.errorMsg) }
+                    }
+
+                    passwordError != null -> {
+                        _state.update { it.copy(passwordError = passwordError.errorMsg) }
+                    }
+
+                    else -> login()
+                }
             }
         }
     }
