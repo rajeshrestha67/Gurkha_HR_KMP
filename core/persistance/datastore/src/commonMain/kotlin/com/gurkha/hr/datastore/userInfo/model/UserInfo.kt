@@ -6,4 +6,5 @@ import kotlinx.serialization.Serializable
 data class UserInfo(
     val name: String ? = null,
     val email: String ? = null,
+    val isFirstTime: Boolean? = null
 )
