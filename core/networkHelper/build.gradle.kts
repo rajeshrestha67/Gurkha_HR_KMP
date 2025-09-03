@@ -62,7 +62,11 @@ kotlin {
                 implementation(libs.kotlin.stdlib)
                 // Add KMP dependencies here
                 implementation(projects.core.network)
+                implementation(projects.core.persistance.datastore)
+                implementation(projects.core.model)
                 implementation(libs.ktor.client.core)
+                implementation(libs.koin.core)
+                implementation(libs.koin.compose)
             }
         }
 

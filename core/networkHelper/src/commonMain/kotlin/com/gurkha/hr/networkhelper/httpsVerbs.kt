@@ -1,12 +1,16 @@
 package com.gurkha.hr.networkhelper
 
+import com.gurkha.hr.datastore.token.repository.TokenRepository
 import io.ktor.client.HttpClient
 import io.ktor.client.request.HttpRequestBuilder
+import io.ktor.client.request.bearerAuth
 import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.url
 import io.ktor.client.statement.HttpResponse
+import kotlinx.coroutines.flow.firstOrNull
+import org.koin.mp.KoinPlatform.getKoin
 
 
 suspend inline fun HttpClient.post(
@@ -44,6 +48,11 @@ suspend inline fun HttpRequestBuilder.appendLocalAttributes(
     endPoint: String,
     block: HttpRequestBuilder.() -> Unit = {}
 ) {
+    val tokenRepository: TokenRepository = getKoin().get()
+    tokenRepository.token.firstOrNull()?.jwtToken?.let { token ->
+        println("token $token")
+        bearerAuth(token)
+    }
 
     url(path = endPoint, host = baseUrl.url, scheme = "https")
     block()

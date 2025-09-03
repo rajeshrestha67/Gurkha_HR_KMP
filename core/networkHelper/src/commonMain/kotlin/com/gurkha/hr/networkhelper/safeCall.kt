@@ -1,5 +1,7 @@
 package com.gurkha.hr.networkhelper
 
+import com.gurkha.model.ErrorData
+import com.gurkha.model.auth.login.LoginResponseDto
 import io.ktor.client.call.NoTransformationFoundException
 import io.ktor.client.call.body
 import io.ktor.client.network.sockets.SocketTimeoutException
@@ -56,6 +58,21 @@ suspend inline fun <reified T> responseToResult(
         429 -> ERPResult.Error(DataError.NetworkError.TooManyRequest)
         413 -> ERPResult.Error(DataError.NetworkError.PayloadTooLarge)
         in 500..599 -> ERPResult.Error(DataError.NetworkError.Server)
-        else -> ERPResult.Error(DataError.NetworkError.DataUnknown)
+        else -> {
+            if (T::class == LoginResponseDto::class) {
+                val res = try {
+                    response.body<ErrorData>()
+                } catch (e: Exception) {
+                    null
+                }
+                ERPResult.Error(
+                    DataError.NetworkError.Custom(
+                        res?.message ?: response.status.description
+                    )
+                )
+            } else {
+                ERPResult.Error(DataError.NetworkError.DataUnknown)
+            }
+        }
     }
 }
