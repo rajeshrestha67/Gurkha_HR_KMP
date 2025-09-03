@@ -7,4 +7,7 @@ interface UserInfoRepository {
     val userInfo : Flow<UserInfo>
 
     suspend fun saveUserInfo(userInfo: UserInfo)
+
+//    update the userinfo for the first time login or not
+    suspend fun updateUserInfo(userInfo: UserInfo)
 }

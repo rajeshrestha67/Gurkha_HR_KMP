@@ -13,7 +13,7 @@ class UserInfoDataStore(
     private val produceFilePath: () -> String
 ) {
 
-//    create db for the user info
+    //    create db for the user info
     private val db = DataStoreFactory.create(
         storage = OkioStorage(
             fileSystem = FileSystem.SYSTEM,
@@ -24,14 +24,23 @@ class UserInfoDataStore(
         )
     )
 
-//get the userdata
+    //get the userdata
     val userInfoFlow: Flow<UserInfo>
         get() = db.data
 
-//update the user data
-    suspend fun update(userInfo: UserInfo) {
-        db.updateData { _ ->
+    suspend fun save(userInfo: UserInfo) {
+        db.updateData {_->
             UserInfo()
         }
     }
+    //update the user data
+    suspend fun update(userInfo: UserInfo) {
+        db.updateData {current->
+            current.copy(
+                isFirstTime = userInfo.isFirstTime ?: current.isFirstTime
+            )
+        }
+    }
+
+
 }
