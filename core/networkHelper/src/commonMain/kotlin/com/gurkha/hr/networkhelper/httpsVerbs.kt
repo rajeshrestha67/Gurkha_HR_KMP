@@ -50,7 +50,6 @@ suspend inline fun HttpRequestBuilder.appendLocalAttributes(
 ) {
     val tokenRepository: TokenRepository = getKoin().get()
     tokenRepository.token.firstOrNull()?.jwtToken?.let { token ->
-        println("token $token")
         bearerAuth(token)
     }
 

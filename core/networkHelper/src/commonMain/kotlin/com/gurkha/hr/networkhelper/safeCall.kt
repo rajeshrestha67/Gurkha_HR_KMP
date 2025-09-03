@@ -27,7 +27,6 @@ suspend inline fun <reified T> safeCall(
     } catch (e: Throwable) {
         return ERPResult.Error(e.toNetworkError())
     } catch (e: Exception) {
-        println("Exception $e")
         coroutineContext.ensureActive()
         return ERPResult.Error(DataError.NetworkError.DataUnknown)
     }
@@ -37,7 +36,6 @@ suspend inline fun <reified T> safeCall(
 suspend inline fun <reified T> responseToResult(
     response: HttpResponse
 ): ERPResult<T, DataError.NetworkError> {
-    println("response $response, ${response.status.value}")
     return when (response.status.value) {
         in 200..299 -> {
             try {
