@@ -28,19 +28,9 @@ class UserInfoDataStore(
     val userInfoFlow: Flow<UserInfo>
         get() = db.data
 
-    suspend fun save(userInfo: UserInfo) {
-        db.updateData {_->
-            UserInfo()
-        }
-    }
-    //update the user data
     suspend fun update(userInfo: UserInfo) {
-        db.updateData {current->
-            current.copy(
-                isFirstTime = userInfo.isFirstTime ?: current.isFirstTime
-            )
+        db.updateData {_->
+           userInfo
         }
     }
-
-
 }

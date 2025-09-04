@@ -15,7 +15,7 @@ class LocalUserInfoRepository(
     }
 
     override suspend fun saveUserInfo(userInfo: UserInfo) {
-        userInfoDataStore.save(
+        userInfoDataStore.update(
             userInfo = userInfo
         )
     }
