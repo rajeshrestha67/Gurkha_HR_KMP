@@ -2,9 +2,7 @@ package com.gurkha.hr
 
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.scaleOut
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -13,9 +11,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.TransformOrigin
-import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.gurkha.hr.graph.dashboardScreenBuilder
 import com.gurkha.hr.graph.loginScreenBuilder
@@ -30,7 +26,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 @Preview
 fun App() {
-    var isFirstTimeState by remember { mutableStateOf(true) }
+    var isFirstTimeState by remember { mutableStateOf(false) }
     val viewModel: SplashscreenViewModel = koinViewModel()
 
     LaunchedEffect(Unit) {
@@ -69,8 +65,6 @@ fun AppScreen(isFirstTime: Boolean) {
     ) {
         loginScreenBuilder(navController = navController)
         dashboardScreenBuilder(navController = navController)
-        onBoardingBuilder(onClick = {
-            navController.navigate(AppRoute.LoginRoute)
-        })
+        onBoardingBuilder(navController = navController)
     }
 }
