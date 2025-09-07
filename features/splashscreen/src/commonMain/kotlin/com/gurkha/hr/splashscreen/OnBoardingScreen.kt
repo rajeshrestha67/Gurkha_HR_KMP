@@ -1,31 +1,12 @@
 package com.gurkha.hr.splashscreen
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.defaultMinSize
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,59 +19,88 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.primaryTextColor
+import com.gurkha.hr.splashscreen.model.OnBoardingAction
 import com.gurkha.hr.splashscreen.model.ScreenList
-import kotlinx.coroutines.launch
-
+import org.koin.compose.viewmodel.koinViewModel
+import androidx.compose.runtime.snapshotFlow
+import com.gurkha.hr.components.ERPButton
+import com.gurkha.hr.splashscreen.model.Indicator
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OnBoardingScreen(
+    viewModel: OnBoardingViewModel = koinViewModel(),
     onNavigateToLogin: () -> Unit
 ) {
-    val screenList = ScreenList.screenList
-    val pageState = rememberPagerState { screenList.size }
+    val screens = viewModel.screens
+    val currentPage by viewModel.currentPage.collectAsState()
+    val indicators by viewModel.indicator.collectAsState(initial = screens.map {
+        Indicator(
+            Color.Gray,
+            10.dp,
+        )
+    })
 
-//    not fixed
-    val scope = rememberCoroutineScope()
+
+    val pageState = rememberPagerState(
+        initialPage = currentPage,
+        pageCount = { screens.size }
+    )
+
+    // only trigger if the current_page changes
+    LaunchedEffect(currentPage) {
+        if (pageState.currentPage != currentPage) {
+            pageState.animateScrollToPage(currentPage)
+        }
+    }
+
+    // Update ViewModel when pager is manually scrolled
+    LaunchedEffect(pageState) {
+        snapshotFlow { pageState.currentPage }.collect { page ->
+            viewModel.setCurrentPage(page)
+        }
+    }
+
+    // if the navigation channel gives value true then it navigate to the login screen
+    LaunchedEffect(Unit) {
+        viewModel.navigationChannel.collect { shouldNavigate ->
+            if (shouldNavigate) onNavigateToLogin()
+        }
+    }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = {
-                    Text("")
-                },
+                title = { Text("") },
                 actions = {
                     TextButton(
                         modifier = Modifier.padding(MaterialTheme.dimens.small2),
                         onClick = {
-                            scope.launch {
-                                pageState.animateScrollToPage(screenList.size - 1)
-                            }
-                        },
+                            viewModel.action(OnBoardingAction.OnSkip)
+                        }
                     ) {
                         Text(
                             "Skip",
-                            fontWeight = MaterialTheme.typography.titleLarge.fontWeight,
-                            fontSize = MaterialTheme.typography.titleSmall.fontSize
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 14.sp
                         )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = (MaterialTheme.colorScheme.secondaryContainer)
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer
                 )
             )
         }
-    ) { paddingValues ->
+    ) {
         Box(
             modifier = Modifier
-                .background(color = (MaterialTheme.colorScheme.secondaryContainer))
+                .background(MaterialTheme.colorScheme.secondaryContainer)
                 .fillMaxSize(),
             contentAlignment = Alignment.BottomCenter
         ) {
             HorizontalPager(state = pageState) { item ->
                 Column(
-                    modifier = Modifier
-                        .fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
@@ -100,52 +110,50 @@ fun OnBoardingScreen(
                             .padding(MaterialTheme.dimens.medium3)
                             .fillMaxWidth(),
                         contentAlignment = Alignment.TopStart
-
                     ) {
                         AsyncImage(
-                            model = screenList[item].image,
-                            contentDescription = screenList[item].title,
+                            model = screens[item].image,
+                            contentDescription = screens[item].title,
                             modifier = Modifier
                                 .fillMaxSize(),
                             contentScale = ContentScale.Fit
                         )
                     }
+
                     Column(
                         modifier = Modifier
-                            .clip(shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
+                            .clip(RoundedCornerShape(topStart = MaterialTheme.dimens.medium1, topEnd = MaterialTheme.dimens.medium1))
                             .weight(6f)
-                            .background(color = MaterialTheme.colorScheme.background)
+                            .background(MaterialTheme.colorScheme.background)
                             .fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally,
-
-                        ) {
-                        Spacer(modifier = Modifier.height(40.dp))
+                    ) {
+                        Spacer(modifier = Modifier.height(MaterialTheme.dimens.medium2))
 
                         Text(
-                            text = screenList[item].title,
+                            text = screens[item].title,
                             color = MaterialTheme.colorScheme.onBackground,
                             fontSize = MaterialTheme.typography.titleMedium.fontSize,
                             textAlign = TextAlign.Center,
                             fontWeight = FontWeight.Bold
                         )
-                        Spacer(modifier = Modifier.height(40.dp))
+
+                        Spacer(modifier = Modifier.height(MaterialTheme.dimens.medium2))
+
                         Text(
-                            text = screenList[item].description,
+                            text = screens[item].description,
                             color = MaterialTheme.colorScheme.primaryTextColor,
-                            fontSize = 12.sp,
+                            fontSize = MaterialTheme.typography.labelMedium.fontSize,
                             textAlign = TextAlign.Center
                         )
                     }
                 }
             }
 
-
-//        indicator and button section
+            // Indicator & Button
             Column(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
-
             ) {
                 Row(
                     modifier = Modifier
@@ -154,53 +162,28 @@ fun OnBoardingScreen(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    repeat(screenList.size) { item ->
-                        val color =
-                            if (item == pageState.currentPage) Color.Red else MaterialTheme.colorScheme.primary
-                        val width = if (item == pageState.currentPage) 30.dp else 10.dp
+                    repeat(screens.size) { index ->
                         Box(
                             modifier = Modifier
-                                .padding(2.dp)
-                                .clip(shape = RoundedCornerShape(50.dp))
-                                .background(
-                                    color = color
-                                )
-                                .width(width)
-                                .height(8.dp)
+                                .padding(MaterialTheme.dimens.extraSmall)
+                                .clip(RoundedCornerShape(MaterialTheme.dimens.medium2))
+                                .background(indicators[index].color)
+                                .width(indicators[index].width)
+                                .height(MaterialTheme.dimens.small2)
                         )
-
                     }
                 }
-                FilledTonalButton(
-                    onClick = {
-                        if (pageState.currentPage == screenList.size - 1) {
-                            onNavigateToLogin()
-                        } else {
-                            scope.launch {
-                                pageState.animateScrollToPage(pageState.currentPage + 1)
-                            }
-                        }
-                    }, modifier = Modifier
-                        .defaultMinSize(250.dp),
-                    shape = RoundedCornerShape(10.dp),
-                    colors = ButtonColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.onSecondary,
-                        disabledContainerColor = MaterialTheme.colorScheme.onSecondary,
-                        disabledContentColor = MaterialTheme.colorScheme.onSurface,
-                    )
-                ) {
-                    Text(
-                        if (pageState.currentPage != screenList.size - 1) "Next" else "Get Started",
-                        modifier = Modifier.padding(MaterialTheme.dimens.small1)
-                    )
-                }
 
-                Spacer(modifier = Modifier.height(30.dp))
+                ERPButton(
+                    onClick = {
+                        viewModel.action(OnBoardingAction.OnNext)
+                    },
+                    modifier = Modifier.defaultMinSize(250.dp),
+                    text = if (currentPage != screens.size - 1) "Next" else "Get Started"
+                )
+
+                Spacer(modifier = Modifier.height(MaterialTheme.dimens.medium2))
             }
         }
-
     }
-
 }
-

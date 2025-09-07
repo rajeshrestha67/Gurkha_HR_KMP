@@ -18,20 +18,19 @@ import com.gurkha.hr.graph.loginScreenBuilder
 import com.gurkha.hr.graph.onBoardingBuilder
 import com.gurkha.hr.res.theme.AppTheme
 import com.gurkha.hr.route.AppRoute
-import com.gurkha.hr.splashscreen.SplashscreenViewModel
-import com.gurkha.hr.splashscreen.model.SplashScreenAction
-import kotlinx.coroutines.delay
+import com.gurkha.hr.splashscreen.OnBoardingViewModel
+import com.gurkha.hr.splashscreen.model.OnBoardingAction
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 @Preview
 fun App() {
-    var isFirstTimeState by remember { mutableStateOf(false) }
-    val viewModel: SplashscreenViewModel = koinViewModel()
+    var isFirstTimeState by remember { mutableStateOf<Boolean?>(null) }
+    val viewModel: OnBoardingViewModel = koinViewModel()
 
     LaunchedEffect(Unit) {
-        viewModel.action(SplashScreenAction.CheckFirstUser)
+        viewModel.action(OnBoardingAction.CheckFirstUser)
     }
 
     LaunchedEffect(Unit) {
@@ -41,7 +40,10 @@ fun App() {
     }
 
     AppTheme {
-        AppScreen(isFirstTimeState)
+        isFirstTimeState?.let {
+            AppScreen(it)
+
+        }
     }
 }
 

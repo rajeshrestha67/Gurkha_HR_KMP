@@ -3,7 +3,7 @@ package com.gurkha.di
 import com.gurkha.hr.datastore.userInfo.repository.UserInfoRepository
 import com.gurkha.hr.domain.splash.CheckFirstTimeUserUseCase
 import com.gurkha.hr.domain.splash.UpdateFirstTimeCheckUseCase
-import com.gurkha.hr.splashscreen.SplashscreenViewModel
+import com.gurkha.hr.splashscreen.OnBoardingViewModel
 import org.koin.android.annotation.KoinViewModel
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Module
@@ -13,7 +13,7 @@ class SplashScreenModule {
 
     @KoinViewModel
     fun getSplashScreenViewModel(checkFirstTimeUserUseCase: CheckFirstTimeUserUseCase, updateFirstTimeCheckUseCase: UpdateFirstTimeCheckUseCase) =
-        SplashscreenViewModel(checkFirstTimeUserUseCase = checkFirstTimeUserUseCase, updateFirstTimeCheckUseCase = updateFirstTimeCheckUseCase)
+        OnBoardingViewModel(checkFirstTimeUserUseCase = checkFirstTimeUserUseCase, updateFirstTimeCheckUseCase = updateFirstTimeCheckUseCase)
 
 
     @Factory
