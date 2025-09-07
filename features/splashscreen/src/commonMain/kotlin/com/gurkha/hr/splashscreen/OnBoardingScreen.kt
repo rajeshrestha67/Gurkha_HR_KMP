@@ -20,7 +20,6 @@ import coil3.compose.AsyncImage
 import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.primaryTextColor
 import com.gurkha.hr.splashscreen.model.OnBoardingAction
-import com.gurkha.hr.splashscreen.model.ScreenList
 import org.koin.compose.viewmodel.koinViewModel
 import androidx.compose.runtime.snapshotFlow
 import com.gurkha.hr.components.ERPButton
