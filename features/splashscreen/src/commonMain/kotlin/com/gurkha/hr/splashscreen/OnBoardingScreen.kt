@@ -1,62 +1,81 @@
 package com.gurkha.hr.splashscreen
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
+import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.primaryTextColor
-import com.gurkha.hr.splashscreen.model.OnBoardingAction
-import org.koin.compose.viewmodel.koinViewModel
-import androidx.compose.runtime.snapshotFlow
-import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.splashscreen.model.Indicator
+import com.gurkha.hr.splashscreen.model.OnBoardingAction
+import com.gurkha.hr.splashscreen.model.OnBoardingScreenState
+import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OnBoardingScreen(
-    viewModel: OnBoardingViewModel = koinViewModel(),
     onNavigateToLogin: () -> Unit
 ) {
-    val screens = viewModel.screens
-    val currentPage by viewModel.currentPage.collectAsState()
-    val indicators by viewModel.indicator.collectAsState(initial = screens.map {
+
+    val viewModel: OnBoardingViewModel = koinViewModel()
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+
+    val indicators by viewModel.indicators.collectAsState(initial = state.screens.map {
         Indicator(
-            Color.Gray,
-            10.dp,
+            MaterialTheme.colorScheme.primary,
+            MaterialTheme.dimens.small2,
         )
     })
 
-
     val pageState = rememberPagerState(
-        initialPage = currentPage,
-        pageCount = { screens.size }
+        initialPage = state.currentPage,
+        pageCount = { state.screens.size }
     )
 
+
     // only trigger if the current_page changes
-    LaunchedEffect(currentPage) {
-        if (pageState.currentPage != currentPage) {
-            pageState.animateScrollToPage(currentPage)
+    LaunchedEffect(state.currentPage) {
+        if (pageState.currentPage != state.currentPage) {
+            pageState.animateScrollToPage(state.currentPage)
         }
     }
 
     // Update ViewModel when pager is manually scrolled
     LaunchedEffect(pageState) {
         snapshotFlow { pageState.currentPage }.collect { page ->
-            viewModel.setCurrentPage(page)
+            viewModel.action(OnBoardingAction.SetCurrentPage(page))
         }
     }
 
@@ -67,33 +86,31 @@ fun OnBoardingScreen(
         }
     }
 
+    OnBoardingScreenContainer(
+        state = state,
+        onAction = viewModel::action,
+        onNavigateToLogin = onNavigateToLogin,
+        indicators = indicators,
+        pageState = pageState
+    )
+
+}
+
+@Composable
+fun OnBoardingScreenContainer(
+    state: OnBoardingScreenState,
+    onAction: (OnBoardingAction) -> Unit,
+    onNavigateToLogin: () -> Unit,
+    indicators: List<Indicator>,
+    pageState: PagerState
+) {
+
+
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("") },
-                actions = {
-                    TextButton(
-                        modifier = Modifier.padding(MaterialTheme.dimens.small2),
-                        onClick = {
-                            viewModel.action(OnBoardingAction.OnSkip)
-                        }
-                    ) {
-                        Text(
-                            "Skip",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 14.sp
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer
-                )
-            )
-        }
+        containerColor = MaterialTheme.colorScheme.secondaryContainer
     ) {
         Box(
             modifier = Modifier
-                .background(MaterialTheme.colorScheme.secondaryContainer)
                 .fillMaxSize(),
             contentAlignment = Alignment.BottomCenter
         ) {
@@ -103,25 +120,23 @@ fun OnBoardingScreen(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Box(
+                    AsyncImage(
+                        model = state.screens[item].image,
+                        contentDescription = state.screens[item].title,
                         modifier = Modifier
+                            .fillMaxWidth()
                             .weight(7f)
-                            .padding(MaterialTheme.dimens.medium3)
-                            .fillMaxWidth(),
-                        contentAlignment = Alignment.TopStart
-                    ) {
-                        AsyncImage(
-                            model = screens[item].image,
-                            contentDescription = screens[item].title,
-                            modifier = Modifier
-                                .fillMaxSize(),
-                            contentScale = ContentScale.Fit
-                        )
-                    }
-
+                            .padding(MaterialTheme.dimens.medium3),
+                        contentScale = ContentScale.FillWidth
+                    )
                     Column(
                         modifier = Modifier
-                            .clip(RoundedCornerShape(topStart = MaterialTheme.dimens.medium1, topEnd = MaterialTheme.dimens.medium1))
+                            .clip(
+                                RoundedCornerShape(
+                                    topStart = MaterialTheme.dimens.medium1,
+                                    topEnd = MaterialTheme.dimens.medium1
+                                )
+                            )
                             .weight(6f)
                             .background(MaterialTheme.colorScheme.background)
                             .fillMaxWidth(),
@@ -130,25 +145,44 @@ fun OnBoardingScreen(
                         Spacer(modifier = Modifier.height(MaterialTheme.dimens.medium2))
 
                         Text(
-                            text = screens[item].title,
-                            color = MaterialTheme.colorScheme.onBackground,
-                            fontSize = MaterialTheme.typography.titleMedium.fontSize,
-                            textAlign = TextAlign.Center,
-                            fontWeight = FontWeight.Bold
+                            text = state.screens[item].title,
+                            style = MaterialTheme.typography.labelLarge.copy(
+                                color = MaterialTheme.colorScheme.primary,
+                                fontSize = 18.sp,
+                                textAlign = TextAlign.Center
+                            ),
                         )
 
                         Spacer(modifier = Modifier.height(MaterialTheme.dimens.medium2))
 
                         Text(
-                            text = screens[item].description,
-                            color = MaterialTheme.colorScheme.primaryTextColor,
-                            fontSize = MaterialTheme.typography.labelMedium.fontSize,
-                            textAlign = TextAlign.Center
+                            text = state.screens[item].description,
+                            style = MaterialTheme.typography.labelMedium.copy(
+                                color = MaterialTheme.colorScheme.primaryTextColor,
+                                fontSize = 12.sp,
+                                textAlign = TextAlign.Center
+
+                            )
                         )
                     }
                 }
             }
 
+
+            if (state.currentPage != state.screens.size - 1) {
+                TextButton(
+                    modifier = Modifier.padding(MaterialTheme.dimens.small2)
+                        .align(Alignment.TopEnd),
+                    onClick = onNavigateToLogin
+                ) {
+                    Text(
+                        "Skip",
+                        style = MaterialTheme.typography.labelLarge.copy(
+                            fontSize = 14.sp
+                        )
+                    )
+                }
+            }
             // Indicator & Button
             Column(
                 modifier = Modifier.fillMaxWidth(),
@@ -161,7 +195,7 @@ fun OnBoardingScreen(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    repeat(screens.size) { index ->
+                    repeat(state.screens.size) { index ->
                         Box(
                             modifier = Modifier
                                 .padding(MaterialTheme.dimens.extraSmall)
@@ -175,10 +209,10 @@ fun OnBoardingScreen(
 
                 ERPButton(
                     onClick = {
-                        viewModel.action(OnBoardingAction.OnNext)
+                        onAction(OnBoardingAction.OnNext)
                     },
                     modifier = Modifier.fillMaxWidth(0.7f),
-                    text = if (currentPage != screens.size - 1) "Next" else "Get Started"
+                    text = stringResource(state.title)
                 )
 
                 Spacer(modifier = Modifier.height(MaterialTheme.dimens.medium2))
@@ -186,3 +220,5 @@ fun OnBoardingScreen(
         }
     }
 }
+
+
