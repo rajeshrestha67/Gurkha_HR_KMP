@@ -25,7 +25,6 @@ sealed interface DataError : ERPError {
 }
 
 fun DataError.toErrorMessage(): String {
-    println("Error $this")
     return when (this) {
         DataError.NetworkError.RequestTimeout -> "Request time out"
         DataError.NetworkError.UnAuthorized -> "Unauthorized Access"
