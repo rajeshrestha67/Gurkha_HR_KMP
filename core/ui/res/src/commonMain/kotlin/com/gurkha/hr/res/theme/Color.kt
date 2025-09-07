@@ -2,6 +2,9 @@ package com.gurkha.hr.res.theme
 
 import androidx.compose.ui.graphics.Color
 
+//0xFFE7F5DA
+
+
 val primaryLight = Color(0xFF4B662C)
 val onPrimaryLight = Color(0xFFFFFFFF)
 val primaryContainerLight = Color(0xFFCCEDA4)

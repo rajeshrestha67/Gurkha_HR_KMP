@@ -1,10 +1,9 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
-
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.android.kotlin.multiplatform.library)
     alias(libs.plugins.android.lint)
-    alias(libs.plugins.ksp)
+    alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.composeMultiplatform)
 }
 
 kotlin {
@@ -13,7 +12,7 @@ kotlin {
     // which platforms this KMP module supports.
     // See: https://kotlinlang.org/docs/multiplatform-discover-project.html#targets
     androidLibrary {
-        namespace = "com.gurkha.di"
+        namespace = "com.gurkha.hr.splashscreen"
         compileSdk = 36
         minSdk = 24
 
@@ -34,7 +33,7 @@ kotlin {
     // A step-by-step guide on how to include this library in an XCode
     // project can be found here:
     // https://developer.android.com/kotlin/multiplatform/migrate
-    val xcfName = "core:diKit"
+    val xcfName = "features:splashscreenKit"
 
     iosX64 {
         binaries.framework {
@@ -62,28 +61,29 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
+                implementation(compose.preview)
+
                 implementation(libs.kotlin.stdlib)
                 // Add KMP dependencies here
-                implementation(libs.koin.core)
-                implementation(libs.koin.compose)
+                implementation(compose.runtime)
+                implementation(compose.foundation)
+                implementation(compose.material3)
+
+                implementation(libs.androidx.lifecycle.viewmodelCompose)
+                implementation(libs.androidx.lifecycle.runtimeCompose)
+
                 implementation(libs.koin.compose.viewmodel)
-                implementation(libs.koin.compose.viewmodel.navigation)
+                implementation(compose.components.resources)
 
-
-                api(libs.koin.annotations)
-
-                implementation(libs.ktor.client.core)
-                implementation(libs.ktor.client.content.negotiation)
-                implementation(libs.ktor.client.logging)
-                implementation(libs.ktor.serialization.kotlinx.json)
-
-                implementation(projects.core.network)
-                implementation(projects.core.data)
                 implementation(projects.core.domain)
-                implementation(projects.features.auth.login)
-                implementation(projects.features.splashscreen)
+                implementation(projects.core.networkHelper)
+                implementation(projects.core.ui.res)
                 implementation(projects.core.ui.components)
-                implementation(projects.core.persistance.datastore)
+
+                implementation(libs.coil.compose)
+                implementation(libs.coil.compose.core)
+                implementation(libs.coil.mp)
+                implementation(libs.coil.network.ktor3)
             }
         }
 
@@ -99,10 +99,6 @@ kotlin {
                 // commonMain by default and will correctly pull the Android artifacts of any KMP
                 // dependencies declared in commonMain.
             }
-        }
-
-        sourceSets.named("commonMain").configure {
-            kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
         }
 
         getByName("androidDeviceTest") {
@@ -124,18 +120,4 @@ kotlin {
         }
     }
 
-}
-ksp {
-    arg("KOIN_USE_COMPOSE_VIEWMODEL", "true")
-    arg("KOIN_CONFIG_CHECK", "true")
-}
-
-dependencies {
-    add("kspCommonMainMetadata", libs.koin.ksp.compiler)
-}
-
-project.tasks.withType(KotlinCompilationTask::class.java).configureEach {
-    if (name != "kspCommonMainKotlinMetadata") {
-        dependsOn("kspCommonMainKotlinMetadata")
-    }
 }

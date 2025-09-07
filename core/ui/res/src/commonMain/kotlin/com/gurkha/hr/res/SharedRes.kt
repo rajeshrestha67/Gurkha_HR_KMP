@@ -8,6 +8,7 @@ import gurkhahr.core.ui.res.generated.resources.email
 import gurkhahr.core.ui.res.generated.resources.enter_your_email
 import gurkhahr.core.ui.res.generated.resources.enter_your_password
 import gurkhahr.core.ui.res.generated.resources.enter_your_username
+import gurkhahr.core.ui.res.generated.resources.getStarted
 import gurkhahr.core.ui.res.generated.resources.invalid_email_address
 import gurkhahr.core.ui.res.generated.resources.invalid_password_digit
 import gurkhahr.core.ui.res.generated.resources.invalid_password_length
@@ -15,6 +16,7 @@ import gurkhahr.core.ui.res.generated.resources.invalid_password_lowercase
 import gurkhahr.core.ui.res.generated.resources.invalid_password_special_char
 import gurkhahr.core.ui.res.generated.resources.invalid_password_uppercase
 import gurkhahr.core.ui.res.generated.resources.login
+import gurkhahr.core.ui.res.generated.resources.next
 import gurkhahr.core.ui.res.generated.resources.password
 import gurkhahr.core.ui.res.generated.resources.required
 import gurkhahr.core.ui.res.generated.resources.username
@@ -35,6 +37,10 @@ object SharedRes {
     object Strings {
         val welcome = Res.string.welcome
         val required = Res.string.required
+        val next = Res.string.next
+        val getStarted = Res.string.getStarted
+
+
         val invalidEmailAddress = Res.string.invalid_email_address
         val email = Res.string.email
         val enterYourEmail = Res.string.enter_your_email
