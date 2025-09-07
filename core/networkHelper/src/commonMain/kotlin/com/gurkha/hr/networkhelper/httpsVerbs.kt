@@ -56,7 +56,3 @@ suspend inline fun HttpRequestBuilder.appendLocalAttributes(
     url(path = endPoint, host = baseUrl.url, scheme = "https")
     block()
 }
-
-sealed class BaseUrl(open val url: String) {
-    data object Generic : BaseUrl(BASE_URL)
-}

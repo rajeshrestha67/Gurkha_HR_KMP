@@ -57,6 +57,7 @@ suspend inline fun <reified T> responseToResult(
         413 -> ERPResult.Error(DataError.NetworkError.PayloadTooLarge)
         in 500..599 -> ERPResult.Error(DataError.NetworkError.Server)
         else -> {
+            println("status ${T::class}, ${LoginResponseDto::class}, ${T::class == LoginResponseDto::class}")
             if (T::class == LoginResponseDto::class) {
                 val res = try {
                     response.body<ErrorData>()
