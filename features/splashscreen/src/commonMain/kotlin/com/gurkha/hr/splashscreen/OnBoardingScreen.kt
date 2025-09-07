@@ -63,7 +63,6 @@ fun OnBoardingScreen(
                     TextButton(
                         modifier = Modifier.padding(MaterialTheme.dimens.small2),
                         onClick = {
-//                            not fixed
                             scope.launch {
                                 pageState.animateScrollToPage(screenList.size - 1)
                             }
@@ -77,14 +76,14 @@ fun OnBoardingScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    Color(0xFFE7F5DA)
+                    containerColor = (MaterialTheme.colorScheme.secondaryContainer)
                 )
             )
         }
     ) { paddingValues ->
         Box(
             modifier = Modifier
-                .background(Color(0xFFE7F5DA))
+                .background(color = (MaterialTheme.colorScheme.secondaryContainer))
                 .fillMaxSize(),
             contentAlignment = Alignment.BottomCenter
         ) {
@@ -105,7 +104,7 @@ fun OnBoardingScreen(
                     ) {
                         AsyncImage(
                             model = screenList[item].image,
-                            contentDescription = screenList[0].title,
+                            contentDescription = screenList[item].title,
                             modifier = Modifier
                                 .fillMaxSize(),
                             contentScale = ContentScale.Fit
@@ -156,7 +155,8 @@ fun OnBoardingScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     repeat(screenList.size) { item ->
-                        val color = if (item == pageState.currentPage) Color.Red else MaterialTheme.colorScheme.primary
+                        val color =
+                            if (item == pageState.currentPage) Color.Red else MaterialTheme.colorScheme.primary
                         val width = if (item == pageState.currentPage) 30.dp else 10.dp
                         Box(
                             modifier = Modifier
@@ -173,13 +173,11 @@ fun OnBoardingScreen(
                 }
                 FilledTonalButton(
                     onClick = {
-//                        not fixed
-                        scope.launch {
-                            if (pageState.currentPage == screenList.size - 1) {
-                                onNavigateToLogin()
-                            } else {
+                        if (pageState.currentPage == screenList.size - 1) {
+                            onNavigateToLogin()
+                        } else {
+                            scope.launch {
                                 pageState.animateScrollToPage(pageState.currentPage + 1)
-
                             }
                         }
                     }, modifier = Modifier

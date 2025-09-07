@@ -16,8 +16,6 @@ class SplashScreenModule {
         SplashscreenViewModel(checkFirstTimeUserUseCase = checkFirstTimeUserUseCase, updateFirstTimeCheckUseCase = updateFirstTimeCheckUseCase)
 
 
-
-
     @Factory
     fun getFirstTimeUserUseCase(userInfoRepository: UserInfoRepository) =
         CheckFirstTimeUserUseCase(userInfoRepository = userInfoRepository)

@@ -20,6 +20,7 @@ import com.gurkha.hr.res.theme.AppTheme
 import com.gurkha.hr.route.AppRoute
 import com.gurkha.hr.splashscreen.SplashscreenViewModel
 import com.gurkha.hr.splashscreen.model.SplashScreenAction
+import kotlinx.coroutines.delay
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -33,7 +34,7 @@ fun App() {
         viewModel.action(SplashScreenAction.CheckFirstUser)
     }
 
-    LaunchedEffect(Unit){
+    LaunchedEffect(Unit) {
         viewModel.navigationChannel.collect { isFirstTime ->
             isFirstTimeState = isFirstTime
         }
@@ -51,9 +52,9 @@ fun AppScreen(isFirstTime: Boolean) {
     NavHost(
         modifier = Modifier.fillMaxSize(),
         navController = navController,
-        startDestination = if(isFirstTime)  AppRoute.OnBoardingRoute else AppRoute.LoginRoute,
+        startDestination = if (isFirstTime) AppRoute.OnBoardingRoute else AppRoute.LoginRoute,
 
-    popExitTransition = {
+        popExitTransition = {
             scaleOut(
                 targetScale = 0.9f,
                 transformOrigin = TransformOrigin(pivotFractionX = 0.5f, pivotFractionY = 0.5f)
