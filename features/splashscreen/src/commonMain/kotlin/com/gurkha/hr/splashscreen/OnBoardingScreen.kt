@@ -177,7 +177,7 @@ fun OnBoardingScreen(
                     onClick = {
                         viewModel.action(OnBoardingAction.OnNext)
                     },
-                    modifier = Modifier.defaultMinSize(250.dp),
+                    modifier = Modifier.fillMaxWidth(0.7f),
                     text = if (currentPage != screens.size - 1) "Next" else "Get Started"
                 )
 
