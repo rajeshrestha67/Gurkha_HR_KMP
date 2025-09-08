@@ -23,6 +23,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -30,6 +31,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.PlatformMessage
+import com.gurkha.hr.components.hideKeyboardOnTap
 import com.gurkha.hr.components.textField.AGEmailTextField
 import com.gurkha.hr.components.textField.FormValidate
 import com.gurkha.hr.components.textField.PasswordTextField
@@ -79,13 +81,16 @@ fun LoginScreenContent(
 ) {
     val focusRequester: FocusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
-
+    val keyboardController = LocalSoftwareKeyboardController.current
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
     }
 
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().hideKeyboardOnTap(
+            focusManager = focusManager,
+            keyboardController = keyboardController
+        ),
         containerColor = MaterialTheme.colorScheme.background,
     ) { contentPadding ->
 
