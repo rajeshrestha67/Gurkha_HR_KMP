@@ -2,6 +2,7 @@ package com.gurkha.hr.datastore
 
 import android.content.Context
 import com.gurkha.hr.datastore.token.local.TokenDataStore
+import com.gurkha.hr.datastore.userInfo.local.UserInfoDataStore
 import org.koin.mp.KoinPlatform.getKoin
 
 actual class DataStoreFactory {
@@ -19,4 +20,13 @@ actual class DataStoreFactory {
             }
         )
     }
+
+    actual fun getUserInfo(jsonPath: String): UserInfoDataStore {
+        return UserInfoDataStore(
+            produceFilePath = {
+                getSystemPath(jsonPath)
+            }
+        )
+    }
+
 }

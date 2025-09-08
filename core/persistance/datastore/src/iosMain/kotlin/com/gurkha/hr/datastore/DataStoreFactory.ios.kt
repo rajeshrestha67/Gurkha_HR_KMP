@@ -1,6 +1,7 @@
 package com.gurkha.hr.datastore
 
 import com.gurkha.hr.datastore.token.local.TokenDataStore
+import com.gurkha.hr.datastore.userInfo.local.UserInfoDataStore
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Foundation.NSDocumentDirectory
 import platform.Foundation.NSFileManager
@@ -26,6 +27,14 @@ actual class DataStoreFactory {
 
     actual fun getTokenDataStore(jsonPath: String): TokenDataStore {
         return TokenDataStore(
+            produceFilePath = {
+                getSystemPath(jsonPath)
+            }
+        )
+    }
+
+    actual fun getUserInfo(jsonPath: String): UserInfoDataStore {
+        return UserInfoDataStore(
             produceFilePath = {
                 getSystemPath(jsonPath)
             }

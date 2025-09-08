@@ -53,7 +53,11 @@ kotlin {
             implementation(projects.core.ui.res)
 
             implementation(projects.features.auth.login)
+            implementation(projects.features.splashscreen)
             implementation(projects.features.dashboard)
+
+            implementation(libs.koin.compose.viewmodel)
+            implementation(compose.components.resources)
 
         }
         commonTest.dependencies {

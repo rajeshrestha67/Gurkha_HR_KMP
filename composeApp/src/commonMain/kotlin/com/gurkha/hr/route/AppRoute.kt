@@ -9,4 +9,7 @@ sealed interface AppRoute{
     data object LoginRoute: AppRoute
     @Serializable
     data object DashboardRoute: AppRoute
+
+    @Serializable
+    data object OnBoardingRoute: AppRoute
 }

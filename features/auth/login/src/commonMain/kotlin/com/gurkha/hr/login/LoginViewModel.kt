@@ -94,6 +94,7 @@ class LoginViewModel(
     }
 
     private fun login() = viewModelScope.launch {
+//        loginUseCase("Chirag.dangol@mbank.com.np", "OVf#9PfTs")
         _state.update {
             it.copy(isLoading = true)
         }
