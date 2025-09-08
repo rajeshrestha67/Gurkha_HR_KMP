@@ -7,6 +7,7 @@ import com.gurkha.hr.domain.auth.login.usecase.ClearTokenUseCase
 import com.gurkha.hr.domain.auth.login.usecase.LoginUseCase
 import com.gurkha.hr.domain.form.EmailValidateUseCase
 import com.gurkha.hr.domain.form.PasswordValidateUseCase
+import com.gurkha.hr.domain.splash.UpdateFirstTimeCheckUseCase
 import com.gurkha.hr.login.LoginViewModel
 import io.ktor.client.HttpClient
 import org.koin.android.annotation.KoinViewModel
@@ -33,12 +34,14 @@ class AuthModule {
         loginUseCase: LoginUseCase,
         clearTokenUseCase: ClearTokenUseCase,
         emailValidateUseCase: EmailValidateUseCase,
-        passwordValidateUseCase: PasswordValidateUseCase
+        passwordValidateUseCase: PasswordValidateUseCase,
+        updateFirstTimeCheckUseCase: UpdateFirstTimeCheckUseCase
     ) =
         LoginViewModel(
             loginUseCase = loginUseCase,
             clearTokenUseCase = clearTokenUseCase,
             emailValidateUseCase = emailValidateUseCase,
-            passwordValidateUseCase = passwordValidateUseCase
+            passwordValidateUseCase = passwordValidateUseCase,
+            updateFirstTimeCheckUseCase = updateFirstTimeCheckUseCase
         )
 }

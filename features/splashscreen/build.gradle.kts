@@ -61,7 +61,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation(compose.preview)
+
 
                 implementation(libs.kotlin.stdlib)
                 // Add KMP dependencies here

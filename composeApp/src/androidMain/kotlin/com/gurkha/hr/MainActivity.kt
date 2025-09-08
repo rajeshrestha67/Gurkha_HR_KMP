@@ -4,26 +4,49 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
+import com.gurkha.hr.splashscreen.OnBoardingViewModel
+import com.gurkha.hr.splashscreen.model.OnBoardingAction
+import org.koin.compose.viewmodel.koinViewModel
 
 
 class MainActivity : ComponentActivity() {
+
+
+    var showSplashScreen by mutableStateOf(true)
+    var navigateToOnBoarding by mutableStateOf(true)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         installSplashScreen().apply {
             setKeepOnScreenCondition {
-                false
+                showSplashScreen
             }
         }
 
         setContent {
             val view = LocalView.current
             val darkTheme = isSystemInDarkTheme()
+            val viewModel: OnBoardingViewModel = koinViewModel()
+
+            LaunchedEffect(Unit) {
+                viewModel.action(OnBoardingAction.CheckFirstUser)
+            }
+
+            LaunchedEffect(Unit) {
+                viewModel.navigationChannel.collect { isFirstTime ->
+                    showSplashScreen = false
+                    navigateToOnBoarding = isFirstTime
+                }
+            }
 
             if (!view.isInEditMode) {
                 SideEffect {
@@ -31,13 +54,12 @@ class MainActivity : ComponentActivity() {
                         !darkTheme
                 }
             }
-            App()
+
+            if (!showSplashScreen) {
+                App(
+                    isFirstTime = navigateToOnBoarding
+                )
+            }
         }
     }
-}
-
-@Preview
-@Composable
-fun AppAndroidPreview() {
-    App()
 }

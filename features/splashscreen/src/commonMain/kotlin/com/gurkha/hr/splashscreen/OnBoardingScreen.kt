@@ -22,7 +22,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
@@ -34,6 +33,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.gurkha.hr.components.ERPButton
+import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.primaryTextColor
 import com.gurkha.hr.splashscreen.model.Indicator
@@ -50,14 +50,6 @@ fun OnBoardingScreen(
 
     val viewModel: OnBoardingViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
-
-
-    val indicators by viewModel.indicators.collectAsState(initial = state.screens.map {
-        Indicator(
-            MaterialTheme.colorScheme.primary,
-            MaterialTheme.dimens.small2,
-        )
-    })
 
     val pageState = rememberPagerState(
         initialPage = state.currentPage,
@@ -90,7 +82,7 @@ fun OnBoardingScreen(
         state = state,
         onAction = viewModel::action,
         onNavigateToLogin = onNavigateToLogin,
-        indicators = indicators,
+        indicators = state.indicators,
         pageState = pageState
     )
 
@@ -107,10 +99,12 @@ fun OnBoardingScreenContainer(
 
 
     Scaffold(
+        modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.secondaryContainer
-    ) {
+    ) { paddingValues ->
         Box(
             modifier = Modifier
+                .padding(paddingValues)
                 .fillMaxSize(),
             contentAlignment = Alignment.BottomCenter
         ) {
@@ -171,12 +165,12 @@ fun OnBoardingScreenContainer(
 
             if (state.currentPage != state.screens.size - 1) {
                 TextButton(
-                    modifier = Modifier.padding(MaterialTheme.dimens.small2)
+                    modifier = Modifier.padding(MaterialTheme.dimens.small1)
                         .align(Alignment.TopEnd),
                     onClick = onNavigateToLogin
                 ) {
                     Text(
-                        "Skip",
+                        text = stringResource(SharedRes.Strings.skip),
                         style = MaterialTheme.typography.labelLarge.copy(
                             fontSize = 14.sp
                         )
@@ -199,7 +193,7 @@ fun OnBoardingScreenContainer(
                         Box(
                             modifier = Modifier
                                 .padding(MaterialTheme.dimens.extraSmall)
-                                .clip(RoundedCornerShape(MaterialTheme.dimens.medium2))
+                                .clip(MaterialTheme.shapes.small)
                                 .background(indicators[index].color)
                                 .width(indicators[index].width)
                                 .height(MaterialTheme.dimens.small2)

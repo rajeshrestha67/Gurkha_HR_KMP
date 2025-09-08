@@ -6,6 +6,7 @@ import com.gurkha.hr.domain.auth.login.usecase.ClearTokenUseCase
 import com.gurkha.hr.domain.auth.login.usecase.LoginUseCase
 import com.gurkha.hr.domain.form.EmailValidateUseCase
 import com.gurkha.hr.domain.form.PasswordValidateUseCase
+import com.gurkha.hr.domain.splash.UpdateFirstTimeCheckUseCase
 import com.gurkha.hr.login.model.LoginScreenAction
 import com.gurkha.hr.login.model.LoginScreenState
 import com.gurkha.hr.networkhelper.onError
@@ -24,7 +25,8 @@ class LoginViewModel(
     private val loginUseCase: LoginUseCase,
     private val clearTokenUseCase: ClearTokenUseCase,
     private val emailValidateUseCase: EmailValidateUseCase,
-    private val passwordValidateUseCase: PasswordValidateUseCase
+    private val passwordValidateUseCase: PasswordValidateUseCase,
+    private val updateFirstTimeCheckUseCase: UpdateFirstTimeCheckUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(LoginScreenState())
@@ -37,6 +39,7 @@ class LoginViewModel(
 
     val state = _state
         .onStart {
+            updateFirstTimeUser()
             clearToken()
         }
         .stateIn(
@@ -111,8 +114,10 @@ class LoginViewModel(
                 it.copy(isLoading = false)
             }
             _errorChannel.send(error.toErrorMessage())
-
-
         }
+    }
+
+    private fun updateFirstTimeUser() = viewModelScope.launch {
+        updateFirstTimeCheckUseCase()
     }
 }

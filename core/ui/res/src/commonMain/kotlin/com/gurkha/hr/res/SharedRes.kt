@@ -19,6 +19,7 @@ import gurkhahr.core.ui.res.generated.resources.login
 import gurkhahr.core.ui.res.generated.resources.next
 import gurkhahr.core.ui.res.generated.resources.password
 import gurkhahr.core.ui.res.generated.resources.required
+import gurkhahr.core.ui.res.generated.resources.skip
 import gurkhahr.core.ui.res.generated.resources.username
 import gurkhahr.core.ui.res.generated.resources.welcome
 
@@ -38,6 +39,7 @@ object SharedRes {
         val welcome = Res.string.welcome
         val required = Res.string.required
         val next = Res.string.next
+        val skip = Res.string.skip
         val getStarted = Res.string.getStarted
 
 

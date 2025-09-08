@@ -12,8 +12,10 @@ import org.koin.core.annotation.Module
 class SplashScreenModule {
 
     @KoinViewModel
-    fun getSplashScreenViewModel(checkFirstTimeUserUseCase: CheckFirstTimeUserUseCase, updateFirstTimeCheckUseCase: UpdateFirstTimeCheckUseCase) =
-        OnBoardingViewModel(checkFirstTimeUserUseCase = checkFirstTimeUserUseCase, updateFirstTimeCheckUseCase = updateFirstTimeCheckUseCase)
+    fun getSplashScreenViewModel(
+        checkFirstTimeUserUseCase: CheckFirstTimeUserUseCase
+    ) =
+        OnBoardingViewModel(checkFirstTimeUserUseCase = checkFirstTimeUserUseCase)
 
 
     @Factory

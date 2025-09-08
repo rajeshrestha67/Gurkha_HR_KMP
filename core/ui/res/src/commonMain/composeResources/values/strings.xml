@@ -9,6 +9,7 @@
     <string name="enter_your_username">Enter your Username</string>
     <string name="password">Password</string>
     <string name="next">Next</string>
+    <string name="skip">Skip</string>
     <string name="getStarted">Get Started</string>
     <string name="enter_your_password">Enter your Password</string>
     <string name="invalid_password_length">Password must be 8–16 characters long</string>

@@ -14,6 +14,8 @@ data class Dimens(
     val medium3: Dp = 0.dp,
     val large: Dp = 0.dp,
     val borderWidth: Dp = 0.dp,
+    val onBoardingIndicatorSelected: Dp = 0.dp,
+    val onBoardingIndicatorUnSelected: Dp = 0.dp,
 )
 
 
@@ -27,4 +29,6 @@ val CompactDimens = Dimens(
     medium3 = 48.dp,
     borderWidth = 2.dp,
     large = 56.dp,
+    onBoardingIndicatorSelected = 30.dp,
+    onBoardingIndicatorUnSelected = 10.dp,
 )
