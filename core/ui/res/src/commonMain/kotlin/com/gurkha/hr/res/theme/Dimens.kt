@@ -16,6 +16,7 @@ data class Dimens(
     val borderWidth: Dp = 0.dp,
     val onBoardingIndicatorSelected: Dp = 0.dp,
     val onBoardingIndicatorUnSelected: Dp = 0.dp,
+    val loginImageSize: Dp = 0.dp
 )
 
 
@@ -31,4 +32,5 @@ val CompactDimens = Dimens(
     large = 56.dp,
     onBoardingIndicatorSelected = 30.dp,
     onBoardingIndicatorUnSelected = 10.dp,
+    loginImageSize = 200.dp
 )

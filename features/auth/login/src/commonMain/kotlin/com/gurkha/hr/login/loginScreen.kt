@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
@@ -25,7 +25,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
@@ -102,8 +101,8 @@ fun LoginScreenContent(
         ) {
 
             AsyncImage(
-                modifier = Modifier.fillMaxWidth().padding(MaterialTheme.dimens.small3).heightIn(
-                    max = 200.dp
+                modifier = Modifier.fillMaxWidth().padding(MaterialTheme.dimens.small3).height(
+                    MaterialTheme.dimens.loginImageSize
                 ),
                 model = SharedRes.getRes("drawable/gurkha_hr.png"),
                 contentDescription = "gurkha_hr",
