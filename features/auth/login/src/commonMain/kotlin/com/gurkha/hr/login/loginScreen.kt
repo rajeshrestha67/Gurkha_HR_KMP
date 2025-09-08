@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
@@ -23,6 +24,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
@@ -90,13 +92,14 @@ fun LoginScreenContent(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(contentPadding)
-                .verticalScroll(rememberScrollState()),
+                .verticalScroll(rememberScrollState())
+                .padding(contentPadding),
         ) {
 
             AsyncImage(
-                modifier = Modifier.fillMaxWidth().padding(MaterialTheme.dimens.small3)
-                    .weight(1f),
+                modifier = Modifier.fillMaxWidth().padding(MaterialTheme.dimens.small3).heightIn(
+                    max = 200.dp
+                ),
                 model = SharedRes.getRes("drawable/gurkha_hr.png"),
                 contentDescription = "gurkha_hr",
                 contentScale = ContentScale.FillWidth
@@ -105,7 +108,6 @@ fun LoginScreenContent(
 
             Column(
                 modifier = Modifier
-                    .weight(3f)
                     .fillMaxWidth()
                     .padding(horizontal = MaterialTheme.dimens.small3),
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
@@ -141,6 +143,7 @@ fun LoginScreenContent(
                         }
                     )
                 )
+
                 PasswordTextField(
                     enabled = !state.isLoading,
                     modifier = Modifier.fillMaxWidth(),
@@ -162,6 +165,7 @@ fun LoginScreenContent(
                     ),
                     rules = FormValidate.passwordValidationRules
                 )
+
                 ERPButton(
                     modifier = Modifier.fillMaxWidth(),
                     onClick = {

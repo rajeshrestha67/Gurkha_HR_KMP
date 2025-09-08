@@ -8,9 +8,11 @@ import com.gurkha.hr.route.AppRoute
 
 fun NavGraphBuilder.loginScreenBuilder(navController: NavHostController) {
 
-    composable<AppRoute.LoginRoute>{
+    composable<AppRoute.LoginRoute> {
         LoginScreen(onNavigateToDashboard = {
-            navController.navigate(AppRoute.DashboardRoute)
+            navController.navigate(AppRoute.DashboardRoute) {
+                popUpTo(AppRoute.LoginRoute) { inclusive = true }
+            }
         })
     }
 }

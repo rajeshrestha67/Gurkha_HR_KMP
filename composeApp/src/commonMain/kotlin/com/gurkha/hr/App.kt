@@ -44,8 +44,8 @@ fun AppScreen(isFirstTime: Boolean) {
             EnterTransition.None
         }
     ) {
+        onBoardingBuilder(navController = navController)
         loginScreenBuilder(navController = navController)
         dashboardScreenBuilder(navController = navController)
-        onBoardingBuilder(navController = navController)
     }
 }
