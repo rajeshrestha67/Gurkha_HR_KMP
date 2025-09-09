@@ -18,7 +18,7 @@ class SplashScreenModule {
         OnBoardingViewModel(checkFirstTimeUserUseCase = checkFirstTimeUserUseCase)
 
 
-    @Factory
+    @Factory\
     fun getFirstTimeUserUseCase(userInfoRepository: UserInfoRepository) =
         CheckFirstTimeUserUseCase(userInfoRepository = userInfoRepository)
 
