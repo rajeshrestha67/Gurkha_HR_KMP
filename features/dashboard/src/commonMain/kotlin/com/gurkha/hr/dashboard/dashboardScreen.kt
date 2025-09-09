@@ -13,6 +13,7 @@ import androidx.navigation.compose.rememberNavController
 import com.gurkha.hr.dashboard.graph.attendanceScreen
 import com.gurkha.hr.dashboard.graph.homeScreenBuilder
 import com.gurkha.hr.dashboard.graph.profileScreenBuilder
+import com.gurkha.hr.dashboard.model.DashboardScreenAction
 import org.koin.compose.viewmodel.koinViewModel
 
 
@@ -23,6 +24,7 @@ fun DashboardScreen() {
 
     val navController = rememberNavController()
 
+
     Scaffold(
         bottomBar = {
             NavigationBar {
@@ -30,7 +32,7 @@ fun DashboardScreen() {
                     NavigationBarItem(
                         selected = item.route == state.currentScreen,
                         onClick = {
-                            viewModel.navigateTo(item.route)
+                            viewModel.action(DashboardScreenAction.OnChangeScreen(item.route))
                         },
                         icon = {
                             Icon(item.icon, contentDescription = item.name)
