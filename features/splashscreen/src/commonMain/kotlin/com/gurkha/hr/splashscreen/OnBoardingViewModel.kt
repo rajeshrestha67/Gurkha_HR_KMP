@@ -66,7 +66,6 @@ class OnBoardingViewModel(
     }
 
     private fun checkFirstUser() = viewModelScope.launch {
-        
         _navigationChannel.send(checkFirstTimeUserUseCase())
     }
 }
