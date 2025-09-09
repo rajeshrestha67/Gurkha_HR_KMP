@@ -4,7 +4,6 @@ plugins {
     alias(libs.plugins.android.lint)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeMultiplatform)
-    alias(libs.plugins.jetbrains.kotlin.serialization)
 }
 
 kotlin {
@@ -13,7 +12,7 @@ kotlin {
     // which platforms this KMP module supports.
     // See: https://kotlinlang.org/docs/multiplatform-discover-project.html#targets
     androidLibrary {
-        namespace = "com.gurkha.hr.dashboard"
+        namespace = "com.gurkha.hr.attendance"
         compileSdk = 36
         minSdk = 24
 
@@ -34,7 +33,7 @@ kotlin {
     // A step-by-step guide on how to include this library in an XCode
     // project can be found here:
     // https://developer.android.com/kotlin/multiplatform/migrate
-    val xcfName = "features:dashboardKit"
+    val xcfName = "features:attendanceKit"
 
     iosX64 {
         binaries.framework {
@@ -67,27 +66,22 @@ kotlin {
                 implementation(compose.runtime)
                 implementation(compose.foundation)
                 implementation(compose.material3)
-                implementation(compose.components.uiToolingPreview)
-                implementation(libs.androidx.lifecycle.viewmodelCompose)
-                implementation(libs.androidx.lifecycle.runtimeCompose)
 
                 implementation(libs.androidx.lifecycle.viewmodelCompose)
                 implementation(libs.androidx.lifecycle.runtimeCompose)
-
-                implementation(libs.org.jetbrains.navigation)
-                implementation(libs.kotlinx.serialization.json)
-
-                implementation(projects.core.domain)
-                implementation(projects.core.networkHelper)
-
-                implementation(projects.core.ui.res)
-
-                implementation(projects.features.home)
-                implementation(projects.features.profile)
-                implementation(projects.features.attendance)
 
                 implementation(libs.koin.compose.viewmodel)
                 implementation(compose.components.resources)
+
+                implementation(projects.core.domain)
+                implementation(projects.core.networkHelper)
+                implementation(projects.core.ui.res)
+                implementation(projects.core.ui.components)
+
+                implementation(libs.coil.compose)
+                implementation(libs.coil.compose.core)
+                implementation(libs.coil.mp)
+                implementation(libs.coil.network.ktor3)
             }
         }
 
@@ -125,4 +119,3 @@ kotlin {
     }
 
 }
-

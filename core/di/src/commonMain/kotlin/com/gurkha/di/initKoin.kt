@@ -15,7 +15,8 @@ fun initKoin(config: KoinAppDeclaration? = null) {
             PlatformMessageModule().module,
             DataStoreModule().module,
             FormModule().module,
-            SplashScreenModule().module
+            SplashScreenModule().module,
+            DashboardScreenModule().module
         )
     }
 }
