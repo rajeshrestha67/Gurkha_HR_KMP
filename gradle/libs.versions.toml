@@ -1,31 +1,32 @@
 [versions]
-agp = "8.12.2"
+agp = "8.12.3"
 android-compileSdk = "36"
 android-minSdk = "24"
 android-targetSdk = "36"
-androidx-activity = "1.10.1"
+androidx-activity = "1.11.0"
 androidx-appcompat = "1.7.1"
 androidx-core = "1.17.0"
 androidx-espresso = "3.7.0"
 androidx-lifecycle = "2.9.3"
 androidx-testExt = "1.3.0"
-composeMultiplatform = "1.9.0-rc01"
+composeMultiplatform = "1.9.0-rc02"
 junit = "4.13.2"
-kotlin = "2.2.0"
-kotlinStdlib = "2.2.10"
+kotlin = "2.2.20"
+kotlin-test = "2.2.10"
+kotlinStdlib = "2.2.20"
 accompanistSystemuicontroller = "0.36.0"
 kotlinx-coroutines = "1.10.2"
 ksp = "2.2.0-2.0.2"
 koin-core = "4.1.1"
 koin-annotations = "2.1.0"
-ktor = "3.2.3"
+ktor = "3.3.0"
 navigationCompose = "2.8.0-alpha13"
 kotlinSerialization = "1.9.0"
 composeHotReload = "1.0.0-beta05"
 
 runner = "1.7.0"
 core = "1.7.0"
-orgJetbrainsNavigation = "2.9.0-rc01"
+orgJetbrainsNavigation = "2.9.0-rc02"
 coreSplashscreen = "1.0.1"
 
 coil3 = "3.3.0"
@@ -35,8 +36,8 @@ okio = "3.16.0"
 dataStore = "1.1.7"
 
 [libraries]
-kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
-kotlin-testJunit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin-test" }
+kotlin-testJunit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin-test" }
 junit = { module = "junit:junit", version.ref = "junit" }
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
 androidx-testExt-junit = { module = "androidx.test.ext:junit", version.ref = "androidx-testExt" }
