@@ -17,7 +17,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.gurkha.hr.dashboard.graph.attendanceScreen
 import com.gurkha.hr.dashboard.graph.homeScreenBuilder
+import com.gurkha.hr.dashboard.graph.leaveScreenBuilder
 import com.gurkha.hr.dashboard.graph.profileScreenBuilder
+import com.gurkha.hr.dashboard.graph.reportScreenBuilder
 import com.gurkha.hr.dashboard.model.DashboardScreenAction
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -48,14 +50,14 @@ fun DashboardScreen() {
                                 tint = MaterialTheme.colorScheme.primary
                             )
                         },
-                        label = {
-                            Text(
-                                text = stringResource(item.name),
-                                style = MaterialTheme.typography.bodyMedium.copy(
-                                    fontSize = 12.sp
-                                )
-                            )
-                        }
+//                        label = {
+//                            Text(
+//                                text = stringResource(item.name),
+//                                style = MaterialTheme.typography.bodyMedium.copy(
+//                                    fontSize = 12.sp
+//                                )
+//                            )
+//                        }
                     )
                 }
             }
@@ -69,6 +71,8 @@ fun DashboardScreen() {
             homeScreenBuilder(navController = navController)
             profileScreenBuilder(navController = navController)
             attendanceScreen(navController = navController)
+            leaveScreenBuilder(navController = navController)
+            reportScreenBuilder(navController = navController)
         }
     }
 }

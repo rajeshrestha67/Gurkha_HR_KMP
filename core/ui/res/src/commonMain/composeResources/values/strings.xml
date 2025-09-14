@@ -12,6 +12,8 @@
     <string name="skip">Skip</string>
     <string name="getStarted">Get Started</string>
     <string name="home">Home</string>
+    <string name="leave">Leave</string>
+    <string name="report">Report</string>
     <string name="my_attendance">My Attendance</string>
     <string name="profile">Profile</string>
     <string name="enter_your_password">Enter your Password</string>
