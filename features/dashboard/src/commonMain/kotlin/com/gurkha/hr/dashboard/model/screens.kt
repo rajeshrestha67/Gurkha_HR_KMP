@@ -1,6 +1,7 @@
 package com.gurkha.hr.dashboard.model
 
 import androidx.compose.material.icons.Icons
+
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
@@ -27,7 +28,16 @@ object DashboardScreens {
             DashboardRoute.AttendanceRoute,
             Icons.Filled.Call
         ),
-
+        DashboardScreen(
+            SharedRes.Strings.leave,
+            DashboardRoute.LeaveRoute,
+            Icons.Filled.Person
+        ),
+        DashboardScreen(
+            SharedRes.Strings.report,
+            DashboardRoute.ReportRoute,
+            Icons.Filled.Home
+        ),
         DashboardScreen(
             SharedRes.Strings.profile,
             DashboardRoute.ProfileRoute,

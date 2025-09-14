@@ -12,4 +12,10 @@ sealed interface DashboardRoute {
 
     @Serializable
     data object ProfileRoute : DashboardRoute
+
+    @Serializable
+    data object LeaveRoute : DashboardRoute
+
+    @Serializable
+    data object ReportRoute : DashboardRoute
 }

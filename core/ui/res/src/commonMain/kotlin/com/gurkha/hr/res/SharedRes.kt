@@ -16,11 +16,13 @@ import gurkhahr.core.ui.res.generated.resources.invalid_password_length
 import gurkhahr.core.ui.res.generated.resources.invalid_password_lowercase
 import gurkhahr.core.ui.res.generated.resources.invalid_password_special_char
 import gurkhahr.core.ui.res.generated.resources.invalid_password_uppercase
+import gurkhahr.core.ui.res.generated.resources.leave
 import gurkhahr.core.ui.res.generated.resources.login
 import gurkhahr.core.ui.res.generated.resources.my_attendance
 import gurkhahr.core.ui.res.generated.resources.next
 import gurkhahr.core.ui.res.generated.resources.password
 import gurkhahr.core.ui.res.generated.resources.profile
+import gurkhahr.core.ui.res.generated.resources.report
 import gurkhahr.core.ui.res.generated.resources.required
 import gurkhahr.core.ui.res.generated.resources.skip
 import gurkhahr.core.ui.res.generated.resources.username
@@ -47,6 +49,10 @@ object SharedRes {
         val home = Res.string.home
         val my_attendance = Res.string.my_attendance
         val profile = Res.string.profile
+        val leave = Res.string.leave
+        val report = Res.string.report
+
+
 
 
         val invalidEmailAddress = Res.string.invalid_email_address
