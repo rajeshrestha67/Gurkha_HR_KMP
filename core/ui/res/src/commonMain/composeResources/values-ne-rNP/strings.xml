@@ -6,6 +6,9 @@
     <string name="email">इमेल</string>
     <string name="next">अर्को</string>
     <string name="getStarted">सुरु गर्नुहोस्</string>
+    <string name="home">गृह</string>
+    <string name="my_attendance">मेरो उपस्थिति</string>
+    <string name="profile">प्रोफाइल</string>
     <string name="login">लग इन गर्नुहोस्</string>
     <string name="username">प्रयोगकर्ता नाम</string>
     <string name="skip">छोड्नुहोस्</string>

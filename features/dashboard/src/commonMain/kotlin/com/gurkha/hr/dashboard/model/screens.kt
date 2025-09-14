@@ -6,9 +6,11 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.gurkha.hr.dashboard.route.DashboardRoute
+import com.gurkha.hr.res.SharedRes
+import org.jetbrains.compose.resources.StringResource
 
 data class DashboardScreen(
-    val name: String,
+    val name: StringResource,
     val route: DashboardRoute,
     val icon: ImageVector
 )
@@ -16,18 +18,18 @@ data class DashboardScreen(
 object DashboardScreens {
     val dashboardScreens = listOf(
         DashboardScreen(
-            "Home",
+            SharedRes.Strings.home,
             DashboardRoute.HomeRoute,
             Icons.Filled.Home
         ),
         DashboardScreen(
-            "My Attendance",
+            SharedRes.Strings.my_attendance,
             DashboardRoute.AttendanceRoute,
             Icons.Filled.Call
         ),
 
         DashboardScreen(
-            "Profile",
+            SharedRes.Strings.profile,
             DashboardRoute.ProfileRoute,
             Icons.Filled.Person
         )
