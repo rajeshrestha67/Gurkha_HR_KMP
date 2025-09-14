@@ -11,6 +11,9 @@
     <string name="next">Next</string>
     <string name="skip">Skip</string>
     <string name="getStarted">Get Started</string>
+    <string name="home">Home</string>
+    <string name="my_attendance">My Attendance</string>
+    <string name="profile">Profile</string>
     <string name="enter_your_password">Enter your Password</string>
     <string name="invalid_password_length">Password must be 8–16 characters long</string>
     <string name="invalid_password_uppercase">Must contain at least one uppercase letter</string>

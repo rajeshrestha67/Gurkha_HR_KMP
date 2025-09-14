@@ -19,7 +19,6 @@ class OnBoardingViewModel(
     private val checkFirstTimeUserUseCase: CheckFirstTimeUserUseCase
 ) : ViewModel() {
 
-
     private val _state = MutableStateFlow(OnBoardingScreenState())
     val state = _state
         .stateIn(

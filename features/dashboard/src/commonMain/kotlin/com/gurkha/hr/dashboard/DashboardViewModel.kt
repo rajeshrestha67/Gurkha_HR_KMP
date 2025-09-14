@@ -8,6 +8,7 @@ import com.gurkha.hr.dashboard.route.DashboardRoute
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 
 class DashboardViewModel : ViewModel() {
     private val _state = MutableStateFlow(DashboardScreenState())
@@ -17,16 +18,19 @@ class DashboardViewModel : ViewModel() {
         initialValue = DashboardScreenState()
     )
 
-    fun action(action: DashboardScreenAction){
-        when(action){
+    fun action(action: DashboardScreenAction) {
+        when (action) {
             is DashboardScreenAction.OnChangeScreen -> {
                 navigateTo(action.route)
             }
         }
     }
 
-    fun navigateTo(route: DashboardRoute) {
-        _state.value = _state.value.copy(currentScreen = route)
+    private fun navigateTo(route: DashboardRoute) {
+
+        _state.update {
+            it.copy(currentScreen = route)
+        }
     }
 
 
