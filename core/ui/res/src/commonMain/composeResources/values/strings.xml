@@ -16,6 +16,11 @@
     <string name="report">Report</string>
     <string name="my_attendance">My Attendance</string>
     <string name="profile">Profile</string>
+    <string name="time_and_attendance">Time and attendance</string>
+    <string name="document">Document</string>
+    <string name="company_assets">Company Assets</string>
+    <string name="history">History</string>
+    <string name="allocated_leave">Allocated Leave</string>
     <string name="enter_your_password">Enter your Password</string>
     <string name="invalid_password_length">Password must be 8–16 characters long</string>
     <string name="invalid_password_uppercase">Must contain at least one uppercase letter</string>

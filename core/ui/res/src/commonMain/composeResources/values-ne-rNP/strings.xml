@@ -11,6 +11,11 @@
     <string name="report">रिपोर्ट गर्नुहोस्</string>
     <string name="my_attendance">मेरो उपस्थिति</string>
     <string name="profile">प्रोफाइल</string>
+    <string name="time_and_attendance">समय र उपस्थिति</string>
+    <string name="document">कागजात</string>
+    <string name="company_assets">कम्पनी सम्पत्तिहरू</string>
+    <string name="history">इतिहास</string>
+    <string name="allocated_leave">आवंटित स्रोतहरू</string>
     <string name="login">लग इन गर्नुहोस्</string>
     <string name="username">प्रयोगकर्ता नाम</string>
     <string name="skip">छोड्नुहोस्</string>

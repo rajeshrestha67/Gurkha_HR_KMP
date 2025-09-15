@@ -36,6 +36,7 @@ import coil3.compose.AsyncImage
 import com.gurkha.hr.profile.model.ScreenList
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.dimens
+import org.jetbrains.compose.resources.stringResource
 
 
 @Composable
@@ -120,7 +121,7 @@ fun ProfileScreenContainer(
 
         }
 
-        items(items = ScreenList.screenList, key = { it.title }) { item ->
+        items(items = ScreenList.screenList, key = { it.title.toString() }) { item ->
             val isFirst = item == ScreenList.screenList.first()
             Row(
                 modifier = Modifier.fillMaxWidth()
@@ -145,7 +146,7 @@ fun ProfileScreenContainer(
                 Text(
                     modifier = Modifier
                         .weight(1f),
-                    text = item.title
+                    text =stringResource(item.title)
                 )
                 Icon(
                     imageVector = Icons.Filled.ChevronRight,

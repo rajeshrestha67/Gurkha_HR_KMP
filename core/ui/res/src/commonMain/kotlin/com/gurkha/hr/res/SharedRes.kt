@@ -4,11 +4,15 @@ import gurkhahr.core.ui.res.generated.resources.Poppins_Bold
 import gurkhahr.core.ui.res.generated.resources.Poppins_Italic
 import gurkhahr.core.ui.res.generated.resources.Poppins_Medium
 import gurkhahr.core.ui.res.generated.resources.Res
+import gurkhahr.core.ui.res.generated.resources.allocated_leave
+import gurkhahr.core.ui.res.generated.resources.company_assets
+import gurkhahr.core.ui.res.generated.resources.document
 import gurkhahr.core.ui.res.generated.resources.email
 import gurkhahr.core.ui.res.generated.resources.enter_your_email
 import gurkhahr.core.ui.res.generated.resources.enter_your_password
 import gurkhahr.core.ui.res.generated.resources.enter_your_username
 import gurkhahr.core.ui.res.generated.resources.getStarted
+import gurkhahr.core.ui.res.generated.resources.history
 import gurkhahr.core.ui.res.generated.resources.home
 import gurkhahr.core.ui.res.generated.resources.invalid_email_address
 import gurkhahr.core.ui.res.generated.resources.invalid_password_digit
@@ -25,6 +29,7 @@ import gurkhahr.core.ui.res.generated.resources.profile
 import gurkhahr.core.ui.res.generated.resources.report
 import gurkhahr.core.ui.res.generated.resources.required
 import gurkhahr.core.ui.res.generated.resources.skip
+import gurkhahr.core.ui.res.generated.resources.time_and_attendance
 import gurkhahr.core.ui.res.generated.resources.username
 import gurkhahr.core.ui.res.generated.resources.welcome
 
@@ -51,6 +56,13 @@ object SharedRes {
         val profile = Res.string.profile
         val leave = Res.string.leave
         val report = Res.string.report
+        val allocated_leave= Res.string.allocated_leave
+        val time_and_attendance = Res.string.time_and_attendance
+        val document = Res.string.document
+        val company_assets = Res.string.company_assets
+        val history = Res.string.history
+
+
 
 
 
