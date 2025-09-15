@@ -1,5 +1,5 @@
 [versions]
-agp = "8.12.3"
+agp = "8.13.0"
 android-compileSdk = "36"
 android-minSdk = "24"
 android-targetSdk = "36"
@@ -34,6 +34,8 @@ compose = "1.6.11"
 
 okio = "3.16.0"
 dataStore = "1.1.7"
+
+kotest-version = "6.0.3"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin-test" }
@@ -90,6 +92,10 @@ okio = { module = "com.squareup.okio:okio", version.ref = "okio" }
 #datastore
 androidx-datastore-core-okio = { group = "androidx.datastore", name = "datastore-core-okio", version.ref = "dataStore" }
 androidx-datastore-preferences-core = { group = "androidx.datastore", name = "datastore-preferences-core", version.ref = "dataStore" }
+
+#test
+kotest-assertions = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest-version" }
+kotest-property = { module = "io.kotest:kotest-property", version.ref = "kotest-version" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
