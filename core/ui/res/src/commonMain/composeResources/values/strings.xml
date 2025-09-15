@@ -22,4 +22,5 @@
     <string name="invalid_password_lowercase">Must contain at least one lowercase letter</string>
     <string name="invalid_password_digit">Must contain at least one digit</string>
     <string name="invalid_password_special_char">Must contain at least one special character</string>
+
 </resources>
