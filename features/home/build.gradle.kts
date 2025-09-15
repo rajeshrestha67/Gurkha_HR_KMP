@@ -73,6 +73,7 @@ kotlin {
 
                 implementation(libs.koin.compose.viewmodel)
                 implementation(compose.components.resources)
+                implementation(compose.materialIconsExtended)
 
                 implementation(projects.core.domain)
                 implementation(projects.core.networkHelper)
@@ -97,6 +98,7 @@ kotlin {
                 // Add Android-specific dependencies here. Note that this source set depends on
                 // commonMain by default and will correctly pull the Android artifacts of any KMP
                 // dependencies declared in commonMain.
+
             }
         }
 
