@@ -21,6 +21,14 @@
     <string name="company_assets">Company Assets</string>
     <string name="history">History</string>
     <string name="allocated_leave">Allocated Leave</string>
+    <string name="general">General</string>
+    <string name="account">Account</string>
+    <string name="terms_and_services">Terms and Services</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="fac">FAC</string>
+    <string name="support">Support</string>
+    <string name="setting">Setting</string>
+    <string name="log_out">Logout</string>
     <string name="enter_your_password">Enter your Password</string>
     <string name="invalid_password_length">Password must be 8–16 characters long</string>
     <string name="invalid_password_uppercase">Must contain at least one uppercase letter</string>

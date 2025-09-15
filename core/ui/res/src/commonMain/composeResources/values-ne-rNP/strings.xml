@@ -15,6 +15,14 @@
     <string name="document">कागजात</string>
     <string name="company_assets">कम्पनी सम्पत्तिहरू</string>
     <string name="history">इतिहास</string>
+    <string name="general">सामान्य</string>
+    <string name="account">खाता</string>
+    <string name="terms_and_services">सर्तहरू र सेवाहरू</string>
+    <string name="privacy_policy">गोपनीयता नीति</string>
+    <string name="fac">FAC</string>
+    <string name="support">समर्थन</string>
+    <string name="setting">सेटिङ</string>
+    <string name="log_out">लगआउट</string>
     <string name="allocated_leave">आवंटित स्रोतहरू</string>
     <string name="login">लग इन गर्नुहोस्</string>
     <string name="username">प्रयोगकर्ता नाम</string>

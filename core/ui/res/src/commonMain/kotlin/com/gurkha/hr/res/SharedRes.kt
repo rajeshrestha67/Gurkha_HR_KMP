@@ -4,6 +4,7 @@ import gurkhahr.core.ui.res.generated.resources.Poppins_Bold
 import gurkhahr.core.ui.res.generated.resources.Poppins_Italic
 import gurkhahr.core.ui.res.generated.resources.Poppins_Medium
 import gurkhahr.core.ui.res.generated.resources.Res
+import gurkhahr.core.ui.res.generated.resources.account
 import gurkhahr.core.ui.res.generated.resources.allocated_leave
 import gurkhahr.core.ui.res.generated.resources.company_assets
 import gurkhahr.core.ui.res.generated.resources.document
@@ -11,6 +12,8 @@ import gurkhahr.core.ui.res.generated.resources.email
 import gurkhahr.core.ui.res.generated.resources.enter_your_email
 import gurkhahr.core.ui.res.generated.resources.enter_your_password
 import gurkhahr.core.ui.res.generated.resources.enter_your_username
+import gurkhahr.core.ui.res.generated.resources.fac
+import gurkhahr.core.ui.res.generated.resources.general
 import gurkhahr.core.ui.res.generated.resources.getStarted
 import gurkhahr.core.ui.res.generated.resources.history
 import gurkhahr.core.ui.res.generated.resources.home
@@ -21,14 +24,19 @@ import gurkhahr.core.ui.res.generated.resources.invalid_password_lowercase
 import gurkhahr.core.ui.res.generated.resources.invalid_password_special_char
 import gurkhahr.core.ui.res.generated.resources.invalid_password_uppercase
 import gurkhahr.core.ui.res.generated.resources.leave
+import gurkhahr.core.ui.res.generated.resources.log_out
 import gurkhahr.core.ui.res.generated.resources.login
 import gurkhahr.core.ui.res.generated.resources.my_attendance
 import gurkhahr.core.ui.res.generated.resources.next
 import gurkhahr.core.ui.res.generated.resources.password
 import gurkhahr.core.ui.res.generated.resources.profile
+import gurkhahr.core.ui.res.generated.resources.privacy_policy
 import gurkhahr.core.ui.res.generated.resources.report
 import gurkhahr.core.ui.res.generated.resources.required
+import gurkhahr.core.ui.res.generated.resources.setting
 import gurkhahr.core.ui.res.generated.resources.skip
+import gurkhahr.core.ui.res.generated.resources.support
+import gurkhahr.core.ui.res.generated.resources.terms_and_services
 import gurkhahr.core.ui.res.generated.resources.time_and_attendance
 import gurkhahr.core.ui.res.generated.resources.username
 import gurkhahr.core.ui.res.generated.resources.welcome
@@ -61,6 +69,15 @@ object SharedRes {
         val document = Res.string.document
         val company_assets = Res.string.company_assets
         val history = Res.string.history
+        val general = Res.string.general
+        val account = Res.string.account
+        val terms_and_services = Res.string.terms_and_services
+        val fac = Res.string.fac
+        val privacy_policy = Res.string.privacy_policy
+        val support = Res.string.support
+        val setting = Res.string.setting
+        val log_out = Res.string.log_out
+
 
 
 

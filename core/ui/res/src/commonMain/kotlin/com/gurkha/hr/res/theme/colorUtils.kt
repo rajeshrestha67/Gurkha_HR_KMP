@@ -11,6 +11,12 @@ fun extendedColor(light: Color, dark: Color): Color {
     return if (isSystemInDarkTheme()) dark else light
 }
 
+val ColorScheme.imageBackgroundColor: Color
+    @Composable get() =
+        extendedColor(
+            light = Color.Black,
+            dark = Color(0xFF212121)
+        )
 val ColorScheme.primaryTextColor: Color
     @Composable get() =
         extendedColor(
@@ -18,6 +24,12 @@ val ColorScheme.primaryTextColor: Color
             dark = Color(0xFF212121)
         )
 
+val ColorScheme.secondaryTextColor: Color
+    @Composable get() =
+        extendedColor(
+            light = Color(0xFF616161),
+            dark = Color.White,
+        )
 val ColorScheme.onBoardingIndicatorSelectedColor: Color
     @Composable get() = extendedColor(
         light = Color.Red,
@@ -29,6 +41,12 @@ val ColorScheme.onBoardingIndicatorUnSelectedColor: Color
         light = Color.Gray,
         dark = Color.Gray
     )
+val ColorScheme.logOutButtonColor: Color
+    @Composable get() = extendedColor(
+        light = Color.Red,
+        dark = Color.Gray
+    )
+
 
 @Composable
 fun ColorScheme.getOnBoardingIndicatorColor(isSelected: Boolean): Color {

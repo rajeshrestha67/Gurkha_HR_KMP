@@ -2,7 +2,6 @@ package com.gurkha.hr.profile
 
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,43 +11,109 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.gurkha.hr.profile.model.ScreenList
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.dimens
+import com.gurkha.hr.res.theme.imageBackgroundColor
+import com.gurkha.hr.res.theme.logOutButtonColor
+import com.gurkha.hr.res.theme.secondaryTextColor
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen() {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
-        contentWindowInsets = WindowInsets(0.dp)
+        contentWindowInsets = WindowInsets(0.dp),
+        topBar = {
+            TopAppBar(
+                windowInsets = WindowInsets(0.dp),
+                navigationIcon = {
+                    AsyncImage(
+                        modifier = Modifier
+                            .clip(shape = CircleShape)
+                            .width(MaterialTheme.dimens.extraLarge)
+                            .height(MaterialTheme.dimens.extraLarge)
+                            .background(MaterialTheme.colorScheme.imageBackgroundColor),
+                        model = SharedRes.getRes(path = "drawable/gurkha_hr.png"),
+                        contentDescription = "avatar",
+                        contentScale = ContentScale.FillWidth,
+                    )
+                },
+                title = {
+                    Spacer(modifier = Modifier.width(MaterialTheme.dimens.small2))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceAround
+                    ) {
+                        Row(
+                            modifier = Modifier.weight(4f),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+
+                            Spacer(modifier = Modifier.width(MaterialTheme.dimens.small2))
+                            Column {
+                                Text(
+                                    style = MaterialTheme.typography.titleMedium,
+                                    text = "Shreejesh Pathak",
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+
+                                )
+                                Text(
+                                    style = MaterialTheme.typography.titleSmall,
+                                    color = MaterialTheme.colorScheme.secondaryTextColor,
+                                    text = "Android Developer"
+                                )
+                                Text(
+                                    style = MaterialTheme.typography.titleSmall,
+                                    color = MaterialTheme.colorScheme.secondaryTextColor,
+                                    text = "9866290535"
+                                )
+                            }
+                        }
+                    }
+                },
+
+
+                )
+        }
+
+
     ) { paddingValues ->
         ProfileScreenContainer(
             modifier = Modifier.padding(paddingValues).fillMaxSize()
         )
+
     }
 }
 
@@ -63,100 +128,105 @@ fun ProfileScreenContainer(
             vertical = MaterialTheme.dimens.small2
         )
     ) {
-        item(key = "header") {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(MaterialTheme.dimens.small2)
 
-            ) {
-                AsyncImage(
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .size(MaterialTheme.dimens.extraLarge)
-                        .border(
-                            shape = CircleShape,
-                            width = 1.dp,
-                            color = MaterialTheme.colorScheme.primaryContainer
-                        ),
-                    contentScale = ContentScale.FillWidth,
+        item { SectionHeader(SharedRes.Strings.general) }
+        items(items = ScreenList.general, key = { it.title.toString() }) { item ->
+            ProfileItemRow(
+                text = stringResource(item.title),
+                onClick = {println("Clicked General Items")}
+            )
+        }
+        item { SectionHeader(SharedRes.Strings.account) }
 
-                    model = SharedRes.getRes(
-                        "drawable/Default.png"
-                    ),
-                    contentDescription = "Profile Image",
-
-
-                    )
-                Spacer(modifier = Modifier.width(16.dp))
-                Column(
-                    modifier = Modifier
-                        .padding(top = MaterialTheme.dimens.small1)
-
-                ) {
-                    Text(
-                        "Shreejesh Pathak",
-                        style = MaterialTheme.typography.titleLarge.copy(
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.W600
-                        )
-                    )
-                    Text(
-                        "Intern",
-                        style = MaterialTheme.typography.titleMedium,
-                        color = Color.Gray
-
-                    )
-                    Text(
-                        "9845875484",
-                        style = MaterialTheme.typography.titleMedium,
-                        color = Color.Gray
-
-                    )
-
-
-                }
-            }
+        items(items = ScreenList.account, key = { it.title.toString() }) { item ->
+            ProfileItemRow(
+                text = stringResource(item.title),
+                onClick = {println("Clicked Account Items")}
+            )
 
 
         }
 
-        items(items = ScreenList.screenList, key = { it.title.toString() }) { item ->
-            val isFirst = item == ScreenList.screenList.first()
-            Row(
-                modifier = Modifier.fillMaxWidth()
-                    .then(
-                        if (isFirst) Modifier.padding(top = MaterialTheme.dimens.small3)
-                        else Modifier
+        //Log Out Button
+        item {
+            TextButton(
+                onClick = {},
+                modifier = Modifier
+                    .padding(
+                        horizontal = MaterialTheme.dimens.small2,
+                        vertical = MaterialTheme.dimens.small2
                     )
-                    .clickable(
-                        onClick = {
-                            println("Button Clicked")
-                        }
-                    )
-                    .padding(MaterialTheme.dimens.small2)
-                    .background(
-                        Color(0xFFD3D3D3),
-                        shape = MaterialTheme.shapes.medium
-                    )
-                    .padding(MaterialTheme.dimens.small3),
-                horizontalArrangement = Arrangement.SpaceBetween
+                    .fillMaxWidth(),
 
             ) {
-                Text(
-                    modifier = Modifier
-                        .weight(1f),
-                    text =stringResource(item.title)
-                )
-                Icon(
-                    imageVector = Icons.Filled.ChevronRight,
-                    contentDescription = "Arrow Right",
-
+                Row (
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Start
+                ){
+                    Text(
+                        text = stringResource(SharedRes.Strings.log_out),
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.logOutButtonColor
                     )
 
+                }
             }
+
         }
 
 
     }
 }
+
+@Composable
+fun SectionHeader(text: StringResource) {
+
+    Text(
+        modifier = Modifier
+            .padding(top = MaterialTheme.dimens.small2)
+            .padding(
+                horizontal = MaterialTheme.dimens.small3,
+                vertical = MaterialTheme.dimens.small2,
+            ),
+        text = stringResource(text),
+        style = MaterialTheme.typography.titleLarge,
+
+    )
+}
+
+@Composable
+fun ProfileItemRow(
+    text: String,
+    onClick: () -> Unit
+) {
+    Column {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { onClick() }
+                .padding(MaterialTheme.dimens.small2)
+                .padding(MaterialTheme.dimens.small2),
+
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                modifier = Modifier.weight(1f),
+                text = text,
+                color = MaterialTheme.colorScheme.secondaryTextColor
+            )
+            Icon(
+                imageVector = Icons.Filled.ChevronRight,
+                contentDescription = "Arrow Right"
+            )
+        }
+        HorizontalDivider(
+            Modifier
+                .fillMaxWidth()
+                .padding(horizontal = MaterialTheme.dimens.small2),
+            thickness = 1.dp,
+            color = Color.LightGray
+        )
+    }
+}
+
