@@ -7,14 +7,15 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyItemScope
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -28,6 +29,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,6 +38,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import com.gurkha.hr.profile.model.ScreenItem
 import com.gurkha.hr.profile.model.ScreenList
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.dimens
@@ -60,52 +63,41 @@ fun ProfileScreen() {
                     AsyncImage(
                         modifier = Modifier
                             .clip(shape = CircleShape)
-                            .width(MaterialTheme.dimens.extraLarge)
-                            .height(MaterialTheme.dimens.extraLarge)
+                            .size(MaterialTheme.dimens.extraLarge)
+                            .aspectRatio(1f)
                             .background(MaterialTheme.colorScheme.imageBackgroundColor),
                         model = SharedRes.getRes(path = "drawable/gurkha_hr.png"),
                         contentDescription = "avatar",
-                        contentScale = ContentScale.FillWidth,
+                        contentScale = ContentScale.Fit,
                     )
                 },
                 title = {
-                    Spacer(modifier = Modifier.width(MaterialTheme.dimens.small2))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceAround
+                    Column(
+                        modifier = Modifier.fillMaxWidth()
                     ) {
-                        Row(
-                            modifier = Modifier.weight(4f),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
+                        Text(
+                            style = MaterialTheme.typography.titleMedium,
+                            text = "Shreejesh Pathak",
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
 
-                            Spacer(modifier = Modifier.width(MaterialTheme.dimens.small2))
-                            Column {
-                                Text(
-                                    style = MaterialTheme.typography.titleMedium,
-                                    text = "Shreejesh Pathak",
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
-
-                                )
-                                Text(
-                                    style = MaterialTheme.typography.titleSmall,
-                                    color = MaterialTheme.colorScheme.secondaryTextColor,
-                                    text = "Android Developer"
-                                )
-                                Text(
-                                    style = MaterialTheme.typography.titleSmall,
-                                    color = MaterialTheme.colorScheme.secondaryTextColor,
-                                    text = "9866290535"
-                                )
-                            }
-                        }
+                        )
+                        Text(
+                            style = MaterialTheme.typography.titleSmall.copy(
+                                color = MaterialTheme.colorScheme.secondaryTextColor
+                            ),
+                            maxLines = 1,
+                            text = "Android Developer"
+                        )
+                        Text(
+                            style = MaterialTheme.typography.titleSmall.copy(
+                                color = MaterialTheme.colorScheme.secondaryTextColor
+                            ),
+                            text = "9866290535"
+                        )
                     }
-                },
-
-
-                )
+                }
+            )
         }
 
 
@@ -121,6 +113,10 @@ fun ProfileScreen() {
 fun ProfileScreenContainer(
     modifier: Modifier = Modifier
 ) {
+
+    val generalList = remember { ScreenList.general }
+    val accountList = remember { ScreenList.account }
+
     LazyColumn(
         modifier = modifier,
         contentPadding = PaddingValues(
@@ -129,21 +125,34 @@ fun ProfileScreenContainer(
         )
     ) {
 
-        item { SectionHeader(SharedRes.Strings.general) }
-        items(items = ScreenList.general, key = { it.title.toString() }) { item ->
+
+        profileHeaderSection(
+            title = SharedRes.Strings.general,
+            key = "general title"
+        )
+        profileList(
+            list = generalList
+        ) { item ->
             ProfileItemRow(
                 text = stringResource(item.title),
-                onClick = {println("Clicked General Items")}
+                onClick = { println("Clicked Account Items") }
             )
+
         }
-        item { SectionHeader(SharedRes.Strings.account) }
 
-        items(items = ScreenList.account, key = { it.title.toString() }) { item ->
+        profileHeaderSection(
+            title = SharedRes.Strings.account,
+            key = "account title"
+        )
+
+
+        profileList(
+            list = accountList
+        ) { item ->
             ProfileItemRow(
                 text = stringResource(item.title),
-                onClick = {println("Clicked Account Items")}
+                onClick = { println("Clicked Account Items") }
             )
-
 
         }
 
@@ -158,24 +167,38 @@ fun ProfileScreenContainer(
                     )
                     .fillMaxWidth(),
 
-            ) {
-                Row (
+                ) {
+                Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Start
-                ){
+                ) {
                     Text(
                         text = stringResource(SharedRes.Strings.log_out),
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.logOutButtonColor
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            color = MaterialTheme.colorScheme.logOutButtonColor
+                        )
                     )
-
                 }
             }
-
         }
-
-
     }
+}
+
+private fun LazyListScope.profileHeaderSection(
+    title: StringResource,
+    key: String
+) {
+    item(key = key) { SectionHeader(title) }
+}
+
+private fun LazyListScope.profileList(
+    list: List<ScreenItem>,
+    itemContent: @Composable LazyItemScope.(item: ScreenItem) -> Unit
+) {
+    items(
+        list, key = { it.title.toString() },
+        itemContent = itemContent
+    )
 }
 
 @Composable
@@ -189,7 +212,7 @@ fun SectionHeader(text: StringResource) {
                 vertical = MaterialTheme.dimens.small2,
             ),
         text = stringResource(text),
-        style = MaterialTheme.typography.titleLarge,
+        style = MaterialTheme.typography.titleLarge
 
     )
 }
@@ -199,7 +222,9 @@ fun ProfileItemRow(
     text: String,
     onClick: () -> Unit
 ) {
-    Column {
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
