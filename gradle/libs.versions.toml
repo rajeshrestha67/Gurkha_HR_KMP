@@ -34,6 +34,7 @@ compose = "1.6.11"
 
 okio = "3.16.0"
 dataStore = "1.1.7"
+datetime = "0.7.1"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin-test" }
@@ -90,6 +91,10 @@ okio = { module = "com.squareup.okio:okio", version.ref = "okio" }
 #datastore
 androidx-datastore-core-okio = { group = "androidx.datastore", name = "datastore-core-okio", version.ref = "dataStore" }
 androidx-datastore-preferences-core = { group = "androidx.datastore", name = "datastore-preferences-core", version.ref = "dataStore" }
+
+#date and time
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "datetime" }
+
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

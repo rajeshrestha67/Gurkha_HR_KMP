@@ -4,6 +4,7 @@ import gurkhahr.core.ui.res.generated.resources.Poppins_Bold
 import gurkhahr.core.ui.res.generated.resources.Poppins_Italic
 import gurkhahr.core.ui.res.generated.resources.Poppins_Medium
 import gurkhahr.core.ui.res.generated.resources.Res
+import gurkhahr.core.ui.res.generated.resources.attendance
 import gurkhahr.core.ui.res.generated.resources.email
 import gurkhahr.core.ui.res.generated.resources.enter_your_email
 import gurkhahr.core.ui.res.generated.resources.enter_your_password
@@ -23,9 +24,11 @@ import gurkhahr.core.ui.res.generated.resources.next
 import gurkhahr.core.ui.res.generated.resources.password
 import gurkhahr.core.ui.res.generated.resources.profile
 import gurkhahr.core.ui.res.generated.resources.report
+import gurkhahr.core.ui.res.generated.resources.request
 import gurkhahr.core.ui.res.generated.resources.required
 import gurkhahr.core.ui.res.generated.resources.skip
 import gurkhahr.core.ui.res.generated.resources.username
+import gurkhahr.core.ui.res.generated.resources.view_all
 import gurkhahr.core.ui.res.generated.resources.welcome
 
 object SharedRes {
@@ -51,6 +54,9 @@ object SharedRes {
         val profile = Res.string.profile
         val leave = Res.string.leave
         val report = Res.string.report
+        val request = Res.string.request
+        val view_all = Res.string.view_all
+        val attendance = Res.string.attendance
 
 
 

@@ -9,5 +9,4 @@ data class LoginScreenState(
     val passwordError: StringResource? = null,
     val isLoading: Boolean = false,
     val isLoginSuccess: Boolean = false
-
 )
