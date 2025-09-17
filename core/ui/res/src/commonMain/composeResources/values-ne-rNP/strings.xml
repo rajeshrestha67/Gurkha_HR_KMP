@@ -20,4 +20,12 @@
     <string name="enter_your_username">आफ्नो प्रयोगकर्ता नाम प्रविष्ट गर्नुहोस्</string>
     <string name="password">पासवर्ड</string>
     <string name="enter_your_password">आफ्नो पासवर्ड प्रविष्ट गर्नुहोस्</string>
+    <string name="invalid_password_length">पासवर्ड कम्तिमा ६ वर्ण लामो हुनुपर्छ</string>
+    <string name="invalid_password_uppercase">कम्तिमा एउटा ठूलो अक्षर हुनुपर्छ</string>
+
+    <string name="invalid_password_lowercase">कम्तिमा एउटा सानो अक्षर हुनुपर्छ</string>
+
+    <string name="invalid_password_digit">कम्तिमा एउटा अङ्क हुनुपर्छ</string>
+
+    <string name="invalid_password_special_char">कम्तिमा एउटा विशेष वर्ण हुनुपर्छ</string>
 </resources>

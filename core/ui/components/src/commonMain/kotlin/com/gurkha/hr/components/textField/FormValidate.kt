@@ -76,7 +76,7 @@ object FormValidate {
         }
     }
     val passwordLengthRule = Rule { text ->
-        if (!text.matches(Regex(".{8,16}"))) {
+        if (!text.matches(Regex(".{6,}"))) {
             ErrorStatus(
                 isError = true,
                 errorMsg = SharedRes.Strings.invalidPasswordLength
@@ -90,10 +90,10 @@ object FormValidate {
 
     val passwordValidationRules = listOf(
         requiredRule,
-        upperCaseRule,
-        lowerCaseRule,
-        digitRule,
-        specialCharRule,
+//        upperCaseRule,
+//        lowerCaseRule,
+//        digitRule,
+//        specialCharRule,
         passwordLengthRule
     )
 
