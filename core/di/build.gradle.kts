@@ -83,6 +83,9 @@ kotlin {
                 implementation(projects.features.auth.login)
                 implementation(projects.features.splashscreen)
                 implementation(projects.features.dashboard)
+                implementation(projects.features.home)
+
+
                 implementation(projects.core.ui.components)
                 implementation(projects.core.persistance.datastore)
             }

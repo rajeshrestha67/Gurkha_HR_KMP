@@ -35,6 +35,7 @@ fun DashboardScreen() {
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
+        containerColor = MaterialTheme.colorScheme.background,
         bottomBar = {
             NavigationBar {
                 state.screens.forEach { item ->
