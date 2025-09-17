@@ -36,6 +36,7 @@ okio = "3.16.0"
 dataStore = "1.1.7"
 
 kotest-version = "6.0.3"
+datetime = "0.7.1"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin-test" }
@@ -97,6 +98,9 @@ androidx-datastore-preferences-core = { group = "androidx.datastore", name = "da
 kotest-assertions = { group = "io.kotest", name = "kotest-assertions-core", version.ref = "kotest-version" }
 kotest-framework = { group = "io.kotest", name = "kotest-framework-engine", version.ref = "kotest-version" }
 kotest-property = { group = "io.kotest", name = "kotest-property", version.ref = "kotest-version" }
+
+#datetime
+kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "datetime" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

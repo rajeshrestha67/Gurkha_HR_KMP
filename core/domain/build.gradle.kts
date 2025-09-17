@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.android.kotlin.multiplatform.library)
     alias(libs.plugins.android.lint)
+    alias(libs.plugins.io.kotest)
     alias(libs.plugins.ksp)
 }
 
@@ -73,6 +74,7 @@ kotlin {
             dependencies {
                 implementation(libs.kotlin.test)
                 implementation(libs.kotest.framework)
+                implementation(libs.kotest.assertions)
             }
         }
 
