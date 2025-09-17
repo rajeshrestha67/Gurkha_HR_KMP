@@ -29,6 +29,7 @@ import androidx.compose.material.icons.filled.Chat
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -322,7 +323,13 @@ fun HomeScreenContent(
                             modifier = Modifier
                                 .background(color = color)
                                 .fillMaxSize(),
-                        )
+                            contentAlignment = Alignment.Center
+                        ){
+                            if(state.isLoading){
+                                CircularProgressIndicator()
+                            }
+                        }
+
                     }
                 }
             }

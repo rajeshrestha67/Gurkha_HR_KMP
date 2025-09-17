@@ -10,4 +10,5 @@ sealed interface HomeScreenActions {
     data object OnRequestAttendance : HomeScreenActions
     data object OnChatClicked : HomeScreenActions
     data class OnSpecificDayClicked(val date: String) : HomeScreenActions
+
 }

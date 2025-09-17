@@ -6,6 +6,7 @@ data class HomeScreenState(
     val requestRow2: List<AttendanceItem> = attendanceList2,
     val userName: String = "Suneel Shrestha",
     val position: String = "App Developer",
-    val avatar: String = ""
+    val avatar: String = "",
+    val isLoading : Boolean = false
 
 )
