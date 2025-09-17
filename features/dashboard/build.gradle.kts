@@ -73,6 +73,8 @@ kotlin {
 
                 implementation(libs.androidx.lifecycle.viewmodelCompose)
                 implementation(libs.androidx.lifecycle.runtimeCompose)
+                implementation(compose.materialIconsExtended)
+
 
                 implementation(libs.org.jetbrains.navigation)
                 implementation(libs.kotlinx.serialization.json)

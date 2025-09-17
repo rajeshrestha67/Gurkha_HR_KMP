@@ -10,6 +10,9 @@
     <string name="leave">छोड्नुहोस्</string>
     <string name="report">रिपोर्ट गर्नुहोस्</string>
     <string name="my_attendance">मेरो उपस्थिति</string>
+    <string name="request">अनुरोध</string>
+    <string name="attendance">उपस्थिति</string>
+    <string name="view_all">सबै हेर्नुहोस्</string>
     <string name="profile">प्रोफाइल</string>
     <string name="login">लग इन गर्नुहोस्</string>
     <string name="username">प्रयोगकर्ता नाम</string>

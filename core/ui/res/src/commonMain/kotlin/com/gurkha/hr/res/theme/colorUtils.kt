@@ -29,6 +29,18 @@ val ColorScheme.onBoardingIndicatorUnSelectedColor: Color
         light = Color.Gray,
         dark = Color.Gray
     )
+val ColorScheme.BorderColor: Color
+    @Composable get() = extendedColor(
+        light = Color.LightGray,
+        dark = Color.LightGray
+    )
+
+val ColorScheme.linkColor: Color
+    @Composable get() = extendedColor(
+        light = Color(color =  0xFF0288D1),
+        dark = Color(color =  0xFF0288D1)
+    )
+
 
 @Composable
 fun ColorScheme.getOnBoardingIndicatorColor(isSelected: Boolean): Color {
