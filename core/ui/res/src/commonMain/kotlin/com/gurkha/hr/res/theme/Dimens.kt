@@ -17,7 +17,8 @@ data class Dimens(
     val onBoardingIndicatorSelected: Dp = 0.dp,
     val onBoardingIndicatorUnSelected: Dp = 0.dp,
     val loginImageSize: Dp = 0.dp,
-    val chartHeight: Dp = 0.dp
+    val chartHeight: Dp = 0.dp,
+    val bottomBar: Dp = 0.dp
 )
 
 
@@ -34,5 +35,6 @@ val CompactDimens = Dimens(
     onBoardingIndicatorSelected = 30.dp,
     onBoardingIndicatorUnSelected = 10.dp,
     loginImageSize = 200.dp,
-    chartHeight = 200.dp
+    chartHeight = 200.dp,
+    bottomBar = 80.dp
 )
