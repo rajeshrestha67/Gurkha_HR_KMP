@@ -12,4 +12,6 @@ sealed interface AppRoute{
 
     @Serializable
     data object OnBoardingRoute: AppRoute
+
+
 }

@@ -23,6 +23,12 @@ val ColorScheme.primaryTextColor: Color
             light = Color(0xFF727272),
             dark = Color(0xFF212121)
         )
+val ColorScheme.borderColor: Color
+    @Composable get() =
+        extendedColor(
+            light = Color.Gray,
+            dark = Color(0xFF212121)
+        )
 
 val ColorScheme.secondaryTextColor: Color
     @Composable get() =
@@ -45,6 +51,11 @@ val ColorScheme.logOutButtonColor: Color
     @Composable get() = extendedColor(
         light = Color.Red,
         dark = Color.Gray
+    )
+val ColorScheme.logOutTextColor: Color
+    @Composable get() = extendedColor(
+        light = Color.White,
+        dark = Color.Black
     )
 
 

@@ -20,6 +20,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -29,21 +31,26 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.gurkha.hr.profile.model.ScreenItem
-import com.gurkha.hr.profile.model.ScreenList
+import com.gurkha.hr.profile.model.AccountList
+import com.gurkha.hr.profile.model.GeneralList
 import com.gurkha.hr.res.SharedRes
+import com.gurkha.hr.res.theme.borderColor
 import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.imageBackgroundColor
 import com.gurkha.hr.res.theme.logOutButtonColor
+import com.gurkha.hr.res.theme.logOutTextColor
 import com.gurkha.hr.res.theme.secondaryTextColor
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
@@ -51,13 +58,17 @@ import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(
+    onLogout: () -> Unit,
+    onAccountClick:(AccountList)->Unit
+) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
         contentWindowInsets = WindowInsets(0.dp),
         topBar = {
             TopAppBar(
+                modifier = Modifier.padding(start = MaterialTheme.dimens.small3),
                 windowInsets = WindowInsets(0.dp),
                 navigationIcon = {
                     AsyncImage(
@@ -73,7 +84,9 @@ fun ProfileScreen() {
                 },
                 title = {
                     Column(
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = MaterialTheme.dimens.small2)
                     ) {
                         Text(
                             style = MaterialTheme.typography.titleMedium,
@@ -103,7 +116,9 @@ fun ProfileScreen() {
 
     ) { paddingValues ->
         ProfileScreenContainer(
-            modifier = Modifier.padding(paddingValues).fillMaxSize()
+            modifier = Modifier.padding(paddingValues).fillMaxSize(),
+            onLogout = onLogout,
+            onAccountClick = onAccountClick
         )
 
     }
@@ -111,11 +126,15 @@ fun ProfileScreen() {
 
 @Composable
 fun ProfileScreenContainer(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onLogout: () -> Unit,
+    onAccountClick:(AccountList) -> Unit
 ) {
 
-    val generalList = remember { ScreenList.general }
-    val accountList = remember { ScreenList.account }
+    val generalList = remember { GeneralList.list }
+    val accountList = remember { AccountList.list }
+
+    var showDialog by rememberSaveable { mutableStateOf(false) }
 
     LazyColumn(
         modifier = modifier,
@@ -130,12 +149,13 @@ fun ProfileScreenContainer(
             title = SharedRes.Strings.general,
             key = "general title"
         )
-        profileList(
+        profileListGeneral(
             list = generalList
         ) { item ->
             ProfileItemRow(
                 text = stringResource(item.title),
-                onClick = { println("Clicked Account Items") }
+                onClick = { println("Clicked Account Items") },
+                showDivider = item != GeneralList.History
             )
 
         }
@@ -146,20 +166,21 @@ fun ProfileScreenContainer(
         )
 
 
-        profileList(
+        profileListAccount(
             list = accountList
         ) { item ->
             ProfileItemRow(
                 text = stringResource(item.title),
-                onClick = { println("Clicked Account Items") }
+                onClick = {
+                    onAccountClick(item)
+                }
             )
-
         }
 
         //Log Out Button
         item {
             TextButton(
-                onClick = {},
+                onClick = { showDialog = true },
                 modifier = Modifier
                     .padding(
                         horizontal = MaterialTheme.dimens.small2,
@@ -180,6 +201,15 @@ fun ProfileScreenContainer(
                     )
                 }
             }
+            if (showDialog) {
+                ActionDialog(
+                    onDismiss = { showDialog = false },
+                    onConfirm = {
+                        onLogout()
+                        showDialog = false
+                    }
+                )
+            }
         }
     }
 }
@@ -191,12 +221,23 @@ private fun LazyListScope.profileHeaderSection(
     item(key = key) { SectionHeader(title) }
 }
 
-private fun LazyListScope.profileList(
-    list: List<ScreenItem>,
-    itemContent: @Composable LazyItemScope.(item: ScreenItem) -> Unit
+private fun LazyListScope.profileListAccount(
+    list: List<AccountList>,
+    itemContent: @Composable LazyItemScope.(item: AccountList) -> Unit
 ) {
     items(
-        list, key = { it.title.toString() },
+        list, key = { it.toString() },
+        itemContent = itemContent
+    )
+}
+
+
+private fun LazyListScope.profileListGeneral(
+    list: List<GeneralList>,
+    itemContent: @Composable LazyItemScope.(item: GeneralList) -> Unit
+) {
+    items(
+        list, key = { it.toString() },
         itemContent = itemContent
     )
 }
@@ -220,38 +261,77 @@ fun SectionHeader(text: StringResource) {
 @Composable
 fun ProfileItemRow(
     text: String,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    showDivider: Boolean = true
 ) {
-    Column(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { onClick() }
-                .padding(MaterialTheme.dimens.small2)
-                .padding(MaterialTheme.dimens.small2),
 
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                modifier = Modifier.weight(1f),
-                text = text,
-                color = MaterialTheme.colorScheme.secondaryTextColor
-            )
-            Icon(
-                imageVector = Icons.Filled.ChevronRight,
-                contentDescription = "Arrow Right"
-            )
-        }
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() }
+            .padding(MaterialTheme.dimens.small2)
+            .padding(MaterialTheme.dimens.small2),
+
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            modifier = Modifier.weight(1f),
+            text = text,
+            color = MaterialTheme.colorScheme.secondaryTextColor
+        )
+        Icon(
+            imageVector = Icons.Filled.ChevronRight,
+            contentDescription = "Arrow Right"
+        )
+    }
+    if (showDivider) {
         HorizontalDivider(
             Modifier
                 .fillMaxWidth()
                 .padding(horizontal = MaterialTheme.dimens.small2),
-            thickness = 1.dp,
-            color = Color.LightGray
+            thickness = 0.5.dp,
+            color = MaterialTheme.colorScheme.borderColor
         )
     }
 }
+
+
+@Composable
+fun ActionDialog(
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = { onDismiss() },
+        title = { Text(text = stringResource(SharedRes.Strings.are_you_sure)) },
+        text = { Text(text = stringResource(SharedRes.Strings.do_you_really_want_to_logout)) },
+        confirmButton = {
+            TextButton(
+                onClick = { onConfirm() },
+                colors = ButtonDefaults.textButtonColors(
+                    containerColor = MaterialTheme.colorScheme.logOutButtonColor,
+                    contentColor = MaterialTheme.colorScheme.logOutTextColor
+
+                )
+
+            ) {
+                Text(text = stringResource(SharedRes.Strings.yes))
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = { onDismiss() }) {
+                Text(
+                    text = stringResource(SharedRes.Strings.no),
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+
+        }
+    )
+}
+
+
+
 
