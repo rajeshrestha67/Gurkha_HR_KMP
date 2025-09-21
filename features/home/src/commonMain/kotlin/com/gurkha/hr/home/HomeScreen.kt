@@ -19,10 +19,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -44,7 +47,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -55,8 +57,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.gurkha.hr.components.graphLine.SmoothLineGraph
-import com.gurkha.hr.home.Model.AttendanceItem
-import com.gurkha.hr.home.Model.HomeScreenState
+import com.gurkha.hr.home.model.AttendanceItem
+import com.gurkha.hr.home.model.CalendarItem
+import com.gurkha.hr.home.model.HomeScreenState
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.BorderColor
 import com.gurkha.hr.res.theme.dimens
@@ -166,7 +169,7 @@ fun HomeScreenContent(
     val pagerState = rememberPagerState(pageCount = { 2 })
     val listState = rememberLazyListState()
     val activeIndex = state.calendarItem.indexOfFirst { it.active }
-    var showNotification by rememberSaveable {
+    val (showNotification, onChangeNotification) = rememberSaveable {
         mutableStateOf(true)
     }
 
@@ -203,169 +206,204 @@ fun HomeScreenContent(
             )
         ) {
             //    Notification part
-            item(key = "notification") {
-                AnimatedVisibility(showNotification) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = MaterialTheme.dimens.small3),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text("Notification view")
-                        IconButton(onClick = {
-                            showNotification = !showNotification
-                        }) {
-                            Icon(Icons.Filled.Close, contentDescription = "close icon")
-                        }
-                    }
-                }
-            }
+            notificationView(
+                showNotification = showNotification,
+                onChangeNotification = onChangeNotification
+            )
 
             //            calender part
-            stickyHeader(key = "calender") {
-                LazyRow(
-                    state = listState,
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(space = MaterialTheme.dimens.small3),
-                    contentPadding = PaddingValues(horizontal = MaterialTheme.dimens.small3)
-                ) {
-                    items(state.calendarItem) { item ->
-                        val color = if (item.active)
-                            MaterialTheme.colorScheme.secondaryContainer
-                        else
-                            MaterialTheme.colorScheme.background
-                        Column(
-                            modifier = Modifier
-                                .clip(MaterialTheme.shapes.medium)
-                                .background(color = color)
-                                .border(
-                                    1.dp,
-                                    color = MaterialTheme.colorScheme.BorderColor,
-                                    MaterialTheme.shapes.medium
-                                )
-                                .size(MaterialTheme.dimens.medium3)
-                                .clickable(onClick = {
-//                                    send the date to find there activities for that date
-                                }),
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Text(
-                                text = item.day, style = MaterialTheme.typography.titleMedium
-                            )
-                            Text(
-                                text = item.date, style = MaterialTheme.typography.titleSmall.copy(
-                                    color = MaterialTheme.colorScheme.primaryTextColor
+            calendarView(
+                listState = listState,
+                calendarItem = state.calendarItem
+            )
 
-                                )
-                            )
-                        }
-                    }
-                }
-            }
+            // request section
+            requestSection(state = state)
 
-            item("request_title") {
-                Text(
-                    modifier = Modifier.fillMaxWidth()
-                        .padding(horizontal = MaterialTheme.dimens.small3),
-                    text = stringResource(SharedRes.Strings.request),
-                    style = MaterialTheme.typography.titleLarge.copy(
-                        color = MaterialTheme.colorScheme.primaryTextColor
-                    )
+            // attendance title
+            attendanceSection(
+                pagerState = pagerState
+            )
+        }
+    }
+}
+
+
+fun LazyListScope.attendanceSection(
+    pagerState: PagerState
+) {
+    item(key = "attendance_title") {
+        Row(
+            modifier = Modifier.fillMaxWidth()
+                .padding(horizontal = MaterialTheme.dimens.small3),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                modifier = Modifier.weight(1f),
+                text = stringResource(SharedRes.Strings.attendance),
+                style = MaterialTheme.typography.titleLarge.copy(
+                    color = MaterialTheme.colorScheme.primaryTextColor
                 )
-            }
+            )
+            Text(
+                text = stringResource(SharedRes.Strings.view_all),
+                style = MaterialTheme.typography.titleSmall.copy(
+                    color = MaterialTheme.colorScheme.linkColor
+                )
+            )
+        }
+    }
 
-            //        request part
-            item(key = "request") {
-                Column(
-                    modifier = Modifier.fillMaxWidth()
-                        .padding(horizontal = MaterialTheme.dimens.small3)
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
-                    ) {
-                        state.requestRow1.forEach { item ->
-                            AttendanceItemContent(
-                                modifier = Modifier.weight(1f),
-                                item = item
-                            )
-                        }
-                    }
 
-                    Spacer(modifier = Modifier.height(MaterialTheme.dimens.small3))
-
-                    //  second row
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
-                    ) {
-                        state.requestRow2.forEach { item ->
-                            AttendanceItemContent(
-                                modifier = Modifier.weight(1f),
-                                item = item
-                            )
-                        }
-                    }
-                }
-
-            }
-
-            //        attendance title
-            item(key = "attendance_title") {
-                Row(
-                    modifier = Modifier.fillMaxWidth()
-                        .padding(horizontal = MaterialTheme.dimens.small3),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        modifier = Modifier.weight(1f),
-                        text = stringResource(SharedRes.Strings.attendance),
-                        style = MaterialTheme.typography.titleLarge.copy(
-                            color = MaterialTheme.colorScheme.primaryTextColor
+    //        attendance chart
+    item(key = "Attendance Chart") {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(MaterialTheme.dimens.chartHeight)
+        ) {
+            HorizontalPager(state = pagerState) { item ->
+                AnimatedContent(item) { page ->
+                    when (page) {
+                        0 -> SmoothLineGraph()
+                        1 -> Box(
+                            modifier = Modifier
+                                .background(color = MaterialTheme.colorScheme.onPrimaryContainer)
+                                .fillMaxSize(),
                         )
-                    )
-                    Text(
-                        text = stringResource(SharedRes.Strings.view_all),
-                        style = MaterialTheme.typography.titleSmall.copy(
-                            color = MaterialTheme.colorScheme.linkColor
-                        )
-                    )
-                }
-            }
-
-
-            //        attendance chart
-            item(key = "Attendance Chart") {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(MaterialTheme.dimens.chartHeight)
-                ) {
-                    HorizontalPager(state = pagerState) { item ->
-                        AnimatedContent(item) { page ->
-                            when (page) {
-                                0 -> SmoothLineGraph()
-                                1 -> Box(
-                                    modifier = Modifier
-                                        .background(color = MaterialTheme.colorScheme.onPrimaryContainer)
-                                        .fillMaxSize(),
-                                )
-                            }
-                        }
                     }
                 }
             }
         }
-//        slider
+    }
+}
+
+fun LazyListScope.requestSection(
+    state: HomeScreenState
+) {
+    item("request_title") {
+        Text(
+            modifier = Modifier.fillMaxWidth()
+                .padding(horizontal = MaterialTheme.dimens.small3),
+            text = stringResource(SharedRes.Strings.request),
+            style = MaterialTheme.typography.titleLarge.copy(
+                color = MaterialTheme.colorScheme.primaryTextColor
+            )
+        )
+    }
+
+    // request part
+    item(key = "request") {
+        Column(
+            modifier = Modifier.fillMaxWidth()
+                .padding(horizontal = MaterialTheme.dimens.small3)
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
+            ) {
+                state.requestRow1.forEach { item ->
+                    AttendanceItemContent(
+                        modifier = Modifier.weight(1f),
+                        item = item
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small3))
+
+            //  second row
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
+            ) {
+                state.requestRow2.forEach { item ->
+                    AttendanceItemContent(
+                        modifier = Modifier.weight(1f),
+                        item = item
+                    )
+                }
+            }
+        }
+
+    }
+}
+
+fun LazyListScope.calendarView(
+    listState: LazyListState,
+    calendarItem: List<CalendarItem>
+) {
+    stickyHeader(key = "calender") {
+        LazyRow(
+            state = listState,
+            modifier = Modifier
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(space = MaterialTheme.dimens.small3),
+            contentPadding = PaddingValues(horizontal = MaterialTheme.dimens.small3)
+        ) {
+            items(calendarItem) { item ->
+                val color = if (item.active)
+                    MaterialTheme.colorScheme.secondaryContainer
+                else
+                    MaterialTheme.colorScheme.background
+                Column(
+                    modifier = Modifier
+                        .clip(MaterialTheme.shapes.medium)
+                        .background(color = color)
+                        .border(
+                            1.dp,
+                            color = MaterialTheme.colorScheme.BorderColor,
+                            MaterialTheme.shapes.medium
+                        )
+                        .size(MaterialTheme.dimens.medium3)
+                        .clickable(onClick = {
+//                                    send the date to find there activities for that date
+                        }),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = item.day, style = MaterialTheme.typography.titleMedium
+                    )
+                    Text(
+                        text = item.date, style = MaterialTheme.typography.titleSmall.copy(
+                            color = MaterialTheme.colorScheme.primaryTextColor
+
+                        )
+                    )
+                }
+            }
+        }
+    }
+}
+
+fun LazyListScope.notificationView(
+    showNotification: Boolean,
+    onChangeNotification: (Boolean) -> Unit
+) {
+    item(key = "notification") {
+        AnimatedVisibility(showNotification) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = MaterialTheme.dimens.small3),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text("Notification view")
+                IconButton(onClick = {
+                    onChangeNotification(!showNotification)
+                }) {
+                    Icon(Icons.Filled.Close, contentDescription = "close icon")
+                }
+            }
+        }
     }
 }
 

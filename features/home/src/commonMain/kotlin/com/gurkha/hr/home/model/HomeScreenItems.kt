@@ -1,4 +1,4 @@
-package com.gurkha.hr.home.Model
+package com.gurkha.hr.home.model
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.EditCalendar

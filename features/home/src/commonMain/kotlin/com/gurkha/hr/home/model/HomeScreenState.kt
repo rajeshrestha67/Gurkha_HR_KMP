@@ -1,4 +1,4 @@
-package com.gurkha.hr.home.Model
+package com.gurkha.hr.home.model
 
 data class HomeScreenState(
     val calendarItem: List<CalendarItem> = generateCalendarDays(),

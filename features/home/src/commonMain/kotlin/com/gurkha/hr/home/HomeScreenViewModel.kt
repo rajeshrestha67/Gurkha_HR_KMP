@@ -2,8 +2,8 @@ package com.gurkha.hr.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gurkha.hr.home.Model.HomeScreenActions
-import com.gurkha.hr.home.Model.HomeScreenState
+import com.gurkha.hr.home.model.HomeScreenActions
+import com.gurkha.hr.home.model.HomeScreenState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
