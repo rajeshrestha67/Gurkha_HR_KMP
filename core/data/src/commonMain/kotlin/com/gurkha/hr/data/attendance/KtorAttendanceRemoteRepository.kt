@@ -18,16 +18,14 @@ class KtorAttendanceRemoteRepository(
 ) : AttendanceRemoteRepository {
     override suspend fun fetchAttendance(
         dateFrom: String,
-        toDate: String,
-        enableManualAttendance: String,
-        branchId: String?
+        toDate: String
     ): ERPResult<AttendanceResponseDto, DataError> {
         return  safeCall {
             httpClient.post(
                 baseUrl = BaseUrl.Generic,
                 endPoint = EndPoint.FETCH_ATTENDANCE_END_POINT
             ){
-                setBody(AttendanceRequestDto(dateFrom, toDate, enableManualAttendance, branchId))
+                setBody(AttendanceRequestDto(dateFrom, toDate))
             }
         }
     }

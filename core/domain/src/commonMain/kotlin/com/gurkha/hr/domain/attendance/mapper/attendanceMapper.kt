@@ -4,11 +4,12 @@ import com.gurkha.hr.domain.attendance.model.AttendanceData
 import com.gurkha.model.attendance.AttendanceResponseDto
 
 
-fun AttendanceResponseDto.toData(): AttendanceData {
-    return AttendanceData(
-        status = status ?: "",
-        detail = detail ?: emptyList(),
-        message = message ?: "",
-        success = success ?: false,
-    )
+fun AttendanceResponseDto.toData(): List<AttendanceData> {
+    return detail?.map {
+        AttendanceData(
+            workingHrs = it.workingHrs ?: "",
+            clockInTime = it.clockInTime ?: "",
+            clockOutTime = it.clockOutTime ?: "",
+        )
+    }?: emptyList()
 }

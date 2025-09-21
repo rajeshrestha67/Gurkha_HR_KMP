@@ -82,7 +82,6 @@ kotlin {
 
                 implementation(projects.core.domain)
 
-
                 implementation(libs.coil.compose)
                 implementation(libs.coil.compose.core)
                 implementation(libs.coil.mp)

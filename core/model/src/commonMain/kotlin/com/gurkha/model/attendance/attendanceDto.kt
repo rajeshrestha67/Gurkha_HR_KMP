@@ -6,25 +6,19 @@ import kotlinx.serialization.Serializable
 data class AttendanceRequestDto(
     val fromDate: String,
     val toDate: String,
-    val enableManualAttendance: String,
-    val branchId: String?
 )
 
 @Serializable
 data class AttendanceResponseDto(
     val status: String? = null,
     val message: String? = null,
-    val detail: List<AttendanceDetailResponse>? = null,
+    val detail: List<AttendanceDataResponseDto>? = null,
     val success: Boolean? = null
 )
 
-@Serializable
-data class AttendanceDetailResponse(
-    val data: HashMap<String, AttendanceDataResponse>? = null
-)
 
 @Serializable
-data class AttendanceDataResponse(
+data class AttendanceDataResponseDto(
     val attendanceId: Int? = null,
     val created: String? = null,
     val forRequestedDate: String? = null,

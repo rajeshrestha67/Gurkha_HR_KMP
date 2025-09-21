@@ -8,7 +8,5 @@ interface AttendanceRemoteRepository {
     suspend fun fetchAttendance(
         dateFrom: String,
         toDate: String,
-        enableManualAttendance: String,
-        branchId: String?
     ): ERPResult<AttendanceResponseDto, DataError>
 }
