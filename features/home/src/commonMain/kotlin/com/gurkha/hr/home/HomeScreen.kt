@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
@@ -40,6 +41,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -57,24 +59,30 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.gurkha.hr.components.graphLine.SmoothLineGraph
+import com.gurkha.hr.components.shimmer.ShimmerView
 import com.gurkha.hr.home.model.AttendanceItem
 import com.gurkha.hr.home.model.CalendarItem
+import com.gurkha.hr.home.model.HomeScreenActions
 import com.gurkha.hr.home.model.HomeScreenState
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.BorderColor
 import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.linkColor
 import com.gurkha.hr.res.theme.primaryTextColor
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+) {
     val viewModel: HomeScreenViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
+
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+
     Scaffold(
         contentWindowInsets = WindowInsets(0.dp),
         modifier = Modifier
@@ -108,13 +116,13 @@ fun HomeScreen() {
                                 style = MaterialTheme.typography.titleMedium.copy(
                                     color = MaterialTheme.colorScheme.primaryTextColor
                                 ),
-                                text = state.userName
+                                text = state.fullName
                             )
                             Text(
                                 style = MaterialTheme.typography.titleSmall.copy(
                                     color = MaterialTheme.colorScheme.primaryTextColor
                                 ),
-                                text = state.position
+                                text = state.levelName
                             )
                         }
                     }
@@ -156,6 +164,7 @@ fun HomeScreen() {
         HomeScreenContent(
             modifier = Modifier.fillMaxSize().padding(paddingValues),
             state = state,
+            onFetchAttendance = { viewModel.onAction(HomeScreenActions.AttendanceFetch) }
         )
     }
 }
@@ -164,6 +173,7 @@ fun HomeScreen() {
 fun HomeScreenContent(
     modifier: Modifier = Modifier,
     state: HomeScreenState,
+    onFetchAttendance: () -> Unit
 ) {
     val pagerState = rememberPagerState(pageCount = { 2 })
     val listState = rememberLazyListState()
@@ -189,6 +199,11 @@ fun HomeScreenContent(
             val sundayIndex = (activeIndex - dayOfWeekNumber + 1).coerceAtLeast(0)
             listState.scrollToItem(sundayIndex)
         }
+    }
+
+//    fetch the data
+    LaunchedEffect(Unit) {
+        onFetchAttendance()
     }
 
     Box(
@@ -219,10 +234,119 @@ fun HomeScreenContent(
             // request section
             requestSection(state = state)
 
+            //birthday section
+            birthDaySection(
+                state = state
+            )
+
+            // anniversary Section
+            anniversarySection(
+                state = state
+            )
+
             // attendance title
             attendanceSection(
                 pagerState = pagerState
             )
+        }
+    }
+}
+
+fun LazyListScope.anniversarySection(
+    state: HomeScreenState
+) {
+    item(key = "anniversary title") {
+        TitleBar(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = MaterialTheme.dimens.small3),
+            onViewAll = {},
+            title = SharedRes.Strings.work_anniversaries,
+            subTitle = SharedRes.Strings.view_all
+        )
+    }
+
+    item(key = "anniversary list") {
+        when {
+            state.isAnniversaryLoading -> {
+                ShimmerView(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(MaterialTheme.dimens.bottomBar)
+                )
+            }
+
+            else -> {
+                LazyRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = MaterialTheme.dimens.small3),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = (state.upComingWorkAnniversary?.size
+                        ?: 0).let { size ->
+                        if (size > 2) Arrangement.spacedBy(MaterialTheme.dimens.medium3)
+                        else Arrangement.SpaceBetween
+                    }
+
+                ) {
+                    items(state.upComingWorkAnniversary ?: emptyList()) { item ->
+                        EventCard(
+                            fullName = item.fullName,
+                            imageUrl = item.imageUrl,
+                            date = item.joinedDate,
+                            designationName = item.designationName
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+fun LazyListScope.birthDaySection(
+    state: HomeScreenState
+) {
+    item(key = "birthday") {
+        TitleBar(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = MaterialTheme.dimens.small3),
+            onViewAll = {},
+            title = SharedRes.Strings.upcoming_birthday,
+            subTitle = SharedRes.Strings.view_all
+        )
+    }
+
+    item(key = "birthday list") {
+        when {
+            state.isBirthDayLoading -> {
+                ShimmerView(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(MaterialTheme.dimens.bottomBar)
+                )
+            }
+
+            else -> {
+                LazyRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = MaterialTheme.dimens.small3),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = (state.upComingBirthday?.size
+                        ?: 0).let { size ->
+                        if (size > 2) Arrangement.spacedBy(MaterialTheme.dimens.medium3)
+                        else Arrangement.SpaceBetween
+                    }
+
+                ) {
+                    items(state.upComingBirthday ?: emptyList()) { item ->
+                        EventCard(
+                            fullName = item.fullName,
+                            imageUrl = item.imageUrl,
+                            date = item.dateOfBirth,
+                            designationName = item.designationName
+                        )
+                    }
+                }
+            }
         }
     }
 }
@@ -232,29 +356,13 @@ fun LazyListScope.attendanceSection(
     pagerState: PagerState
 ) {
     item(key = "attendance_title") {
-        Row(
+        TitleBar(
             modifier = Modifier.fillMaxWidth()
                 .padding(horizontal = MaterialTheme.dimens.small3),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                modifier = Modifier.weight(1f),
-                text = stringResource(SharedRes.Strings.attendance),
-                style = MaterialTheme.typography.titleLarge.copy(
-                    color = MaterialTheme.colorScheme.primaryTextColor
-                )
-            )
-            Text(
-                text = stringResource(SharedRes.Strings.view_all),
-                style = MaterialTheme.typography.titleSmall.copy(
-                    color = MaterialTheme.colorScheme.linkColor
-                )
-            )
-        }
+            title = SharedRes.Strings.attendance,
+            subTitle = SharedRes.Strings.view_all
+        )
     }
-
-
     //        attendance chart
     item(key = "Attendance Chart") {
         Box(
@@ -282,13 +390,11 @@ fun LazyListScope.requestSection(
     state: HomeScreenState
 ) {
     item("request_title") {
-        Text(
+
+        TitleBar(
             modifier = Modifier.fillMaxWidth()
                 .padding(horizontal = MaterialTheme.dimens.small3),
-            text = stringResource(SharedRes.Strings.request),
-            style = MaterialTheme.typography.titleLarge.copy(
-                color = MaterialTheme.colorScheme.primaryTextColor
-            )
+            title = SharedRes.Strings.request
         )
     }
 
@@ -341,7 +447,9 @@ fun LazyListScope.calendarView(
         LazyRow(
             state = listState,
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.background)
+                .padding(vertical = MaterialTheme.dimens.small2),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(space = MaterialTheme.dimens.small3),
             contentPadding = PaddingValues(horizontal = MaterialTheme.dimens.small3)
@@ -409,7 +517,6 @@ fun LazyListScope.notificationView(
     }
 }
 
-
 //reusable request row
 @Composable
 fun AttendanceItemContent(
@@ -464,5 +571,89 @@ fun AttendanceItemContent(
             )
         }
 
+    }
+}
+
+
+@Composable
+fun EventCard(
+    imageUrl: String,
+    fullName: String,
+    designationName: String,
+    date: String,
+) {
+    Column(
+        modifier = Modifier
+            .widthIn(min = 150.dp)
+            .border(
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.BorderColor,
+                shape = RoundedCornerShape(MaterialTheme.dimens.small2)
+            )
+            .padding(
+                MaterialTheme.dimens.small2
+            )
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small1)
+        ) {
+            AsyncImage(
+                model = imageUrl,
+                contentDescription = fullName,
+                contentScale = ContentScale.Fit,
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .size(MaterialTheme.dimens.medium2)
+                    .aspectRatio(ratio = 1f)
+                    .background(Color.Black)
+            )
+            Text(
+                text = "Kartik",
+                style = MaterialTheme.typography.titleSmall.copy(
+                    color = MaterialTheme.colorScheme.primaryTextColor
+                )
+            )
+        }
+        Text(text = fullName, style = MaterialTheme.typography.titleMedium)
+        Text(
+            text = designationName,
+            style = MaterialTheme.typography.titleSmall.copy(
+                color = MaterialTheme.colorScheme.primaryTextColor
+            )
+        )
+    }
+}
+
+
+@Composable
+fun TitleBar(
+    modifier: Modifier,
+    title: StringResource,
+    subTitle: StringResource? = null,
+    onViewAll: () -> Unit = {}
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = stringResource(title),
+            style = MaterialTheme.typography.titleLarge
+        )
+        subTitle?.let {
+            TextButton(
+                onClick = onViewAll,
+                content = {
+                    Text(
+                        text = stringResource(subTitle),
+                        style = MaterialTheme.typography.titleSmall.copy(
+                            color = MaterialTheme.colorScheme.linkColor
+                        )
+                    )
+                }
+            )
+        }
     }
 }

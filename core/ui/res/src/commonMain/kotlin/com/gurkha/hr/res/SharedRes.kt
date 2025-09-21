@@ -27,9 +27,11 @@ import gurkhahr.core.ui.res.generated.resources.report
 import gurkhahr.core.ui.res.generated.resources.request
 import gurkhahr.core.ui.res.generated.resources.required
 import gurkhahr.core.ui.res.generated.resources.skip
+import gurkhahr.core.ui.res.generated.resources.upcoming_birthday
 import gurkhahr.core.ui.res.generated.resources.username
 import gurkhahr.core.ui.res.generated.resources.view_all
 import gurkhahr.core.ui.res.generated.resources.welcome
+import gurkhahr.core.ui.res.generated.resources.work_anniversaries
 
 object SharedRes {
 
@@ -57,6 +59,8 @@ object SharedRes {
         val request = Res.string.request
         val view_all = Res.string.view_all
         val attendance = Res.string.attendance
+        val upcoming_birthday = Res.string.upcoming_birthday
+        val work_anniversaries = Res.string.work_anniversaries
 
 
 
