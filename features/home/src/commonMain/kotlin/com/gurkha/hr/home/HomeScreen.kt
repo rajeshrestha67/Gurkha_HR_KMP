@@ -1,5 +1,7 @@
 package com.gurkha.hr.home
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -40,6 +42,9 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -49,6 +54,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
+import com.gurkha.hr.components.graphLine.SmoothLineGraph
 import com.gurkha.hr.home.Model.AttendanceItem
 import com.gurkha.hr.home.Model.HomeScreenState
 import com.gurkha.hr.res.SharedRes
@@ -70,36 +76,45 @@ fun HomeScreen() {
         contentWindowInsets = WindowInsets(0.dp),
         modifier = Modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection)
-            .padding(
-                horizontal = MaterialTheme.dimens.small3, vertical = MaterialTheme.dimens.small2
-            ).fillMaxSize(), containerColor = MaterialTheme.colorScheme.background,
+            .fillMaxSize(),
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
+                modifier = Modifier.fillMaxWidth(),
                 windowInsets = WindowInsets(0.dp),
-                navigationIcon = {
-                    AsyncImage(
-                        modifier = Modifier
-                            .clip(shape = CircleShape)
-                            .size(size = MaterialTheme.dimens.medium3)
-                            .aspectRatio(ratio = 1f)
-                            .background(Color.Black),
-                        model = SharedRes.getRes(path = "drawable/gurkha_hr.png"),
-                        contentDescription = "avatar",
-                        contentScale = ContentScale.Fit,
-                    )
-                },
+
                 title = {
-                    Column {
-                        Text(
-                            style = MaterialTheme.typography.titleMedium,
-                            text = state.userName
+                    Row(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        AsyncImage(
+                            modifier = Modifier
+                                .clip(shape = CircleShape)
+                                .size(size = MaterialTheme.dimens.medium3)
+                                .aspectRatio(ratio = 1f)
+                                .background(Color.Black),
+                            model = SharedRes.getRes(path = "drawable/gurkha_hr.png"),
+                            contentDescription = "avatar",
+                            contentScale = ContentScale.Fit,
                         )
-                        Text(
-                            style = MaterialTheme.typography.titleSmall.copy(
-                                color = MaterialTheme.colorScheme.primaryTextColor
-                            ),
-                            text = state.position
-                        )
+
+                        Column(
+                            modifier = Modifier.weight(1f)
+                                .padding(horizontal = MaterialTheme.dimens.small1),
+                        ) {
+                            Text(
+                                style = MaterialTheme.typography.titleMedium.copy(
+                                    color = MaterialTheme.colorScheme.primaryTextColor
+                                ),
+                                text = state.userName
+                            )
+                            Text(
+                                style = MaterialTheme.typography.titleSmall.copy(
+                                    color = MaterialTheme.colorScheme.primaryTextColor
+                                ),
+                                text = state.position
+                            )
+                        }
                     }
                 },
                 actions = {
@@ -151,7 +166,9 @@ fun HomeScreenContent(
     val pagerState = rememberPagerState(pageCount = { 2 })
     val listState = rememberLazyListState()
     val activeIndex = state.calendarItem.indexOfFirst { it.active }
-
+    var showNotification by rememberSaveable {
+        mutableStateOf(true)
+    }
 
 //to show the active week date and day starting from the sunday
     LaunchedEffect(activeIndex) {
@@ -173,29 +190,35 @@ fun HomeScreenContent(
     }
 
     Box(
+        modifier = modifier,
         contentAlignment = Alignment.BottomCenter,
     ) {
         LazyColumn(
-            modifier = modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.medium1),
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3),
             horizontalAlignment = Alignment.CenterHorizontally,
             contentPadding = PaddingValues(
-                start = MaterialTheme.dimens.small2,
-                end = MaterialTheme.dimens.small2,
                 top = MaterialTheme.dimens.small2,
                 bottom = MaterialTheme.dimens.medium3
             )
         ) {
             //    Notification part
             item(key = "notification") {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text("Notification view")
-                    Icon(Icons.Filled.Close, contentDescription = "close icon")
+                AnimatedVisibility(showNotification) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = MaterialTheme.dimens.small3),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text("Notification view")
+                        IconButton(onClick = {
+                            showNotification = !showNotification
+                        }) {
+                            Icon(Icons.Filled.Close, contentDescription = "close icon")
+                        }
+                    }
                 }
             }
 
@@ -204,10 +227,10 @@ fun HomeScreenContent(
                 LazyRow(
                     state = listState,
                     modifier = Modifier
-                        .background(MaterialTheme.colorScheme.background)
                         .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(space = MaterialTheme.dimens.small3)
+                    horizontalArrangement = Arrangement.spacedBy(space = MaterialTheme.dimens.small3),
+                    contentPadding = PaddingValues(horizontal = MaterialTheme.dimens.small3)
                 ) {
                     items(state.calendarItem) { item ->
                         val color = if (item.active)
@@ -244,16 +267,23 @@ fun HomeScreenContent(
                 }
             }
 
+            item("request_title") {
+                Text(
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(horizontal = MaterialTheme.dimens.small3),
+                    text = stringResource(SharedRes.Strings.request),
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        color = MaterialTheme.colorScheme.primaryTextColor
+                    )
+                )
+            }
+
             //        request part
             item(key = "request") {
-                Column {
-                    Text(
-                        text = stringResource(SharedRes.Strings.request),
-                        style = MaterialTheme.typography.titleLarge
-                    )
-
-                    Spacer(modifier = Modifier.height(MaterialTheme.dimens.small3))
-
+                Column(
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(horizontal = MaterialTheme.dimens.small3)
+                ) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth(),
@@ -270,7 +300,7 @@ fun HomeScreenContent(
 
                     Spacer(modifier = Modifier.height(MaterialTheme.dimens.small3))
 
-                    //                second row
+                    //  second row
                     Row(
                         modifier = Modifier
                             .fillMaxWidth(),
@@ -289,15 +319,19 @@ fun HomeScreenContent(
             }
 
             //        attendance title
-            item(key = "Attendance Title") {
+            item(key = "attendance_title") {
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(horizontal = MaterialTheme.dimens.small3),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
+                        modifier = Modifier.weight(1f),
                         text = stringResource(SharedRes.Strings.attendance),
-                        style = MaterialTheme.typography.titleLarge
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            color = MaterialTheme.colorScheme.primaryTextColor
+                        )
                     )
                     Text(
                         text = stringResource(SharedRes.Strings.view_all),
@@ -308,6 +342,7 @@ fun HomeScreenContent(
                 }
             }
 
+
             //        attendance chart
             item(key = "Attendance Chart") {
                 Box(
@@ -316,13 +351,16 @@ fun HomeScreenContent(
                         .height(MaterialTheme.dimens.chartHeight)
                 ) {
                     HorizontalPager(state = pagerState) { item ->
-                        val color =
-                            if (item == 0) MaterialTheme.colorScheme.BorderColor else MaterialTheme.colorScheme.onPrimaryContainer
-                        Box(
-                            modifier = Modifier
-                                .background(color = color)
-                                .fillMaxSize(),
-                        )
+                        AnimatedContent(item) { page ->
+                            when (page) {
+                                0 -> SmoothLineGraph()
+                                1 -> Box(
+                                    modifier = Modifier
+                                        .background(color = MaterialTheme.colorScheme.onPrimaryContainer)
+                                        .fillMaxSize(),
+                                )
+                            }
+                        }
                     }
                 }
             }
