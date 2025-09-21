@@ -267,11 +267,24 @@ fun LazyListScope.anniversarySection(
     item(key = "anniversary list") {
         when {
             state.isAnniversaryLoading -> {
-                ShimmerView(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(MaterialTheme.dimens.bottomBar)
-                )
+
+                Row(
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(horizontal = MaterialTheme.dimens.small3),
+                    horizontalArrangement = Arrangement.spacedBy(
+                        MaterialTheme.dimens.small2,
+                        alignment = Alignment.Start
+                    )
+                ) {
+                    repeat(4) {
+                        ShimmerView(
+                            modifier = Modifier
+                                .size(MaterialTheme.dimens.bottomBar)
+                                .clip(MaterialTheme.shapes.small)
+                        )
+                    }
+                }
+
             }
 
             else -> {
@@ -317,11 +330,22 @@ fun LazyListScope.birthDaySection(
     item(key = "birthday list") {
         when {
             state.isBirthDayLoading -> {
-                ShimmerView(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(MaterialTheme.dimens.bottomBar)
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(horizontal = MaterialTheme.dimens.small3),
+                    horizontalArrangement = Arrangement.spacedBy(
+                        MaterialTheme.dimens.small2,
+                        alignment = Alignment.Start
+                    )
+                ) {
+                    repeat(4) {
+                        ShimmerView(
+                            modifier = Modifier
+                                .size(MaterialTheme.dimens.bottomBar)
+                                .clip(MaterialTheme.shapes.small)
+                        )
+                    }
+                }
             }
 
             else -> {
