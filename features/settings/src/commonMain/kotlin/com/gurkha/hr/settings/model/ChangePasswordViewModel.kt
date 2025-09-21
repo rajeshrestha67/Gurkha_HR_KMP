@@ -2,18 +2,21 @@ package com.gurkha.hr.settings.model
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gurkha.hr.domain.changePassword.usecase.ChangePasswordUseCase
 import com.gurkha.hr.domain.form.PasswordValidateUseCase
+import com.gurkha.hr.networkhelper.onSuccess
 import com.gurkha.hr.res.SharedRes
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class ChangePasswordViewModel(
-    private val newPasswordValidateUseCase: PasswordValidateUseCase
+    private val newPasswordValidateUseCase: PasswordValidateUseCase,
+    private val changePasswordUseCase: ChangePasswordUseCase
 ): ViewModel(){
     private val _state = MutableStateFlow(value = ChangePasswordScreenState())
 
@@ -60,14 +63,35 @@ class ChangePasswordViewModel(
                     }
                     state.value.newPassword != state.value.confirmPassword -> {
                         _state.update {
-                            it.copy(confirmPasswordError = SharedRes.Strings.invalidPasswordLowercase)
+                            it.copy(confirmPasswordError = SharedRes.Strings.password_does_not_match)
                         }
                     }
-//                    else ->
+                    else -> changePassword()
                 }
 
             }
         }
+    }
+
+    private fun changePassword() = viewModelScope.launch{
+        _state.update {
+            it.copy(isLoading =  true)
+        }
+        changePasswordUseCase(
+            newPassword = state.value.newPassword,
+            confirmPassword = state.value.confirmPassword
+
+        ).onSuccess { data ->
+            _state.update {
+                it.copy(isLoading = false)
+            }
+            if (data.success){
+                _successChannel.send(true)
+            }else{
+                _errorChannel.send(data.message ?: "Unknown Error")
+            }
+
+            }
     }
 
 

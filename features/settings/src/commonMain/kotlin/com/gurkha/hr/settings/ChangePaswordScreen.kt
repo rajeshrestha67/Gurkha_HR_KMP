@@ -1,12 +1,13 @@
 package com.gurkha.hr.settings
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ChevronLeft
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -34,24 +35,25 @@ import org.koin.compose.viewmodel.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChangePasswordScreen(
-    onBackPressed: ()-> Unit
-){
+    onBackPressed: () -> Unit
+) {
 
     val changePasswordViewModel: ChangePasswordViewModel = koinViewModel()
     val state by changePasswordViewModel.state.collectAsStateWithLifecycle()
-    Scaffold (
+    Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
 
 
         topBar = {
             TopAppBar(
-                title = {Text(stringResource(SharedRes.Strings.change_password))},
+                title = { Text(stringResource(SharedRes.Strings.change_password)) },
                 navigationIcon = {
                     IconButton(
-                        onClick = onBackPressed){
+                        onClick = onBackPressed
+                    ) {
                         Icon(
-                            imageVector = Icons.Default.ChevronLeft,
+                            imageVector = Icons.AutoMirrored.Default.ArrowBack,
                             contentDescription = "Back"
                         )
                     }
@@ -59,8 +61,7 @@ fun ChangePasswordScreen(
 
             )
         }
-    ){
-            paddingValues ->
+    ) { paddingValues ->
         ChangePasswordScreenContainer(
             modifier = Modifier
                 .fillMaxSize()
@@ -77,9 +78,10 @@ fun ChangePasswordScreenContainer(
     modifier: Modifier = Modifier,
     state: ChangePasswordScreenState,
     onAction: (ChangePasswordScreenAction) -> Unit
-){
+) {
     Column(
-        modifier = modifier.padding(MaterialTheme.dimens.small3)
+        modifier = modifier.padding(MaterialTheme.dimens.small3),
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2 )
     ) {
         PasswordTextField(
             enabled = true,
@@ -112,33 +114,34 @@ fun ChangePasswordScreenContainer(
 
             label = stringResource(SharedRes.Strings.confirm_password),
             hint = stringResource(SharedRes.Strings.confirm_password),
-            onValueChange = {
-
-                onAction
+            onValueChange = { confirmValue ->
+                onAction(ChangePasswordScreenAction.OnConfirmPasswordChanged(confirmPassword = confirmValue))
 
             },
-            value = "",
+            value = state.confirmPassword,
 
-            onErrorStateChange = {
-
+            onErrorStateChange = { confirmError ->
+                onAction(ChangePasswordScreenAction.OnConfirmPasswordError(confirmPasswordError = confirmError?.errorMsg))
             },
             imeAction = ImeAction.Send,
+            error = state.confirmPasswordError,
             keyboardActions = KeyboardActions(
                 onSend = { }),
-            rules = FormValidate.passwordValidationRules,
+            rules = FormValidate.passwordValidationRules
 
-        )
+            )
 
         ERPButton(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = MaterialTheme.dimens.small3),
             onClick = {
-
+                onAction(ChangePasswordScreenAction.ConfirmClicked)
             },
-            isLoading = false,
+            isLoading = state.isLoading,
             text = stringResource(SharedRes.Strings.confirm)
         )
+
 
     }
 }

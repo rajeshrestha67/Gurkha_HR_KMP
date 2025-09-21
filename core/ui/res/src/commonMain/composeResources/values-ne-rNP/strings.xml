@@ -34,6 +34,8 @@
     <string name="no">होइन</string>
     <string name="are_you_sure">के तपाईं निश्चित हुनुहुन्छ</string>
     <string name="do_you_really_want_to_logout">के तपाईं साँच्चै लगआउट गर्न चाहनुहुन्छ</string>
+    <string name="password_does_not_match">पासवर्ड मेल खाँदैन</string>
+    <string name="unknown_error_occurred">अज्ञात त्रुटि भयो</string>
     <string name="support">समर्थन</string>
     <string name="setting">सेटिङ</string>
     <string name="log_out">लगआउट</string>

@@ -40,6 +40,7 @@ import gurkhahr.core.ui.res.generated.resources.new_password
 import gurkhahr.core.ui.res.generated.resources.next
 import gurkhahr.core.ui.res.generated.resources.no
 import gurkhahr.core.ui.res.generated.resources.password
+import gurkhahr.core.ui.res.generated.resources.password_does_not_match
 import gurkhahr.core.ui.res.generated.resources.profile
 import gurkhahr.core.ui.res.generated.resources.privacy_policy
 import gurkhahr.core.ui.res.generated.resources.report
@@ -51,6 +52,7 @@ import gurkhahr.core.ui.res.generated.resources.system_default
 import gurkhahr.core.ui.res.generated.resources.terms_and_services
 import gurkhahr.core.ui.res.generated.resources.theme
 import gurkhahr.core.ui.res.generated.resources.time_and_attendance
+import gurkhahr.core.ui.res.generated.resources.unknown_error_occurred
 import gurkhahr.core.ui.res.generated.resources.username
 import gurkhahr.core.ui.res.generated.resources.welcome
 import gurkhahr.core.ui.res.generated.resources.yes
@@ -126,5 +128,7 @@ object SharedRes {
         val invalidPasswordLowercase = Res.string.invalid_password_lowercase
         val invalidPasswordDigit = Res.string.invalid_password_digit
         val invalidPasswordSpecialChar = Res.string.invalid_password_special_char
+        val password_does_not_match = Res.string.password_does_not_match
+        val unknown_error_occurred = Res.string.unknown_error_occurred
     }
 }
