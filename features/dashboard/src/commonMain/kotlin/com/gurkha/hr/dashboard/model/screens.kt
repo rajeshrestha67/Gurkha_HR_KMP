@@ -14,7 +14,7 @@ import org.jetbrains.compose.resources.StringResource
 data class DashboardScreen(
     val name: StringResource,
     val route: DashboardRoute,
-    val icon: ImageVector
+    val icon: ImageVector,
 )
 
 object DashboardScreens {

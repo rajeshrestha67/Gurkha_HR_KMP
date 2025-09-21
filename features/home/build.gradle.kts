@@ -80,6 +80,8 @@ kotlin {
                 implementation(projects.core.ui.res)
                 implementation(projects.core.ui.components)
 
+                implementation(projects.core.domain)
+
                 implementation(libs.coil.compose)
                 implementation(libs.coil.compose.core)
                 implementation(libs.coil.mp)

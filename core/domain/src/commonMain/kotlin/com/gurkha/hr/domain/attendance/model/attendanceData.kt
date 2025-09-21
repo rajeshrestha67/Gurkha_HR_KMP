@@ -1,5 +1,7 @@
 package com.gurkha.hr.domain.attendance.model
 
 data class AttendanceData(
-    val a: String
+    val workingHrs : String,
+    val clockInTime : String,
+    val clockOutTime : String,
 )

@@ -60,4 +60,4 @@ suspend inline fun HttpRequestBuilder.appendLocalAttributes(
 }
 
 public fun HttpMessageBuilder.accessToken(token: String): Unit =
-    header(HttpHeaders.Authorization, "accessToken $token")
+    header(HttpHeaders.Authorization, token)

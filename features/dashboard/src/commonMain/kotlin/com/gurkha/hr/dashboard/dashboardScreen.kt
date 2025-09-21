@@ -8,6 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -20,6 +21,7 @@ import com.gurkha.hr.dashboard.graph.leaveScreenBuilder
 import com.gurkha.hr.dashboard.graph.profileScreenBuilder
 import com.gurkha.hr.dashboard.graph.reportScreenBuilder
 import com.gurkha.hr.dashboard.model.DashboardScreenAction
+import com.gurkha.hr.dashboard.route.DashboardRoute
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -30,6 +32,10 @@ fun DashboardScreen() {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     val navController = rememberNavController()
+
+    LaunchedEffect(Unit){
+        viewModel.action(DashboardScreenAction.OnFetchCurrentUser)
+    }
 
 
     Scaffold(
@@ -44,6 +50,10 @@ fun DashboardScreen() {
                         selected = item.route == state.currentScreen,
                         onClick = {
                             viewModel.action(action = DashboardScreenAction.OnChangeScreen(item.route))
+                            navController.navigate(item.route){
+                                launchSingleTop = true
+                                restoreState = true
+                            }
                         },
                         icon = {
                             Icon(
@@ -68,9 +78,12 @@ fun DashboardScreen() {
         NavHost(
             modifier = Modifier.padding(paddingValues).fillMaxSize(),
             navController = navController,
-            startDestination = state.currentScreen
+            startDestination = DashboardRoute.HomeRoute
         ) {
-            homeScreenBuilder(navController = navController)
+
+            homeScreenBuilder(
+                navController = navController
+            )
             profileScreenBuilder(navController = navController)
             attendanceScreen(navController = navController)
             leaveScreenBuilder(navController = navController)
