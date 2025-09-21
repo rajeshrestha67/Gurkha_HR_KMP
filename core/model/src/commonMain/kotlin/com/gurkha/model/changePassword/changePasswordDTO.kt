@@ -8,10 +8,11 @@ data class ChangePasswordRequestDTO(
     val password: String,
     val confirmPassword: String,
 
-)
+    )
 
+@Serializable
 data class ChangePasswordResponseDTO(
-    val status: String?,
-    val message: String?,
-    val success: Boolean,
+    val status: String? = null,
+    val message: String? = null,
+    val success: Boolean? = null
 )

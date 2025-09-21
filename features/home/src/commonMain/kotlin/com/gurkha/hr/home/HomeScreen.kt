@@ -65,7 +65,8 @@ import com.gurkha.hr.home.model.CalendarItem
 import com.gurkha.hr.home.model.HomeScreenActions
 import com.gurkha.hr.home.model.HomeScreenState
 import com.gurkha.hr.res.SharedRes
-import com.gurkha.hr.res.theme.BorderColor
+import com.gurkha.hr.res.theme.borderColor
+
 import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.linkColor
 import com.gurkha.hr.res.theme.primaryTextColor
@@ -489,7 +490,7 @@ fun LazyListScope.calendarView(
                         .background(color = color)
                         .border(
                             1.dp,
-                            color = MaterialTheme.colorScheme.BorderColor,
+                            color = MaterialTheme.colorScheme.borderColor,
                             MaterialTheme.shapes.medium
                         )
                         .size(MaterialTheme.dimens.medium3)
@@ -553,7 +554,7 @@ fun AttendanceItemContent(
             .border(
                 width = 1.dp,
                 shape = MaterialTheme.shapes.medium,
-                color = MaterialTheme.colorScheme.BorderColor
+                color = MaterialTheme.colorScheme.borderColor
             )
             .clickable(onClick = {
 
@@ -611,7 +612,7 @@ fun EventCard(
             .widthIn(min = 150.dp)
             .border(
                 width = 1.dp,
-                color = MaterialTheme.colorScheme.BorderColor,
+                color = MaterialTheme.colorScheme.borderColor,
                 shape = RoundedCornerShape(MaterialTheme.dimens.small2)
             )
             .padding(
