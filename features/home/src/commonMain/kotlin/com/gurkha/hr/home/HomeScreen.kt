@@ -85,7 +85,6 @@ fun HomeScreen() {
             TopAppBar(
                 modifier = Modifier.fillMaxWidth(),
                 windowInsets = WindowInsets(0.dp),
-
                 title = {
                     Row(
                         modifier = Modifier.fillMaxWidth()
@@ -450,9 +449,8 @@ fun AttendanceItemContent(
                 .padding(
                     horizontal = MaterialTheme.dimens.small3,
                     vertical = MaterialTheme.dimens.small2
-                ),
-
-            ) {
+                )
+        ) {
             Text(
                 text = item.time, style = MaterialTheme.typography.titleLarge.copy(
                     color = MaterialTheme.colorScheme.primaryTextColor
