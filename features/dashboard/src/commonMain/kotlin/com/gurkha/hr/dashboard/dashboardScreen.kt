@@ -22,18 +22,23 @@ import com.gurkha.hr.dashboard.graph.profileScreenBuilder
 import com.gurkha.hr.dashboard.graph.reportScreenBuilder
 import com.gurkha.hr.dashboard.model.DashboardScreenAction
 import com.gurkha.hr.dashboard.route.DashboardRoute
+import com.gurkha.hr.profile.model.AccountList
+
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 
 @Composable
-fun DashboardScreen() {
+fun DashboardScreen(
+    onLogout: () -> Unit,
+    onAccountClick: (AccountList) -> Unit
+) {
     val viewModel: DashboardViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     val navController = rememberNavController()
 
-    LaunchedEffect(Unit){
+    LaunchedEffect(Unit) {
         viewModel.action(DashboardScreenAction.OnFetchCurrentUser)
     }
 
@@ -50,7 +55,7 @@ fun DashboardScreen() {
                         selected = item.route == state.currentScreen,
                         onClick = {
                             viewModel.action(action = DashboardScreenAction.OnChangeScreen(item.route))
-                            navController.navigate(item.route){
+                            navController.navigate(item.route) {
                                 launchSingleTop = true
                                 restoreState = true
                             }
@@ -80,11 +85,11 @@ fun DashboardScreen() {
             navController = navController,
             startDestination = DashboardRoute.HomeRoute
         ) {
-
-            homeScreenBuilder(
-                navController = navController
+            homeScreenBuilder(navController = navController)
+            profileScreenBuilder(
+                onLogout = onLogout,
+                onAccountClick = onAccountClick
             )
-            profileScreenBuilder(navController = navController)
             attendanceScreen(navController = navController)
             leaveScreenBuilder(navController = navController)
             reportScreenBuilder(navController = navController)

@@ -8,9 +8,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.gurkha.hr.dashboard.DashboardScreen
+import com.gurkha.hr.graph.changePasswordScreenBuilder
 import com.gurkha.hr.graph.dashboardScreenBuilder
 import com.gurkha.hr.graph.loginScreenBuilder
 import com.gurkha.hr.graph.onBoardingBuilder
+import com.gurkha.hr.graph.settingsScreenBuilder
 import com.gurkha.hr.res.theme.AppTheme
 import com.gurkha.hr.route.AppRoute
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -47,5 +50,7 @@ fun AppScreen(isFirstTime: Boolean) {
         onBoardingBuilder(navController = navController)
         loginScreenBuilder(navController = navController)
         dashboardScreenBuilder(navController = navController)
+        settingsScreenBuilder(navController = navController)
+        changePasswordScreenBuilder(navController = navController)
     }
 }
