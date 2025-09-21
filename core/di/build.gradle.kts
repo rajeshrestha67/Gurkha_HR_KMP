@@ -85,6 +85,9 @@ kotlin {
                 implementation(projects.features.dashboard)
                 implementation(projects.features.profile)
                 implementation(projects.features.settings)
+                implementation(projects.features.home)
+
+
                 implementation(projects.core.ui.components)
                 implementation(projects.core.persistance.datastore)
             }

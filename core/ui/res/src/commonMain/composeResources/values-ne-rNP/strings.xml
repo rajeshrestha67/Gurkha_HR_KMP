@@ -10,6 +10,9 @@
     <string name="leave">छोड्नुहोस्</string>
     <string name="report">रिपोर्ट गर्नुहोस्</string>
     <string name="my_attendance">मेरो उपस्थिति</string>
+    <string name="request">अनुरोध</string>
+    <string name="attendance">उपस्थिति</string>
+    <string name="view_all">सबै हेर्नुहोस्</string>
     <string name="profile">प्रोफाइल</string>
     <string name="time_and_attendance">समय र उपस्थिति</string>
     <string name="document">कागजात</string>
@@ -42,8 +45,15 @@
     <string name="allocated_leave">आवंटित स्रोतहरू</string>
     <string name="login">लग इन गर्नुहोस्</string>
     <string name="username">प्रयोगकर्ता नाम</string>
+    <string name="upcoming_birthday">आगामी जन्मदिन</string>
+    <string name="work_anniversaries">कार्य वार्षिकोत्सव</string>
     <string name="skip">छोड्नुहोस्</string>
     <string name="enter_your_username">आफ्नो प्रयोगकर्ता नाम प्रविष्ट गर्नुहोस्</string>
     <string name="password">पासवर्ड</string>
     <string name="enter_your_password">आफ्नो पासवर्ड प्रविष्ट गर्नुहोस्</string>
+    <string name="invalid_password_length">पासवर्ड कम्तिमा ६ वर्ण लामो हुनुपर्छ</string>
+    <string name="invalid_password_uppercase">कम्तिमा एउटा ठूलो अक्षर हुनुपर्छ</string>
+    <string name="invalid_password_lowercase">कम्तिमा एउटा सानो अक्षर हुनुपर्छ</string>
+    <string name="invalid_password_digit">कम्तिमा एउटा अङ्क हुनुपर्छ</string>
+    <string name="invalid_password_special_char">कम्तिमा एउटा विशेष वर्ण हुनुपर्छ</string>
 </resources>

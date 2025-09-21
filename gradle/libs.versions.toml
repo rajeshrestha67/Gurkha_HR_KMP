@@ -1,5 +1,5 @@
 [versions]
-agp = "8.12.3"
+agp = "8.13.0"
 android-compileSdk = "36"
 android-minSdk = "24"
 android-targetSdk = "36"
@@ -16,7 +16,7 @@ kotlin-test = "2.2.10"
 kotlinStdlib = "2.2.20"
 accompanistSystemuicontroller = "0.36.0"
 kotlinx-coroutines = "1.10.2"
-ksp = "2.2.0-2.0.2"
+ksp = "2.2.20-2.0.2"
 koin-core = "4.1.1"
 koin-annotations = "2.1.0"
 ktor = "3.3.0"
@@ -34,6 +34,9 @@ compose = "1.6.11"
 
 okio = "3.16.0"
 dataStore = "1.1.7"
+
+kotest-version = "6.0.3"
+datetime = "0.7.1"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin-test" }
@@ -91,6 +94,14 @@ okio = { module = "com.squareup.okio:okio", version.ref = "okio" }
 androidx-datastore-core-okio = { group = "androidx.datastore", name = "datastore-core-okio", version.ref = "dataStore" }
 androidx-datastore-preferences-core = { group = "androidx.datastore", name = "datastore-preferences-core", version.ref = "dataStore" }
 
+#test
+kotest-assertions = { group = "io.kotest", name = "kotest-assertions-core", version.ref = "kotest-version" }
+kotest-framework = { group = "io.kotest", name = "kotest-framework-engine", version.ref = "kotest-version" }
+kotest-property = { group = "io.kotest", name = "kotest-property", version.ref = "kotest-version" }
+
+#datetime
+kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "datetime" }
+
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
@@ -102,3 +113,5 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 jetbrains-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
 android-lint = { id = "com.android.lint", version.ref = "agp" }
+io-kotest = { id = "io.kotest", version.ref = "kotest-version" }
+
