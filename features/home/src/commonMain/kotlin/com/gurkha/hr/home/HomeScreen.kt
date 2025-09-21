@@ -53,12 +53,13 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
 import com.gurkha.hr.components.shimmer.ShimmerView
-import com.gurkha.hr.domain.upComingBirthday.model.UpComingBirthdayData
 import com.gurkha.hr.home.Model.AttendanceItem
 import com.gurkha.hr.home.Model.HomeScreenActions
 import com.gurkha.hr.home.Model.HomeScreenState
+import com.gurkha.hr.home.homeRoute.HomeRoute
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.BorderColor
 import com.gurkha.hr.res.theme.dimens
@@ -71,6 +72,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
+
 ) {
     val viewModel: HomeScreenViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -170,7 +172,7 @@ fun HomeScreen(
         HomeScreenContent(
             modifier = Modifier.fillMaxSize().padding(paddingValues),
             state = state,
-            onFetchAttendance = { viewModel.onAction(HomeScreenActions.AttendanceFetch) }
+            onFetchAttendance = { viewModel.onAction(HomeScreenActions.AttendanceFetch) },
         )
     }
 }
@@ -325,7 +327,9 @@ fun HomeScreenContent(
 //            Upcoming birthday part
             item(key = "upcoming birthday part") {
                 TitleBar(
-                    onViewAll = {},
+                    onViewAll = {
+//                        navController.navigate(HomeRoute.ViewAllPage)
+                    },
                     title = SharedRes.Strings.upcoming_birthday,
                     subTitle = SharedRes.Strings.view_all
                 )
