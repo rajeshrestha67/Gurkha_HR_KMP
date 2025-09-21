@@ -392,7 +392,10 @@ fun LazyListScope.notificationView(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = MaterialTheme.dimens.small3),
+                    .padding(
+                        end = MaterialTheme.dimens.small1,
+                        start = MaterialTheme.dimens.small3
+                    ),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
