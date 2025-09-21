@@ -6,12 +6,13 @@ import com.gurkha.hr.domain.attendance.usecase.AttendanceUseCase
 import com.gurkha.hr.domain.upComingBirthday.usecase.UpComingBirthdayUseCase
 import com.gurkha.hr.domain.upComingWorkAnniversaries.useCase.UpComingWorkAnniversaryUseCase
 import com.gurkha.hr.domain.userDetail.usecase.UserDetailUseCase
-import com.gurkha.hr.home.Model.HomeScreenActions
-import com.gurkha.hr.home.Model.HomeScreenState
+import com.gurkha.hr.home.model.HomeScreenActions
+import com.gurkha.hr.home.model.HomeScreenState
 import com.gurkha.hr.networkhelper.onError
 import com.gurkha.hr.networkhelper.onSuccess
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -24,6 +25,11 @@ class HomeScreenViewModel(
 ) : ViewModel() {
     private val _state = MutableStateFlow(HomeScreenState())
     val state = _state
+        .onStart {
+            fetchCurrentUser()
+            fetchUpComingBirthday()
+            fetchUpComingWorkAnniversary()
+        }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
@@ -37,10 +43,6 @@ class HomeScreenViewModel(
             }
 
             is HomeScreenActions.OnCheckInClicked -> {
-                TODO()
-            }
-
-            is HomeScreenActions.OnCheckOutClicked -> {
                 TODO()
             }
 
@@ -67,6 +69,10 @@ class HomeScreenViewModel(
             is HomeScreenActions.OnFetchUpComingWorkAnniversary -> {
                 fetchUpComingWorkAnniversary()
             }
+
+            is HomeScreenActions.OnCheckOutClicked -> TODO()
+            is HomeScreenActions.OnNotificationClicked -> TODO()
+            is HomeScreenActions.OnSearchedClicked -> TODO()
         }
     }
 
@@ -74,7 +80,7 @@ class HomeScreenViewModel(
     private fun fetch(
     ) = viewModelScope.launch {
         _state.update {
-            it.copy(isLoading = true)
+            it.copy(isAttendanceLoading = true)
         }
         attendanceUseCase(
 //            fromDate = state.value.fromDate,
@@ -84,13 +90,13 @@ class HomeScreenViewModel(
         ).onSuccess { data ->
             _state.update {
                 it.copy(
-                    isLoading = false,
+                    isAttendanceLoading = false,
                     attendanceReport = data
                 )
             }
         }.onError {
             _state.update {
-                it.copy(isLoading = false)
+                it.copy(isAttendanceLoading = false)
             }
         }
     }
@@ -99,13 +105,13 @@ class HomeScreenViewModel(
     private fun fetchCurrentUser() = viewModelScope.launch {
         _state.update {
             it.copy(
-                isLoading = true
+                isProfileLoading = true
             )
         }
         userDetailUseCase().onSuccess { data ->
             _state.update {
                 it.copy(
-                    isLoading = false,
+                    isProfileLoading = false,
                     fullName = data.fullName,
                     levelName = data.levelName,
                     email = data.email,
@@ -115,7 +121,7 @@ class HomeScreenViewModel(
         }.onError {
             _state.update {
                 it.copy(
-                    isLoading = false
+                    isProfileLoading = false
                 )
             }
         }
@@ -124,18 +130,18 @@ class HomeScreenViewModel(
     //    fetch the upcoming birthday
     private fun fetchUpComingBirthday() = viewModelScope.launch {
         _state.update {
-            it.copy(isLoading = true)
+            it.copy(isBirthDayLoading = true)
         }
         upComingBirthdayUseCase().onSuccess { data ->
             _state.update {
                 it.copy(
-                    isLoading = false,
+                    isBirthDayLoading = false,
                     upComingBirthday = data
                 )
             }
         }.onError {
             _state.update {
-                it.copy(isLoading = false)
+                it.copy(isBirthDayLoading = false)
             }
         }
     }
@@ -144,20 +150,20 @@ class HomeScreenViewModel(
     private fun fetchUpComingWorkAnniversary() = viewModelScope.launch {
         _state.update {
             it.copy(
-                isLoading = true
+                isAnniversaryLoading = true
             )
         }
         upComingWorkAnniversaryUseCase().onSuccess { data ->
             _state.update {
                 it.copy(
-                    isLoading = false,
+                    isAnniversaryLoading = false,
                     upComingWorkAnniversary = data
                 )
             }
         }.onError {
             _state.update {
                 it.copy(
-                    isLoading = false
+                    isAnniversaryLoading = false
                 )
             }
         }

@@ -35,6 +35,6 @@ val CompactDimens = Dimens(
     onBoardingIndicatorSelected = 30.dp,
     onBoardingIndicatorUnSelected = 10.dp,
     loginImageSize = 200.dp,
-    chartHeight = 200.dp,
+    chartHeight = 250.dp,
     bottomBar = 80.dp
 )

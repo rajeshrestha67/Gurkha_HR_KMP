@@ -37,10 +37,14 @@ val ColorScheme.BorderColor: Color
 
 val ColorScheme.linkColor: Color
     @Composable get() = extendedColor(
-        light = Color(color =  0xFF0288D1),
-        dark = Color(color =  0xFF0288D1)
+        light = Color(color = 0xFF0288D1),
+        dark = Color(color = 0xFF0288D1)
     )
-
+val ColorScheme.highLightColor: Color
+    @Composable get() = extendedColor(
+        light = Color.White.copy(alpha = 0.7f),
+        dark = Color.White.copy(alpha = 0.7f)
+    )
 
 @Composable
 fun ColorScheme.getOnBoardingIndicatorColor(isSelected: Boolean): Color {

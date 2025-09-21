@@ -1,4 +1,4 @@
-package com.gurkha.hr.home.Model
+package com.gurkha.hr.home.model
 
 import com.gurkha.hr.domain.attendance.model.AttendanceData
 import com.gurkha.hr.domain.upComingBirthday.model.UpComingBirthdayData
@@ -13,14 +13,17 @@ data class HomeScreenState(
     val levelName: String = "",
     val email: String = "",
     val userProfileUrl: String? = null,
-    val isLoading : Boolean = false,
+    val isProfileLoading: Boolean = false,
+    val isAttendanceLoading: Boolean = false,
+    val isBirthDayLoading: Boolean = false,
+    val isAnniversaryLoading: Boolean = false,
     val fromDate: String = "2025-09-16",
-    val toDate : String = "2025-09-17",
-    val enableManualAttendance : String ="N",
-    val branchId : String ? = null,
+    val toDate: String = "2025-09-17",
+    val enableManualAttendance: String = "N",
+    val branchId: String? = null,
 
-    val attendanceReport : List<AttendanceData> ? = null,
-    val userDetail : UserDetailData ? = null,
-    val upComingBirthday : List<UpComingBirthdayData>? = emptyList(),
-    val upComingWorkAnniversary : List<UpComingWorkAnniversaryData>? = emptyList()
+    val attendanceReport: List<AttendanceData>? = null,
+    val userDetail: UserDetailData? = null,
+    val upComingBirthday: List<UpComingBirthdayData>? = emptyList(),
+    val upComingWorkAnniversary: List<UpComingWorkAnniversaryData>? = emptyList()
 )
