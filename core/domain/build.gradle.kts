@@ -4,6 +4,8 @@ plugins {
     alias(libs.plugins.android.lint)
     alias(libs.plugins.io.kotest)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.composeMultiplatform)
 }
 
 kotlin {
@@ -34,7 +36,9 @@ kotlin {
     // project can be found here:
     // https://developer.android.com/kotlin/multiplatform/migrate
     val xcfName = "core:domainKit"
+    compilerOptions {
 
+    }
     iosX64 {
         binaries.framework {
             baseName = xcfName
@@ -67,6 +71,11 @@ kotlin {
                 implementation(projects.core.networkHelper)
                 implementation(projects.core.persistance.datastore)
                 implementation(projects.core.ui.components)
+                implementation(projects.core.ui.res)
+
+                implementation(compose.components.resources)
+                implementation(compose.runtime)
+                implementation(compose.foundation)
             }
         }
 
@@ -75,6 +84,8 @@ kotlin {
                 implementation(libs.kotlin.test)
                 implementation(libs.kotest.framework)
                 implementation(libs.kotest.assertions)
+                implementation("io.insert-koin:koin-test:4.1.1")
+//                implementation("io.insert-koin:koin-test-junit5:4.1.1")
             }
         }
 
