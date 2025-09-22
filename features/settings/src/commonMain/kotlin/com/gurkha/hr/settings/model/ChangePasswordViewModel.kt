@@ -4,7 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gurkha.hr.domain.changePassword.usecase.ChangePasswordUseCase
 import com.gurkha.hr.domain.form.PasswordValidateUseCase
+import com.gurkha.hr.networkhelper.onError
 import com.gurkha.hr.networkhelper.onSuccess
+import com.gurkha.hr.networkhelper.toErrorMessage
 import com.gurkha.hr.res.SharedRes
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +19,7 @@ import kotlinx.coroutines.launch
 class ChangePasswordViewModel(
     private val newPasswordValidateUseCase: PasswordValidateUseCase,
     private val changePasswordUseCase: ChangePasswordUseCase
-): ViewModel(){
+) : ViewModel() {
     private val _state = MutableStateFlow(value = ChangePasswordScreenState())
 
     private val _errorChannel = Channel<String>()
@@ -26,6 +28,8 @@ class ChangePasswordViewModel(
 
     private val _successChannel = Channel<Boolean>()
 
+    val successChannel = _successChannel.receiveAsFlow()
+
     val state = _state
         .stateIn(
             viewModelScope,
@@ -33,39 +37,45 @@ class ChangePasswordViewModel(
             initialValue = ChangePasswordScreenState()
         )
 
-    fun onAction(action: ChangePasswordScreenAction){
-        when(action){
+    fun onAction(action: ChangePasswordScreenAction) {
+        when (action) {
             is ChangePasswordScreenAction.OnConfirmPasswordError -> {
                 _state.update {
                     it.copy(confirmPasswordError = action.confirmPasswordError)
                 }
             }
+
             is ChangePasswordScreenAction.OnNewPasswordChanged -> {
                 _state.update {
                     it.copy(newPassword = action.newPassword)
                 }
             }
+
             is ChangePasswordScreenAction.OnNewPasswordError -> {
                 _state.update {
                     it.copy(newPasswordError = action.newPasswordError)
                 }
             }
+
             is ChangePasswordScreenAction.OnConfirmPasswordChanged -> {
                 _state.update {
                     it.copy(confirmPassword = action.confirmPassword)
                 }
             }
+
             ChangePasswordScreenAction.ConfirmClicked -> {
                 val newPasswordError = newPasswordValidateUseCase(state.value.newPassword)
-                when{
+                when {
                     newPasswordError != null -> {
                         _state.update { it.copy(newPasswordError = newPasswordError.errorMsg) }
                     }
+
                     state.value.newPassword != state.value.confirmPassword -> {
                         _state.update {
                             it.copy(confirmPasswordError = SharedRes.Strings.password_does_not_match)
                         }
                     }
+
                     else -> changePassword()
                 }
 
@@ -73,9 +83,9 @@ class ChangePasswordViewModel(
         }
     }
 
-    private fun changePassword() = viewModelScope.launch{
+    private fun changePassword() = viewModelScope.launch {
         _state.update {
-            it.copy(isLoading =  true)
+            it.copy(isLoading = true)
         }
         changePasswordUseCase(
             newPassword = state.value.newPassword,
@@ -85,13 +95,13 @@ class ChangePasswordViewModel(
             _state.update {
                 it.copy(isLoading = false)
             }
-            if (data.success){
-                _successChannel.send(true)
-            }else{
-                _errorChannel.send(data.message ?: "Unknown Error")
+            _successChannel.send(true)
+        }.onError { error ->
+            _state.update {
+                it.copy(isLoading = false)
             }
-
-            }
+            _errorChannel.send(error.toErrorMessage())
+        }
     }
 
 

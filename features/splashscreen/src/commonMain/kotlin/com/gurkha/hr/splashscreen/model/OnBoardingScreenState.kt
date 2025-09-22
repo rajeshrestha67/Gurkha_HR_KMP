@@ -13,7 +13,6 @@ data class OnBoardingScreenState(
     val screens: List<Screen> = ScreenList.screenList,
     val title: StringResource = SharedRes.Strings.next
 ) {
-
     val indicators: List<Indicator>
         @Composable get() = screens.mapIndexed { index, _ ->
             val isSelected = index == currentPage

@@ -16,11 +16,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gurkha.hr.components.ERPButton
+import com.gurkha.hr.components.PlatformMessage
 import com.gurkha.hr.components.textField.FormValidate
 import com.gurkha.hr.components.textField.PasswordTextField
 import com.gurkha.hr.res.SharedRes
@@ -29,17 +31,36 @@ import com.gurkha.hr.settings.model.ChangePasswordScreenAction
 import com.gurkha.hr.settings.model.ChangePasswordScreenState
 import com.gurkha.hr.settings.model.ChangePasswordViewModel
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChangePasswordScreen(
-    onBackPressed: () -> Unit
+    onBackPressed: () -> Unit,
 ) {
 
     val changePasswordViewModel: ChangePasswordViewModel = koinViewModel()
     val state by changePasswordViewModel.state.collectAsStateWithLifecycle()
+
+
+    val platformMessage: PlatformMessage = koinInject()
+
+    LaunchedEffect(Unit) {
+        changePasswordViewModel.successChannel.collect { success ->
+            if (success) {
+                onBackPressed()
+            }
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        changePasswordViewModel.errorChannel.collect { error ->
+            platformMessage.showToast(error)
+        }
+    }
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
@@ -81,7 +102,7 @@ fun ChangePasswordScreenContainer(
 ) {
     Column(
         modifier = modifier.padding(MaterialTheme.dimens.small3),
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2 )
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2)
     ) {
         PasswordTextField(
             enabled = true,
@@ -129,7 +150,7 @@ fun ChangePasswordScreenContainer(
                 onSend = { }),
             rules = FormValidate.passwordValidationRules
 
-            )
+        )
 
         ERPButton(
             modifier = Modifier

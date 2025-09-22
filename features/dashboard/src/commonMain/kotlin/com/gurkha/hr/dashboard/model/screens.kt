@@ -1,8 +1,9 @@
 package com.gurkha.hr.dashboard.model
 
 import androidx.compose.material.icons.Icons
-
-import androidx.compose.material.icons.filled.Call
+import androidx.compose.material.icons.filled.CalendarViewMonth
+import androidx.compose.material.icons.filled.Checklist
+import androidx.compose.material.icons.filled.EditCalendar
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -13,7 +14,7 @@ import org.jetbrains.compose.resources.StringResource
 data class DashboardScreen(
     val name: StringResource,
     val route: DashboardRoute,
-    val icon: ImageVector
+    val icon: ImageVector,
 )
 
 object DashboardScreens {
@@ -26,17 +27,17 @@ object DashboardScreens {
         DashboardScreen(
             SharedRes.Strings.my_attendance,
             DashboardRoute.AttendanceRoute,
-            Icons.Filled.Call
+            Icons.Filled.CalendarViewMonth
         ),
         DashboardScreen(
             SharedRes.Strings.leave,
             DashboardRoute.LeaveRoute,
-            Icons.Filled.Person
+            Icons.Filled.EditCalendar
         ),
         DashboardScreen(
             SharedRes.Strings.report,
             DashboardRoute.ReportRoute,
-            Icons.Filled.Home
+            Icons.Filled.Checklist
         ),
         DashboardScreen(
             SharedRes.Strings.profile,

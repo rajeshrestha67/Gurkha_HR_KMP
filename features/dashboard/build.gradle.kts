@@ -73,6 +73,8 @@ kotlin {
 
                 implementation(libs.androidx.lifecycle.viewmodelCompose)
                 implementation(libs.androidx.lifecycle.runtimeCompose)
+                implementation(compose.materialIconsExtended)
+
 
                 implementation(libs.org.jetbrains.navigation)
                 implementation(libs.kotlinx.serialization.json)
@@ -81,6 +83,7 @@ kotlin {
                 implementation(projects.core.networkHelper)
 
                 implementation(projects.core.ui.res)
+                implementation(projects.core.ui.components)
 
                 implementation(projects.features.home)
                 implementation(projects.features.profile)

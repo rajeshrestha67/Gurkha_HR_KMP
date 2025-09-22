@@ -18,7 +18,8 @@ fun initKoin(config: KoinAppDeclaration? = null) {
             SplashScreenModule().module,
             DashboardScreenModule().module,
             ProfileScreenModule().module,
-            ChangePasswordModule().module
+            ChangePasswordModule().module,
+            HomeScreenModule().module
         )
     }
 }
