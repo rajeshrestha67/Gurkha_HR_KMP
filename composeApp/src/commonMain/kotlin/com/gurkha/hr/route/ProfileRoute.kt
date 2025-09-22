@@ -9,4 +9,7 @@ sealed interface ProfileRoute{
 
     @Serializable
     data object  ChangePasswordRoute: AppRoute
+
+    @Serializable
+    data object ProfileInfoScreenRoute: AppRoute
 }

@@ -9,6 +9,7 @@ import androidx.compose.ui.graphics.TransformOrigin
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.gurkha.hr.dashboard.DashboardScreen
+import com.gurkha.hr.dashboard.graph.profileScreenBuilder
 import com.gurkha.hr.graph.changePasswordScreenBuilder
 import com.gurkha.hr.graph.dashboardScreenBuilder
 import com.gurkha.hr.graph.loginScreenBuilder

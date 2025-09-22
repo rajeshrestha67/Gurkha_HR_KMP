@@ -60,7 +60,8 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun ProfileScreen(
     onLogout: () -> Unit,
-    onAccountClick:(AccountList)->Unit
+    onAccountClick:(AccountList)->Unit,
+    onGeneralClick:(GeneralList)->Unit
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -118,7 +119,8 @@ fun ProfileScreen(
         ProfileScreenContainer(
             modifier = Modifier.padding(paddingValues).fillMaxSize(),
             onLogout = onLogout,
-            onAccountClick = onAccountClick
+            onAccountClick = onAccountClick,
+            onGeneralClick = onGeneralClick
         )
 
     }
@@ -128,7 +130,8 @@ fun ProfileScreen(
 fun ProfileScreenContainer(
     modifier: Modifier = Modifier,
     onLogout: () -> Unit,
-    onAccountClick:(AccountList) -> Unit
+    onAccountClick:(AccountList) -> Unit,
+    onGeneralClick: (GeneralList) -> Unit
 ) {
 
     val generalList = remember { GeneralList.list }
@@ -154,7 +157,7 @@ fun ProfileScreenContainer(
         ) { item ->
             ProfileItemRow(
                 text = stringResource(item.title),
-                onClick = { println("Clicked Account Items") },
+                onClick = { onGeneralClick(item) },
                 showDivider = item != GeneralList.History
             )
 

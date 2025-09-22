@@ -36,6 +36,9 @@
     <string name="new_password">New Password</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="confirm">Confirm</string>
+    <string name="personal_info">Personal Info</string>
+    <string name="emergency_contact">Emergency Contact</string>
+    <string name="skill_and_qualification">Skill and Qualification</string>
     <string name="language">Language</string>
     <string name="light_mode">Light Mode</string>
     <string name="system_default">System Default</string>

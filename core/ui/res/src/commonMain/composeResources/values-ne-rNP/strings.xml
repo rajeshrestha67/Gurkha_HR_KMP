@@ -40,6 +40,9 @@
     <string name="setting">सेटिङ</string>
     <string name="log_out">लगआउट</string>
     <string name="allocated_leave">आवंटित स्रोतहरू</string>
+    <string name="personal_info">व्यक्तिगत जानकारी</string>
+    <string name="emergency_contact">आपतकालीन सम्पर्क</string>
+    <string name="skill_and_qualification">सीप र योग्यता</string>
     <string name="login">लग इन गर्नुहोस्</string>
     <string name="username">प्रयोगकर्ता नाम</string>
     <string name="skip">छोड्नुहोस्</string>

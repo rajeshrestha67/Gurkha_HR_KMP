@@ -5,5 +5,6 @@ import androidx.compose.runtime.Composable
 
 @Composable
 fun LeaveScreen(){
-    Text("This is leave screen")
+    Text("This is Leave Screen")
 }
+

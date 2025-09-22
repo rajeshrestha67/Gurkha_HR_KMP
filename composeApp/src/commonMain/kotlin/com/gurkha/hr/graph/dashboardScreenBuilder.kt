@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.gurkha.hr.dashboard.DashboardScreen
 import com.gurkha.hr.profile.model.AccountList
+import com.gurkha.hr.profile.model.GeneralList
 import com.gurkha.hr.route.AppRoute
 import com.gurkha.hr.route.ProfileRoute
 
@@ -17,26 +18,51 @@ fun NavGraphBuilder.dashboardScreenBuilder(navController: NavHostController) {
                 }
             },
             onAccountClick = { item ->
-                when(item){
-                    AccountList.TermsAndServices ->{
+                when (item) {
+                    AccountList.TermsAndServices -> {
 
                     }
-                    AccountList.PrivacyPolicy ->{
+
+                    AccountList.PrivacyPolicy -> {
 
                     }
-                    AccountList.FAC ->{
+
+                    AccountList.FAC -> {
 
                     }
+
                     AccountList.Support -> {
 
                     }
-                    AccountList.Settings ->{
+
+                    AccountList.Settings -> {
                         navController.navigate(ProfileRoute.SettingsRoute)
                     }
                 }
 
-            }
+            },
+            onGeneralClick = { item ->
+                when(item){
+                    GeneralList.Profile -> {
+                        navController.navigate((ProfileRoute.ProfileInfoScreenRoute))
+                    }
+                    GeneralList.AllocatedLeave -> {
 
+                    }
+                    GeneralList.TimeAndAttendance -> {
+
+                    }
+                    GeneralList.Document -> {
+
+                    }
+                    GeneralList.CompanyAssets -> {
+
+                    }
+                    GeneralList.History -> {
+
+                    }
+                }
+            },
         )
     }
 }

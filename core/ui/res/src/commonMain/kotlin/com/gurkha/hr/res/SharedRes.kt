@@ -16,6 +16,7 @@ import gurkhahr.core.ui.res.generated.resources.dark_mode
 import gurkhahr.core.ui.res.generated.resources.do_you_really_want_to_logout
 import gurkhahr.core.ui.res.generated.resources.document
 import gurkhahr.core.ui.res.generated.resources.email
+import gurkhahr.core.ui.res.generated.resources.emergency_contact
 import gurkhahr.core.ui.res.generated.resources.enter_your_email
 import gurkhahr.core.ui.res.generated.resources.enter_your_password
 import gurkhahr.core.ui.res.generated.resources.enter_your_username
@@ -41,11 +42,13 @@ import gurkhahr.core.ui.res.generated.resources.next
 import gurkhahr.core.ui.res.generated.resources.no
 import gurkhahr.core.ui.res.generated.resources.password
 import gurkhahr.core.ui.res.generated.resources.password_does_not_match
+import gurkhahr.core.ui.res.generated.resources.personal_info
 import gurkhahr.core.ui.res.generated.resources.profile
 import gurkhahr.core.ui.res.generated.resources.privacy_policy
 import gurkhahr.core.ui.res.generated.resources.report
 import gurkhahr.core.ui.res.generated.resources.required
 import gurkhahr.core.ui.res.generated.resources.setting
+import gurkhahr.core.ui.res.generated.resources.skill_and_qualification
 import gurkhahr.core.ui.res.generated.resources.skip
 import gurkhahr.core.ui.res.generated.resources.support
 import gurkhahr.core.ui.res.generated.resources.system_default
@@ -108,6 +111,9 @@ object SharedRes {
         val system_default = Res.string.system_default
         val confirm = Res.string.confirm
         val language = Res.string.language
+        val personal_info = Res.string.personal_info
+        val emergency_contact = Res.string.emergency_contact
+        val skill_and_qualification = Res.string.skill_and_qualification
 
 
 
