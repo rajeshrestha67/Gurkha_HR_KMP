@@ -84,6 +84,7 @@ kotlin {
                 implementation(projects.features.splashscreen)
                 implementation(projects.features.dashboard)
                 implementation(projects.features.home)
+                implementation(projects.features.leave)
 
 
                 implementation(projects.core.ui.components)

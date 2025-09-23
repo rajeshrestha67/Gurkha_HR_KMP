@@ -46,6 +46,42 @@ val ColorScheme.highLightColor: Color
         dark = Color.White.copy(alpha = 0.7f)
     )
 
+val ColorScheme.darkPrimaryTextColor: Color
+    @Composable get() = extendedColor(
+        light = Color.Black,
+        dark = Color.Black
+    )
+
+val ColorScheme.leaveBalanceBorder: Color
+    @Composable get() = extendedColor(
+        light = Color.Blue,
+        dark = Color.Blue
+    )
+
+val ColorScheme.leaveApprovedBorder: Color
+    @Composable get() = extendedColor(
+        light = Color.Yellow,
+        dark = Color.Yellow
+    )
+
+val ColorScheme.leavePendingBorder: Color
+    @Composable get() = extendedColor(
+        light = Color.Green,
+        dark = Color.Green
+    )
+
+val ColorScheme.leaveCancelledBorder: Color
+    @Composable get() = extendedColor(
+        light = Color.Red,
+        dark = Color.Red
+    )
+
+val ColorScheme.veryLightGray: Color
+    @Composable get() = extendedColor(
+        light = Color(0xFFF3F6F4),
+        dark =Color(0xFFF3F6F4),
+    )
+
 @Composable
 fun ColorScheme.getOnBoardingIndicatorColor(isSelected: Boolean): Color {
     return if (isSelected) onBoardingIndicatorSelectedColor else onBoardingIndicatorUnSelectedColor

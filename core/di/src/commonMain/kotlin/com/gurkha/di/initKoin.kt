@@ -17,7 +17,8 @@ fun initKoin(config: KoinAppDeclaration? = null) {
             FormModule().module,
             SplashScreenModule().module,
             DashboardScreenModule().module,
-            HomeScreenModule().module
+            HomeScreenModule().module,
+            LeaveScreenModule().module,
         )
     }
 }

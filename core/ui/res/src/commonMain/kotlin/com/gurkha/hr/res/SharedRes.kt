@@ -4,7 +4,10 @@ import gurkhahr.core.ui.res.generated.resources.Poppins_Bold
 import gurkhahr.core.ui.res.generated.resources.Poppins_Italic
 import gurkhahr.core.ui.res.generated.resources.Poppins_Medium
 import gurkhahr.core.ui.res.generated.resources.Res
+import gurkhahr.core.ui.res.generated.resources.all_leaves
+import gurkhahr.core.ui.res.generated.resources.approved
 import gurkhahr.core.ui.res.generated.resources.attendance
+import gurkhahr.core.ui.res.generated.resources.cancelled
 import gurkhahr.core.ui.res.generated.resources.email
 import gurkhahr.core.ui.res.generated.resources.enter_your_email
 import gurkhahr.core.ui.res.generated.resources.enter_your_password
@@ -18,10 +21,15 @@ import gurkhahr.core.ui.res.generated.resources.invalid_password_lowercase
 import gurkhahr.core.ui.res.generated.resources.invalid_password_special_char
 import gurkhahr.core.ui.res.generated.resources.invalid_password_uppercase
 import gurkhahr.core.ui.res.generated.resources.leave
+import gurkhahr.core.ui.res.generated.resources.leave_approved
+import gurkhahr.core.ui.res.generated.resources.leave_balance
+import gurkhahr.core.ui.res.generated.resources.leave_cancelled
+import gurkhahr.core.ui.res.generated.resources.leave_pending
 import gurkhahr.core.ui.res.generated.resources.login
 import gurkhahr.core.ui.res.generated.resources.my_attendance
 import gurkhahr.core.ui.res.generated.resources.next
 import gurkhahr.core.ui.res.generated.resources.password
+import gurkhahr.core.ui.res.generated.resources.pending
 import gurkhahr.core.ui.res.generated.resources.profile
 import gurkhahr.core.ui.res.generated.resources.report
 import gurkhahr.core.ui.res.generated.resources.request
@@ -61,6 +69,16 @@ object SharedRes {
         val attendance = Res.string.attendance
         val upcoming_birthday = Res.string.upcoming_birthday
         val work_anniversaries = Res.string.work_anniversaries
+        val all_leaves = Res.string.all_leaves
+        val leave_balance = Res.string.leave_balance
+        val leave_approved = Res.string.leave_approved
+        val leave_pending = Res.string.leave_pending
+        val leave_cancelled = Res.string.leave_cancelled
+        val pending = Res.string.pending
+        val approved = Res.string.approved
+        val cancelled = Res.string.cancelled
+
+
 
 
 
