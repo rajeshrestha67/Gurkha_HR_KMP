@@ -13,21 +13,22 @@ import io.ktor.client.request.setBody
 
 class KtorChangePasswordRemoteRepository(
     private val httpClient: HttpClient
-):ChangePasswordRemoteRepository {
+) : ChangePasswordRemoteRepository {
 
     override suspend fun changePassword(
+        email: String,
         newPassword: String,
         confirmPassword: String
     ): ERPResult<ChangePasswordResponseDTO, DataError> {
         val requestDto = ChangePasswordRequestDTO(
-            email = "shreejesh.mbank@gmail.com",
+            email = email,
             password = newPassword,
             confirmPassword = confirmPassword
         )
         return safeCall {
             httpClient.post(
                 endPoint = CHANGE_PASSWORD_END_POINT
-            ){
+            ) {
                 setBody(
                     requestDto
                 )
