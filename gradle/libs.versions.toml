@@ -39,6 +39,7 @@ kotest-version = "6.0.3"
 datetime = "0.7.1"
 
 [libraries]
+koin-test = { module = "io.insert-koin:koin-test", version.ref = "koin-core" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin-test" }
 kotlin-testJunit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin-test" }
 junit = { module = "junit:junit", version.ref = "junit" }

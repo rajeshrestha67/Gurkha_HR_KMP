@@ -84,7 +84,7 @@ kotlin {
                 implementation(libs.kotlin.test)
                 implementation(libs.kotest.framework)
                 implementation(libs.kotest.assertions)
-                implementation("io.insert-koin:koin-test:4.1.1")
+                implementation(libs.koin.test)
             }
         }
 
