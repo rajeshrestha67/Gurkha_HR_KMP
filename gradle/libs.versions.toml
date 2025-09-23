@@ -38,6 +38,8 @@ dataStore = "1.1.7"
 kotest-version = "6.0.3"
 datetime = "0.7.1"
 
+kotlinx-coroutine = "1.10.2"
+
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin-test" }
 kotlin-testJunit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin-test" }
@@ -89,6 +91,9 @@ compose-resources = { module = "org.jetbrains.compose.resources:resources", vers
 
 
 okio = { module = "com.squareup.okio:okio", version.ref = "okio" }
+
+
+kotlinx-coroutine = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutine" }
 
 #datastore
 androidx-datastore-core-okio = { group = "androidx.datastore", name = "datastore-core-okio", version.ref = "dataStore" }

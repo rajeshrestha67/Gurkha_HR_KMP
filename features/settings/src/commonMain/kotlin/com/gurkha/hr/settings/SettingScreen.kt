@@ -4,7 +4,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -26,7 +25,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.borderColor
@@ -38,23 +36,23 @@ import org.jetbrains.compose.resources.stringResource
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingScreen(
-    onBackPressed:()-> Unit,
-    onButtonPressed:()-> Unit,
+    onBackPressed: () -> Unit,
+    onButtonPressed: () -> Unit
 
 
-){
+) {
 
-    Scaffold (
+    Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
 
-
         topBar = {
             TopAppBar(
-                title = {Text(stringResource(SharedRes.Strings.setting))},
+                title = { Text(stringResource(SharedRes.Strings.setting)) },
                 navigationIcon = {
                     IconButton(
-                        onClick = onBackPressed){
+                        onClick = onBackPressed
+                    ) {
                         Icon(
                             imageVector = Icons.Default.ChevronLeft,
                             contentDescription = "Back"
@@ -64,8 +62,7 @@ fun SettingScreen(
 
             )
         }
-    ){
-        paddingValues ->
+    ) { paddingValues ->
         SettingScreenContainer(
             modifier = Modifier
                 .fillMaxSize()
@@ -79,20 +76,20 @@ fun SettingScreen(
 @Composable
 fun SettingScreenContainer(
     modifier: Modifier = Modifier,
-    onButtonPressed:()-> Unit,
+    onButtonPressed: () -> Unit,
 ) {
-    LazyColumn (
+    LazyColumn(
         modifier = modifier,
         contentPadding = PaddingValues(
             horizontal = MaterialTheme.dimens.small3,
             vertical = MaterialTheme.dimens.small2
         )
-    ){
-        settingListItems(SettingList.values().toList()){item ->
+    ) {
+        settingListItems(SettingList.values().toList()) { item ->
             SettingsItemRow(
                 text = stringResource(item.title),
                 onClick = {
-                    when (item){
+                    when (item) {
                         SettingList.ChangePassword -> {
                             onButtonPressed()
                         }
@@ -100,19 +97,19 @@ fun SettingScreenContainer(
                         SettingList.Theme -> {
 
                         }
+
                         SettingList.Language -> {
 
                         }
                     }
                 },
 
-            )
+                )
         }
 
     }
 
 }
-
 
 
 private fun LazyListScope.settingListItems(
@@ -124,6 +121,7 @@ private fun LazyListScope.settingListItems(
         itemContent = itemContent
     )
 }
+
 @Composable
 fun SettingsItemRow(
     text: String,
