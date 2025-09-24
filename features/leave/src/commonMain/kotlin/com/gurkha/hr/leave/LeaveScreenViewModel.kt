@@ -53,7 +53,6 @@ class LeaveScreenViewModel(
         employeeName: String,
         isSelf: String
     ) = viewModelScope.launch {
-        println("fetchAttendanceStatus")
 
         _state.update {
             when(attendanceStatus){
