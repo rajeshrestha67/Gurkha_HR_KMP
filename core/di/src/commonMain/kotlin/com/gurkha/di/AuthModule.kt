@@ -2,6 +2,7 @@ package com.gurkha.di
 
 import com.gurkha.hr.data.login.KtorUserRemoteRepository
 import com.gurkha.hr.datastore.token.repository.TokenRepository
+import com.gurkha.hr.datastore.user_data.repository.UserDataRepository
 import com.gurkha.hr.domain.auth.login.repository.UserRemoteRepository
 import com.gurkha.hr.domain.auth.login.usecase.ClearTokenUseCase
 import com.gurkha.hr.domain.auth.login.usecase.LoginUseCase
@@ -22,8 +23,15 @@ class AuthModule {
     fun userRepository(httpClient: HttpClient) = KtorUserRemoteRepository(httpClient)
 
     @Factory
-    fun loginUseCase(userRemoteRepository: UserRemoteRepository, tokenRepository: TokenRepository) =
-        LoginUseCase(userRemoteRepository, tokenRepository = tokenRepository)
+    fun loginUseCase(
+        userRemoteRepository: UserRemoteRepository,
+        tokenRepository: TokenRepository,
+        userDataRepository: UserDataRepository
+    ) = LoginUseCase(
+        userRemoteRepository = userRemoteRepository,
+        tokenRepository = tokenRepository,
+        userDataRepository = userDataRepository
+    )
 
     @Factory
     fun clearTokenUseCase(tokenRepository: TokenRepository) =

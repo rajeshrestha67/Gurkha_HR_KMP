@@ -1,6 +1,6 @@
 package com.gurkha.di
 
-import com.gurkha.hr.datastore.userInfo.repository.UserInfoRepository
+import com.gurkha.hr.datastore.user_info.repository.UserInfoRepository
 import com.gurkha.hr.domain.splash.CheckFirstTimeUserUseCase
 import com.gurkha.hr.domain.splash.UpdateFirstTimeCheckUseCase
 import com.gurkha.hr.splashscreen.OnBoardingViewModel

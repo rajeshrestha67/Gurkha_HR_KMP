@@ -1,23 +1,20 @@
-package com.gurkha.hr.datastore.userInfo.local
+package com.gurkha.hr.datastore.user_data.local
 
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.okio.OkioStorage
-import com.gurkha.hr.datastore.userInfo.model.UserInfo
+import com.gurkha.hr.datastore.user_data.model.UserData
 import kotlinx.coroutines.flow.Flow
 import okio.FileSystem
 import okio.Path.Companion.toPath
 import okio.SYSTEM
 
-
-class UserInfoDataStore(
+class UserDataDataStore(
     private val produceFilePath: () -> String
 ) {
-
-    //    create db for the user info
     private val db = DataStoreFactory.create(
         storage = OkioStorage(
             fileSystem = FileSystem.SYSTEM,
-            serializer = UserInfoJsonSerializer,
+            serializer = UserDataJsonSerializer,
             producePath = {
                 produceFilePath().toPath()
             }
@@ -25,12 +22,12 @@ class UserInfoDataStore(
     )
 
     //get the userdata
-    val userInfoFlow: Flow<UserInfo>
+    val userInfoFlow: Flow<UserData>
         get() = db.data
 
-    suspend fun update(userInfo: UserInfo) {
-        db.updateData {_->
-           userInfo
+    suspend fun update(userData: UserData) {
+        db.updateData { _ ->
+            userData
         }
     }
 }
