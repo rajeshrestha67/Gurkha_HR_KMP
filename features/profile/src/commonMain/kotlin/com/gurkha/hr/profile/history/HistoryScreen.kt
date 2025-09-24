@@ -1,10 +1,9 @@
-package com.gurkha.hr.leave
+package com.gurkha.hr.profile.history
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 
 @Composable
-fun LeaveScreen(){
-    Text("This is Leave Screen")
+fun HistoryScreen(){
+    Text("This is History Screen")
 }
-

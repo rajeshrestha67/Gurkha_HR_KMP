@@ -1,7 +1,4 @@
-package com.gurkha.hr.profile.model
-
-import com.gurkha.hr.res.SharedRes
-import org.jetbrains.compose.resources.StringResource
+package com.gurkha.hr.profile.model.profile_screen
 
 data class ProfileScreenState (
     val generalItems: List<GeneralList> = GeneralList.list,

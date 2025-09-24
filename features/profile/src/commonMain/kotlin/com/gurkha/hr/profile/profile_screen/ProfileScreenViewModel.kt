@@ -1,9 +1,9 @@
-package com.gurkha.hr.profile
+package com.gurkha.hr.profile.profile_screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gurkha.hr.profile.model.ProfileScreenState
-import com.gurkha.hr.profile.model.ProfileViewAction
+import com.gurkha.hr.profile.model.profile_screen.ProfileScreenState
+import com.gurkha.hr.profile.model.profile_screen.ProfileViewAction
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn

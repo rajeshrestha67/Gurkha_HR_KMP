@@ -1,4 +1,4 @@
-package com.gurkha.hr.profile
+package com.gurkha.hr.profile.profile_screen
 
 
 import androidx.compose.foundation.background
@@ -43,8 +43,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.gurkha.hr.profile.model.AccountList
-import com.gurkha.hr.profile.model.GeneralList
+import com.gurkha.hr.profile.model.profile_screen.AccountList
+import com.gurkha.hr.profile.model.profile_screen.GeneralList
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.borderColor
 import com.gurkha.hr.res.theme.dimens
@@ -60,7 +60,8 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun ProfileScreen(
     onLogout: () -> Unit,
-    onAccountClick:(AccountList)->Unit
+    onAccountClick:(AccountList)->Unit,
+    onGeneralClick:(GeneralList)->Unit
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -118,7 +119,8 @@ fun ProfileScreen(
         ProfileScreenContainer(
             modifier = Modifier.padding(paddingValues).fillMaxSize(),
             onLogout = onLogout,
-            onAccountClick = onAccountClick
+            onAccountClick = onAccountClick,
+            onGeneralClick = onGeneralClick
         )
 
     }
@@ -128,7 +130,8 @@ fun ProfileScreen(
 fun ProfileScreenContainer(
     modifier: Modifier = Modifier,
     onLogout: () -> Unit,
-    onAccountClick:(AccountList) -> Unit
+    onAccountClick:(AccountList) -> Unit,
+    onGeneralClick: (GeneralList) -> Unit
 ) {
 
     val generalList = remember { GeneralList.list }
@@ -154,7 +157,7 @@ fun ProfileScreenContainer(
         ) { item ->
             ProfileItemRow(
                 text = stringResource(item.title),
-                onClick = { println("Clicked Account Items") },
+                onClick = { onGeneralClick(item) },
                 showDivider = item != GeneralList.History
             )
 

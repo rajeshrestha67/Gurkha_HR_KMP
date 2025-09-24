@@ -22,7 +22,7 @@ import com.gurkha.hr.dashboard.graph.profileScreenBuilder
 import com.gurkha.hr.dashboard.graph.reportScreenBuilder
 import com.gurkha.hr.dashboard.model.DashboardScreenAction
 import com.gurkha.hr.dashboard.route.DashboardRoute
-import com.gurkha.hr.profile.model.AccountList
+import com.gurkha.hr.profile.model.profile_screen.AccountListimport com.gurkha.hr.profile.model.profile_screen.GeneralList
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -30,7 +30,8 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun DashboardScreen(
     onLogout: () -> Unit,
-    onAccountClick: (AccountList) -> Unit
+    onAccountClick: (AccountList) -> Unit,
+    onGeneralClick: (GeneralList) -> Unit
 ) {
     val viewModel: DashboardViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -87,7 +88,8 @@ fun DashboardScreen(
             homeScreenBuilder(navController = navController)
             profileScreenBuilder(
                 onLogout = onLogout,
-                onAccountClick = onAccountClick
+                onAccountClick = onAccountClick,
+                onGeneralClick = onGeneralClick,
             )
             attendanceScreen(navController = navController)
             leaveScreenBuilder(navController = navController)
