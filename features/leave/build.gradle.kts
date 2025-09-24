@@ -78,6 +78,23 @@ kotlin {
                 implementation(projects.core.networkHelper)
                 implementation(projects.core.ui.res)
                 implementation(projects.core.ui.components)
+
+                implementation(libs.androidx.lifecycle.viewmodelCompose)
+                implementation(libs.androidx.lifecycle.runtimeCompose)
+
+                implementation(libs.koin.compose.viewmodel)
+                implementation(compose.components.resources)
+                implementation(compose.materialIconsExtended)
+
+                implementation(projects.core.domain)
+                implementation(projects.core.networkHelper)
+                implementation(projects.core.ui.res)
+                implementation(projects.core.ui.components)
+
+                implementation(libs.coil.compose)
+                implementation(libs.coil.compose.core)
+                implementation(libs.coil.mp)
+                implementation(libs.coil.network.ktor3)
             }
         }
 
@@ -115,3 +132,4 @@ kotlin {
     }
 
 }
+

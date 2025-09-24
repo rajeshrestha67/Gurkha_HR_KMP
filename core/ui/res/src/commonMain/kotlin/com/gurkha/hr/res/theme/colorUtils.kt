@@ -11,13 +11,31 @@ fun extendedColor(light: Color, dark: Color): Color {
     return if (isSystemInDarkTheme()) dark else light
 }
 
+val ColorScheme.imageBackgroundColor: Color
+    @Composable get() =
+        extendedColor(
+            light = Color.Black,
+            dark = Color(0xFF212121)
+        )
 val ColorScheme.primaryTextColor: Color
     @Composable get() =
         extendedColor(
-            light = Color(0xFF727272),
+            light = Color(0xFF424242),
+            dark = Color(0xFF212121)
+        )
+val ColorScheme.borderColor: Color
+    @Composable get() =
+        extendedColor(
+            light = Color.Gray,
             dark = Color(0xFF212121)
         )
 
+val ColorScheme.secondaryTextColor: Color
+    @Composable get() =
+        extendedColor(
+            light = Color(0xFF616161),
+            dark = Color.White,
+        )
 val ColorScheme.onBoardingIndicatorSelectedColor: Color
     @Composable get() = extendedColor(
         light = Color.Red,
@@ -28,11 +46,6 @@ val ColorScheme.onBoardingIndicatorUnSelectedColor: Color
     @Composable get() = extendedColor(
         light = Color.Gray,
         dark = Color.Gray
-    )
-val ColorScheme.BorderColor: Color
-    @Composable get() = extendedColor(
-        light = Color.LightGray,
-        dark = Color.LightGray
     )
 
 val ColorScheme.linkColor: Color
@@ -45,6 +58,23 @@ val ColorScheme.highLightColor: Color
         light = Color.White.copy(alpha = 0.7f),
         dark = Color.White.copy(alpha = 0.7f)
     )
+val ColorScheme.logOutButtonColor: Color
+    @Composable get() = extendedColor(
+        light = Color.Red,
+        dark = Color.Gray
+    )
+val ColorScheme.logOutTextColor: Color
+    @Composable get() = extendedColor(
+        light = Color.White,
+        dark = Color.Black
+    )
+
+val ColorScheme.veryLightGray: Color
+    @Composable get() = extendedColor(
+        light = Color(0xFFF3F6F4),
+        dark =Color(0xFFF3F6F4),
+    )
+
 
 val ColorScheme.darkPrimaryTextColor: Color
     @Composable get() = extendedColor(

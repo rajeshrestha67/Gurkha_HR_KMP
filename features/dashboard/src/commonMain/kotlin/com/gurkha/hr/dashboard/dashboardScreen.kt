@@ -12,8 +12,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.gurkha.hr.components.AnimatedNavHost
 import com.gurkha.hr.components.navigationBar.ERPNavigationBar
 import com.gurkha.hr.dashboard.graph.attendanceScreen
 import com.gurkha.hr.dashboard.graph.homeScreenBuilder
@@ -22,13 +22,17 @@ import com.gurkha.hr.dashboard.graph.profileScreenBuilder
 import com.gurkha.hr.dashboard.graph.reportScreenBuilder
 import com.gurkha.hr.dashboard.model.DashboardScreenAction
 import com.gurkha.hr.dashboard.route.DashboardRoute
+import com.gurkha.hr.profile.model.profile_screen.AccountListimport com.gurkha.hr.profile.model.profile_screen.GeneralList
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 
 @Composable
 fun DashboardScreen(
-    onGoToLeaveRequestPage:()-> Unit
+    onGoToLeaveRequestPage:()-> Unit,
+    onLogout: () -> Unit,
+    onAccountClick: (AccountList) -> Unit,
+    onGeneralClick: (GeneralList) -> Unit
 ) {
     val viewModel: DashboardViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -77,20 +81,20 @@ fun DashboardScreen(
             }
         }
     ) { paddingValues ->
-        NavHost(
+        AnimatedNavHost(
             modifier = Modifier.padding(paddingValues).fillMaxSize(),
             navController = navController,
-            startDestination = DashboardRoute.HomeRoute
+            startDestination = DashboardRoute.HomeRoute,
         ) {
-
-            homeScreenBuilder(
-                navController = navController
+            homeScreenBuilder(navController = navController)
+            profileScreenBuilder(
+                onLogout = onLogout,
+                onAccountClick = onAccountClick,
+                onGeneralClick = onGeneralClick,
             )
-            profileScreenBuilder(navController = navController)
             attendanceScreen(navController = navController)
             leaveScreenBuilder(navController = navController,onGoToLeaveRequestPage = onGoToLeaveRequestPage)
             reportScreenBuilder(navController = navController)
         }
     }
 }
-

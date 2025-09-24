@@ -1,6 +1,6 @@
 package com.gurkha.hr.domain.splash
 
-import com.gurkha.hr.datastore.userInfo.repository.UserInfoRepository
+import com.gurkha.hr.datastore.user_info.repository.UserInfoRepository
 import kotlinx.coroutines.flow.firstOrNull
 
 class CheckFirstTimeUserUseCase(

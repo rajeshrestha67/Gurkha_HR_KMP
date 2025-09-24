@@ -62,6 +62,7 @@ kotlin {
                 implementation(libs.kotlin.stdlib)
                 // Add KMP dependencies here
                 implementation(libs.kotlinx.serialization.json)
+                implementation(libs.kotlinx.coroutine)
             }
         }
 
@@ -76,6 +77,7 @@ kotlin {
                 // Add Android-specific dependencies here. Note that this source set depends on
                 // commonMain by default and will correctly pull the Android artifacts of any KMP
                 // dependencies declared in commonMain.
+
             }
         }
 
