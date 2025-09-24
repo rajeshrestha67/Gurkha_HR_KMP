@@ -7,8 +7,10 @@ import com.gurkha.hr.dashboard.route.DashboardRoute
 import com.gurkha.hr.leave.LeaveScreen
 
 
-fun NavGraphBuilder.leaveScreenBuilder(navController: NavController) {
+fun NavGraphBuilder.leaveScreenBuilder(navController: NavController,onGoToLeaveRequestPage:()-> Unit) {
     composable<DashboardRoute.LeaveRoute> {
-        LeaveScreen()
+        LeaveScreen(
+            onGoToLeaveRequestPage = onGoToLeaveRequestPage
+        )
     }
 }

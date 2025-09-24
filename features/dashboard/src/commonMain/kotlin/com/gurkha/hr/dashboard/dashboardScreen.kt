@@ -30,6 +30,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun DashboardScreen(
+    onGoToLeaveRequestPage:()-> Unit,
     onLogout: () -> Unit,
     onAccountClick: (AccountList) -> Unit,
     onGeneralClick: (GeneralList) -> Unit
@@ -93,7 +94,7 @@ fun DashboardScreen(
                 onGeneralClick = onGeneralClick,
             )
             attendanceScreen(navController = navController)
-            leaveScreenBuilder(navController = navController)
+            leaveScreenBuilder(navController = navController,onGoToLeaveRequestPage = onGoToLeaveRequestPage)
             reportScreenBuilder(navController = navController)
         }
     }

@@ -86,6 +86,7 @@ kotlin {
                 implementation(projects.features.profile)
                 implementation(projects.features.settings)
                 implementation(projects.features.home)
+                implementation(projects.features.leave)
 
 
                 implementation(projects.core.ui.components)
