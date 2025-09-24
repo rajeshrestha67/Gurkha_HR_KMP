@@ -7,6 +7,8 @@ data class UserDetailResponseDto(
     val status: String? = null,
     val message: String? = null,
     val detail: UserDetailDto? = null,
+    val employeeDetails: EmployeeDetailsDto? = null,
+    val branch: BranchDto? = null,
     val success: Boolean? = null
 )
 

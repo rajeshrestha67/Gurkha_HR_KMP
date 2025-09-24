@@ -14,25 +14,46 @@ import com.gurkha.hr.route.ProfileRoute
 fun NavGraphBuilder.profileInfoScreenBuilder(navController: NavController){
     composable<ProfileRoute.ProfileInfoScreenRoute>{
         ProfileInfoScreen(
+
             onBackPressed = {
                 navController.popBackStack()
             }
         )
     }
     composable<ProfileRoute.AllocatedLeaveScreenRoute>{
-        AllocatedLeaveScreen()
+        AllocatedLeaveScreen(
+            onBackPressed = {
+                navController.popBackStack()
+            }
+        )
     }
     composable<ProfileRoute.TimeAndAttendanceScreenRoute>{
-        TimeAndAttendanceScreen()
+        TimeAndAttendanceScreen(
+            onBackPressed = {
+                navController.popBackStack()
+            }
+        )
     }
     composable<ProfileRoute.DocumentScreenRoute>{
-        DocumentScreen()
+        DocumentScreen(
+            onBackPressed = {
+                navController.popBackStack()
+            }
+        )
     }
     composable<ProfileRoute.CompanyAssetsScreenRoute>{
-        CompanyAssetsScreen()
+        CompanyAssetsScreen(
+            onBackPressed = {
+                navController.popBackStack()
+            }
+        )
     }
     composable<ProfileRoute.HistoryScreenRoute>{
-        HistoryScreen()
+        HistoryScreen(
+            onBackPressed = {
+                navController.popBackStack()
+            }
+        )
 
     }
 
