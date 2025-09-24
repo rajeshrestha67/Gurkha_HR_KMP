@@ -393,6 +393,7 @@ fun LazyListScope.attendanceSection(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(horizontal = MaterialTheme.dimens.small3)
                 .height(MaterialTheme.dimens.chartHeight)
         ) {
             HorizontalPager(state = pagerState) { item ->

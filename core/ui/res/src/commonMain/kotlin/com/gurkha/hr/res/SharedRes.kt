@@ -4,6 +4,9 @@ import gurkhahr.core.ui.res.generated.resources.Poppins_Bold
 import gurkhahr.core.ui.res.generated.resources.Poppins_Italic
 import gurkhahr.core.ui.res.generated.resources.Poppins_Medium
 import gurkhahr.core.ui.res.generated.resources.Res
+import gurkhahr.core.ui.res.generated.resources.all_leaves
+import gurkhahr.core.ui.res.generated.resources.annual_leave
+import gurkhahr.core.ui.res.generated.resources.approved
 import gurkhahr.core.ui.res.generated.resources.account
 import gurkhahr.core.ui.res.generated.resources.address
 import gurkhahr.core.ui.res.generated.resources.allocated_leave
@@ -17,17 +20,23 @@ import gurkhahr.core.ui.res.generated.resources.dark_mode
 import gurkhahr.core.ui.res.generated.resources.do_you_really_want_to_logout
 import gurkhahr.core.ui.res.generated.resources.document
 import gurkhahr.core.ui.res.generated.resources.attendance
+import gurkhahr.core.ui.res.generated.resources.cancelled
 import gurkhahr.core.ui.res.generated.resources.contact_info
 import gurkhahr.core.ui.res.generated.resources.date_of_birth
 import gurkhahr.core.ui.res.generated.resources.email
+import gurkhahr.core.ui.res.generated.resources.end_date
+import gurkhahr.core.ui.res.generated.resources.enter_reason
 import gurkhahr.core.ui.res.generated.resources.emergency_contact
 import gurkhahr.core.ui.res.generated.resources.enter_your_email
 import gurkhahr.core.ui.res.generated.resources.enter_your_password
 import gurkhahr.core.ui.res.generated.resources.enter_your_username
+import gurkhahr.core.ui.res.generated.resources.full_day
 import gurkhahr.core.ui.res.generated.resources.faq
 import gurkhahr.core.ui.res.generated.resources.gender
 import gurkhahr.core.ui.res.generated.resources.general
 import gurkhahr.core.ui.res.generated.resources.getStarted
+import gurkhahr.core.ui.res.generated.resources.half_afternoon
+import gurkhahr.core.ui.res.generated.resources.half_morning
 import gurkhahr.core.ui.res.generated.resources.guardian_information
 import gurkhahr.core.ui.res.generated.resources.guardian_name
 import gurkhahr.core.ui.res.generated.resources.guardian_phone
@@ -41,28 +50,45 @@ import gurkhahr.core.ui.res.generated.resources.invalid_password_special_char
 import gurkhahr.core.ui.res.generated.resources.invalid_password_uppercase
 import gurkhahr.core.ui.res.generated.resources.language
 import gurkhahr.core.ui.res.generated.resources.leave
+import gurkhahr.core.ui.res.generated.resources.leave_approved
+import gurkhahr.core.ui.res.generated.resources.leave_balance
+import gurkhahr.core.ui.res.generated.resources.leave_cancelled
+import gurkhahr.core.ui.res.generated.resources.leave_duration
+import gurkhahr.core.ui.res.generated.resources.leave_pending
+import gurkhahr.core.ui.res.generated.resources.leave_request_form
+import gurkhahr.core.ui.res.generated.resources.leave_type
 import gurkhahr.core.ui.res.generated.resources.light_mode
 import gurkhahr.core.ui.res.generated.resources.log_out
 import gurkhahr.core.ui.res.generated.resources.login
 import gurkhahr.core.ui.res.generated.resources.marital_status
+import gurkhahr.core.ui.res.generated.resources.maternity_leave
+import gurkhahr.core.ui.res.generated.resources.mourning_leave
 import gurkhahr.core.ui.res.generated.resources.my_attendance
 import gurkhahr.core.ui.res.generated.resources.nationality
 import gurkhahr.core.ui.res.generated.resources.new_password
 import gurkhahr.core.ui.res.generated.resources.next
 import gurkhahr.core.ui.res.generated.resources.no
 import gurkhahr.core.ui.res.generated.resources.password
+import gurkhahr.core.ui.res.generated.resources.pending
 import gurkhahr.core.ui.res.generated.resources.password_does_not_match
 import gurkhahr.core.ui.res.generated.resources.personal_details
 import gurkhahr.core.ui.res.generated.resources.personal_info
 import gurkhahr.core.ui.res.generated.resources.phone
 import gurkhahr.core.ui.res.generated.resources.profile
 import gurkhahr.core.ui.res.generated.resources.privacy_policy
+import gurkhahr.core.ui.res.generated.resources.reason
 import gurkhahr.core.ui.res.generated.resources.report
 import gurkhahr.core.ui.res.generated.resources.request
 import gurkhahr.core.ui.res.generated.resources.required
 import gurkhahr.core.ui.res.generated.resources.setting
 import gurkhahr.core.ui.res.generated.resources.skill_and_qualification
+import gurkhahr.core.ui.res.generated.resources.select_end_date
+import gurkhahr.core.ui.res.generated.resources.select_leave_duration
+import gurkhahr.core.ui.res.generated.resources.select_leave_type
+import gurkhahr.core.ui.res.generated.resources.select_start_date
+import gurkhahr.core.ui.res.generated.resources.sick_leave
 import gurkhahr.core.ui.res.generated.resources.skip
+import gurkhahr.core.ui.res.generated.resources.start_date
 import gurkhahr.core.ui.res.generated.resources.upcoming_birthday
 import gurkhahr.core.ui.res.generated.resources.support
 import gurkhahr.core.ui.res.generated.resources.system_default
@@ -105,54 +131,34 @@ object SharedRes {
         val attendance = Res.string.attendance
         val upcoming_birthday = Res.string.upcoming_birthday
         val work_anniversaries = Res.string.work_anniversaries
-        val allocated_leave= Res.string.allocated_leave
-        val time_and_attendance = Res.string.time_and_attendance
-        val document = Res.string.document
-        val company_assets = Res.string.company_assets
-        val history = Res.string.history
-        val general = Res.string.general
-        val account = Res.string.account
-        val terms_and_services = Res.string.terms_and_services
-        val faq = Res.string.faq
-        val privacy_policy = Res.string.privacy_policy
-        val support = Res.string.support
-        val setting = Res.string.setting
-        val log_out = Res.string.log_out
-        val no = Res.string.no
-        val yes = Res.string.yes
-        val are_you_sure = Res.string.are_you_sure
-        val do_you_really_want_to_logout = Res.string.do_you_really_want_to_logout
-        val change_password = Res.string.change_password
-        val confirm_password = Res.string.confirm_password
-        val new_password = Res.string.new_password
-        val current_password = Res.string.current_password
-        val light_mode = Res.string.light_mode
-        val dark_mode = Res.string.dark_mode
-        val theme = Res.string.theme
-        val system_default = Res.string.system_default
-        val confirm = Res.string.confirm
-        val language = Res.string.language
-        val personal_info = Res.string.personal_info
-        val phone = Res.string.phone
-        val address = Res.string.address
-        val contact_info= Res.string.contact_info
-        val date_of_birth = Res.string.date_of_birth
-        val gender = Res.string.gender
-        val nationality = Res.string.nationality
-        val marital_status = Res.string.marital_status
-        val guardian_information = Res.string.guardian_information
-        val guardian_name = Res.string.guardian_name
-        val guardian_phone = Res.string.guardian_phone
-        val personal_details = Res.string.personal_details
-        val emergency_contact = Res.string.emergency_contact
-        val skill_and_qualification = Res.string.skill_and_qualification
+        val all_leaves = Res.string.all_leaves
+        val leave_balance = Res.string.leave_balance
+        val leave_approved = Res.string.leave_approved
+        val leave_pending = Res.string.leave_pending
+        val leave_cancelled = Res.string.leave_cancelled
+        val pending = Res.string.pending
+        val approved = Res.string.approved
+        val cancelled = Res.string.cancelled
+        val leave_request_form = Res.string.leave_request_form
+        val startDate = Res.string.start_date
+        val selectStartDate = Res.string.select_start_date
+        val endDate = Res.string.end_date
+        val selectEndDate = Res.string.select_end_date
+        val leaveType = Res.string.leave_type
+        val selectLeaveType = Res.string.select_leave_type
+        val reason = Res.string.reason
+        val enterReason = Res.string.enter_reason
 
+        val fullDay = Res.string.full_day
+        val halfMorning = Res.string.half_morning
+        val halfAfternoon = Res.string.half_afternoon
 
-
-
-
-
-
+        val leave_duration = Res.string.leave_duration
+        val select_leave_duration = Res.string.select_leave_duration
+        val sickLeave = Res.string.sick_leave
+        val annualLeave = Res.string.annual_leave
+        val maternityLeave = Res.string.maternity_leave
+        val mourningLeave = Res.string.mourning_leave
 
         val invalidEmailAddress = Res.string.invalid_email_address
         val email = Res.string.email
@@ -169,5 +175,46 @@ object SharedRes {
         val invalidPasswordSpecialChar = Res.string.invalid_password_special_char
         val password_does_not_match = Res.string.password_does_not_match
         val unknown_error_occurred = Res.string.unknown_error_occurred
+        val change_password = Res.string.change_password
+        val confirm_password = Res.string.confirm_password
+        val new_password = Res.string.new_password
+        val current_password = Res.string.current_password
+
+        val setting = Res.string.setting
+        val theme = Res.string.theme
+        val system_default = Res.string.system_default
+        val confirm = Res.string.confirm
+        val language = Res.string.language
+        val allocated_leave= Res.string.allocated_leave
+        val time_and_attendance = Res.string.time_and_attendance
+        val document = Res.string.document
+        val company_assets = Res.string.company_assets
+        val history = Res.string.history
+        val terms_and_services = Res.string.terms_and_services
+        val faq = Res.string.faq
+        val privacy_policy = Res.string.privacy_policy
+        val support = Res.string.support
+
+        val personal_info = Res.string.personal_info
+        val phone = Res.string.phone
+        val address = Res.string.address
+        val contact_info= Res.string.contact_info
+        val date_of_birth = Res.string.date_of_birth
+        val gender = Res.string.gender
+        val nationality = Res.string.nationality
+        val marital_status = Res.string.marital_status
+        val guardian_information = Res.string.guardian_information
+        val guardian_name = Res.string.guardian_name
+        val guardian_phone = Res.string.guardian_phone
+        val personal_details = Res.string.personal_details
+        val emergency_contact = Res.string.emergency_contact
+        val general = Res.string.general
+        val account = Res.string.account
+
+        val log_out = Res.string.log_out
+        val no = Res.string.no
+        val yes = Res.string.yes
+        val are_you_sure = Res.string.are_you_sure
+        val do_you_really_want_to_logout = Res.string.do_you_really_want_to_logout
     }
 }

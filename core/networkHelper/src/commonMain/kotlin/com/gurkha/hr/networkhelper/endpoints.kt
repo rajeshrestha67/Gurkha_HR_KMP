@@ -7,5 +7,6 @@ object EndPoint{
     const val CURRENT_USER_DETAIL_END_POINT = "api/user/current-user"
     const val UPCOMING_BIRTHDAY_END_POINT = "api/birthday/upcomingBirthdays"
     const val UPCOMING_WORK_ANNIVERSARY_END_POINT = "api/birthday/allWorkingAnniversaries"
+    const val ATTENDANCE_STATUS_REPORT_ENDPOINT = "api/attendance/attendanceStatus"
 
 }
