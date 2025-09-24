@@ -9,7 +9,7 @@ import com.gurkha.hr.route.AppRoute
 import com.gurkha.hr.route.ProfileRoute
 
 fun NavGraphBuilder.dashboardScreenBuilder(navController: NavHostController) {
-    composable<AppRoute.DashboardRoute>{
+    composable<AppRoute.DashboardRoute> {
         DashboardScreen(
             onLogout = {
                 navController.navigate(AppRoute.LoginRoute) {
@@ -17,26 +17,28 @@ fun NavGraphBuilder.dashboardScreenBuilder(navController: NavHostController) {
                 }
             },
             onAccountClick = { item ->
-                when(item){
-                    AccountList.TermsAndServices ->{
+                when (item) {
+                    AccountList.TermsAndServices -> {
 
                     }
-                    AccountList.PrivacyPolicy ->{
+
+                    AccountList.PrivacyPolicy -> {
 
                     }
-                    AccountList.FAC ->{
+
+                    AccountList.FAC -> {
 
                     }
+
                     AccountList.Support -> {
 
                     }
-                    AccountList.Settings ->{
+
+                    AccountList.Settings -> {
                         navController.navigate(ProfileRoute.SettingsRoute)
                     }
                 }
-
             }
-
         )
     }
 }

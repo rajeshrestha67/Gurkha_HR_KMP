@@ -51,6 +51,7 @@ kotlin {
 
             implementation(projects.core.di)
             implementation(projects.core.ui.res)
+            implementation(projects.core.ui.components)
 
             implementation(projects.features.auth.login)
             implementation(projects.features.splashscreen)
