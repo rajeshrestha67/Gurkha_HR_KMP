@@ -73,6 +73,9 @@ kotlin {
 
                 implementation(libs.koin.core)
                 implementation(libs.koin.compose)
+
+                implementation(libs.org.jetbrains.navigation)
+
             }
         }
 

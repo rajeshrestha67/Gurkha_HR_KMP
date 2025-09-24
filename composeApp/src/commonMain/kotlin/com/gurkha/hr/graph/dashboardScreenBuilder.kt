@@ -10,7 +10,7 @@ import com.gurkha.hr.route.AppRoute
 import com.gurkha.hr.route.ProfileRoute
 
 fun NavGraphBuilder.dashboardScreenBuilder(navController: NavHostController) {
-    composable<AppRoute.DashboardRoute>{
+    composable<AppRoute.DashboardRoute> {
         DashboardScreen(
             onLogout = {
                 navController.navigate(AppRoute.LoginRoute) {
