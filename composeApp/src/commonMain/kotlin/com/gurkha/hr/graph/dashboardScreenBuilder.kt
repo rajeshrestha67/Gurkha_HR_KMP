@@ -42,37 +42,38 @@ fun NavGraphBuilder.dashboardScreenBuilder(navController: NavHostController) {
                 }
 
             },
+            onGoToLeaveRequestPage = {
+                navController.navigate(LeaveRoute.LeaveRequestPageRoute)
+            },
             onGeneralClick = { item ->
-                when(item){
+                when (item) {
                     GeneralList.Profile -> {
                         navController.navigate(ProfileRoute.ProfileInfoScreenRoute)
                     }
+
                     GeneralList.AllocatedLeave -> {
                         navController.navigate(ProfileRoute.AllocatedLeaveScreenRoute)
                     }
+
                     GeneralList.TimeAndAttendance -> {
                         navController.navigate(ProfileRoute.TimeAndAttendanceScreenRoute)
 
                     }
+
                     GeneralList.Document -> {
                         navController.navigate(ProfileRoute.DocumentScreenRoute)
                     }
+
                     GeneralList.CompanyAssets -> {
                         navController.navigate(ProfileRoute.CompanyAssetsScreenRoute)
 
                     }
+
                     GeneralList.History -> {
                         navController.navigate(ProfileRoute.HistoryScreenRoute)
 
                     }
                 }
-            },
-        )
-    composable<AppRoute.DashboardRoute>{
-        DashboardScreen(
-                onGoToLeaveRequestPage = {
-                    navController.navigate(LeaveRoute.LeaveRequestPageRoute)
-                }
-        )
+            })
     }
 }

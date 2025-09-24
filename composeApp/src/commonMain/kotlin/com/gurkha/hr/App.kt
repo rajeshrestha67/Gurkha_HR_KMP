@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
+import com.gurkha.hr.components.AnimatedNavHost
 import com.gurkha.hr.dashboard.DashboardScreen
 import com.gurkha.hr.dashboard.graph.profileScreenBuilder
 import com.gurkha.hr.graph.changePasswordScreenBuilder

@@ -175,5 +175,46 @@ object SharedRes {
         val invalidPasswordSpecialChar = Res.string.invalid_password_special_char
         val password_does_not_match = Res.string.password_does_not_match
         val unknown_error_occurred = Res.string.unknown_error_occurred
+        val change_password = Res.string.change_password
+        val confirm_password = Res.string.confirm_password
+        val new_password = Res.string.new_password
+        val current_password = Res.string.current_password
+
+        val setting = Res.string.setting
+        val theme = Res.string.theme
+        val system_default = Res.string.system_default
+        val confirm = Res.string.confirm
+        val language = Res.string.language
+        val allocated_leave= Res.string.allocated_leave
+        val time_and_attendance = Res.string.time_and_attendance
+        val document = Res.string.document
+        val company_assets = Res.string.company_assets
+        val history = Res.string.history
+        val terms_and_services = Res.string.terms_and_services
+        val faq = Res.string.faq
+        val privacy_policy = Res.string.privacy_policy
+        val support = Res.string.support
+
+        val personal_info = Res.string.personal_info
+        val phone = Res.string.phone
+        val address = Res.string.address
+        val contact_info= Res.string.contact_info
+        val date_of_birth = Res.string.date_of_birth
+        val gender = Res.string.gender
+        val nationality = Res.string.nationality
+        val marital_status = Res.string.marital_status
+        val guardian_information = Res.string.guardian_information
+        val guardian_name = Res.string.guardian_name
+        val guardian_phone = Res.string.guardian_phone
+        val personal_details = Res.string.personal_details
+        val emergency_contact = Res.string.emergency_contact
+        val general = Res.string.general
+        val account = Res.string.account
+
+        val log_out = Res.string.log_out
+        val no = Res.string.no
+        val yes = Res.string.yes
+        val are_you_sure = Res.string.are_you_sure
+        val do_you_really_want_to_logout = Res.string.do_you_really_want_to_logout
     }
 }

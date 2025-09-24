@@ -69,11 +69,6 @@ val ColorScheme.logOutTextColor: Color
         dark = Color.Black
     )
 
-val ColorScheme.veryLightGray: Color
-    @Composable get() = extendedColor(
-        light = Color(0xFFF3F6F4),
-        dark =Color(0xFFF3F6F4),
-    )
 
 
 val ColorScheme.darkPrimaryTextColor: Color
