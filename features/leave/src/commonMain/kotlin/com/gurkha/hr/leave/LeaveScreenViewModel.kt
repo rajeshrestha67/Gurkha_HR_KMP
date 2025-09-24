@@ -3,6 +3,7 @@ package com.gurkha.hr.leave
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gurkha.hr.domain.attendanceStatus.useCase.AttendanceStatusUseCase
+import com.gurkha.hr.leave.model.AttendanceStatusEnum
 import com.gurkha.hr.leave.model.LeaveScreenAction
 import com.gurkha.hr.leave.model.LeaveScreenState
 import com.gurkha.hr.networkhelper.onSuccess
@@ -28,59 +29,97 @@ class LeaveScreenViewModel(
             is LeaveScreenAction.OnStatusChange -> {
                 _state.update {
                     it.copy(
-                        attendanceStatus = action.status
+                        attendanceStatus = action.status,
+                        currentTapItem = when(action.status){
+                            AttendanceStatusEnum.PENDING -> it.pendingTapItem
+                            AttendanceStatusEnum.APPROVED -> it.approvedTapItem
+                            else -> it.cancelTapItem
+                        }
                     )
                 }
-                fetchAttendanceStatus(
-                    attendanceStatus = state.value.attendanceStatus,
-                    employeeName = "",
-                    isSelf = "Y"
-                )
+                if (state.value.currentTapItem.result.isEmpty()) {
+                    fetchAttendanceStatus(
+                        attendanceStatus = state.value.attendanceStatus,
+                        employeeName = "",
+                        isSelf = "Y"
+                    )
+                }
             }
         }
     }
 
     fun fetchAttendanceStatus(
-        attendanceStatus: String,
+        attendanceStatus: AttendanceStatusEnum,
         employeeName: String,
         isSelf: String
     ) = viewModelScope.launch {
         println("fetchAttendanceStatus")
+
         _state.update {
-            it.copy(
-                isLoading = true
-            )
+            when(attendanceStatus){
+                AttendanceStatusEnum.PENDING -> {
+                    it.copy(
+                        pendingTapItem = it.pendingTapItem.copy(isLoading = true)
+                    )
+                }
+                AttendanceStatusEnum.APPROVED -> {
+                    it.copy(
+                        approvedTapItem = it.approvedTapItem.copy(isLoading = true)
+                    )
+                }
+                else -> {
+                    it.copy(
+                        cancelTapItem = it.cancelTapItem.copy(isLoading = true)
+                    )
+                }
+            }
+
         }
         attendanceStatusUseCase(
-            attendanceStatus = attendanceStatus,
+            attendanceStatus = attendanceStatus.value,
             employeeName = employeeName,
             isSelf = isSelf
         ).onSuccess { data ->
             when (attendanceStatus) {
-                "pending" -> {
+                 AttendanceStatusEnum.PENDING -> {
                     _state.update {
                         it.copy(
-                            isLoading = false,
-                            pendingResult = data
+                            pendingTapItem = it.pendingTapItem.copy(
+                                isLoading = false,
+                                result = data
+                            )
                         )
                     }
                 }
-                "approved" -> {
+                 AttendanceStatusEnum.APPROVED -> {
                     _state.update {
                         it.copy(
-                            isLoading = false,
-                            approvedResult = data
+                           approvedTapItem = it.approvedTapItem.copy(
+                               isLoading = false,
+                               result = data
+                           )
                         )
                     }
                 }
-                "cancelled" -> {
+               else -> {
                     _state.update {
                         it.copy(
-                            isLoading = false,
-                            cancelledResult = data
+                           cancelTapItem = it.cancelTapItem.copy(
+                               isLoading = false,
+                               result = data
+                           )
                         )
                     }
                 }
+            }
+            _state.update {
+                it.copy(
+                    currentTapItem = when(attendanceStatus){
+                        AttendanceStatusEnum.PENDING -> it.pendingTapItem
+                        AttendanceStatusEnum.APPROVED -> it.approvedTapItem
+                        else -> it.cancelTapItem
+                    }
+                )
             }
         }
     }

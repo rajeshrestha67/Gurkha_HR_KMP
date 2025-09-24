@@ -55,6 +55,7 @@ kotlin {
             implementation(projects.features.auth.login)
             implementation(projects.features.splashscreen)
             implementation(projects.features.dashboard)
+            implementation(projects.features.leave)
 
             implementation(libs.koin.compose.viewmodel)
             implementation(compose.components.resources)

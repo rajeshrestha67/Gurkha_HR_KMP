@@ -27,13 +27,15 @@ import org.koin.compose.viewmodel.koinViewModel
 
 
 @Composable
-fun DashboardScreen() {
+fun DashboardScreen(
+    onGoToLeaveRequestPage:()-> Unit
+) {
     val viewModel: DashboardViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     val navController = rememberNavController()
 
-    LaunchedEffect(Unit){
+    LaunchedEffect(Unit) {
         viewModel.action(DashboardScreenAction.OnFetchCurrentUser)
     }
 
@@ -50,7 +52,7 @@ fun DashboardScreen() {
                         selected = item.route == state.currentScreen,
                         onClick = {
                             viewModel.action(action = DashboardScreenAction.OnChangeScreen(item.route))
-                            navController.navigate(item.route){
+                            navController.navigate(item.route) {
                                 launchSingleTop = true
                                 restoreState = true
                             }
@@ -86,7 +88,7 @@ fun DashboardScreen() {
             )
             profileScreenBuilder(navController = navController)
             attendanceScreen(navController = navController)
-            leaveScreenBuilder(navController = navController)
+            leaveScreenBuilder(navController = navController,onGoToLeaveRequestPage = onGoToLeaveRequestPage)
             reportScreenBuilder(navController = navController)
         }
     }

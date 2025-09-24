@@ -12,6 +12,26 @@
     <string name="my_attendance">मेरो उपस्थिति</string>
     <string name="request">अनुरोध</string>
     <string name="attendance">उपस्थिति</string>
+    <string name="leave_request_form">अनुरोध फारम छोड्नुहोस्</string>
+
+    <string name="leave_duration">बिदा अवधि</string>
+    <string name="start_date">सुरुवात मिति</string>
+    <string name="select_start_date">सुरुवात मिति चयन गर्नुहोस्</string>
+    <string name="end_date">अन्त्य मिति</string>
+
+    <string name="select_end_date">अन्त्य मिति चयन गर्नुहोस्</string>
+    <string name="leave_type">बिदाको प्रकार चयन गर्नुहोस्</string>
+    <string name="reason">कारण</string>
+    <string name="enter_reason">कारण प्रविष्ट गर्नुहोस्</string>
+
+    <string name="full_day">पूर्ण दिन</string>
+    <string name="half_morning">आधा बिहान</string>
+    <string name="half_afternoon">आधा दिउँसो</string>
+
+    <string name="sick_leave">बिरामी बिदा</string>
+    <string name="annual_leave">वार्षिक बिदा</string>">
+    <string name="mourning_leave">शोक छोड्नुहोस्</string>">
+
     <string name="view_all">सबै हेर्नुहोस्</string>
     <string name="profile">प्रोफाइल</string>
     <string name="pending">पेन्डिङ</string>

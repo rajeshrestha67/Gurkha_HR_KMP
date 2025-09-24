@@ -9,6 +9,7 @@ import androidx.compose.ui.graphics.TransformOrigin
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.gurkha.hr.graph.dashboardScreenBuilder
+import com.gurkha.hr.graph.leaveRequestPageBuilder
 import com.gurkha.hr.graph.loginScreenBuilder
 import com.gurkha.hr.graph.onBoardingBuilder
 import com.gurkha.hr.res.theme.AppTheme
@@ -47,5 +48,6 @@ fun AppScreen(isFirstTime: Boolean) {
         onBoardingBuilder(navController = navController)
         loginScreenBuilder(navController = navController)
         dashboardScreenBuilder(navController = navController)
+        leaveRequestPageBuilder(navController= navController)
     }
 }

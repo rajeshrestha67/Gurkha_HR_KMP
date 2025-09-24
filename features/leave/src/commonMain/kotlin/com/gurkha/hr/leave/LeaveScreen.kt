@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gurkha.hr.components.shimmer.ShimmerView
 import com.gurkha.hr.domain.attendanceStatus.model.AttendanceStatusData
+import com.gurkha.hr.leave.model.AttendanceStatusEnum
 import com.gurkha.hr.leave.model.LeaveItem
 import com.gurkha.hr.leave.model.LeaveScreenAction
 import com.gurkha.hr.leave.model.LeaveScreenState
@@ -59,6 +60,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LeaveScreen(
+    onGoToLeaveRequestPage: () -> Unit,
 ) {
     val viewModel: LeaveScreenViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -82,11 +84,9 @@ fun LeaveScreen(
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {
-
-                },
+                onClick = onGoToLeaveRequestPage,
                 content = {
-                    Icon(Icons.Filled.Add, contentDescription = "Go to Add Date Page")
+                    Icon(Icons.Filled.Add, contentDescription = "Go to Request page")
                 }
             )
         }
@@ -94,7 +94,7 @@ fun LeaveScreen(
         LeaveScreenContent(
             modifier = Modifier.fillMaxSize().padding(contentPadding),
             state = state,
-            viewModel = viewModel
+            viewModel = viewModel,
         )
     }
 }
@@ -104,7 +104,7 @@ fun LeaveScreen(
 fun LeaveScreenContent(
     modifier: Modifier = Modifier,
     state: LeaveScreenState,
-    viewModel: LeaveScreenViewModel
+    viewModel: LeaveScreenViewModel,
 ) {
     var selectedTabIndex by remember { mutableStateOf(0) }
 
@@ -216,7 +216,7 @@ fun LazyListScope.leaveStatusTab(
                     selected = selectedTabIndex == index,
                     onClick = {
                         onTabSelected(index)
-                        viewModel.onAction(LeaveScreenAction.OnStatusChange(item))
+                        viewModel.onAction(LeaveScreenAction.OnStatusChange(AttendanceStatusEnum.get(item)))
 
                     },
                     text = {
@@ -241,7 +241,7 @@ fun LazyListScope.attendanceResult(
     state: LeaveScreenState
 ) {
     when {
-        state.isLoading ->
+        state.pendingTapItem.isLoading || state.approvedTapItem.isLoading || state.cancelTapItem.isLoading ->
             item {
                 Column(
                     modifier = Modifier.fillMaxWidth()
@@ -260,13 +260,8 @@ fun LazyListScope.attendanceResult(
             }
 
         else -> {
-            val listToShow = when (state.attendanceStatus) {
-                "pending" -> state.pendingResult
-                "approved" -> state.approvedResult
-                else -> state.cancelledResult
-            }
-            if (listToShow.isNotEmpty()) {
-                items(listToShow) { item ->
+            if (state.currentTapItem.result.isNotEmpty()) {
+                items(state.currentTapItem.result) { item ->
                     ResultBox(item = item)
                 }
             } else {
