@@ -30,11 +30,7 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -65,22 +61,22 @@ fun LeaveScreen(
     val viewModel: LeaveScreenViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    LaunchedEffect(state.attendanceStatus) {
-        viewModel.onAction(LeaveScreenAction.OnStatusChange(state.attendanceStatus))
-    }
 
     Scaffold(
+        modifier = Modifier.fillMaxSize(),
         contentWindowInsets = WindowInsets(0.dp),
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
-            TopAppBar(title = {
-                Text(
-                    text = stringResource(SharedRes.Strings.all_leaves),
-                    style = MaterialTheme.typography.titleLarge.copy(
-                        color = MaterialTheme.colorScheme.darkPrimaryTextColor
+            TopAppBar(
+                windowInsets = WindowInsets(0.dp),
+                title = {
+                    Text(
+                        text = stringResource(SharedRes.Strings.all_leaves),
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                        )
                     )
-                )
-            })
+                })
         },
         floatingActionButton = {
             FloatingActionButton(
@@ -94,7 +90,7 @@ fun LeaveScreen(
         LeaveScreenContent(
             modifier = Modifier.fillMaxSize().padding(contentPadding),
             state = state,
-            viewModel = viewModel,
+            onAction = viewModel::onAction,
         )
     }
 }
@@ -104,17 +100,16 @@ fun LeaveScreen(
 fun LeaveScreenContent(
     modifier: Modifier = Modifier,
     state: LeaveScreenState,
-    viewModel: LeaveScreenViewModel,
+    onAction: (LeaveScreenAction) -> Unit
 ) {
-    var selectedTabIndex by remember { mutableStateOf(0) }
 
     LazyColumn(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3),
         horizontalAlignment = Alignment.CenterHorizontally,
         contentPadding = PaddingValues(
             top = MaterialTheme.dimens.small2,
-            bottom = MaterialTheme.dimens.medium2
+            bottom = MaterialTheme.dimens.bottomBar
         ),
     ) {
 //        show the 4 leave options
@@ -122,9 +117,8 @@ fun LeaveScreenContent(
 
 //        show the tabs for the attendance status
         leaveStatusTab(
-            selectedTabIndex = selectedTabIndex,
-            onTabSelected = { index -> selectedTabIndex = index },
-            viewModel = viewModel
+            selectedItem = state.attendanceStatus,
+            onAction = onAction
         )
 
 //        show the result of the attendance
@@ -144,7 +138,7 @@ fun LazyListScope.leaveOptions(itemsPerRow: Int = 2) {
             ) {
                 rowItems.forEach { leaveItem ->
                     LeaveBox(
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.weight(1f).fillMaxSize(),
                         item = leaveItem
                     )
                 }
@@ -173,7 +167,7 @@ fun LeaveBox(
             )
             .clip(shape = MaterialTheme.shapes.medium)
             .background(item.backGroundColor)
-
+            .heightIn(min = MaterialTheme.dimens.leaveBoxHeight)
             .clickable(onClick = {})
             .padding(MaterialTheme.dimens.small2),
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small1)
@@ -193,37 +187,40 @@ fun LeaveBox(
 }
 
 fun LazyListScope.leaveStatusTab(
-    selectedTabIndex: Int,
-    onTabSelected: (Int) -> Unit,
-    viewModel: LeaveScreenViewModel
+    selectedItem: AttendanceStatusEnum = AttendanceStatusEnum.PENDING,
+    onAction: (LeaveScreenAction) -> Unit
 ) {
-    item {
+    stickyHeader(key = "leaveStatusTab") {
         TabRow(
-            selectedTabIndex = selectedTabIndex,
+            selectedTabIndex = selectedItem.ordinal,
             indicator = {},
             divider = {},
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = MaterialTheme.dimens.small3),
         ) {
-            tabItemsList.forEachIndexed { index, item ->
+            tabItemsList.forEach { item ->
+                val isSelected = selectedItem == item
                 Tab(
                     modifier = Modifier
                         .clip(shape = MaterialTheme.shapes.small)
                         .background(
-                            if (selectedTabIndex == index) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.veryLightGray
+                            if (isSelected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.veryLightGray
                         ),
-                    selected = selectedTabIndex == index,
+                    selected = isSelected,
                     onClick = {
-                        onTabSelected(index)
-                        viewModel.onAction(LeaveScreenAction.OnStatusChange(AttendanceStatusEnum.get(item)))
+                        onAction(
+                            LeaveScreenAction.OnStatusChange(
+                                item
+                            )
+                        )
 
                     },
                     text = {
                         val color =
-                            if (selectedTabIndex == index) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.primaryTextColor
+                            if (isSelected) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.primaryTextColor
                         Text(
-                            text = item,
+                            text = item.name,
                             style = MaterialTheme.typography.titleSmall.copy(
                                 color = color
                             )

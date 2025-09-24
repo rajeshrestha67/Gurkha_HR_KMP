@@ -75,10 +75,10 @@
     <string name="username">प्रयोगकर्ता नाम</string>
     <string name="upcoming_birthday">जन्मदिन</string>
     <string name="all_leaves">पातहरू</string>
-    <string name="leave_balance">ब्यालेन्स छोड्नुहोस्</string>
-    <string name="leave_approved">स्वीकृत छोड्नुहोस्</string>
-    <string name="leave_pending">बाँकी छोड्नुहोस्</string>
-    <string name="leave_cancelled">रद्द गरिएको छोड्नुहोस्</string>
+    <string name="leave_balance">ब्यालेन्स\nछोड्नुहोस्</string>
+    <string name="leave_approved">स्वीकृत\nछोड्नुहोस्</string>
+    <string name="leave_pending">बाँकी\nछोड्नुहोस्</string>
+    <string name="leave_cancelled">रद्द गरिएको\nछोड्नुहोस्</string>
     <string name="work_anniversaries">कार्य वार्षिकोत्सव</string>
     <string name="skip">छोड्नुहोस्</string>
     <string name="enter_your_username">आफ्नो प्रयोगकर्ता नाम प्रविष्ट गर्नुहोस्</string>

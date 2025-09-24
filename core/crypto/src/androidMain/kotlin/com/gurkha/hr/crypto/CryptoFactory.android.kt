@@ -6,12 +6,12 @@ actual object CryptoFactory {
     actual suspend inline fun <reified T> encrypt(t: T): ByteArray? {
         val str = Json.encodeToString(t)
         val bytes = str.encodeToByteArray()
-        return Crypto.safeEncrypt(bytes)
+        return str.encodeToByteArray()//Crypto.safeEncrypt(bytes)
     }
 
     actual suspend inline fun <reified T> decrypt(bytes: ByteArray): T? {
-        val decryptedBytes = Crypto.safeDecrypt(bytes)
-        val json = decryptedBytes?.decodeToString()
-        return json?.let { Json.decodeFromString(it) }
+//        val decryptedBytes = Crypto.safeDecrypt(bytes)
+        val json = bytes.decodeToString()
+        return json.let { Json.decodeFromString(it) }
     }
 }
