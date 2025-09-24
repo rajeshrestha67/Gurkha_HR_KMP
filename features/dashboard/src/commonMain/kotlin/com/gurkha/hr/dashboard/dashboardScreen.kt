@@ -22,18 +22,14 @@ import com.gurkha.hr.dashboard.graph.profileScreenBuilder
 import com.gurkha.hr.dashboard.graph.reportScreenBuilder
 import com.gurkha.hr.dashboard.model.DashboardScreenAction
 import com.gurkha.hr.dashboard.route.DashboardRoute
-import com.gurkha.hr.profile.model.profile_screen.AccountList
-import com.gurkha.hr.profile.model.profile_screen.GeneralList
+import com.gurkha.hr.dashboard.route.LeaveRoute
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 
 @Composable
 fun DashboardScreen(
-    onGoToLeaveRequestPage:()-> Unit,
-    onLogout: () -> Unit,
-    onAccountClick: (AccountList) -> Unit,
-    onGeneralClick: (GeneralList) -> Unit
+    onLogout: () -> Unit
 ) {
     val viewModel: DashboardViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -90,11 +86,15 @@ fun DashboardScreen(
             homeScreenBuilder(navController = navController)
             profileScreenBuilder(
                 onLogout = onLogout,
-                onAccountClick = onAccountClick,
-                onGeneralClick = onGeneralClick,
+                navController = navController
             )
             attendanceScreen(navController = navController)
-            leaveScreenBuilder(navController = navController,onGoToLeaveRequestPage = onGoToLeaveRequestPage)
+            leaveScreenBuilder(
+                navController = navController,
+                onGoToLeaveRequestPage = {
+                    navController.navigate(LeaveRoute.LeaveRequestPageRoute)
+                }
+            )
             reportScreenBuilder(navController = navController)
         }
     }

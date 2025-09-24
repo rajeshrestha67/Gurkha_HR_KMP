@@ -90,6 +90,7 @@ kotlin {
                 implementation(projects.features.attendance)
                 implementation(projects.features.leave)
                 implementation(projects.features.report)
+                implementation(projects.features.settings)
 
                 implementation(libs.koin.compose.viewmodel)
                 implementation(compose.components.resources)
