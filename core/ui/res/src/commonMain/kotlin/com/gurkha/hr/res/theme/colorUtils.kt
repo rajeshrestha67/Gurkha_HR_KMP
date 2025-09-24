@@ -20,7 +20,7 @@ val ColorScheme.imageBackgroundColor: Color
 val ColorScheme.primaryTextColor: Color
     @Composable get() =
         extendedColor(
-            light = Color(0xFF727272),
+            light = Color(0xFF424242),
             dark = Color(0xFF212121)
         )
 val ColorScheme.borderColor: Color
@@ -67,6 +67,12 @@ val ColorScheme.logOutTextColor: Color
     @Composable get() = extendedColor(
         light = Color.White,
         dark = Color.Black
+    )
+
+val ColorScheme.veryLightGray: Color
+    @Composable get() = extendedColor(
+        light = Color(0xFFF3F6F4),
+        dark =Color(0xFFF3F6F4),
     )
 
 

@@ -43,6 +43,8 @@
     <string name="setting">सेटिङ</string>
     <string name="log_out">लगआउट</string>
     <string name="allocated_leave">आवंटित स्रोतहरू</string>
+    <string name="phone">फोन</string>
+    <string name="address">ठेगाना</string>
     <string name="personal_info">व्यक्तिगत जानकारी</string>
     <string name="emergency_contact">आपतकालीन सम्पर्क</string>
     <string name="skill_and_qualification">सीप र योग्यता</string>
@@ -59,4 +61,13 @@
     <string name="invalid_password_lowercase">कम्तिमा एउटा सानो अक्षर हुनुपर्छ</string>
     <string name="invalid_password_digit">कम्तिमा एउटा अङ्क हुनुपर्छ</string>
     <string name="invalid_password_special_char">कम्तिमा एउटा विशेष वर्ण हुनुपर्छ</string>
+    <string name="contact_info">सम्पर्क जानकारी</string>
+    <string name="personal_details">व्यक्तिगत विवरणहरू</string>
+    <string name="date_of_birth">जन्म मिति</string>
+    <string name="guardian_information">अभिभावकको जानकारी</string>
+    <string name="guardian_name">अभिभावकको नाम</string>
+    <string name="guardian_phone">अभिभावकको फोन</string>
+    <string name="gender">लिङ्ग</string>
+    <string name="nationality">राष्ट्रियता</string>
+    <string name="marital_status">वैवाहिक स्थिति</string>
 </resources>

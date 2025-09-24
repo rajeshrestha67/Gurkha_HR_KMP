@@ -14,6 +14,7 @@ import com.gurkha.hr.graph.changePasswordScreenBuilder
 import com.gurkha.hr.graph.dashboardScreenBuilder
 import com.gurkha.hr.graph.loginScreenBuilder
 import com.gurkha.hr.graph.onBoardingBuilder
+import com.gurkha.hr.graph.profileInfoScreenBuilder
 import com.gurkha.hr.graph.settingsScreenBuilder
 import com.gurkha.hr.res.theme.AppTheme
 import com.gurkha.hr.route.AppRoute
@@ -53,5 +54,7 @@ fun AppScreen(isFirstTime: Boolean) {
         dashboardScreenBuilder(navController = navController)
         settingsScreenBuilder(navController = navController)
         changePasswordScreenBuilder(navController = navController)
+        profileInfoScreenBuilder(navController = navController)
+
     }
 }

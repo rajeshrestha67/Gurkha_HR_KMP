@@ -1,4 +1,4 @@
-package com.gurkha.hr.profile
+package com.gurkha.hr.profile.profile_screen
 
 
 import androidx.compose.foundation.background
@@ -43,8 +43,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.gurkha.hr.profile.model.AccountList
-import com.gurkha.hr.profile.model.GeneralList
+import com.gurkha.hr.profile.model.profile_screen.AccountList
+import com.gurkha.hr.profile.model.profile_screen.GeneralList
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.borderColor
 import com.gurkha.hr.res.theme.dimens
