@@ -32,6 +32,10 @@
     <string name="annual_leave">वार्षिक बिदा</string>">
     <string name="mourning_leave">शोक छोड्नुहोस्</string>">
 
+    <string name="cancel">रद्द गर्नुहोस्</string>">
+    <string name="submit">पेश गर्नुहोस्</string>">
+
+
     <string name="view_all">सबै हेर्नुहोस्</string>
     <string name="profile">प्रोफाइल</string>
     <string name="time_and_attendance">समय र उपस्थिति</string>

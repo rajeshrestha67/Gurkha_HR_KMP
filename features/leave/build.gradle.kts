@@ -95,6 +95,9 @@ kotlin {
                 implementation(libs.coil.compose.core)
                 implementation(libs.coil.mp)
                 implementation(libs.coil.network.ktor3)
+
+                implementation(libs.kotlinx.datetime)
+
             }
         }
 

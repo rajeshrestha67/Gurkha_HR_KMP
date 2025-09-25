@@ -54,11 +54,18 @@ data class AttendanceItem(
     val status: String
 )
 
-val attendanceList = listOf(
+//val attendanceList = listOf(
+//    AttendanceItem(Icons.Filled.SyncLock, "Check In", "10.20 AM", "On Time"),
+//    AttendanceItem(Icons.Filled.LockClock, "Check Out", "5.30 AM", "Go Home"),
+//)
+//val attendanceList2 = listOf(
+//    AttendanceItem(Icons.Filled.TimeToLeave, "Leave", "3", "Total Leave"),
+//    AttendanceItem(Icons.Filled.EditCalendar, "Attendance", "22", "Working Days"),
+//)
+
+val homeGridItems = listOf(
     AttendanceItem(Icons.Filled.SyncLock, "Check In", "10.20 AM", "On Time"),
     AttendanceItem(Icons.Filled.LockClock, "Check Out", "5.30 AM", "Go Home"),
-)
-val attendanceList2 = listOf(
     AttendanceItem(Icons.Filled.TimeToLeave, "Leave", "3", "Total Leave"),
     AttendanceItem(Icons.Filled.EditCalendar, "Attendance", "22", "Working Days"),
 )

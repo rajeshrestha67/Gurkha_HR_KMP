@@ -68,6 +68,11 @@ val ColorScheme.logOutTextColor: Color
         light = Color.White,
         dark = Color.Black
     )
+val ColorScheme.lightRedColor: Color
+    @Composable get() = extendedColor(
+        light = Color(0xFFEF5350),
+        dark = Color(0xFFF44336)
+    )
 
 
 

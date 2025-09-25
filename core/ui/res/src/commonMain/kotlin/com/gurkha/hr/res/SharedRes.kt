@@ -20,6 +20,7 @@ import gurkhahr.core.ui.res.generated.resources.dark_mode
 import gurkhahr.core.ui.res.generated.resources.do_you_really_want_to_logout
 import gurkhahr.core.ui.res.generated.resources.document
 import gurkhahr.core.ui.res.generated.resources.attendance
+import gurkhahr.core.ui.res.generated.resources.cancel
 import gurkhahr.core.ui.res.generated.resources.cancelled
 import gurkhahr.core.ui.res.generated.resources.contact_info
 import gurkhahr.core.ui.res.generated.resources.date_of_birth
@@ -89,6 +90,7 @@ import gurkhahr.core.ui.res.generated.resources.select_start_date
 import gurkhahr.core.ui.res.generated.resources.sick_leave
 import gurkhahr.core.ui.res.generated.resources.skip
 import gurkhahr.core.ui.res.generated.resources.start_date
+import gurkhahr.core.ui.res.generated.resources.submit
 import gurkhahr.core.ui.res.generated.resources.upcoming_birthday
 import gurkhahr.core.ui.res.generated.resources.support
 import gurkhahr.core.ui.res.generated.resources.system_default
@@ -210,6 +212,9 @@ object SharedRes {
         val emergency_contact = Res.string.emergency_contact
         val general = Res.string.general
         val account = Res.string.account
+        val cancel = Res.string.cancel
+        val submit = Res.string.submit
+
 
         val log_out = Res.string.log_out
         val no = Res.string.no

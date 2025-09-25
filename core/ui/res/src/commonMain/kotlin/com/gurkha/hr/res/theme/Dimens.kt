@@ -42,5 +42,6 @@ val CompactDimens = Dimens(
     loginImageSize = 200.dp,
     bottomBar = 80.dp,
     chartHeight = 200.dp,
-    leaveBoxHeight = 120.dp
+    leaveBoxHeight = 120.dp,
+    reasonTextField = 80.dp
 )

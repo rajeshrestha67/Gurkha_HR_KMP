@@ -85,7 +85,7 @@ class HomeScreenViewModel(
         attendanceUseCase(
 //            fromDate = state.value.fromDate,
 //            toDate = state.value.toDate,
-            fromDate = "2025-09-16",
+            fromDate = "2025-09-18",
             toDate = "2025-09-18",
         ).onSuccess { data ->
             _state.update {
