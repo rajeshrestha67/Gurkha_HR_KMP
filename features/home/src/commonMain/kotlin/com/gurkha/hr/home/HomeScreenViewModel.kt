@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.gurkha.hr.domain.attendance.usecase.AttendanceUseCase
 import com.gurkha.hr.domain.upComingBirthday.usecase.UpComingBirthdayUseCase
 import com.gurkha.hr.domain.upComingWorkAnniversaries.useCase.UpComingWorkAnniversaryUseCase
-import com.gurkha.hr.domain.userDetail.usecase.UserDetailUseCase
+import com.gurkha.hr.domain.userDetail.usecase.FetchRemoteUserDetailUseCase
 import com.gurkha.hr.home.model.HomeScreenActions
 import com.gurkha.hr.home.model.HomeScreenState
 import com.gurkha.hr.networkhelper.onError
@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 
 class HomeScreenViewModel(
     private val attendanceUseCase: AttendanceUseCase,
-    private val userDetailUseCase: UserDetailUseCase,
+    private val userDetailUseCase: FetchRemoteUserDetailUseCase,
     private val upComingBirthdayUseCase: UpComingBirthdayUseCase,
     private val upComingWorkAnniversaryUseCase: UpComingWorkAnniversaryUseCase
 ) : ViewModel() {

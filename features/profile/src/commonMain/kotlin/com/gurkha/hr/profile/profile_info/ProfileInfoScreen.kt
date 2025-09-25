@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -22,17 +23,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,15 +37,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import com.gurkha.hr.profile.model.profileinfo_screen.InfoList
 import com.gurkha.hr.profile.model.profileinfo_screen.ProfileInfo
 import com.gurkha.hr.profile.model.profileinfo_screen.ProfileInfoScreenState
 import com.gurkha.hr.profile.model.profileinfo_screen.ProfileInfoViewAction
-import com.gurkha.hr.profile.model.profileinfo_screen.contactInfo
-import com.gurkha.hr.profile.model.profileinfo_screen.guardianInfo
-import com.gurkha.hr.profile.model.profileinfo_screen.personalDetails
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.imageBackgroundColor
@@ -83,8 +75,9 @@ fun ProfileInfoScreen(
 fun ProfileInfoScreenContainer(
     onBackPressed: () -> Unit,
     state: ProfileInfoScreenState,
-    onAction:(ProfileInfoViewAction) -> Unit,
-){
+    onAction: (ProfileInfoViewAction) -> Unit,
+) {
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
@@ -118,11 +111,12 @@ fun ProfileInfoScreenContainer(
         )
     }
 }
+
 @Composable
 fun ProfileInfoContainer(
     modifier: Modifier = Modifier,
     state: ProfileInfoScreenState,
-    onAction:(ProfileInfoViewAction) -> Unit
+    onAction: (ProfileInfoViewAction) -> Unit
 ) {
     val infoList = InfoList.list.map { stringResource(it.title) }
 //    var selectedTab by remember { mutableStateOf(0) }
@@ -135,7 +129,9 @@ fun ProfileInfoContainer(
         )
     ) {
         item {
-            ProfileCard()
+            ProfileCard(
+                state = state
+            )
         }
         stickyHeader {
             ProfileInfoRow(
@@ -158,7 +154,7 @@ fun ProfileInfoContainer(
                         )
                 }
 
-                items(contactInfo, key = { it.name.key }) { item ->
+                items(state.contactInfo, key = { it.name.key }) { item ->
                     InfoItem(
                         item = item
                     )
@@ -170,7 +166,7 @@ fun ProfileInfoContainer(
                         )
                 }
 
-                items(personalDetails, key = { it.name.key }) { item ->
+                items(state.personalDetails, key = { it.name.key }) { item ->
                     InfoItem(
                         item = item
                     )
@@ -186,7 +182,7 @@ fun ProfileInfoContainer(
                     )
                 }
 
-                items(guardianInfo, key = { it.name.key }) { item ->
+                items(state.guardianInfo, key = { it.name.key }) { item ->
                     InfoItem(
                         item = item
                     )
@@ -199,7 +195,10 @@ fun ProfileInfoContainer(
 
 
 @Composable
-fun ProfileCard() {
+fun ProfileCard(
+    state: ProfileInfoScreenState,
+) {
+
     Row(
         modifier = Modifier.padding(bottom = MaterialTheme.dimens.small3),
         verticalAlignment = Alignment.CenterVertically
@@ -210,7 +209,7 @@ fun ProfileCard() {
                 .size(MaterialTheme.dimens.profileScreenImageSize)
                 .clip(CircleShape)
                 .background(MaterialTheme.colorScheme.imageBackgroundColor),
-            model = SharedRes.getRes(path = "drawable/gurkha_hr.png"),
+            model = state.userProfileUrl,
             contentDescription = "Profile picture",
             contentScale = ContentScale.Fit
         )
@@ -222,7 +221,7 @@ fun ProfileCard() {
         ) {
             Text(
                 style = MaterialTheme.typography.titleLarge,
-                text = "Shreejesh Pathak",
+                text = state.fullName,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
@@ -231,13 +230,13 @@ fun ProfileCard() {
                     color = MaterialTheme.colorScheme.secondaryTextColor
                 ),
                 maxLines = 1,
-                text = "Intern"
+                text = state.levelName
             )
             Text(
                 style = MaterialTheme.typography.titleSmall.copy(
                     color = MaterialTheme.colorScheme.secondaryTextColor
                 ),
-                text = "Employee Id: 136"
+                text = "Employee Id: ${state.employeeId}"
             )
 
 
@@ -256,7 +255,7 @@ fun ProfileCard() {
 
                             )
                         Text(
-                            text = "TECH_Branch",
+                            text = state.branchName,
                             style = MaterialTheme.typography.bodyMedium,
                             modifier = Modifier.padding(start = 4.dp)
                         )
@@ -270,7 +269,7 @@ fun ProfileCard() {
 
                             )
                         Text(
-                            text = "baneshwor",
+                            text = state.address,
                             style = MaterialTheme.typography.bodyMedium,
                             modifier = Modifier.padding(start = 4.dp)
                         )
@@ -288,7 +287,7 @@ fun ProfileCard() {
 
                         )
                     Text(
-                        text = "Joined: 2082-05-17",
+                        text = "Joined: ${state.joinedDate}",
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.padding(start = 4.dp)
                     )
@@ -402,6 +401,8 @@ private fun InfoItem(
         )
     }
 }
+
+
 
 
 
