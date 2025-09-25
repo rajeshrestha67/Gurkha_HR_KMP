@@ -14,9 +14,6 @@ sealed interface ProfileRoute {
     data object ProfileInfoScreenRoute : ProfileRoute
 
     @Serializable
-    data object PersonalInfoScreenRoute : ProfileRoute
-
-    @Serializable
     data object AllocatedLeaveScreenRoute : ProfileRoute
 
     @Serializable

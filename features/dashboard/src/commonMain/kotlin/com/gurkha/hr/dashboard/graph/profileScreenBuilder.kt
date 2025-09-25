@@ -5,7 +5,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.gurkha.hr.dashboard.route.DashboardRoute
 import com.gurkha.hr.dashboard.route.ProfileRoute
-import com.gurkha.hr.dashboard.route.settingsScreenBuilder
 import com.gurkha.hr.profile.allocated_leave.AllocatedLeaveScreen
 import com.gurkha.hr.profile.company_assets.CompanyAssetsScreen
 import com.gurkha.hr.profile.document.DocumentScreen
@@ -98,7 +97,5 @@ fun NavGraphBuilder.profileScreenBuilder(
     composable<ProfileRoute.HistoryScreenRoute> {
         HistoryScreen()
     }
-    settingsScreenBuilder(
-        navController = navController
-    )
+
 }

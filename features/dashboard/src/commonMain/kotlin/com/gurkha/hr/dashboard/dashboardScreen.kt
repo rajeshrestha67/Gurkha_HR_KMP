@@ -30,6 +30,7 @@ import com.gurkha.hr.dashboard.graph.homeScreenBuilder
 import com.gurkha.hr.dashboard.graph.leaveScreenBuilder
 import com.gurkha.hr.dashboard.graph.profileScreenBuilder
 import com.gurkha.hr.dashboard.graph.reportScreenBuilder
+import com.gurkha.hr.dashboard.graph.settingsScreenBuilder
 import com.gurkha.hr.dashboard.model.DashboardScreenAction
 import com.gurkha.hr.dashboard.route.DashboardRoute
 import com.gurkha.hr.dashboard.route.LeaveRoute
@@ -145,6 +146,9 @@ fun DashboardScreen(
                 }
             )
             reportScreenBuilder(navController = navController)
+            settingsScreenBuilder(
+                navController = navController
+            )
         }
     }
 }
