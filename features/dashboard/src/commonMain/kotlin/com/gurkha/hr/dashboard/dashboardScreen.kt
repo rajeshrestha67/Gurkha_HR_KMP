@@ -1,15 +1,25 @@
 package com.gurkha.hr.dashboard
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
@@ -27,6 +37,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen(
     onLogout: () -> Unit
@@ -36,35 +47,67 @@ fun DashboardScreen(
 
     val navController = rememberNavController()
 
+    val topScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    var bottomBarState by remember {
+        mutableStateOf(true)
+    }
+
     LaunchedEffect(Unit) {
         viewModel.action(DashboardScreenAction.OnFetchCurrentUser)
     }
 
+    LaunchedEffect(navController) {
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            bottomBarState = when (destination.route) {
+                DashboardRoute.HomeRoute::class.qualifiedName,
+                DashboardRoute.ProfileRoute::class.qualifiedName,
+                DashboardRoute.AttendanceRoute::class.qualifiedName,
+                DashboardRoute.LeaveRoute::class.qualifiedName,
+                DashboardRoute.ReportRoute::class.qualifiedName -> true // show bottom bar
+                else -> false // hide bottom bar
+            }
+        }
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
         bottomBar = {
-            ERPNavigationBar(
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                state.screens.forEach { item ->
-                    NavigationBarItem(
-                        selected = item.route == state.currentScreen,
-                        onClick = {
-                            viewModel.action(action = DashboardScreenAction.OnChangeScreen(item.route))
-                            navController.navigate(item.route) {
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                        },
-                        icon = {
-                            Icon(
-                                imageVector = item.icon,
-                                contentDescription = stringResource(item.name),
-                                tint = MaterialTheme.colorScheme.primary
-                            )
-                        },
+            AnimatedContent(
+                targetState = bottomBarState, transitionSpec = {
+                    slideInVertically(
+                        initialOffsetY = { fullHeight -> fullHeight },
+                        animationSpec = tween(durationMillis = 200)
+                    ) togetherWith slideOutVertically(
+                        targetOffsetY = { fullHeight -> fullHeight },
+                        animationSpec = tween(durationMillis = 200)
+                    )
+                }) { visible ->
+                if (visible) {
+                    ERPNavigationBar(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        state.screens.forEach { item ->
+                            NavigationBarItem(
+                                selected = item.route == state.currentScreen,
+                                onClick = {
+                                    viewModel.action(
+                                        action = DashboardScreenAction.OnChangeScreen(
+                                            item.route
+                                        )
+                                    )
+                                    navController.navigate(item.route) {
+                                        launchSingleTop = true
+                                        restoreState = true
+                                    }
+                                },
+                                icon = {
+                                    Icon(
+                                        imageVector = item.icon,
+                                        contentDescription = stringResource(item.name),
+                                        tint = MaterialTheme.colorScheme.primary
+                                    )
+                                },
 //                        label = {
 //                            Text(
 //                                text = stringResource(item.name),
@@ -73,9 +116,12 @@ fun DashboardScreen(
 //                                )
 //                            )
 //                        }
-                    )
+                            )
+                        }
+                    }
                 }
             }
+
         }
     ) { paddingValues ->
         AnimatedNavHost(
@@ -83,7 +129,10 @@ fun DashboardScreen(
             navController = navController,
             startDestination = DashboardRoute.HomeRoute,
         ) {
-            homeScreenBuilder(navController = navController)
+            homeScreenBuilder(
+                navController = navController,
+                topAppBarScrollBehavior = topScrollBehavior
+            )
             profileScreenBuilder(
                 onLogout = onLogout,
                 navController = navController
