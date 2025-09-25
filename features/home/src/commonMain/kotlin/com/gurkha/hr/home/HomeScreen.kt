@@ -66,7 +66,6 @@ import com.gurkha.hr.home.model.HomeScreenActions
 import com.gurkha.hr.home.model.HomeScreenState
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.borderColor
-
 import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.linkColor
 import com.gurkha.hr.res.theme.primaryTextColor
@@ -395,6 +394,7 @@ fun LazyListScope.attendanceSection(
                 .fillMaxWidth()
                 .padding(horizontal = MaterialTheme.dimens.small3)
                 .height(MaterialTheme.dimens.chartHeight)
+
         ) {
             HorizontalPager(state = pagerState) { item ->
                 AnimatedContent(item) { page ->
@@ -402,8 +402,8 @@ fun LazyListScope.attendanceSection(
                         0 -> SmoothLineGraph()
                         1 -> Box(
                             modifier = Modifier
+                                .fillMaxSize()
                                 .background(color = MaterialTheme.colorScheme.onPrimaryContainer)
-                                .fillMaxSize(),
                         )
                     }
                 }
@@ -425,43 +425,65 @@ fun LazyListScope.requestSection(
     }
 
     // request part
-    item(key = "request") {
-        Column(
-            modifier = Modifier.fillMaxWidth()
-                .padding(horizontal = MaterialTheme.dimens.small3)
-        ) {
+//    item(key = "request") {
+//        Column(
+//            modifier = Modifier.fillMaxWidth()
+//                .padding(horizontal = MaterialTheme.dimens.small3)
+//        ) {
+//            Row(
+//                modifier = Modifier
+//                    .fillMaxWidth(),
+//                verticalAlignment = Alignment.CenterVertically,
+//                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
+//            ) {
+//                state.requestRow1.forEach { item ->
+//                    AttendanceItemContent(
+//                        modifier = Modifier.weight(1f),
+//                        item = item
+//                    )
+//                }
+//            }
+//
+//            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small3))
+//
+//            //  second row
+//            Row(
+//                modifier = Modifier
+//                    .fillMaxWidth(),
+//                verticalAlignment = Alignment.CenterVertically,
+//                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
+//            ) {
+//                state.requestRow2.forEach { item ->
+//                    AttendanceItemContent(
+//                        modifier = Modifier.weight(1f),
+//                        item = item
+//                    )
+//                }
+//            }
+//        }
+//    }
+
+//    new approach
+    state.homeGridItemsToShow.chunked(2).forEach { rowItems ->
+        item {
             Row(
                 modifier = Modifier
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
+                    .fillMaxWidth()
+                    .padding(horizontal = MaterialTheme.dimens.small3),
                 horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
             ) {
-                state.requestRow1.forEach { item ->
+                rowItems.forEach { leaveItem ->
                     AttendanceItemContent(
-                        modifier = Modifier.weight(1f),
-                        item = item
+                        modifier = Modifier.weight(1f).fillMaxSize(),
+                        item = leaveItem
                     )
                 }
-            }
-
-            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small3))
-
-            //  second row
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
-            ) {
-                state.requestRow2.forEach { item ->
-                    AttendanceItemContent(
-                        modifier = Modifier.weight(1f),
-                        item = item
-                    )
+                // Fill remaining spaces in row if needed
+                repeat(2 - rowItems.size) {
+                    Spacer(modifier = Modifier.weight(1f))
                 }
             }
         }
-
     }
 }
 
@@ -611,11 +633,11 @@ fun EventCard(
     Column(
         modifier = Modifier
             .widthIn(min = 150.dp)
-            .border(
-                width = 1.dp,
-                color = MaterialTheme.colorScheme.borderColor,
-                shape = RoundedCornerShape(MaterialTheme.dimens.small2)
-            )
+//            .border(
+//                width = 1.dp,
+//                color = MaterialTheme.colorScheme.borderColor,
+//                shape = RoundedCornerShape(MaterialTheme.dimens.small2)
+//            )
             .padding(
                 MaterialTheme.dimens.small2
             )
@@ -635,7 +657,7 @@ fun EventCard(
                     .background(Color.Black)
             )
             Text(
-                text = "Kartik",
+                text = "",
                 style = MaterialTheme.typography.titleSmall.copy(
                     color = MaterialTheme.colorScheme.primaryTextColor
                 )

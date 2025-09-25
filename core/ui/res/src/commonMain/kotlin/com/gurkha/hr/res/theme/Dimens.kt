@@ -20,7 +20,8 @@ data class Dimens(
     val loginImageSize: Dp = 0.dp,
     val profileScreenImageSize: Dp = 0.dp,
     val bottomBar: Dp = 0.dp,
-    val chartHeight: Dp = 0.dp
+    val chartHeight: Dp = 0.dp,
+    val reasonTextField: Dp = 0.dp
 )
 
 
@@ -40,5 +41,6 @@ val CompactDimens = Dimens(
     onBoardingIndicatorUnSelected = 10.dp,
     loginImageSize = 200.dp,
     bottomBar = 80.dp,
-    chartHeight = 200.dp
+    chartHeight = 200.dp,
+    reasonTextField = 80.dp
 )

@@ -3,7 +3,6 @@ package com.gurkha.hr.leave.leaveRequestPage
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -36,11 +35,13 @@ import androidx.compose.ui.unit.dp
 import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.textField.DropDownText
 import com.gurkha.hr.components.textField.EPRTextField
+import com.gurkha.hr.components.textField.RequestFormValidate
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.darkPrimaryTextColor
 import com.gurkha.hr.res.theme.dimens
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
+import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -82,7 +83,7 @@ fun LeaveRequestPage(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
 fun LeaveRequestPageContent(
     modifier: Modifier = Modifier,
@@ -94,10 +95,19 @@ fun LeaveRequestPageContent(
     var endDate by remember { mutableStateOf("") }
     var selectedLeaveType by remember { mutableStateOf("") }
     var reason by remember { mutableStateOf("") }
-    var dropDownError by remember { mutableStateOf<StringResource?>(null) }
-    val datePickerState = rememberDatePickerState()
     var startDateActive by remember { mutableStateOf(false) }
     var endDateActive by remember { mutableStateOf(false) }
+
+    val startDatePickerState = rememberDatePickerState()
+    val endDatePickerState = rememberDatePickerState()
+
+    var reasonError by remember { mutableStateOf<StringResource?>(null) }
+    var startDateError by remember { mutableStateOf<StringResource?>(null) }
+    var endDateError by remember { mutableStateOf<StringResource?>(null) }
+    var leaveDurationError by remember { mutableStateOf<StringResource?>(null) }
+    var leaveTypeError by remember { mutableStateOf<StringResource?>(null) }
+
+
 
     Column(
         modifier = modifier
@@ -118,16 +128,22 @@ fun LeaveRequestPageContent(
                         startDateActive = true
                     }
                 ),
+            rules = RequestFormValidate.dateValidationRules,
             text = startDate,
             validateOnFocusChanged = {},
             label = stringResource(SharedRes.Strings.startDate),
             hint = stringResource(SharedRes.Strings.selectStartDate),
             onValueChange = {
                 startDate = it
+                startDateError = RequestFormValidate.validateRules(
+                    it,
+                    RequestFormValidate.dateValidationRules
+                )?.errorMsg
             },
-            rules = emptyList(),
-            showErrorMessage = false,
-            error = null,
+            showErrorMessage = startDateError != null,
+            error = startDateError?.let {
+                SharedRes.Strings.required
+            },
             onErrorStateChange = {},
             trailingIcon = {
                 Icon(
@@ -148,9 +164,11 @@ fun LeaveRequestPageContent(
             hint = stringResource(SharedRes.Strings.selectEndDate),
             onValueChange = {
             },
-            rules = emptyList(),
-            showErrorMessage = false,
-            error = null,
+            rules = RequestFormValidate.dateValidationRules,
+            showErrorMessage = endDateError != null,
+            error = endDateError?.let {
+                SharedRes.Strings.required
+            },
             onErrorStateChange = {},
             trailingIcon = {
                 Icon(
@@ -171,9 +189,9 @@ fun LeaveRequestPageContent(
             listOfItems = LeaveDurationList.map { stringResource(it.title) },
             selectedValue = selectedLeaveDuration,
             onError = {
-                dropDownError = SharedRes.Strings.required
+               SharedRes.Strings.required
             },
-            error = dropDownError,
+            error = leaveDurationError,
             itemClicked = {
                 selectedLeaveDuration = it
             }
@@ -185,9 +203,9 @@ fun LeaveRequestPageContent(
             listOfItems = LeaveTypeList.map { stringResource(it.title) },
             selectedValue = selectedLeaveType,
             onError = {
-                dropDownError = SharedRes.Strings.required
+                leaveTypeError = SharedRes.Strings.required
             },
-            error = dropDownError,
+            error = leaveTypeError,
             itemClicked = {
                 selectedLeaveType = it
             }
@@ -199,38 +217,71 @@ fun LeaveRequestPageContent(
             hint = stringResource(SharedRes.Strings.enterReason),
             onValueChange = {
                 reason = it
+                reasonError = RequestFormValidate.validateRules(
+                    it,
+                    RequestFormValidate.reasonValidationRules
+                )?.errorMsg
             },
-            rules = emptyList(),
-            showErrorMessage = false,
-            error = null,
-            onErrorStateChange = {},
-            height = MaterialTheme.dimens.extraLarge
+            rules = RequestFormValidate.reasonValidationRules,
+            showErrorMessage = reasonError != null,
+            error = reasonError?.let {
+                SharedRes.Strings.required
+            },
+            onErrorStateChange = {
+            },
+            height = MaterialTheme.dimens.reasonTextField
         )
         Spacer(
             modifier = Modifier.weight(1f)
         )
 
 //        buttons for cancel and submit
-        Row(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = MaterialTheme.dimens.small3),
-            horizontalArrangement = Arrangement.End
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2)
         ) {
             ERPButton(
+                modifier = Modifier.fillMaxWidth(),
                 onClick = {
-                    onSubmitClicked(
-                        startDate,
-                        endDate,
-                        selectedLeaveDuration,
-                        selectedLeaveType,
-                        ""
-                    )
+                    reasonError = RequestFormValidate.validateRules(
+                        reason,
+                        RequestFormValidate.reasonValidationRules
+                    )?.errorMsg
+                    leaveTypeError = RequestFormValidate.validateRules(
+                        reason,
+                        RequestFormValidate.reasonValidationRules
+                    )?.errorMsg
+                    leaveDurationError = RequestFormValidate.validateRules(
+                        reason,
+                        RequestFormValidate.reasonValidationRules
+                    )?.errorMsg
+                    startDateError = RequestFormValidate.validateRules(
+                        reason,
+                        RequestFormValidate.reasonValidationRules
+                    )?.errorMsg
+                    endDateError = RequestFormValidate.validateRules(
+                        reason,
+                        RequestFormValidate.reasonValidationRules
+                    )?.errorMsg
+                    if (reasonError == null  && leaveTypeError == null && leaveDurationError == null && endDateError == null && startDateError == null) {
+                        onSubmitClicked(
+                            startDate,
+                            endDate,
+                            selectedLeaveDuration,
+                            selectedLeaveType,
+                            reason
+                        )
+                    }
+
+
                 },
                 text = stringResource(SharedRes.Strings.submit),
             )
             Spacer(modifier = Modifier.width(MaterialTheme.dimens.small3))
             ERPButton(
+                modifier = Modifier.fillMaxWidth(),
                 backgroundColor = MaterialTheme.colorScheme.error,
                 onClick = onBackClicked,
                 text = stringResource(SharedRes.Strings.cancel),
@@ -239,7 +290,7 @@ fun LeaveRequestPageContent(
 //            for the start date
             if (startDateActive) {
                 CostumeDatePicker(
-                    state = datePickerState,
+                    state = startDatePickerState,
                     onDismiss = {
                         startDateActive = false
                     },
@@ -252,7 +303,7 @@ fun LeaveRequestPageContent(
 //for the end date
             if (endDateActive) {
                 CostumeDatePicker(
-                    state = datePickerState,
+                    state = endDatePickerState,
                     onDismiss = {
                         endDateActive = false
                     },
@@ -262,13 +313,12 @@ fun LeaveRequestPageContent(
                     }
                 )
             }
-
         }
     }
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
 fun CostumeDatePicker(
     state: DatePickerState,
@@ -276,11 +326,14 @@ fun CostumeDatePicker(
     onDatePick: (String) -> Unit
 ) {
     DatePickerDialog(
-
         onDismissRequest = onDismiss,
         confirmButton = {
             ERPButton(
-                onClick = { onDatePick(state.selectedDateMillis.toString()) },
+                onClick = {
+                    state.selectedDateMillis?.let { millis ->
+                        onDatePick(millis.toFormattedDate()) // simply call the utility
+                    }
+                },
                 text = stringResource(SharedRes.Strings.confirm)
             )
         },
