@@ -83,19 +83,29 @@ fun NavGraphBuilder.profileScreenBuilder(
         )
     }
     composable<ProfileRoute.AllocatedLeaveScreenRoute> {
-        AllocatedLeaveScreen()
+        AllocatedLeaveScreen(onBackPressed = {
+            navController.popBackStack()
+        })
     }
     composable<ProfileRoute.TimeAndAttendanceScreenRoute> {
-        TimeAndAttendanceScreen()
+        TimeAndAttendanceScreen(onBackPressed = {
+            navController.popBackStack()
+        })
     }
     composable<ProfileRoute.DocumentScreenRoute> {
-        DocumentScreen()
+        DocumentScreen(onBackPressed = {
+            navController.popBackStack()
+        })
     }
     composable<ProfileRoute.CompanyAssetsScreenRoute> {
-        CompanyAssetsScreen()
+        CompanyAssetsScreen(onBackPressed = {
+            navController.popBackStack()
+        })
     }
     composable<ProfileRoute.HistoryScreenRoute> {
-        HistoryScreen()
+        HistoryScreen(onBackPressed = {
+            navController.popBackStack()
+        })
     }
 
 }
