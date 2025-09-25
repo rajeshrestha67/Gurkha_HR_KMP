@@ -1,5 +1,6 @@
 package com.gurkha.hr.profile.company_assets
 
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -12,22 +13,19 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.gurkha.hr.res.SharedRes
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CompanyAssetsScreen(
-    onBackPressed: () -> Unit,
-
-
-
-    ) {
+    onBackPressed: () -> Unit
+) {
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
-
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(SharedRes.Strings.company_assets)) },
