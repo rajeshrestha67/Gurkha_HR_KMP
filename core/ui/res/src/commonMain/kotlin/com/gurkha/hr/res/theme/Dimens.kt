@@ -21,7 +21,8 @@ data class Dimens(
     val profileScreenImageSize: Dp = 0.dp,
     val bottomBar: Dp = 0.dp,
     val chartHeight: Dp = 0.dp,
-    val leaveBoxHeight: Dp = 0.dp
+    val leaveBoxHeight: Dp = 0.dp,
+    val reasonTextField: Dp = 0.dp
 )
 
 

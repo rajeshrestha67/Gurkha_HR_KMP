@@ -5,8 +5,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.gurkha.hr.dashboard.route.DashboardRoute
 import com.gurkha.hr.dashboard.route.LeaveRoute
-import com.gurkha.hr.leave.LeaveRequestPage
 import com.gurkha.hr.leave.LeaveScreen
+import com.gurkha.hr.leave.leaveRequestPage.LeaveRequestPage
 
 
 fun NavGraphBuilder.leaveScreenBuilder(
@@ -19,6 +19,13 @@ fun NavGraphBuilder.leaveScreenBuilder(
         )
     }
     composable<LeaveRoute.LeaveRequestPageRoute> {
-        LeaveRequestPage()
+        LeaveRequestPage(
+            onBackClicked = {
+                navController.popBackStack()
+            },
+            onSubmitClicked = { startDate: String, endDate: String, leaveDuration: String, leaveType: String, reason: String ->
+                navController.popBackStack()
+            }
+        )
     }
 }
