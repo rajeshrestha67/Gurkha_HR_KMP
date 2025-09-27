@@ -13,6 +13,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -46,6 +47,10 @@ fun ERPDateTextField(
     onErrorStateChange: (ErrorStatus?) -> Unit,
     onDateSelected: (DateData) -> Unit
 ) {
+
+    LaunchedEffect(Unit) {
+        println("Data ${DateData.fromDisplay("2025-10-01")}")
+    }
 
     var showDateDialog by rememberSaveable { mutableStateOf(false) }
     Box(
@@ -114,11 +119,8 @@ private fun DatePickerDialog(
                     onDismiss()
                     state.selectedDateMillis?.let { millis ->
                         onDatePick(
-                            DateData(
-                                displayValue = millis.toFormattedDate(),
-                                actualValue = millis
-                            )
-                        ) // simply call the utility
+                            DateData.fromMillis(millis = millis)
+                        )
                     }
                 },
                 text = stringResource(SharedRes.Strings.confirm)
