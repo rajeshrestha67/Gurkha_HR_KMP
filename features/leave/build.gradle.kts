@@ -98,6 +98,8 @@ kotlin {
 
                 implementation(libs.kotlinx.datetime)
 
+                implementation(libs.jetbrians.material3)
+
             }
         }
 

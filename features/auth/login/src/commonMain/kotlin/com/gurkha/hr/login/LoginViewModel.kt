@@ -79,11 +79,11 @@ class LoginViewModel(
                 val passwordError = passwordValidateUseCase(state.value.password)
                 when {
                     usernameError != null -> {
-                        _state.update { it.copy(usernameError = usernameError.errorMsg) }
+                        _state.update { it.copy(usernameError = usernameError) }
                     }
 
                     passwordError != null -> {
-                        _state.update { it.copy(passwordError = passwordError.errorMsg) }
+                        _state.update { it.copy(passwordError = passwordError) }
                     }
 
                     else -> login()

@@ -138,7 +138,7 @@ fun LoginScreenContent(
                     error = state.usernameError,
                     enabled = !state.isLoading,
                     onErrorStateChange = {
-                        onAction(LoginScreenAction.OnUsernameError(it?.errorMsg))
+                        onAction(LoginScreenAction.OnUsernameError(it))
                     },
                     imeAction = ImeAction.Next,
                     rules = FormValidate.emailValidationRules,
@@ -160,7 +160,7 @@ fun LoginScreenContent(
                     value = state.password,
                     error = state.passwordError,
                     onErrorStateChange = {
-                        onAction(LoginScreenAction.OnPasswordError(it?.errorMsg))
+                        onAction(LoginScreenAction.OnPasswordError(it))
                     },
                     imeAction = ImeAction.Send,
                     keyboardActions = KeyboardActions(

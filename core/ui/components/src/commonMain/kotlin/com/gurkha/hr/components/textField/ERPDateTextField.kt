@@ -43,12 +43,12 @@ fun ERPDateTextField(
     rules: List<Rule>,
     error: StringResource?,
     selectableDates: SelectableDates = DatePickerDefaults.AllDates,
-    onErrorStateChange: (ErrorStatus?) -> Unit,
+    onErrorStateChange: (StringResource?) -> Unit,
     onDateSelected: (DateData) -> Unit
 ) {
 
     var showDateDialog by rememberSaveable { mutableStateOf(false) }
-    
+
     Box(
         modifier = modifier.wrapContentHeight(),
         contentAlignment = Alignment.TopCenter

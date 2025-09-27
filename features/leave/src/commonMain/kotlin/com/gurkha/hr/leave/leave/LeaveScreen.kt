@@ -1,4 +1,4 @@
-package com.gurkha.hr.leave
+package com.gurkha.hr.leave.leave
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -38,12 +38,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gurkha.hr.components.shimmer.ShimmerView
 import com.gurkha.hr.domain.attendanceStatus.model.AttendanceStatusData
-import com.gurkha.hr.leave.model.AttendanceStatusEnum
-import com.gurkha.hr.leave.model.LeaveItem
-import com.gurkha.hr.leave.model.LeaveScreenAction
-import com.gurkha.hr.leave.model.LeaveScreenState
-import com.gurkha.hr.leave.model.leaveItemsList
-import com.gurkha.hr.leave.model.tabItemsList
+import com.gurkha.hr.leave.model.leave.AttendanceStatusEnum
+import com.gurkha.hr.leave.model.leave.LeaveItem
+import com.gurkha.hr.leave.model.leave.LeaveScreenAction
+import com.gurkha.hr.leave.model.leave.LeaveScreenState
+import com.gurkha.hr.leave.model.leave.leaveItemsList
+import com.gurkha.hr.leave.model.leave.tabItemsList
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.darkPrimaryTextColor
 import com.gurkha.hr.res.theme.dimens

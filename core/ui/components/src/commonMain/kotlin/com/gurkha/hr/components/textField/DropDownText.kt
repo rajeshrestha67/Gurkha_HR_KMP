@@ -33,7 +33,7 @@ fun <T> DropDownText(
     error: StringResource?,
     dropdownTextColor: Color = MaterialTheme.colorScheme.primaryTextColor,
     enabled: Boolean = true,
-    onError: (ErrorStatus?) -> Unit,
+    onError: (StringResource?) -> Unit,
     listOfItems: List<T>,
     rules: List<Rule> = listOf(),
     itemClicked: (T) -> Unit

@@ -1,4 +1,4 @@
-package com.gurkha.hr.leave.model
+package com.gurkha.hr.leave.model.leave
 
 import androidx.compose.ui.graphics.Color
 import com.gurkha.hr.res.SharedRes

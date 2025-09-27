@@ -1,6 +1,8 @@
 package com.gurkha.hr.components.textField
 
-data class Rule(var check: ((String) -> ErrorStatus?)) {
+import org.jetbrains.compose.resources.StringResource
+
+data class Rule(var check: ((String) -> StringResource?)) {
     operator fun plus(other: Rule): Rule {
         return Rule {
             val firstError = this.check(it)

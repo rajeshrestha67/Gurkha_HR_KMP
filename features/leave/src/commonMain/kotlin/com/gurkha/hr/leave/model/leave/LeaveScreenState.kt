@@ -1,4 +1,4 @@
-package com.gurkha.hr.leave.model
+package com.gurkha.hr.leave.model.leave
 
 import com.gurkha.hr.domain.attendanceStatus.model.AttendanceStatusData
 
@@ -7,11 +7,11 @@ data class LeaveScreenState(
     val approvedTapItem: LeaveTapItem = LeaveTapItem(),
     val cancelTapItem: LeaveTapItem = LeaveTapItem(),
     val currentTapItem: LeaveTapItem = LeaveTapItem(),
-    val fromDate : String = "",
-    val toDate : String = "",
-    val attendanceStatus : AttendanceStatusEnum = AttendanceStatusEnum.PENDING,
-    val employeeName : String = "",
-    val isSelf : String = ""
+    val fromDate: String = "",
+    val toDate: String = "",
+    val attendanceStatus: AttendanceStatusEnum = AttendanceStatusEnum.PENDING,
+    val employeeName: String = "",
+    val isSelf: String = ""
 )
 
 data class LeaveTapItem(

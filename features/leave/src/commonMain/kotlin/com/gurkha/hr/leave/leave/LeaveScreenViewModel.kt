@@ -1,11 +1,11 @@
-package com.gurkha.hr.leave
+package com.gurkha.hr.leave.leave
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gurkha.hr.domain.attendanceStatus.useCase.AttendanceStatusUseCase
-import com.gurkha.hr.leave.model.AttendanceStatusEnum
-import com.gurkha.hr.leave.model.LeaveScreenAction
-import com.gurkha.hr.leave.model.LeaveScreenState
+import com.gurkha.hr.leave.model.leave.AttendanceStatusEnum
+import com.gurkha.hr.leave.model.leave.LeaveScreenAction
+import com.gurkha.hr.leave.model.leave.LeaveScreenState
 import com.gurkha.hr.networkhelper.onSuccess
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -30,7 +30,7 @@ class LeaveScreenViewModel(
                 _state.update {
                     it.copy(
                         attendanceStatus = action.status,
-                        currentTapItem = when(action.status){
+                        currentTapItem = when (action.status) {
                             AttendanceStatusEnum.PENDING -> it.pendingTapItem
                             AttendanceStatusEnum.APPROVED -> it.approvedTapItem
                             else -> it.cancelTapItem
@@ -55,17 +55,19 @@ class LeaveScreenViewModel(
     ) = viewModelScope.launch {
 
         _state.update {
-            when(attendanceStatus){
+            when (attendanceStatus) {
                 AttendanceStatusEnum.PENDING -> {
                     it.copy(
                         pendingTapItem = it.pendingTapItem.copy(isLoading = true)
                     )
                 }
+
                 AttendanceStatusEnum.APPROVED -> {
                     it.copy(
                         approvedTapItem = it.approvedTapItem.copy(isLoading = true)
                     )
                 }
+
                 else -> {
                     it.copy(
                         cancelTapItem = it.cancelTapItem.copy(isLoading = true)
@@ -80,7 +82,7 @@ class LeaveScreenViewModel(
             isSelf = isSelf
         ).onSuccess { data ->
             when (attendanceStatus) {
-                 AttendanceStatusEnum.PENDING -> {
+                AttendanceStatusEnum.PENDING -> {
                     _state.update {
                         it.copy(
                             pendingTapItem = it.pendingTapItem.copy(
@@ -90,30 +92,32 @@ class LeaveScreenViewModel(
                         )
                     }
                 }
-                 AttendanceStatusEnum.APPROVED -> {
+
+                AttendanceStatusEnum.APPROVED -> {
                     _state.update {
                         it.copy(
-                           approvedTapItem = it.approvedTapItem.copy(
-                               isLoading = false,
-                               result = data
-                           )
+                            approvedTapItem = it.approvedTapItem.copy(
+                                isLoading = false,
+                                result = data
+                            )
                         )
                     }
                 }
-               else -> {
+
+                else -> {
                     _state.update {
                         it.copy(
-                           cancelTapItem = it.cancelTapItem.copy(
-                               isLoading = false,
-                               result = data
-                           )
+                            cancelTapItem = it.cancelTapItem.copy(
+                                isLoading = false,
+                                result = data
+                            )
                         )
                     }
                 }
             }
             _state.update {
                 it.copy(
-                    currentTapItem = when(attendanceStatus){
+                    currentTapItem = when (attendanceStatus) {
                         AttendanceStatusEnum.PENDING -> it.pendingTapItem
                         AttendanceStatusEnum.APPROVED -> it.approvedTapItem
                         else -> it.cancelTapItem

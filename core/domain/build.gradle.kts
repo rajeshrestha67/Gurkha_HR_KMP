@@ -4,6 +4,8 @@ plugins {
     alias(libs.plugins.android.lint)
 //    alias(libs.plugins.io.kotest)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.composeMultiplatform)
 }
 
 kotlin {
@@ -63,6 +65,11 @@ kotlin {
             dependencies {
                 implementation(libs.kotlin.stdlib)
                 // Add KMP dependencies here
+                implementation(compose.runtime)
+                implementation(compose.components.resources)
+                implementation(compose.foundation)
+                implementation(compose.material3)
+
                 implementation(projects.core.model)
                 implementation(projects.core.networkHelper)
                 implementation(projects.core.persistance.datastore)

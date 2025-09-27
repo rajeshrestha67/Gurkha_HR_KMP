@@ -115,7 +115,7 @@ fun ChangePasswordScreenContainer(
             value = state.newPassword,
 
             onErrorStateChange = { newError ->
-                onAction(ChangePasswordScreenAction.OnNewPasswordError(newPasswordError = newError?.errorMsg))
+                onAction(ChangePasswordScreenAction.OnNewPasswordError(newPasswordError = newError))
             },
             imeAction = ImeAction.Send,
             error = state.newPasswordError,
@@ -142,7 +142,7 @@ fun ChangePasswordScreenContainer(
             value = state.confirmPassword,
 
             onErrorStateChange = { confirmError ->
-                onAction(ChangePasswordScreenAction.OnConfirmPasswordError(confirmPasswordError = confirmError?.errorMsg))
+                onAction(ChangePasswordScreenAction.OnConfirmPasswordError(confirmPasswordError = confirmError))
             },
             imeAction = ImeAction.Send,
             error = state.confirmPasswordError,

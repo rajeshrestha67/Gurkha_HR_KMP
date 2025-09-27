@@ -1,4 +1,4 @@
-package com.gurkha.hr.leave.leaveRequestPage
+package com.gurkha.hr.leave.model.leave_request
 
 import com.gurkha.hr.res.SharedRes
 import org.jetbrains.compose.resources.StringResource
