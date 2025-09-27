@@ -58,7 +58,7 @@ fun <T> DropDownText(
                 Icon(
                     imageVector = Icons.Filled.ArrowDropDown,
                     contentDescription = "drop down",
-                    tint = Color.Black
+                    tint = MaterialTheme.colorScheme.primaryTextColor
                 )
             },
             onErrorStateChange = { err ->

@@ -75,6 +75,7 @@ kotlin {
                 implementation(libs.koin.compose)
 
                 implementation(libs.org.jetbrains.navigation)
+                implementation(libs.kotlinx.datetime)
 
             }
         }

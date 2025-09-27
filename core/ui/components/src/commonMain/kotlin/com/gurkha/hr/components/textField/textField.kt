@@ -34,7 +34,10 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
+import com.gurkha.hr.res.theme.borderColor
+import com.gurkha.hr.res.theme.dimens
+import com.gurkha.hr.res.theme.primaryTextColor
+import com.gurkha.hr.res.theme.secondaryTextColor
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -62,26 +65,25 @@ fun EPRBaseTextField(
     enabled: Boolean = true,
     showErrorMessage: Boolean = true,
     height: Dp? = null,
-    bgColor: Color = Color.Green.copy(alpha = 0.1f),
+    bgColor: Color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
     bgShape: Shape = MaterialTheme.shapes.medium,
     borderEnabled: Boolean = true,
     onDropDown: (() -> Unit)? = null
 ) {
 
     var hasUserInteracted by remember { mutableStateOf(false) }
-
+    val dropdownAble = onDropDown != null && enabled
     Column(
         modifier = modifier,
     ) {
         label?.let {
             Text(
-                modifier = Modifier.padding(bottom = 4.dp),
+                modifier = Modifier.padding(bottom = MaterialTheme.dimens.small1),
                 text = it,
-                style = MaterialTheme.typography.bodySmall
-//                fontWeight = FontWeight.W400,
-//                color = MaterialTheme.agColors.defaultTextDarkColor.copy(alpha = if (enabled) 1f else 0.5f)
+                style = MaterialTheme.typography.bodySmall.copy(
+                    color = MaterialTheme.colorScheme.primaryTextColor.copy(alpha = if (dropdownAble) 1f else 0.5f)
+                )
             )
-
         }
 
 
@@ -94,6 +96,7 @@ fun EPRBaseTextField(
                 onDropDown()
             }
         } ?: Modifier
+
 
         OutlinedTextField(
             enabled = enabled,
@@ -127,7 +130,7 @@ fun EPRBaseTextField(
             maxLines = maxLines,
             value = textFieldValue,
             textStyle = MaterialTheme.typography.bodySmall.copy(
-                color = Color.Black
+                color = MaterialTheme.colorScheme.primaryTextColor
             ),
             onValueChange = {
                 if (it.text.length <= maxLength) {
@@ -138,7 +141,7 @@ fun EPRBaseTextField(
                 Text(
                     text = hint,
                     style = MaterialTheme.typography.bodySmall.copy(
-                        color = Color.Gray
+                        color = MaterialTheme.colorScheme.secondaryTextColor
                     ),
                 )
             },
@@ -149,8 +152,8 @@ fun EPRBaseTextField(
             isError = error != null,
             colors = if (borderEnabled) {
                 OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color.Green.copy(alpha = if (enabled) 1f else 0.5f),
-                    unfocusedBorderColor = Color.Gray.copy(alpha = if (enabled) 1f else 0.5f),
+                    focusedBorderColor = MaterialTheme.colorScheme.primary.copy(alpha = if (dropdownAble) 1f else 0.5f),
+                    unfocusedBorderColor = MaterialTheme.colorScheme.borderColor.copy(alpha = if (dropdownAble) 1f else 0.5f),
                 )
             } else OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = bgColor,
@@ -162,10 +165,10 @@ fun EPRBaseTextField(
         ) {
             error?.let {
                 Text(
-                    modifier = Modifier.padding(4.dp),
+                    modifier = Modifier.padding(MaterialTheme.dimens.small1),
                     text = stringResource(error),
                     style = MaterialTheme.typography.labelSmall.copy(
-                        color = Color.Red
+                        color = MaterialTheme.colorScheme.error
                     )
                 )
             }

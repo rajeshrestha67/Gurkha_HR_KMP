@@ -1,6 +1,5 @@
 package com.gurkha.hr.leave.leaveRequestPage
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -13,10 +12,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.CalendarMonth
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -24,7 +19,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.textField.DropDownText
+import com.gurkha.hr.components.textField.EPRDateTextField
 import com.gurkha.hr.components.textField.EPRTextField
 import com.gurkha.hr.components.textField.RequestFormValidate
 import com.gurkha.hr.res.SharedRes
@@ -95,11 +90,6 @@ fun LeaveRequestPageContent(
     var endDate by remember { mutableStateOf("") }
     var selectedLeaveType by remember { mutableStateOf("") }
     var reason by remember { mutableStateOf("") }
-    var startDateActive by remember { mutableStateOf(false) }
-    var endDateActive by remember { mutableStateOf(false) }
-
-    val startDatePickerState = rememberDatePickerState()
-    val endDatePickerState = rememberDatePickerState()
 
     var reasonError by remember { mutableStateOf<StringResource?>(null) }
     var startDateError by remember { mutableStateOf<StringResource?>(null) }
@@ -119,18 +109,12 @@ fun LeaveRequestPageContent(
             .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
     ) {
-//        start date
-        EPRTextField(
+
+        EPRDateTextField(
             modifier = Modifier
-                .fillMaxWidth()
-                .clickable(
-                    onClick = {
-                        startDateActive = true
-                    }
-                ),
+                .fillMaxWidth(),
             rules = RequestFormValidate.dateValidationRules,
             text = startDate,
-            validateOnFocusChanged = {},
             label = stringResource(SharedRes.Strings.startDate),
             hint = stringResource(SharedRes.Strings.selectStartDate),
             onValueChange = {
@@ -140,47 +124,23 @@ fun LeaveRequestPageContent(
                     RequestFormValidate.dateValidationRules
                 )?.errorMsg
             },
-            showErrorMessage = startDateError != null,
             error = startDateError?.let {
                 SharedRes.Strings.required
             },
             onErrorStateChange = {},
-            trailingIcon = {
-                Icon(
-                    Icons.Filled.CalendarMonth, contentDescription = "",
-                    modifier = Modifier.clickable(
-                        onClick = {
-                            startDateActive = true
-                        }
-                    ),
-                )
-            },
-            readOnly = true
         )
 //        end date
-        EPRTextField(
+        EPRDateTextField(
             text = endDate,
             label = stringResource(SharedRes.Strings.endDate),
             hint = stringResource(SharedRes.Strings.selectEndDate),
             onValueChange = {
             },
             rules = RequestFormValidate.dateValidationRules,
-            showErrorMessage = endDateError != null,
             error = endDateError?.let {
                 SharedRes.Strings.required
             },
-            onErrorStateChange = {},
-            trailingIcon = {
-                Icon(
-                    Icons.Filled.CalendarMonth, contentDescription = "",
-                    modifier = Modifier.clickable(
-                        onClick = {
-                            endDateActive = true
-                        }
-                    ),
-                )
-            },
-            readOnly = true
+            onErrorStateChange = {}
         )
 //        leave duration
         DropDownText(
@@ -189,7 +149,7 @@ fun LeaveRequestPageContent(
             listOfItems = LeaveDurationList.map { stringResource(it.title) },
             selectedValue = selectedLeaveDuration,
             onError = {
-               SharedRes.Strings.required
+                SharedRes.Strings.required
             },
             error = leaveDurationError,
             itemClicked = {
@@ -265,7 +225,7 @@ fun LeaveRequestPageContent(
                         reason,
                         RequestFormValidate.reasonValidationRules
                     )?.errorMsg
-                    if (reasonError == null  && leaveTypeError == null && leaveDurationError == null && endDateError == null && startDateError == null) {
+                    if (reasonError == null && leaveTypeError == null && leaveDurationError == null && endDateError == null && startDateError == null) {
                         onSubmitClicked(
                             startDate,
                             endDate,
@@ -287,67 +247,40 @@ fun LeaveRequestPageContent(
                 text = stringResource(SharedRes.Strings.cancel),
             )
 
-//            for the start date
-            if (startDateActive) {
-                CostumeDatePicker(
-                    state = startDatePickerState,
-                    onDismiss = {
-                        startDateActive = false
-                    },
-                    onDatePick = {
-                        startDate = it
-                        startDateActive = false
-                    }
-                )
-            }
-//for the end date
-            if (endDateActive) {
-                CostumeDatePicker(
-                    state = endDatePickerState,
-                    onDismiss = {
-                        endDateActive = false
-                    },
-                    onDatePick = {
-                        endDate = it
-                        endDateActive = false
-                    }
-                )
-            }
         }
     }
 }
-
-
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
-@Composable
-fun CostumeDatePicker(
-    state: DatePickerState,
-    onDismiss: () -> Unit,
-    onDatePick: (String) -> Unit
-) {
-    DatePickerDialog(
-        onDismissRequest = onDismiss,
-        confirmButton = {
-            ERPButton(
-                onClick = {
-                    state.selectedDateMillis?.let { millis ->
-                        onDatePick(millis.toFormattedDate()) // simply call the utility
-                    }
-                },
-                text = stringResource(SharedRes.Strings.confirm)
-            )
-        },
-        dismissButton = {
-            ERPButton(
-                onClick = onDismiss,
-                backgroundColor = MaterialTheme.colorScheme.error,
-                text = stringResource(SharedRes.Strings.cancel)
-            )
-        }
-    ) {
-        DatePicker(
-            state = state
-        )
-    }
-}
-
+//
+//
+//@OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
+//@Composable
+//fun CostumeDatePicker(
+//    onDismiss: () -> Unit,
+//    onDatePick: (String) -> Unit
+//) {
+//    val state = rememberDatePickerState()
+//    DatePickerDialog(
+//        onDismissRequest = onDismiss,
+//        confirmButton = {
+//            ERPButton(
+//                onClick = {
+//                    state.selectedDateMillis?.let { millis ->
+//                        onDatePick(millis.toFormattedDate()) // simply call the utility
+//                    }
+//                },
+//                text = stringResource(SharedRes.Strings.confirm)
+//            )
+//        },
+//        dismissButton = {
+//            ERPButton(
+//                onClick = onDismiss,
+//                backgroundColor = MaterialTheme.colorScheme.error,
+//                text = stringResource(SharedRes.Strings.cancel)
+//            )
+//        }
+//    ) {
+//        DatePicker(
+//            state = state
+//        )
+//    }
+//}
