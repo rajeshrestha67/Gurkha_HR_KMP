@@ -4,9 +4,9 @@ import com.gurkha.hr.res.SharedRes
 import org.jetbrains.compose.resources.StringResource
 
 object FormValidate {
-    fun validateRules(text: String, rules: List<Rule>): StringResource? {
+    fun validateRules(text: String?, rules: List<Rule>): StringResource? {
         rules.map { rule ->
-            val errorMessage = rule.check.invoke(text)
+            val errorMessage = rule.check.invoke(text ?: "")
             if (errorMessage != null) {
                 return@validateRules errorMessage
             }
@@ -80,6 +80,6 @@ object FormValidate {
     )
 }
 
-fun List<Rule>.validate(text: String): StringResource? {
+fun List<Rule>.validate(text: String?): StringResource? {
     return FormValidate.validateRules(text = text, this)
 }

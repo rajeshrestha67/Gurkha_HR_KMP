@@ -141,8 +141,8 @@ fun DashboardScreen(
             attendanceScreen(navController = navController)
             leaveScreenBuilder(
                 navController = navController,
-                onGoToLeaveRequestPage = {
-                    navController.navigate(LeaveRoute.LeaveRequestPageRoute)
+                onGoToLeaveRequestPage = { leaveRequestJson ->
+                    navController.navigate(LeaveRoute.LeaveRequestPageRoute(json = leaveRequestJson))
                 }
             )
             reportScreenBuilder(navController = navController)

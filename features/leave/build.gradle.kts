@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.android.lint)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeMultiplatform)
+    alias(libs.plugins.jetbrains.kotlin.serialization)
 }
 
 kotlin {
@@ -76,6 +77,7 @@ kotlin {
 
                 implementation(projects.core.domain)
                 implementation(projects.core.networkHelper)
+                implementation(projects.core.model)
                 implementation(projects.core.ui.res)
                 implementation(projects.core.ui.components)
 
@@ -99,6 +101,9 @@ kotlin {
                 implementation(libs.kotlinx.datetime)
 
                 implementation(libs.jetbrians.material3)
+                implementation(libs.org.jetbrains.navigation)
+
+                implementation(libs.kotlinx.serialization.json)
 
             }
         }

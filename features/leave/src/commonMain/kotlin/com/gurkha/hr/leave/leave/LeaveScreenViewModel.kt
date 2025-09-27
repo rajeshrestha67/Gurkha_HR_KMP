@@ -45,6 +45,14 @@ class LeaveScreenViewModel(
                     )
                 }
             }
+
+            is LeaveScreenAction.UpdateRequestData -> {
+                _state.update {
+                    it.copy(
+                        leaveRequestDataJson = action.json
+                    )
+                }
+            }
         }
     }
 

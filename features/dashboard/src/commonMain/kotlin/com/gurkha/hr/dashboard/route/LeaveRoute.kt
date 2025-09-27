@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 sealed interface LeaveRoute {
     @Serializable
-    data object LeaveRequestPageRoute : LeaveRoute
+    data class LeaveRequestPageRoute(val json: String?) : LeaveRoute
 }

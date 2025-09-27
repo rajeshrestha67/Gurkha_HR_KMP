@@ -3,6 +3,7 @@ package com.gurkha.di
 import com.gurkha.hr.data.attendanceStatus.KtorAttendanceStatusRemoteRepository
 import com.gurkha.hr.domain.attendanceStatus.repository.AttendanceStatusRemoteRepository
 import com.gurkha.hr.domain.attendanceStatus.useCase.AttendanceStatusUseCase
+import com.gurkha.hr.domain.form.RequiredValidationUseCase
 import com.gurkha.hr.leave.leave.LeaveScreenViewModel
 import com.gurkha.hr.leave.leaveRequestPage.LeaveRequestScreenViewModel
 import io.ktor.client.HttpClient
@@ -29,5 +30,6 @@ class LeaveScreenModule {
     )
 
     @KoinViewModel
-    fun getLeaveRequestViewModel(): LeaveRequestScreenViewModel = LeaveRequestScreenViewModel()
+    fun getLeaveRequestViewModel(requiredValidationUseCase: RequiredValidationUseCase): LeaveRequestScreenViewModel =
+        LeaveRequestScreenViewModel(requiredValidationUseCase = requiredValidationUseCase)
 }

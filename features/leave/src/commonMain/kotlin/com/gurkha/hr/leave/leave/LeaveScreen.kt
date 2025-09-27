@@ -30,12 +30,14 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import com.gurkha.hr.components.shimmer.ShimmerView
 import com.gurkha.hr.domain.attendanceStatus.model.AttendanceStatusData
 import com.gurkha.hr.leave.model.leave.AttendanceStatusEnum
@@ -56,12 +58,20 @@ import org.koin.compose.viewmodel.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LeaveScreen(
-    onGoToLeaveRequestPage: () -> Unit,
+    navController: NavHostController,
+    onGoToLeaveRequestPage: (String?) -> Unit,
 ) {
     val viewModel: LeaveScreenViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
+    val result = navController.currentBackStackEntry
+        ?.savedStateHandle
+        ?.getStateFlow<String?>("data", null)
+        ?.collectAsStateWithLifecycle()
 
+    LaunchedEffect(result) {
+        viewModel.onAction(LeaveScreenAction.UpdateRequestData(result?.value))
+    }
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         contentWindowInsets = WindowInsets(0.dp),
@@ -80,7 +90,7 @@ fun LeaveScreen(
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = onGoToLeaveRequestPage,
+                onClick = { onGoToLeaveRequestPage(state.leaveRequestDataJson) },
                 content = {
                     Icon(Icons.Filled.Add, contentDescription = "Go to Request page")
                 }

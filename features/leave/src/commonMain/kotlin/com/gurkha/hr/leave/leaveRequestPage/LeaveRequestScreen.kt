@@ -20,10 +20,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.textField.DropDownText
 import com.gurkha.hr.components.textField.EPRTextField
@@ -38,6 +40,8 @@ import com.gurkha.hr.leave.model.leave_request.LeaveTypeList
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.primaryTextColor
+import com.gurkha.model.leave_request.LeaveRequestData
+import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import kotlin.time.Duration.Companion.days
@@ -47,16 +51,35 @@ import kotlin.time.ExperimentalTime
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LeaveRequestScreen(
-    onBackClicked: () -> Unit,
-    onSubmitClicked: (startDate: String, endDate: String, leaveDuration: String, leaveType: String, reason: String) -> Unit
+    navController: NavHostController,
+    json: String?,
+    onBackClicked: () -> Unit
 ) {
 
     val viewModel: LeaveRequestScreenViewModel = koinViewModel()
 
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.dataChannel.collect { data ->
+            data?.let { safeData ->
+                val stringData = Json.encodeToString(safeData)
+                navController.previousBackStackEntry
+                    ?.savedStateHandle
+                    ?.set("data", stringData)
+                navController.popBackStack()
+            }
+        }
+    }
+
+    LaunchedEffect(json) {
+        json?.let {
+            val data = Json.decodeFromString<LeaveRequestData>(it)
+            viewModel.onAction(LeaveRequestScreenAction.UpdateLeaveRequestData(data))
+        }
+    }
     LeaveRequestPageContent(
         onBackClicked = onBackClicked,
-        onSubmitClicked = onSubmitClicked,
         state = state,
         onAction = viewModel::onAction
     )
@@ -67,11 +90,9 @@ fun LeaveRequestScreen(
 @Composable
 fun LeaveRequestPageContent(
     onBackClicked: () -> Unit,
-    onSubmitClicked: (String, String, String, String, String) -> Unit,
     state: LeaveRequestScreenState,
     onAction: (LeaveRequestScreenAction) -> Unit
 ) {
-
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -138,7 +159,7 @@ fun LeaveRequestScreenForm(
             hint = stringResource(SharedRes.Strings.selectStartDate),
             error = state.startDateError,
             onErrorStateChange = {
-                onAction(LeaveRequestScreenAction.OnStartDateError(it))
+                //onAction(LeaveRequestScreenAction.OnStartDateError(it))
             },
             selectableDates = FutureAndTodayDate,
             onDateSelected = {
@@ -154,7 +175,7 @@ fun LeaveRequestScreenForm(
             rules = FormValidate.requiredValidationRules,
             error = state.endDateError,
             onErrorStateChange = {
-                onAction(LeaveRequestScreenAction.OnEndDateError(it))
+                //onAction(LeaveRequestScreenAction.OnEndDateError(it))
             },
             selectableDates = RangeSelectableDates(
                 minDateMillis = state.startDate?.actualValue?.plus(1.days.toLong(DurationUnit.DAYS))
@@ -167,10 +188,11 @@ fun LeaveRequestScreenForm(
         DropDownText(
             label = SharedRes.Strings.leave_duration,
             hint = SharedRes.Strings.select_leave_duration,
+            rules = FormValidate.requiredValidationRules,
             listOfItems = LeaveDurationList.map { stringResource(it.title) },
             selectedValue = state.leaveDuration,
             onError = {
-                onAction(LeaveRequestScreenAction.OnLeaveDurationError(it))
+                // onAction(LeaveRequestScreenAction.OnLeaveDurationError(it))
             },
             error = state.leaveDurationError,
             itemClicked = {
@@ -181,10 +203,11 @@ fun LeaveRequestScreenForm(
         DropDownText(
             label = SharedRes.Strings.leaveType,
             hint = SharedRes.Strings.selectLeaveType,
+            rules = FormValidate.requiredValidationRules,
             listOfItems = LeaveTypeList.map { stringResource(it.title) },
             selectedValue = state.leaveType,
             onError = {
-                onAction(LeaveRequestScreenAction.OnLeaveTypeError(it))
+                //onAction(LeaveRequestScreenAction.OnLeaveTypeError(it))
             },
             error = state.leaveTypeError,
             itemClicked = {
