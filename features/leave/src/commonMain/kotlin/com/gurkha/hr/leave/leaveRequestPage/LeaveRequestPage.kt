@@ -27,16 +27,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.gurkha.hr.components.ERPButton
+import com.gurkha.hr.components.textField.DateData
 import com.gurkha.hr.components.textField.DropDownText
-import com.gurkha.hr.components.textField.EPRDateTextField
 import com.gurkha.hr.components.textField.EPRTextField
+import com.gurkha.hr.components.textField.ERPDateTextField
+import com.gurkha.hr.components.textField.FormValidate
 import com.gurkha.hr.components.textField.FutureAndTodayDate
-import com.gurkha.hr.components.textField.RequestFormValidate
+import com.gurkha.hr.components.textField.RangeSelectableDates
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.primaryTextColor
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
+import kotlin.time.Duration.Companion.days
+import kotlin.time.DurationUnit
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -88,8 +92,8 @@ fun LeaveRequestPageContent(
     onSubmitClicked: (String, String, String, String, String) -> Unit
 ) {
     var selectedLeaveDuration by remember { mutableStateOf("") }
-    var startDate by remember { mutableStateOf("") }
-    var endDate by remember { mutableStateOf("") }
+    var startDate by remember { mutableStateOf<DateData?>(null) }
+    var endDate by remember { mutableStateOf<DateData?>(null) }
     var selectedLeaveType by remember { mutableStateOf("") }
     var reason by remember { mutableStateOf("") }
 
@@ -112,38 +116,40 @@ fun LeaveRequestPageContent(
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
     ) {
 
-        EPRDateTextField(
+        ERPDateTextField(
             modifier = Modifier
                 .fillMaxWidth(),
-            rules = RequestFormValidate.dateValidationRules,
-            text = startDate,
+            rules = FormValidate.requiredValidationRules,
+            value = startDate,
             label = stringResource(SharedRes.Strings.startDate),
             hint = stringResource(SharedRes.Strings.selectStartDate),
-            onValueChange = {
-                startDate = it
-                startDateError = RequestFormValidate.validateRules(
-                    it,
-                    RequestFormValidate.dateValidationRules
-                )?.errorMsg
-            },
+
             error = startDateError?.let {
                 SharedRes.Strings.required
             },
             onErrorStateChange = {},
-            selectableDates = FutureAndTodayDate
+            selectableDates = FutureAndTodayDate,
+            onDateSelected = {
+                startDate = it
+            }
         )
 //        end date
-        EPRDateTextField(
-            text = endDate,
+        ERPDateTextField(
+            value = endDate,
             label = stringResource(SharedRes.Strings.endDate),
             hint = stringResource(SharedRes.Strings.selectEndDate),
-            onValueChange = {
-            },
-            rules = RequestFormValidate.dateValidationRules,
+
+            rules = FormValidate.requiredValidationRules,
             error = endDateError?.let {
                 SharedRes.Strings.required
             },
-            onErrorStateChange = {}
+            onErrorStateChange = {},
+            selectableDates = RangeSelectableDates(
+                minDateMillis = startDate?.actualValue?.plus(1.days.toLong(DurationUnit.DAYS))
+            ),
+            onDateSelected = {
+                endDate = it
+            }
         )
 //        leave duration
         DropDownText(
@@ -180,12 +186,12 @@ fun LeaveRequestPageContent(
             hint = stringResource(SharedRes.Strings.enterReason),
             onValueChange = {
                 reason = it
-                reasonError = RequestFormValidate.validateRules(
+                reasonError = FormValidate.validateRules(
                     it,
-                    RequestFormValidate.reasonValidationRules
+                    FormValidate.requiredValidationRules
                 )?.errorMsg
             },
-            rules = RequestFormValidate.reasonValidationRules,
+            rules = FormValidate.requiredValidationRules,
             showErrorMessage = reasonError != null,
             error = reasonError?.let {
                 SharedRes.Strings.required
@@ -208,35 +214,35 @@ fun LeaveRequestPageContent(
             ERPButton(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
-                    reasonError = RequestFormValidate.validateRules(
-                        reason,
-                        RequestFormValidate.reasonValidationRules
-                    )?.errorMsg
-                    leaveTypeError = RequestFormValidate.validateRules(
-                        reason,
-                        RequestFormValidate.reasonValidationRules
-                    )?.errorMsg
-                    leaveDurationError = RequestFormValidate.validateRules(
-                        reason,
-                        RequestFormValidate.reasonValidationRules
-                    )?.errorMsg
-                    startDateError = RequestFormValidate.validateRules(
-                        reason,
-                        RequestFormValidate.reasonValidationRules
-                    )?.errorMsg
-                    endDateError = RequestFormValidate.validateRules(
-                        reason,
-                        RequestFormValidate.reasonValidationRules
-                    )?.errorMsg
-                    if (reasonError == null && leaveTypeError == null && leaveDurationError == null && endDateError == null && startDateError == null) {
-                        onSubmitClicked(
-                            startDate,
-                            endDate,
-                            selectedLeaveDuration,
-                            selectedLeaveType,
-                            reason
-                        )
-                    }
+//                    reasonError = FormValidate.validateRules(
+//                        reason,
+//                        RequestFormValidate.reasonValidationRules
+//                    )?.errorMsg
+//                    leaveTypeError = RequestFormValidate.validateRules(
+//                        reason,
+//                        RequestFormValidate.reasonValidationRules
+//                    )?.errorMsg
+//                    leaveDurationError = RequestFormValidate.validateRules(
+//                        reason,
+//                        RequestFormValidate.reasonValidationRules
+//                    )?.errorMsg
+//                    startDateError = RequestFormValidate.validateRules(
+//                        reason,
+//                        RequestFormValidate.reasonValidationRules
+//                    )?.errorMsg
+//                    endDateError = RequestFormValidate.validateRules(
+//                        reason,
+//                        RequestFormValidate.reasonValidationRules
+//                    )?.errorMsg
+//                    if (reasonError == null && leaveTypeError == null && leaveDurationError == null && endDateError == null && startDateError == null) {
+                    onSubmitClicked(
+                        startDate?.displayValue ?: "",
+                        endDate?.displayValue ?: "",
+                        selectedLeaveDuration,
+                        selectedLeaveType,
+                        reason
+                    )
+                    // }
 
 
                 },
@@ -253,37 +259,4 @@ fun LeaveRequestPageContent(
         }
     }
 }
-//
-//
-//@OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
-//@Composable
-//fun CostumeDatePicker(
-//    onDismiss: () -> Unit,
-//    onDatePick: (String) -> Unit
-//) {
-//    val state = rememberDatePickerState()
-//    DatePickerDialog(
-//        onDismissRequest = onDismiss,
-//        confirmButton = {
-//            ERPButton(
-//                onClick = {
-//                    state.selectedDateMillis?.let { millis ->
-//                        onDatePick(millis.toFormattedDate()) // simply call the utility
-//                    }
-//                },
-//                text = stringResource(SharedRes.Strings.confirm)
-//            )
-//        },
-//        dismissButton = {
-//            ERPButton(
-//                onClick = onDismiss,
-//                backgroundColor = MaterialTheme.colorScheme.error,
-//                text = stringResource(SharedRes.Strings.cancel)
-//            )
-//        }
-//    ) {
-//        DatePicker(
-//            state = state
-//        )
-//    }
-//}
+

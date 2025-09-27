@@ -34,17 +34,17 @@ import kotlin.time.Instant
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EPRDateTextField(
+fun ERPDateTextField(
     modifier: Modifier = Modifier,
-    text: String,
+    value: DateData?,
     label: String,
     hint: String,
-    onValueChange: (String) -> Unit,
     enabled: Boolean = true,
     rules: List<Rule>,
     error: StringResource?,
     selectableDates: SelectableDates = DatePickerDefaults.AllDates,
     onErrorStateChange: (ErrorStatus?) -> Unit,
+    onDateSelected: (DateData) -> Unit
 ) {
 
     var showDateDialog by rememberSaveable { mutableStateOf(false) }
@@ -54,10 +54,10 @@ fun EPRDateTextField(
     ) {
 
         EPRTextField(
-            text = text,
+            text = value?.displayValue ?: "",
             label = label,
             hint = hint,
-            onValueChange = onValueChange,
+            onValueChange = {},
             enabled = enabled,
             rules = rules,
             showErrorMessage = error != null,
@@ -81,9 +81,10 @@ fun EPRDateTextField(
                 onDismiss = {
                     showDateDialog = false
                 },
+                initialSelectedDateMillis = value?.actualValue,
                 selectableDates = selectableDates,
                 onDatePick = {
-                    onValueChange(it)
+                    onDateSelected(it)
                     showDateDialog = false
                 }
             )
@@ -95,10 +96,12 @@ fun EPRDateTextField(
 @Composable
 private fun DatePickerDialog(
     onDismiss: () -> Unit,
-    onDatePick: (String) -> Unit,
-    selectableDates: SelectableDates
+    initialSelectedDateMillis: Long? = null,
+    selectableDates: SelectableDates,
+    onDatePick: (DateData) -> Unit
 ) {
     val state = rememberDatePickerState(
+        initialSelectedDateMillis = initialSelectedDateMillis,
         selectableDates = selectableDates
     )
     DatePickerDialog(
@@ -106,8 +109,14 @@ private fun DatePickerDialog(
         confirmButton = {
             ERPButton(
                 onClick = {
+                    onDismiss()
                     state.selectedDateMillis?.let { millis ->
-                        onDatePick(millis.toFormattedDate()) // simply call the utility
+                        onDatePick(
+                            DateData(
+                                displayValue = millis.toFormattedDate(),
+                                actualValue = millis
+                            )
+                        ) // simply call the utility
                     }
                 },
                 text = stringResource(SharedRes.Strings.confirm)
@@ -126,7 +135,6 @@ private fun DatePickerDialog(
         )
     }
 }
-
 
 //date formater
 @OptIn(ExperimentalTime::class)

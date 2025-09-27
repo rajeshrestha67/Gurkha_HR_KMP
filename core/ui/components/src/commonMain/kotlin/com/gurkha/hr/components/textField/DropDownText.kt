@@ -35,6 +35,7 @@ fun <T> DropDownText(
     enabled: Boolean = true,
     onError: (ErrorStatus?) -> Unit,
     listOfItems: List<T>,
+    rules: List<Rule> = listOf(),
     itemClicked: (T) -> Unit
 ) {
 
@@ -69,8 +70,7 @@ fun <T> DropDownText(
             },
             enabled = enabled,
             error = error,
-            rules = listOf(FormValidate.requiredRule),
-
+            rules = rules,
             onDropDown = {
                 expandedState = true
             }

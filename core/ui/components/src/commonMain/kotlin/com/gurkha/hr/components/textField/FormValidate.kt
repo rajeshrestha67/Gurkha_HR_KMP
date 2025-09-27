@@ -85,18 +85,16 @@ object FormValidate {
             null
         }
     }
+    val requiredValidationRules = listOf(requiredRule)
+    val emailValidationRules = requiredValidationRules + listOf(emailRule)
 
-    val emailValidationRules = listOf(requiredRule, emailRule)
-
-    val passwordValidationRules = listOf(
-        requiredRule,
+    val passwordValidationRules = requiredValidationRules + listOf(
 //        upperCaseRule,
 //        lowerCaseRule,
 //        digitRule,
 //        specialCharRule,
         passwordLengthRule
     )
-
 }
 
 fun List<Rule>.validate(text: String): ErrorStatus? {
