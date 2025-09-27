@@ -77,6 +77,7 @@ kotlin {
 
                 implementation(libs.org.jetbrains.navigation)
                 implementation(libs.kotlinx.datetime)
+                implementation(libs.jetbrians.material3)
 
             }
         }

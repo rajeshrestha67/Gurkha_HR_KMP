@@ -57,7 +57,9 @@ fun ERPDateTextField(
             text = value?.displayValue ?: "",
             label = label,
             hint = hint,
-            onValueChange = {},
+            onValueChange = {
+
+            },
             enabled = enabled,
             rules = rules,
             showErrorMessage = error != null,
