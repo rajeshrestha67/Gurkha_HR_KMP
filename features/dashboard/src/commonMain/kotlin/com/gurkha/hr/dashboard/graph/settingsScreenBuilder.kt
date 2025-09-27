@@ -1,17 +1,16 @@
-package com.gurkha.hr.graph
+package com.gurkha.hr.dashboard.graph
 
-import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
-import com.gurkha.hr.route.AppRoute
-import com.gurkha.hr.route.ProfileRoute
+import com.gurkha.hr.dashboard.route.ProfileRoute
 import com.gurkha.hr.settings.ChangePasswordScreen
 import com.gurkha.hr.settings.SettingScreen
 
-
-fun NavGraphBuilder.settingsScreenBuilder(navController: NavController){
-
-    composable< ProfileRoute.SettingsRoute>{
+fun NavGraphBuilder.settingsScreenBuilder(
+    navController: NavHostController
+) {
+    composable<ProfileRoute.SettingsRoute> {
         SettingScreen(
             onBackPressed = {
                 navController.popBackStack()
@@ -21,6 +20,9 @@ fun NavGraphBuilder.settingsScreenBuilder(navController: NavController){
             }
         )
     }
-
+    composable<ProfileRoute.ChangePasswordRoute> {
+        ChangePasswordScreen(onBackPressed = {
+            navController.popBackStack()
+        })
+    }
 }
-

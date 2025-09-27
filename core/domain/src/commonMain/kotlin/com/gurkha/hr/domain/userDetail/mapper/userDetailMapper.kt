@@ -7,10 +7,19 @@ fun UserDetailResponseDto.toData(): UserDetailData {
     println("data $detail")
     return UserDetailData(
         email = detail?.email ?: "",
-        phone = detail?.phone ?: "",
-//        userProfileUrl = detail?.imageUrl ?: "",
+        phoneNumber = detail?.employeeDetails?.phoneNumber ?: "",
         userProfileUrl = detail?.imageUrl ?: "",
         fullName = detail?.fullName ?: "",
         levelName = detail?.levelName ?: "",
+        employeeId = detail?.employeeId.toString() ?: "",
+        address = detail?.employeeDetails?.address ?: "",
+        branchName = detail?.employeeDetails?.user?.branch?.branchName ?: "",
+        dateOfBirth = detail?.employeeDetails?.dateOfBirth ?: "",
+        gender = detail?.employeeDetails?.gender ?: "",
+        joinedDate = detail?.employeeDetails?.joinedDate ?: "",
+        nationality = detail?.employeeDetails?.country ?: "",
+        maritalStatus = detail?.employeeDetails?.maritalStatus ?: "",
+        guardianName = detail?.employeeDetails?.guardianName ?: "",
+        guardianPhone =detail?. employeeDetails?.guardianNumber ?: "",
     )
 }

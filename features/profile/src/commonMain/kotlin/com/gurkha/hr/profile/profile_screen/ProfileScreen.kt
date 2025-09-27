@@ -1,4 +1,4 @@
-package com.gurkha.hr.profile
+package com.gurkha.hr.profile.profile_screen
 
 
 import androidx.compose.foundation.background
@@ -42,9 +42,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
-import com.gurkha.hr.profile.model.AccountList
-import com.gurkha.hr.profile.model.GeneralList
+import com.gurkha.hr.profile.model.profile_screen.AccountList
+import com.gurkha.hr.profile.model.profile_screen.GeneralList
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.borderColor
 import com.gurkha.hr.res.theme.dimens
@@ -54,14 +55,19 @@ import com.gurkha.hr.res.theme.logOutTextColor
 import com.gurkha.hr.res.theme.secondaryTextColor
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
     onLogout: () -> Unit,
-    onAccountClick:(AccountList)->Unit
+    onAccountClick:(AccountList)->Unit,
+    onGeneralClick:(GeneralList)->Unit
 ) {
+    val viewModel: ProfileScreenViewModel = koinViewModel()
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
@@ -77,7 +83,7 @@ fun ProfileScreen(
                             .size(MaterialTheme.dimens.extraLarge)
                             .aspectRatio(1f)
                             .background(MaterialTheme.colorScheme.imageBackgroundColor),
-                        model = SharedRes.getRes(path = "drawable/gurkha_hr.png"),
+                        model = state.userProfileUrl,
                         contentDescription = "avatar",
                         contentScale = ContentScale.Fit,
                     )
@@ -90,7 +96,7 @@ fun ProfileScreen(
                     ) {
                         Text(
                             style = MaterialTheme.typography.titleMedium,
-                            text = "Shreejesh Pathak",
+                            text = state.fullName,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
 
@@ -100,13 +106,13 @@ fun ProfileScreen(
                                 color = MaterialTheme.colorScheme.secondaryTextColor
                             ),
                             maxLines = 1,
-                            text = "Android Developer"
+                            text = state.levelName
                         )
                         Text(
                             style = MaterialTheme.typography.titleSmall.copy(
                                 color = MaterialTheme.colorScheme.secondaryTextColor
                             ),
-                            text = "9866290535"
+                            text = state.phoneNumber
                         )
                     }
                 }
@@ -118,7 +124,8 @@ fun ProfileScreen(
         ProfileScreenContainer(
             modifier = Modifier.padding(paddingValues).fillMaxSize(),
             onLogout = onLogout,
-            onAccountClick = onAccountClick
+            onAccountClick = onAccountClick,
+            onGeneralClick = onGeneralClick
         )
 
     }
@@ -128,7 +135,8 @@ fun ProfileScreen(
 fun ProfileScreenContainer(
     modifier: Modifier = Modifier,
     onLogout: () -> Unit,
-    onAccountClick:(AccountList) -> Unit
+    onAccountClick:(AccountList) -> Unit,
+    onGeneralClick: (GeneralList) -> Unit
 ) {
 
     val generalList = remember { GeneralList.list }
@@ -154,7 +162,7 @@ fun ProfileScreenContainer(
         ) { item ->
             ProfileItemRow(
                 text = stringResource(item.title),
-                onClick = { println("Clicked Account Items") },
+                onClick = { onGeneralClick(item) },
                 showDivider = item != GeneralList.History
             )
 

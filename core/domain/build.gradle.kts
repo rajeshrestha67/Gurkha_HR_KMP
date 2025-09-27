@@ -67,6 +67,11 @@ kotlin {
             dependencies {
                 implementation(libs.kotlin.stdlib)
                 // Add KMP dependencies here
+                implementation(compose.runtime)
+                implementation(compose.components.resources)
+                implementation(compose.foundation)
+                implementation(compose.material3)
+
                 implementation(projects.core.model)
                 implementation(projects.core.networkHelper)
                 implementation(projects.core.persistance.datastore)

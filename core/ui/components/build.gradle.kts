@@ -70,9 +70,15 @@ kotlin {
                 implementation(compose.materialIconsExtended)
 
                 implementation(projects.core.ui.res)
+                implementation(projects.core.model)
 
                 implementation(libs.koin.core)
                 implementation(libs.koin.compose)
+
+                implementation(libs.org.jetbrains.navigation)
+                implementation(libs.kotlinx.datetime)
+                implementation(libs.jetbrians.material3)
+
             }
         }
 

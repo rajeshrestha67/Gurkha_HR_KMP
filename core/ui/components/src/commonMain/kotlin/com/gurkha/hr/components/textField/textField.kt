@@ -2,7 +2,6 @@ package com.gurkha.hr.components.textField
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -34,7 +33,11 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
+import com.gurkha.hr.components.noRippleClickable
+import com.gurkha.hr.res.theme.borderColor
+import com.gurkha.hr.res.theme.dimens
+import com.gurkha.hr.res.theme.disabledTextFieldBorderColor
+import com.gurkha.hr.res.theme.primaryTextColor
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -58,30 +61,29 @@ fun EPRBaseTextField(
     singleLine: Boolean = false,
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
     rules: List<Rule> = listOf(),
-    onErrorStateChange: (ErrorStatus?) -> Unit,
+    onErrorStateChange: (StringResource?) -> Unit,
     enabled: Boolean = true,
     showErrorMessage: Boolean = true,
     height: Dp? = null,
-    bgColor: Color = Color.Green.copy(alpha = 0.1f),
-    bgShape: Shape = MaterialTheme.shapes.medium,
-    borderEnabled: Boolean = true,
+    backgroundColor: Color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+    shape: Shape = MaterialTheme.shapes.medium,
+    focusedBorderColor: Color = MaterialTheme.colorScheme.primary,
+    unfocusedBorderColor: Color = MaterialTheme.colorScheme.borderColor,
     onDropDown: (() -> Unit)? = null
 ) {
 
     var hasUserInteracted by remember { mutableStateOf(false) }
-
     Column(
         modifier = modifier,
     ) {
         label?.let {
             Text(
-                modifier = Modifier.padding(bottom = 4.dp),
+                modifier = Modifier.padding(bottom = MaterialTheme.dimens.small1),
                 text = it,
-                style = MaterialTheme.typography.bodySmall
-//                fontWeight = FontWeight.W400,
-//                color = MaterialTheme.agColors.defaultTextDarkColor.copy(alpha = if (enabled) 1f else 0.5f)
+                style = MaterialTheme.typography.bodySmall.copy(
+                    color = if (enabled) MaterialTheme.colorScheme.primaryTextColor else MaterialTheme.colorScheme.disabledTextFieldBorderColor
+                )
             )
-
         }
 
 
@@ -89,18 +91,28 @@ fun EPRBaseTextField(
             Modifier.height(it)
         } ?: Modifier
 
-        val clickableModifier = onDropDown?.let {
-            Modifier.clickable {
+//        val clickableModifier = onDropDown?.let {
+//            Modifier.clickable {
+//                if (enabled) {
+//                    onDropDown()
+//                }
+//            }
+//        } ?: Modifier
+        val clickableModifier = if (enabled && onDropDown != null) {
+            Modifier.noRippleClickable {
                 onDropDown()
             }
-        } ?: Modifier
+        } else Modifier
+
 
         OutlinedTextField(
-            enabled = enabled,
+            enabled = enabled && onDropDown == null,
             modifier = Modifier
                 .fillMaxWidth()
+                .then(clickableModifier)
                 .background(
-                    bgColor, bgShape
+                    color = backgroundColor,
+                    shape = shape
                 )
                 .onFocusChanged { focusState ->
                     if (hasUserInteracted) {
@@ -116,8 +128,8 @@ fun EPRBaseTextField(
                             hasUserInteracted = true
                         }
                     }
-                }.then(updatedModifier).then(clickableModifier),
-            shape = bgShape,
+                }.then(updatedModifier),
+            shape = shape,
             leadingIcon = leadingIcon,
             trailingIcon = {
                 trailingIcon?.let {
@@ -127,7 +139,7 @@ fun EPRBaseTextField(
             maxLines = maxLines,
             value = textFieldValue,
             textStyle = MaterialTheme.typography.bodySmall.copy(
-                color = Color.Black
+                color = MaterialTheme.colorScheme.primaryTextColor
             ),
             onValueChange = {
                 if (it.text.length <= maxLength) {
@@ -138,7 +150,9 @@ fun EPRBaseTextField(
                 Text(
                     text = hint,
                     style = MaterialTheme.typography.bodySmall.copy(
-                        color = Color.Gray
+                        color = if (enabled) MaterialTheme.colorScheme.primaryTextColor.copy(
+                            0.5f
+                        ) else MaterialTheme.colorScheme.disabledTextFieldBorderColor
                     ),
                 )
             },
@@ -147,25 +161,21 @@ fun EPRBaseTextField(
             keyboardActions = keyboardActions,
             readOnly = readOnly,
             isError = error != null,
-            colors = if (borderEnabled) {
-                OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color.Green.copy(alpha = if (enabled) 1f else 0.5f),
-                    unfocusedBorderColor = Color.Gray.copy(alpha = if (enabled) 1f else 0.5f),
-                )
-            } else OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = bgColor,
-                unfocusedBorderColor = bgColor
-            ),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = if (enabled && onDropDown == null) focusedBorderColor else MaterialTheme.colorScheme.disabledTextFieldBorderColor,
+                unfocusedBorderColor = if (enabled && onDropDown == null) unfocusedBorderColor else MaterialTheme.colorScheme.disabledTextFieldBorderColor,
+                disabledBorderColor = if (enabled && onDropDown != null) unfocusedBorderColor else MaterialTheme.colorScheme.disabledTextFieldBorderColor
+            )
         )
         AnimatedVisibility(
             visible = error != null && showErrorMessage
         ) {
             error?.let {
                 Text(
-                    modifier = Modifier.padding(4.dp),
+                    modifier = Modifier.padding(MaterialTheme.dimens.small1),
                     text = stringResource(error),
                     style = MaterialTheme.typography.labelSmall.copy(
-                        color = Color.Red
+                        color = MaterialTheme.colorScheme.error
                     )
                 )
             }
@@ -194,13 +204,14 @@ fun EPRTextField(
     error: StringResource? = null,
     maxLength: Int = Int.MAX_VALUE,
     rules: List<Rule> = listOf(),
-    onErrorStateChange: (ErrorStatus?) -> Unit,
+    onErrorStateChange: (StringResource?) -> Unit,
     enabled: Boolean = true,
     showErrorMessage: Boolean = true,
     height: Dp? = null,
-    bgColor: Color = Color.Green.copy(alpha = 0.1f),
-    bgShape: Shape = MaterialTheme.shapes.medium,
-    borderEnabled: Boolean = true,
+    backgroundColor: Color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+    shape: Shape = MaterialTheme.shapes.medium,
+    focusedBorderColor: Color = MaterialTheme.colorScheme.primary,
+    unfocusedBorderColor: Color = MaterialTheme.colorScheme.borderColor,
     onDropDown: (() -> Unit)? = null
 ) {
     EPRBaseTextField(
@@ -225,9 +236,10 @@ fun EPRTextField(
         maxLines = maxLines,
         singleLine = singleLine,
         height = height,
-        bgColor = bgColor,
-        bgShape = bgShape,
-        borderEnabled = borderEnabled,
+        backgroundColor = backgroundColor,
+        shape = shape,
+        focusedBorderColor = focusedBorderColor,
+        unfocusedBorderColor = unfocusedBorderColor,
         onDropDown = onDropDown
     )
 }
@@ -250,15 +262,16 @@ fun EPRTextField(
     error: StringResource? = null,
     maxLength: Int = Int.MAX_VALUE,
     rules: List<Rule>,
-    onErrorStateChange: (ErrorStatus?) -> Unit,
+    onErrorStateChange: (StringResource?) -> Unit,
     enabled: Boolean = true,
     showErrorMessage: Boolean = true,
     singleLine: Boolean = false,
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
     height: Dp? = null,
-    bgColor: Color = Color.Green.copy(alpha = 0.1f),
-    bgShape: Shape = MaterialTheme.shapes.medium,
-    borderEnabled: Boolean = true,
+    backgroundColor: Color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+    shape: Shape = MaterialTheme.shapes.medium,
+    focusedBorderColor: Color = MaterialTheme.colorScheme.primary,
+    unfocusedBorderColor: Color = MaterialTheme.colorScheme.borderColor,
     onDropDown: (() -> Unit)? = null
 ) {
     var textFieldValueState by remember { mutableStateOf(TextFieldValue(text = text)) }
@@ -290,9 +303,10 @@ fun EPRTextField(
         singleLine = singleLine,
         maxLines = maxLines,
         height = height,
-        bgColor = bgColor,
-        bgShape = bgShape,
-        borderEnabled = borderEnabled,
+        backgroundColor = backgroundColor,
+        shape = shape,
+        focusedBorderColor = focusedBorderColor,
+        unfocusedBorderColor = unfocusedBorderColor,
         onDropDown = onDropDown
     )
 }
@@ -311,7 +325,7 @@ fun AGMobileTextField(
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     readOnly: Boolean = false,
     error: StringResource? = null,
-    onErrorStateChange: (ErrorStatus?) -> Unit,
+    onErrorStateChange: (StringResource?) -> Unit,
     maxLength: Int = 10,
     rules: List<Rule>,
     showErrorMessage: Boolean = true,
@@ -354,7 +368,7 @@ fun AGEmailTextField(
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     readOnly: Boolean = false,
     error: StringResource? = null,
-    onErrorStateChange: (ErrorStatus?) -> Unit,
+    onErrorStateChange: (StringResource?) -> Unit,
     maxLength: Int = 320,
     rules: List<Rule>,
     enabled: Boolean = true,
@@ -396,7 +410,7 @@ fun PasswordTextField(
     imeAction: ImeAction = ImeAction.Done,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     error: StringResource? = null,
-    onErrorStateChange: (ErrorStatus?) -> Unit,
+    onErrorStateChange: (StringResource?) -> Unit,
     rules: List<Rule>,
     enabled: Boolean = true,
     showErrorMessage: Boolean = true,

@@ -67,7 +67,7 @@ class ChangePasswordViewModel(
                 val newPasswordError = newPasswordValidateUseCase(state.value.newPassword)
                 when {
                     newPasswordError != null -> {
-                        _state.update { it.copy(newPasswordError = newPasswordError.errorMsg) }
+                        _state.update { it.copy(newPasswordError = newPasswordError) }
                     }
 
                     state.value.newPassword != state.value.confirmPassword -> {

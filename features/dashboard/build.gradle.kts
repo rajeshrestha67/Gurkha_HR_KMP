@@ -80,6 +80,7 @@ kotlin {
                 implementation(libs.kotlinx.serialization.json)
 
                 implementation(projects.core.domain)
+                implementation(projects.core.model)
                 implementation(projects.core.networkHelper)
 
                 implementation(projects.core.ui.res)
@@ -90,6 +91,7 @@ kotlin {
                 implementation(projects.features.attendance)
                 implementation(projects.features.leave)
                 implementation(projects.features.report)
+                implementation(projects.features.settings)
 
                 implementation(libs.koin.compose.viewmodel)
                 implementation(compose.components.resources)

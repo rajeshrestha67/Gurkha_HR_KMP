@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.android.lint)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeMultiplatform)
+    alias(libs.plugins.jetbrains.kotlin.serialization)
 }
 
 kotlin {
@@ -66,6 +67,44 @@ kotlin {
                 implementation(compose.runtime)
                 implementation(compose.foundation)
                 implementation(compose.material3)
+
+                implementation(libs.androidx.lifecycle.viewmodelCompose)
+                implementation(libs.androidx.lifecycle.runtimeCompose)
+
+                implementation(libs.koin.compose.viewmodel)
+                implementation(compose.components.resources)
+                implementation(compose.materialIconsExtended)
+
+                implementation(projects.core.domain)
+                implementation(projects.core.networkHelper)
+                implementation(projects.core.model)
+                implementation(projects.core.ui.res)
+                implementation(projects.core.ui.components)
+
+                implementation(libs.androidx.lifecycle.viewmodelCompose)
+                implementation(libs.androidx.lifecycle.runtimeCompose)
+
+                implementation(libs.koin.compose.viewmodel)
+                implementation(compose.components.resources)
+                implementation(compose.materialIconsExtended)
+
+                implementation(projects.core.domain)
+                implementation(projects.core.networkHelper)
+                implementation(projects.core.ui.res)
+                implementation(projects.core.ui.components)
+
+                implementation(libs.coil.compose)
+                implementation(libs.coil.compose.core)
+                implementation(libs.coil.mp)
+                implementation(libs.coil.network.ktor3)
+
+                implementation(libs.kotlinx.datetime)
+
+                implementation(libs.jetbrians.material3)
+                implementation(libs.org.jetbrains.navigation)
+
+                implementation(libs.kotlinx.serialization.json)
+
             }
         }
 
@@ -103,3 +142,4 @@ kotlin {
     }
 
 }
+

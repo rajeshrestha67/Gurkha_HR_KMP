@@ -1,0 +1,21 @@
+package com.gurkha.hr.leave.model.leave
+
+import com.gurkha.hr.domain.attendanceStatus.model.AttendanceStatusData
+
+data class LeaveScreenState(
+    val pendingTapItem: LeaveTapItem = LeaveTapItem(),
+    val approvedTapItem: LeaveTapItem = LeaveTapItem(),
+    val cancelTapItem: LeaveTapItem = LeaveTapItem(),
+    val currentTapItem: LeaveTapItem = LeaveTapItem(),
+    val fromDate: String = "",
+    val toDate: String = "",
+    val attendanceStatus: AttendanceStatusEnum = AttendanceStatusEnum.PENDING,
+    val employeeName: String = "",
+    val isSelf: String = "",
+    val leaveRequestDataJson: String? = null
+)
+
+data class LeaveTapItem(
+    val isLoading: Boolean = false,
+    val result: List<AttendanceStatusData> = emptyList(),
+)

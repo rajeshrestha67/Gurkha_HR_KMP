@@ -1,35 +1,7 @@
-package com.gurkha.hr.profile.model
+package com.gurkha.hr.profile.model.profile_screen
 
 import com.gurkha.hr.res.SharedRes
 import org.jetbrains.compose.resources.StringResource
-
-data class ScreenItem(
-    val title: StringResource
-)
-//
-//object ScreenList {
-//    val general = listOf(
-//        ScreenItem(title = SharedRes.Strings.profile),
-//        ScreenItem(title = SharedRes.Strings.allocated_leave),
-//        ScreenItem(title = SharedRes.Strings.time_and_attendance),
-//        ScreenItem(title = SharedRes.Strings.document),
-//        ScreenItem(title = SharedRes.Strings.company_assets),
-//        ScreenItem(title = SharedRes.Strings.history),
-//    )
-//
-//    val account = listOf(
-//        ScreenItem(title = SharedRes.Strings.terms_and_services),
-//        ScreenItem(title = SharedRes.Strings.privacy_policy),
-//        ScreenItem(title = SharedRes.Strings.fac),
-//        ScreenItem(title = SharedRes.Strings.support),
-//        ScreenItem(title = SharedRes.Strings.setting),
-//
-//
-//
-//
-//    )
-//}
-
 
 enum class GeneralList(val title: StringResource) {
     Profile(SharedRes.Strings.profile),
@@ -66,7 +38,7 @@ enum class AccountList(val title: StringResource){
             AccountList.typeMap[typeName] ?: TermsAndServices
 
         val list: List<AccountList>
-            get() = AccountList.entries.toList().map { it }
+            get() = entries.toList().map { it }
     }
 }
 

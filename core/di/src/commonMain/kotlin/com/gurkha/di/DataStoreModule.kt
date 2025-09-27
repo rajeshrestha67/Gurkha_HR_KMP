@@ -45,7 +45,7 @@ class DataStoreModule {
         LocalUserInfoRepository(userInfoDataStore)
 
     @Factory(binds = [UserDataRepository::class])
-    fun getUserInfoRepository(userDataDataStore: UserDataDataStore) =
+    fun getUserDataRepository(userDataDataStore: UserDataDataStore) =
         LocalUserDataRepository(userDataDataStore)
 
     @Single

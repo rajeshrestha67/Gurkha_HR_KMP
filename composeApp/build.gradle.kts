@@ -51,10 +51,12 @@ kotlin {
 
             implementation(projects.core.di)
             implementation(projects.core.ui.res)
+            implementation(projects.core.ui.components)
 
             implementation(projects.features.auth.login)
             implementation(projects.features.splashscreen)
             implementation(projects.features.dashboard)
+            implementation(projects.features.leave)
             implementation(projects.features.profile)
             implementation(projects.features.settings)
 
