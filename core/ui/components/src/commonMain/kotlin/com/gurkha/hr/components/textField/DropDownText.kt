@@ -19,6 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import com.gurkha.hr.res.theme.disabledTextFieldBorderColor
 import com.gurkha.hr.res.theme.primaryTextColor
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
@@ -31,6 +32,7 @@ fun <T> DropDownText(
     selectedValue: String,
     error: StringResource?,
     dropdownTextColor: Color = MaterialTheme.colorScheme.primaryTextColor,
+    enabled: Boolean = true,
     onError: (ErrorStatus?) -> Unit,
     listOfItems: List<T>,
     itemClicked: (T) -> Unit
@@ -58,17 +60,17 @@ fun <T> DropDownText(
                 Icon(
                     imageVector = Icons.Filled.ArrowDropDown,
                     contentDescription = "drop down",
-                    tint = MaterialTheme.colorScheme.primaryTextColor
+                    tint = if (enabled) MaterialTheme.colorScheme.primaryTextColor else MaterialTheme.colorScheme.disabledTextFieldBorderColor
                 )
             },
             onErrorStateChange = { err ->
                 onError(err)
 
             },
-            enabled = false,
+            enabled = enabled,
             error = error,
             rules = listOf(FormValidate.requiredRule),
-            borderEnabled = true,
+
             onDropDown = {
                 expandedState = true
             }

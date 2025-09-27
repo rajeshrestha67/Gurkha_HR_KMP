@@ -2,7 +2,6 @@ package com.gurkha.hr.components.textField
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -34,10 +33,11 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.Dp
+import com.gurkha.hr.components.noRippleClickable
 import com.gurkha.hr.res.theme.borderColor
 import com.gurkha.hr.res.theme.dimens
+import com.gurkha.hr.res.theme.disabledTextFieldBorderColor
 import com.gurkha.hr.res.theme.primaryTextColor
-import com.gurkha.hr.res.theme.secondaryTextColor
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -65,14 +65,14 @@ fun EPRBaseTextField(
     enabled: Boolean = true,
     showErrorMessage: Boolean = true,
     height: Dp? = null,
-    bgColor: Color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
-    bgShape: Shape = MaterialTheme.shapes.medium,
-    borderEnabled: Boolean = true,
+    backgroundColor: Color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+    shape: Shape = MaterialTheme.shapes.medium,
+    focusedBorderColor: Color = MaterialTheme.colorScheme.primary,
+    unfocusedBorderColor: Color = MaterialTheme.colorScheme.borderColor,
     onDropDown: (() -> Unit)? = null
 ) {
 
     var hasUserInteracted by remember { mutableStateOf(false) }
-    val dropdownAble = onDropDown != null && enabled
     Column(
         modifier = modifier,
     ) {
@@ -81,7 +81,7 @@ fun EPRBaseTextField(
                 modifier = Modifier.padding(bottom = MaterialTheme.dimens.small1),
                 text = it,
                 style = MaterialTheme.typography.bodySmall.copy(
-                    color = MaterialTheme.colorScheme.primaryTextColor.copy(alpha = if (dropdownAble) 1f else 0.5f)
+                    color = if (enabled) MaterialTheme.colorScheme.primaryTextColor else MaterialTheme.colorScheme.disabledTextFieldBorderColor
                 )
             )
         }
@@ -91,19 +91,28 @@ fun EPRBaseTextField(
             Modifier.height(it)
         } ?: Modifier
 
-        val clickableModifier = onDropDown?.let {
-            Modifier.clickable {
+//        val clickableModifier = onDropDown?.let {
+//            Modifier.clickable {
+//                if (enabled) {
+//                    onDropDown()
+//                }
+//            }
+//        } ?: Modifier
+        val clickableModifier = if (enabled && onDropDown != null) {
+            Modifier.noRippleClickable {
                 onDropDown()
             }
-        } ?: Modifier
+        } else Modifier
 
 
         OutlinedTextField(
-            enabled = enabled,
+            enabled = enabled && onDropDown == null,
             modifier = Modifier
                 .fillMaxWidth()
+                .then(clickableModifier)
                 .background(
-                    bgColor, bgShape
+                    color = backgroundColor,
+                    shape = shape
                 )
                 .onFocusChanged { focusState ->
                     if (hasUserInteracted) {
@@ -119,8 +128,8 @@ fun EPRBaseTextField(
                             hasUserInteracted = true
                         }
                     }
-                }.then(updatedModifier).then(clickableModifier),
-            shape = bgShape,
+                }.then(updatedModifier),
+            shape = shape,
             leadingIcon = leadingIcon,
             trailingIcon = {
                 trailingIcon?.let {
@@ -141,7 +150,9 @@ fun EPRBaseTextField(
                 Text(
                     text = hint,
                     style = MaterialTheme.typography.bodySmall.copy(
-                        color = MaterialTheme.colorScheme.secondaryTextColor
+                        color = if (enabled) MaterialTheme.colorScheme.primaryTextColor.copy(
+                            0.5f
+                        ) else MaterialTheme.colorScheme.disabledTextFieldBorderColor
                     ),
                 )
             },
@@ -150,15 +161,11 @@ fun EPRBaseTextField(
             keyboardActions = keyboardActions,
             readOnly = readOnly,
             isError = error != null,
-            colors = if (borderEnabled) {
-                OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = MaterialTheme.colorScheme.primary.copy(alpha = if (dropdownAble) 1f else 0.5f),
-                    unfocusedBorderColor = MaterialTheme.colorScheme.borderColor.copy(alpha = if (dropdownAble) 1f else 0.5f),
-                )
-            } else OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = bgColor,
-                unfocusedBorderColor = bgColor
-            ),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = if (enabled && onDropDown == null) focusedBorderColor else MaterialTheme.colorScheme.disabledTextFieldBorderColor,
+                unfocusedBorderColor = if (enabled && onDropDown == null) unfocusedBorderColor else MaterialTheme.colorScheme.disabledTextFieldBorderColor,
+                disabledBorderColor = if (enabled && onDropDown != null) unfocusedBorderColor else MaterialTheme.colorScheme.disabledTextFieldBorderColor
+            )
         )
         AnimatedVisibility(
             visible = error != null && showErrorMessage
@@ -201,9 +208,10 @@ fun EPRTextField(
     enabled: Boolean = true,
     showErrorMessage: Boolean = true,
     height: Dp? = null,
-    bgColor: Color = Color.Green.copy(alpha = 0.1f),
-    bgShape: Shape = MaterialTheme.shapes.medium,
-    borderEnabled: Boolean = true,
+    backgroundColor: Color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+    shape: Shape = MaterialTheme.shapes.medium,
+    focusedBorderColor: Color = MaterialTheme.colorScheme.primary,
+    unfocusedBorderColor: Color = MaterialTheme.colorScheme.borderColor,
     onDropDown: (() -> Unit)? = null
 ) {
     EPRBaseTextField(
@@ -228,9 +236,10 @@ fun EPRTextField(
         maxLines = maxLines,
         singleLine = singleLine,
         height = height,
-        bgColor = bgColor,
-        bgShape = bgShape,
-        borderEnabled = borderEnabled,
+        backgroundColor = backgroundColor,
+        shape = shape,
+        focusedBorderColor = focusedBorderColor,
+        unfocusedBorderColor = unfocusedBorderColor,
         onDropDown = onDropDown
     )
 }
@@ -259,9 +268,10 @@ fun EPRTextField(
     singleLine: Boolean = false,
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
     height: Dp? = null,
-    bgColor: Color = Color.Green.copy(alpha = 0.1f),
-    bgShape: Shape = MaterialTheme.shapes.medium,
-    borderEnabled: Boolean = true,
+    backgroundColor: Color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+    shape: Shape = MaterialTheme.shapes.medium,
+    focusedBorderColor: Color = MaterialTheme.colorScheme.primary,
+    unfocusedBorderColor: Color = MaterialTheme.colorScheme.borderColor,
     onDropDown: (() -> Unit)? = null
 ) {
     var textFieldValueState by remember { mutableStateOf(TextFieldValue(text = text)) }
@@ -293,9 +303,10 @@ fun EPRTextField(
         singleLine = singleLine,
         maxLines = maxLines,
         height = height,
-        bgColor = bgColor,
-        bgShape = bgShape,
-        borderEnabled = borderEnabled,
+        backgroundColor = backgroundColor,
+        shape = shape,
+        focusedBorderColor = focusedBorderColor,
+        unfocusedBorderColor = unfocusedBorderColor,
         onDropDown = onDropDown
     )
 }

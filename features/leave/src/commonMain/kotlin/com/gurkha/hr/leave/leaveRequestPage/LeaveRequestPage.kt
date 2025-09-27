@@ -32,8 +32,8 @@ import com.gurkha.hr.components.textField.EPRDateTextField
 import com.gurkha.hr.components.textField.EPRTextField
 import com.gurkha.hr.components.textField.RequestFormValidate
 import com.gurkha.hr.res.SharedRes
-import com.gurkha.hr.res.theme.darkPrimaryTextColor
 import com.gurkha.hr.res.theme.dimens
+import com.gurkha.hr.res.theme.primaryTextColor
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.time.ExperimentalTime
@@ -46,6 +46,7 @@ fun LeaveRequestPage(
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
+        containerColor = MaterialTheme.colorScheme.background,
         contentWindowInsets = WindowInsets(0.dp),
         topBar = {
             TopAppBar(
@@ -63,7 +64,7 @@ fun LeaveRequestPage(
                     Text(
                         text = stringResource(SharedRes.Strings.leave_request_form),
                         style = MaterialTheme.typography.titleLarge.copy(
-                            color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                            color = MaterialTheme.colorScheme.primaryTextColor
                         )
                     )
                 }

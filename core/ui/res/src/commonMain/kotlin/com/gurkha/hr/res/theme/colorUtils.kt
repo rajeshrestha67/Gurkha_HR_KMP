@@ -20,21 +20,15 @@ val ColorScheme.imageBackgroundColor: Color
 val ColorScheme.primaryTextColor: Color
     @Composable get() =
         extendedColor(
-            light = Color(0xFF424242),
-            dark = Color(0xFF212121)
-        )
-val ColorScheme.borderColor: Color
-    @Composable get() =
-        extendedColor(
-            light = Color.Gray,
-            dark = Color(0xFF212121)
+            light = Color(0xFF646884),
+            dark = Color(0XFFcbcdd9)
         )
 
 val ColorScheme.secondaryTextColor: Color
     @Composable get() =
         extendedColor(
-            light = Color(0xFF616161),
-            dark = Color.White,
+            light = Color(0xFFa2a5b9),
+            dark = Color(0xFFa2a5b9),
         )
 val ColorScheme.onBoardingIndicatorSelectedColor: Color
     @Composable get() = extendedColor(
@@ -42,6 +36,12 @@ val ColorScheme.onBoardingIndicatorSelectedColor: Color
         dark = Color.Red
     )
 
+val ColorScheme.borderColor: Color
+    @Composable get() =
+        extendedColor(
+            light = Color.Black.copy(alpha = 0.3f),
+            dark = Color.Black.copy(alpha = 0.7f)
+        )
 val ColorScheme.onBoardingIndicatorUnSelectedColor: Color
     @Composable get() = extendedColor(
         light = Color.Gray,
@@ -73,7 +73,6 @@ val ColorScheme.lightRedColor: Color
         light = Color(0xFFEF5350),
         dark = Color(0xFFF44336)
     )
-
 
 
 val ColorScheme.darkPrimaryTextColor: Color
@@ -109,7 +108,13 @@ val ColorScheme.leaveCancelledBorder: Color
 val ColorScheme.veryLightGray: Color
     @Composable get() = extendedColor(
         light = Color(0xFFF3F6F4),
-        dark =Color(0xFFF3F6F4),
+        dark = Color(0xFFF3F6F4),
+    )
+
+val ColorScheme.disabledTextFieldBorderColor: Color
+    @Composable get() = extendedColor(
+        light = Color(0xFFCCCCCC),
+        dark = Color(0xFF444444)
     )
 
 @Composable

@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.res.SharedRes
+import com.gurkha.hr.res.theme.disabledTextFieldBorderColor
 import com.gurkha.hr.res.theme.primaryTextColor
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.number
@@ -35,6 +36,7 @@ fun EPRDateTextField(
     label: String,
     hint: String,
     onValueChange: (String) -> Unit,
+    enabled: Boolean = true,
     rules: List<Rule>,
     error: StringResource?,
     onErrorStateChange: (ErrorStatus?) -> Unit
@@ -51,6 +53,7 @@ fun EPRDateTextField(
             label = label,
             hint = hint,
             onValueChange = onValueChange,
+            enabled = enabled,
             rules = rules,
             showErrorMessage = error != null,
             error = error,
@@ -59,11 +62,10 @@ fun EPRDateTextField(
                 Icon(
                     imageVector = Icons.Filled.CalendarMonth,
                     contentDescription = "date",
-                    tint = MaterialTheme.colorScheme.primaryTextColor
+                    tint = if (enabled) MaterialTheme.colorScheme.primaryTextColor else MaterialTheme.colorScheme.disabledTextFieldBorderColor
                 )
             },
             readOnly = true,
-            enabled = false,
             onDropDown = {
                 showDateDialog = true
             }
