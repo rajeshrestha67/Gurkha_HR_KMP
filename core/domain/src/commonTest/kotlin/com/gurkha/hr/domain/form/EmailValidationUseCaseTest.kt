@@ -1,6 +1,5 @@
 package com.gurkha.hr.domain.form
 
-import com.gurkha.hr.components.textField.ErrorStatus
 import com.gurkha.hr.res.SharedRes
 import io.kotest.matchers.shouldBe
 import org.koin.core.context.startKoin
@@ -36,28 +35,28 @@ class EmailValidationUseCaseTest : KoinTest {
     fun emptyEmailShouldFailRequiredRule() {
         val email = ""
         val result = useCase(email)
-        result shouldBe ErrorStatus(true, SharedRes.Strings.required)
+        result shouldBe SharedRes.Strings.required
     }
 
     @Test
     fun missingAtSymbolShouldFailEmailRule() {
         val email = "testexample.com"
         val result = useCase(email)
-        result shouldBe ErrorStatus(true, SharedRes.Strings.invalidEmailAddress)
+        result shouldBe SharedRes.Strings.invalidEmailAddress
     }
 
     @Test
     fun missingDomainShouldFailEmailRule() {
         val email = "test@"
         val result = useCase(email)
-        result shouldBe ErrorStatus(true, SharedRes.Strings.invalidEmailAddress)
+        result shouldBe SharedRes.Strings.invalidEmailAddress
     }
 
     @Test
     fun missingUsernameShouldFailEmailRule() {
         val email = "@example.com"
         val result = useCase(email)
-        result shouldBe ErrorStatus(true, SharedRes.Strings.invalidEmailAddress)
+        result shouldBe SharedRes.Strings.invalidEmailAddress
     }
 
     @Test

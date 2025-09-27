@@ -1,6 +1,5 @@
 package com.gurkha.hr.domain.form
 
-import com.gurkha.hr.components.textField.ErrorStatus
 import com.gurkha.hr.res.SharedRes
 import io.kotest.matchers.shouldBe
 import org.koin.core.context.startKoin
@@ -30,14 +29,14 @@ class PasswordValidationUseCaseTest : KoinTest {
     fun emptyPasswordShouldFailRequiredRule() {
         val password = ""
         val result = useCase(password)
-        result shouldBe ErrorStatus(true, SharedRes.Strings.required)
+        result shouldBe SharedRes.Strings.required
     }
 
     @Test
     fun passwordLessThan6CharsShouldFailLengthRule() {
         val password = "12345"
         val result = useCase(password)
-        result shouldBe ErrorStatus(true, SharedRes.Strings.invalidPasswordLength)
+        result shouldBe SharedRes.Strings.invalidPasswordLength
     }
 
     @Test
