@@ -5,10 +5,12 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -26,9 +28,11 @@ import kotlinx.datetime.number
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
+import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EPRDateTextField(
     modifier: Modifier = Modifier,
@@ -39,7 +43,8 @@ fun EPRDateTextField(
     enabled: Boolean = true,
     rules: List<Rule>,
     error: StringResource?,
-    onErrorStateChange: (ErrorStatus?) -> Unit
+    selectableDates: SelectableDates = DatePickerDefaults.AllDates,
+    onErrorStateChange: (ErrorStatus?) -> Unit,
 ) {
 
     var showDateDialog by rememberSaveable { mutableStateOf(false) }
@@ -76,6 +81,7 @@ fun EPRDateTextField(
                 onDismiss = {
                     showDateDialog = false
                 },
+                selectableDates = selectableDates,
                 onDatePick = {
                     onValueChange(it)
                     showDateDialog = false
@@ -85,13 +91,16 @@ fun EPRDateTextField(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
 private fun DatePickerDialog(
     onDismiss: () -> Unit,
-    onDatePick: (String) -> Unit
+    onDatePick: (String) -> Unit,
+    selectableDates: SelectableDates
 ) {
-    val state = rememberDatePickerState()
+    val state = rememberDatePickerState(
+        selectableDates = selectableDates
+    )
     DatePickerDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
@@ -133,5 +142,22 @@ fun Long.toFormattedDate(pattern: String = "yyyy-MM-dd"): String {
         else -> "${localDate.year}-${
             localDate.month.number.toString().padStart(2, '0')
         }-${localDate.day.toString().padStart(2, '0')}"
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
+val FutureAndTodayDate: RangeSelectableDates =
+    object : RangeSelectableDates(minDateMillis = Clock.System.now().toEpochMilliseconds()) {}
+
+@OptIn(ExperimentalMaterial3Api::class)
+open class RangeSelectableDates(
+    private val minDateMillis: Long? = null,
+    private val maxDateMillis: Long? = null
+) : SelectableDates {
+
+    override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+        val afterMin = minDateMillis?.let { utcTimeMillis >= it } ?: true
+        val beforeMax = maxDateMillis?.let { utcTimeMillis <= it } ?: true
+        return afterMin && beforeMax
     }
 }

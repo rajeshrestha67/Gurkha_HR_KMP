@@ -30,6 +30,7 @@ import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.textField.DropDownText
 import com.gurkha.hr.components.textField.EPRDateTextField
 import com.gurkha.hr.components.textField.EPRTextField
+import com.gurkha.hr.components.textField.FutureAndTodayDate
 import com.gurkha.hr.components.textField.RequestFormValidate
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.dimens
@@ -129,6 +130,7 @@ fun LeaveRequestPageContent(
                 SharedRes.Strings.required
             },
             onErrorStateChange = {},
+            selectableDates = FutureAndTodayDate
         )
 //        end date
         EPRDateTextField(
