@@ -48,7 +48,6 @@ class DashboardViewModel(
     }
 
     private fun navigateTo(route: DashboardRoute) {
-
         _state.update {
             it.copy(currentScreen = route)
         }

@@ -15,6 +15,7 @@ import androidx.core.view.WindowCompat
 import com.gurkha.hr.splashscreen.OnBoardingViewModel
 import com.gurkha.hr.splashscreen.model.OnBoardingAction
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.mp.KoinPlatform.getKoin
 
 
 class MainActivity : ComponentActivity() {
@@ -22,6 +23,7 @@ class MainActivity : ComponentActivity() {
 
     var showSplashScreen by mutableStateOf(true)
     var navigateToOnBoarding by mutableStateOf(true)
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +33,7 @@ class MainActivity : ComponentActivity() {
                 showSplashScreen
             }
         }
-
+        getKoin().setProperty("activity", this)
         setContent {
             val view = LocalView.current
             val darkTheme = isSystemInDarkTheme()

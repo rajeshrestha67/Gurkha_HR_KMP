@@ -20,8 +20,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.gurkha.hr.components.AnimatedNavHost
 import com.gurkha.hr.components.PlatformMessage
@@ -33,6 +36,7 @@ import com.gurkha.hr.dashboard.graph.profileScreenBuilder
 import com.gurkha.hr.dashboard.graph.reportScreenBuilder
 import com.gurkha.hr.dashboard.graph.settingsScreenBuilder
 import com.gurkha.hr.dashboard.model.DashboardScreenAction
+import com.gurkha.hr.dashboard.model.DashboardScreenState
 import com.gurkha.hr.dashboard.route.DashboardRoute
 import com.gurkha.hr.dashboard.route.LeaveRoute
 import com.gurkha.hr.res.SharedRes
@@ -44,7 +48,7 @@ import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun DashboardScreen(
     onLogout: () -> Unit
@@ -54,7 +58,7 @@ fun DashboardScreen(
 
     val navController = rememberNavController()
 
-    val topScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+
     var bottomBarState by remember {
         mutableStateOf(true)
     }
@@ -90,6 +94,42 @@ fun DashboardScreen(
         }
     }
 
+    DashboardScreenContent(
+        bottomBarState = bottomBarState,
+        state = state,
+        navController = navController,
+        onLogout = onLogout,
+        onAction = viewModel::action
+    )
+
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@Composable
+fun DashboardScreenContent(
+    bottomBarState: Boolean,
+    state: DashboardScreenState,
+    navController: NavHostController,
+    onLogout: () -> Unit,
+    onAction: (DashboardScreenAction) -> Unit
+) {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+
+    LaunchedEffect(currentRoute) {
+        if (currentRoute != null) {
+            val destination = when (currentRoute) {
+                DashboardRoute.HomeRoute::class.qualifiedName -> DashboardRoute.HomeRoute
+                DashboardRoute.ProfileRoute::class.qualifiedName -> DashboardRoute.ProfileRoute
+                DashboardRoute.AttendanceRoute::class.qualifiedName -> DashboardRoute.AttendanceRoute
+                DashboardRoute.LeaveRoute::class.qualifiedName -> DashboardRoute.LeaveRoute
+                DashboardRoute.ReportRoute::class.qualifiedName -> DashboardRoute.ReportRoute
+                else -> DashboardRoute.HomeRoute
+            }
+            onAction(DashboardScreenAction.OnChangeScreen(destination))
+        }
+    }
+    val topScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
@@ -108,12 +148,14 @@ fun DashboardScreen(
                     ERPNavigationBar(
                         modifier = Modifier.fillMaxWidth()
                     ) {
+                        println("currentScreen ${state.currentScreen}")
                         state.screens.forEach { item ->
                             NavigationBarItem(
                                 selected = item.route == state.currentScreen,
                                 onClick = {
-                                    viewModel.action(
-                                        action = DashboardScreenAction.OnChangeScreen(
+                                    if (item.route == state.currentScreen) return@NavigationBarItem
+                                    onAction(
+                                        DashboardScreenAction.OnChangeScreen(
                                             item.route
                                         )
                                     )
@@ -128,15 +170,7 @@ fun DashboardScreen(
                                         contentDescription = stringResource(item.name),
                                         tint = MaterialTheme.colorScheme.primary
                                     )
-                                },
-//                        label = {
-//                            Text(
-//                                text = stringResource(item.name),
-//                                style = MaterialTheme.typography.bodyMedium.copy(
-//                                    fontSize = 12.sp
-//                                )
-//                            )
-//                        }
+                                }
                             )
                         }
                     }

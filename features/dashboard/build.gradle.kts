@@ -95,6 +95,7 @@ kotlin {
 
                 implementation(libs.koin.compose.viewmodel)
                 implementation(compose.components.resources)
+                implementation(libs.ui.backhandler)
             }
         }
 
