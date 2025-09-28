@@ -11,6 +11,7 @@ import gurkhahr.core.ui.res.generated.resources.account
 import gurkhahr.core.ui.res.generated.resources.address
 import gurkhahr.core.ui.res.generated.resources.allocated_leave
 import gurkhahr.core.ui.res.generated.resources.are_you_sure
+import gurkhahr.core.ui.res.generated.resources.assignee
 import gurkhahr.core.ui.res.generated.resources.change_password
 import gurkhahr.core.ui.res.generated.resources.company_assets
 import gurkhahr.core.ui.res.generated.resources.confirm
@@ -81,6 +82,7 @@ import gurkhahr.core.ui.res.generated.resources.reason
 import gurkhahr.core.ui.res.generated.resources.report
 import gurkhahr.core.ui.res.generated.resources.request
 import gurkhahr.core.ui.res.generated.resources.required
+import gurkhahr.core.ui.res.generated.resources.select_assignee
 import gurkhahr.core.ui.res.generated.resources.setting
 import gurkhahr.core.ui.res.generated.resources.skill_and_qualification
 import gurkhahr.core.ui.res.generated.resources.select_end_date
@@ -214,6 +216,9 @@ object SharedRes {
         val account = Res.string.account
         val cancel = Res.string.cancel
         val submit = Res.string.submit
+
+        val assignee = Res.string.assignee
+        val select_assignee = Res.string.select_assignee
 
 
         val log_out = Res.string.log_out

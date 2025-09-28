@@ -1,5 +1,6 @@
 package com.gurkha.hr.leave.model.leave_request
 
+import com.gurkha.hr.domain.leaveType.model.LeaveTypeData
 import com.gurkha.hr.res.SharedRes
 import org.jetbrains.compose.resources.StringResource
 

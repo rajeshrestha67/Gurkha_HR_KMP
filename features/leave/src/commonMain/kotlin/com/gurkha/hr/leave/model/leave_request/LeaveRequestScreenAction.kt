@@ -9,8 +9,10 @@ sealed interface LeaveRequestScreenAction {
     data class OnEndDateChange(val date: DateData) : LeaveRequestScreenAction
     data class OnLeaveDurationChange(val leaveDuration: String) : LeaveRequestScreenAction
     data class OnLeaveTypeChange(val leaveType: String) : LeaveRequestScreenAction
+    data class OnAssigneeChange(val assignee: String) : LeaveRequestScreenAction
     data class OnReasonChange(val reason: String) : LeaveRequestScreenAction
     data class OnReasonError(val error: StringResource?) : LeaveRequestScreenAction
+    data class OnAssigneeError(val error: StringResource?) : LeaveRequestScreenAction
 
     data class UpdateLeaveRequestData(val data: LeaveRequestData?) : LeaveRequestScreenAction
     data object Submit : LeaveRequestScreenAction

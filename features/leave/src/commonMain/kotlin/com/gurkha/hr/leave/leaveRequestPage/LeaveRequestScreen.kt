@@ -81,7 +81,7 @@ fun LeaveRequestScreen(
     LeaveRequestPageContent(
         onBackClicked = onBackClicked,
         state = state,
-        onAction = viewModel::onAction
+        onAction = viewModel::onAction,
     )
 
 }
@@ -91,7 +91,7 @@ fun LeaveRequestScreen(
 fun LeaveRequestPageContent(
     onBackClicked: () -> Unit,
     state: LeaveRequestScreenState,
-    onAction: (LeaveRequestScreenAction) -> Unit
+    onAction: (LeaveRequestScreenAction) -> Unit,
 ) {
 
     Scaffold(
@@ -136,7 +136,7 @@ fun LeaveRequestScreenForm(
     modifier: Modifier = Modifier,
     state: LeaveRequestScreenState,
     onBackClicked: () -> Unit,
-    onAction: (LeaveRequestScreenAction) -> Unit
+    onAction: (LeaveRequestScreenAction) -> Unit,
 ) {
 
     Column(
@@ -184,6 +184,25 @@ fun LeaveRequestScreenForm(
                 onAction(LeaveRequestScreenAction.OnEndDateChange(it))
             }
         )
+        //        assignee =
+        DropDownText(
+            label = SharedRes.Strings.assignee,
+            hint = SharedRes.Strings.select_assignee,
+            rules = FormValidate.requiredValidationRules,
+            listOfItems = state.leaveAssigneeList?.map {
+                it.fullName
+            } ?: emptyList(),
+            selectedValue = state.assignee,
+            onError = {
+                //onAction(LeaveRequestScreenAction.OnLeaveTypeError(it))
+            },
+            error = state.assigneeError,
+            itemClicked = {
+                onAction(LeaveRequestScreenAction.OnAssigneeChange(it))
+            }
+        )
+
+
 //        leave duration
         DropDownText(
             label = SharedRes.Strings.leave_duration,
@@ -204,7 +223,9 @@ fun LeaveRequestScreenForm(
             label = SharedRes.Strings.leaveType,
             hint = SharedRes.Strings.selectLeaveType,
             rules = FormValidate.requiredValidationRules,
-            listOfItems = LeaveTypeList.map { stringResource(it.title) },
+            listOfItems = state.leaveTypeList?.map {
+                it.typeName
+            } ?: emptyList(),
             selectedValue = state.leaveType,
             onError = {
                 //onAction(LeaveRequestScreenAction.OnLeaveTypeError(it))
