@@ -80,6 +80,7 @@ kotlin {
                 implementation(projects.core.network)
                 implementation(projects.core.data)
                 implementation(projects.core.domain)
+                implementation(projects.core.model)
                 implementation(projects.features.auth.login)
                 implementation(projects.features.splashscreen)
                 implementation(projects.features.dashboard)

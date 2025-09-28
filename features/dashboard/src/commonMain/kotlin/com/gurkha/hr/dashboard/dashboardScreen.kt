@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
 import com.gurkha.hr.components.AnimatedNavHost
+import com.gurkha.hr.components.PlatformMessage
 import com.gurkha.hr.components.navigationBar.ERPNavigationBar
 import com.gurkha.hr.dashboard.graph.attendanceScreen
 import com.gurkha.hr.dashboard.graph.homeScreenBuilder
@@ -34,7 +35,12 @@ import com.gurkha.hr.dashboard.graph.settingsScreenBuilder
 import com.gurkha.hr.dashboard.model.DashboardScreenAction
 import com.gurkha.hr.dashboard.route.DashboardRoute
 import com.gurkha.hr.dashboard.route.LeaveRoute
+import com.gurkha.hr.res.SharedRes
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
 
@@ -53,6 +59,7 @@ fun DashboardScreen(
         mutableStateOf(true)
     }
 
+    val showPlatform: PlatformMessage = koinInject()
     LaunchedEffect(Unit) {
         viewModel.action(DashboardScreenAction.OnFetchCurrentUser)
     }
@@ -66,6 +73,18 @@ fun DashboardScreen(
                 DashboardRoute.LeaveRoute::class.qualifiedName,
                 DashboardRoute.ReportRoute::class.qualifiedName -> true // show bottom bar
                 else -> false // hide bottom bar
+            }
+        }
+    }
+
+
+    LaunchedEffect(Unit) {
+        viewModel.sessionExpired.collect { isExpired ->
+            if (isExpired) {
+                withContext(Dispatchers.Main.immediate) {
+                    showPlatform.showToast(getString(SharedRes.Strings.log_out))
+                    onLogout()
+                }
             }
         }
     }
