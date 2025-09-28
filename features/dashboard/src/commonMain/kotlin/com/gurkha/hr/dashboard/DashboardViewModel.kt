@@ -40,6 +40,10 @@ class DashboardViewModel(
             is DashboardScreenAction.OnFetchCurrentUser -> {
 //                currentUserDetailFetch()
             }
+
+            is DashboardScreenAction.Reset -> {
+                authState.reset()
+            }
         }
     }
 

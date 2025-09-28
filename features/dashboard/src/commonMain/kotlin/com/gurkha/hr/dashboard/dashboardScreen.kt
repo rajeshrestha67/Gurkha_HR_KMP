@@ -84,6 +84,7 @@ fun DashboardScreen(
                 withContext(Dispatchers.Main.immediate) {
                     showPlatform.showToast(getString(SharedRes.Strings.log_out))
                     onLogout()
+                    viewModel.action(DashboardScreenAction.Reset)
                 }
             }
         }
