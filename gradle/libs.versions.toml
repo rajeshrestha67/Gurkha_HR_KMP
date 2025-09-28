@@ -111,6 +111,8 @@ kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime",
 
 #jetbrains material 3
 jetbrians-material3 = { module = "org.jetbrains.compose.material3:material3", version.ref = "material3" }
+#back handler
+ui-backhandler = { module = "org.jetbrains.compose.ui:ui-backhandler", version.ref = "composeMultiplatform" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

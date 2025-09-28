@@ -37,6 +37,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -62,8 +63,8 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun ProfileScreen(
     onLogout: () -> Unit,
-    onAccountClick:(AccountList)->Unit,
-    onGeneralClick:(GeneralList)->Unit
+    onAccountClick: (AccountList) -> Unit,
+    onGeneralClick: (GeneralList) -> Unit
 ) {
     val viewModel: ProfileScreenViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -131,11 +132,12 @@ fun ProfileScreen(
     }
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ProfileScreenContainer(
     modifier: Modifier = Modifier,
     onLogout: () -> Unit,
-    onAccountClick:(AccountList) -> Unit,
+    onAccountClick: (AccountList) -> Unit,
     onGeneralClick: (GeneralList) -> Unit
 ) {
 
@@ -209,6 +211,7 @@ fun ProfileScreenContainer(
                     )
                 }
             }
+
             if (showDialog) {
                 ActionDialog(
                     onDismiss = { showDialog = false },
