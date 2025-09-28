@@ -36,7 +36,7 @@ fun ERPButton(
     disableBackgroundColor: Color = Color.Gray,
     disableTextColor: Color = MaterialTheme.colorScheme.onBackground,
     border: BorderStroke = BorderStroke(0.dp, Color.Transparent),
-    textStyle: TextStyle = MaterialTheme.typography.bodySmall
+    textStyle: TextStyle = MaterialTheme.typography.bodyMedium
 ) {
     Button(
         enabled = enabled,
@@ -67,7 +67,7 @@ fun ERPButton(
                         trackColor = backgroundColor,
                         strokeCap = StrokeCap.Round,
                         strokeWidth = 1.dp,
-                        color = Color.Blue
+                        color = Color.White
                     )
                 }
             } else {

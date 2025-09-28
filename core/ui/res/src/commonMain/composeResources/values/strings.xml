@@ -94,8 +94,8 @@
     <string name="system_default">System Default</string>
     <string name="theme">Theme</string>
     <string name="dark_mode">Dark Mode</string>
-    <string name="are_you_sure">Are you Sure</string>
-    <string name="do_you_really_want_to_logout">Do you really want to logout</string>
+    <string name="are_you_sure">Are you Sure?</string>
+    <string name="do_you_really_want_to_logout">Do you really want to logout?</string>
     <string name="password_does_not_match">Password doesn't match</string>
     <string name="enter_your_password">Enter your Password</string>
     <string name="invalid_password_length">Password must be at least 6 characters long</string>

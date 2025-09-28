@@ -4,6 +4,7 @@ package com.gurkha.hr.profile.profile_screen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.LazyListScope
@@ -20,16 +22,16 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,11 +42,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
+import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.profile.model.profile_screen.AccountList
 import com.gurkha.hr.profile.model.profile_screen.GeneralList
 import com.gurkha.hr.res.SharedRes
@@ -52,9 +57,10 @@ import com.gurkha.hr.res.theme.borderColor
 import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.imageBackgroundColor
 import com.gurkha.hr.res.theme.logOutButtonColor
-import com.gurkha.hr.res.theme.logOutTextColor
+import com.gurkha.hr.res.theme.primaryTextColor
 import com.gurkha.hr.res.theme.secondaryTextColor
 import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -213,7 +219,7 @@ fun ProfileScreenContainer(
             }
 
             if (showDialog) {
-                ActionDialog(
+                LogoutBottomSheet(
                     onDismiss = { showDialog = false },
                     onConfirm = {
                         onLogout()
@@ -307,40 +313,87 @@ fun ProfileItemRow(
     }
 }
 
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ActionDialog(
+fun LogoutBottomSheet(
     onDismiss: () -> Unit,
     onConfirm: () -> Unit
 ) {
-    AlertDialog(
-        onDismissRequest = { onDismiss() },
-        title = { Text(text = stringResource(SharedRes.Strings.are_you_sure)) },
-        text = { Text(text = stringResource(SharedRes.Strings.do_you_really_want_to_logout)) },
-        confirmButton = {
-            TextButton(
-                onClick = { onConfirm() },
-                colors = ButtonDefaults.textButtonColors(
-                    containerColor = MaterialTheme.colorScheme.logOutButtonColor,
-                    contentColor = MaterialTheme.colorScheme.logOutTextColor
+    val sheet = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true
+    )
+    ModalBottomSheet(
+        sheetState = sheet,
+        modifier = Modifier
+            .fillMaxWidth()
+            .statusBarsPadding(),
+        onDismissRequest = onDismiss,
+        containerColor = MaterialTheme.colorScheme.background,
+    ) {
 
-                )
-
+        Column(
+            modifier = Modifier.fillMaxWidth().padding(
+                MaterialTheme.dimens.small3
+            ),
+            verticalArrangement = Arrangement.spacedBy(
+                MaterialTheme.dimens.small2,
+                alignment = Alignment.CenterVertically
+            ),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(MaterialTheme.dimens.promptDialogSize)
+                    .aspectRatio(1f)
+                    .background(
+                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
+                        shape = CircleShape
+                    )
+                    .padding(MaterialTheme.dimens.medium1)
+                    .background(
+                        color = MaterialTheme.colorScheme.primary,
+                        shape = CircleShape
+                    ),
+                contentAlignment = Alignment.Center
             ) {
-                Text(text = stringResource(SharedRes.Strings.yes))
-            }
-        },
-        dismissButton = {
-            TextButton(
-                onClick = { onDismiss() }) {
-                Text(
-                    text = stringResource(SharedRes.Strings.no),
-                    color = MaterialTheme.colorScheme.primary
+                Icon(
+                    painter = painterResource(SharedRes.Icons.logout),
+                    contentDescription = "Logout",
+                    tint = Color.White
                 )
             }
+            Text(
+                modifier = Modifier.padding(top = MaterialTheme.dimens.small2),
+                text = stringResource(SharedRes.Strings.are_you_sure),
+                style = MaterialTheme.typography.titleLarge.copy(
+                    color = MaterialTheme.colorScheme.primaryTextColor
+                ),
+                textAlign = TextAlign.Center
+            )
+
+            Text(
+                text = stringResource(SharedRes.Strings.do_you_really_want_to_logout),
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    color = MaterialTheme.colorScheme.primaryTextColor
+                ),
+                textAlign = TextAlign.Center
+            )
+
+            ERPButton(
+                modifier = Modifier.fillMaxWidth().padding(top = MaterialTheme.dimens.medium1),
+                text = stringResource(SharedRes.Strings.log_out),
+                onClick = onConfirm
+            )
+            ERPButton(
+                modifier = Modifier.fillMaxWidth(),
+                text = stringResource(SharedRes.Strings.cancel),
+                backgroundColor = MaterialTheme.colorScheme.error,
+                onClick = onDismiss
+            )
 
         }
-    )
+
+    }
 }
 
 
