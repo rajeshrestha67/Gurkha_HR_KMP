@@ -46,7 +46,7 @@ import coil3.compose.AsyncImage
 import com.gurkha.hr.chat_list.model.ChatListScreenAction
 import com.gurkha.hr.chat_list.model.ChatListScreenState
 import com.gurkha.hr.components.shimmer.ShimmerView
-import com.gurkha.hr.components.textField.EPRTextField
+import com.gurkha.hr.components.textField.ERPTextField
 import com.gurkha.hr.domain.chat.model.ChatItem
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.borderColor
@@ -97,7 +97,7 @@ private fun ChatListScreenContent(
                 title = {
                     AnimatedContent(state.showSearch) { showSearch ->
                         if (showSearch) {
-                            EPRTextField(
+                            ERPTextField(
                                 text = state.query ?: "",
                                 hint = stringResource(SharedRes.Strings.searchUsers),
                                 onValueChange = {

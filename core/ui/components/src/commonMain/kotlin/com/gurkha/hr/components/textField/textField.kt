@@ -43,7 +43,7 @@ import org.jetbrains.compose.resources.stringResource
 
 
 @Composable
-fun EPRBaseTextField(
+fun ERPBaseTextField(
     modifier: Modifier = Modifier,
     textFieldValue: TextFieldValue,
     label: String?,
@@ -186,7 +186,7 @@ fun EPRBaseTextField(
 
 
 @Composable
-fun EPRTextField(
+fun ERPTextField(
     modifier: Modifier = Modifier,
     textFieldValue: TextFieldValue,
     label: String? = null,
@@ -214,7 +214,7 @@ fun EPRTextField(
     unfocusedBorderColor: Color = MaterialTheme.colorScheme.borderColor,
     onDropDown: (() -> Unit)? = null
 ) {
-    EPRBaseTextField(
+    ERPBaseTextField(
         modifier = modifier,
         textFieldValue = textFieldValue,
         label = label,
@@ -246,7 +246,7 @@ fun EPRTextField(
 
 
 @Composable
-fun EPRTextField(
+fun ERPTextField(
     modifier: Modifier = Modifier,
     text: String,
     label: String? = null,
@@ -279,7 +279,7 @@ fun EPRTextField(
 
     val textFieldValue = textFieldValueState.copy(text = text)
 
-    EPRTextField(
+    ERPTextField(
         modifier = modifier,
         textFieldValue = textFieldValue,
         label = label,
@@ -334,7 +334,7 @@ fun AGMobileTextField(
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
     height: Dp? = null
 ) {
-    EPRTextField(
+    ERPTextField(
         modifier = modifier,
         text = value,
         label = label,
@@ -378,7 +378,7 @@ fun AGEmailTextField(
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
     height: Dp? = null
 ) {
-    EPRTextField(
+    ERPTextField(
         modifier = modifier,
         text = value,
         label = label,
@@ -420,7 +420,7 @@ fun PasswordTextField(
 ) {
     var revealed by remember { mutableStateOf(false) }
 
-    EPRTextField(
+    ERPTextField(
         modifier = modifier,
         text = value,
         label = label,

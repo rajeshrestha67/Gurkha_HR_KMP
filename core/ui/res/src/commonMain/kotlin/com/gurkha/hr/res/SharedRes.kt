@@ -96,6 +96,8 @@ import gurkhahr.core.ui.res.generated.resources.system_default
 import gurkhahr.core.ui.res.generated.resources.terms_and_services
 import gurkhahr.core.ui.res.generated.resources.theme
 import gurkhahr.core.ui.res.generated.resources.time_and_attendance
+import gurkhahr.core.ui.res.generated.resources.type_here
+import gurkhahr.core.ui.res.generated.resources.typing
 import gurkhahr.core.ui.res.generated.resources.unknown_error_occurred
 import gurkhahr.core.ui.res.generated.resources.upcoming_birthday
 import gurkhahr.core.ui.res.generated.resources.username
@@ -227,5 +229,7 @@ object SharedRes {
         val do_you_really_want_to_logout = Res.string.do_you_really_want_to_logout
         val chat = Res.string.chat
         val searchUsers = Res.string.search_users
+        val type_here = Res.string.type_here
+        val typing = Res.string.typing
     }
 }

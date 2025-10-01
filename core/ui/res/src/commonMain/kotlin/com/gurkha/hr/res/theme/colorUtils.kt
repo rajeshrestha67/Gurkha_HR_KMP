@@ -117,6 +117,12 @@ val ColorScheme.disabledTextFieldBorderColor: Color
         dark = Color(0xFF444444)
     )
 
+val ColorScheme.chatTopBarColor: Color
+    @Composable get() = extendedColor(
+        light = Color.White,
+        dark = Color.White
+    )
+
 @Composable
 fun ColorScheme.getOnBoardingIndicatorColor(isSelected: Boolean): Color {
     return if (isSelected) onBoardingIndicatorSelectedColor else onBoardingIndicatorUnSelectedColor

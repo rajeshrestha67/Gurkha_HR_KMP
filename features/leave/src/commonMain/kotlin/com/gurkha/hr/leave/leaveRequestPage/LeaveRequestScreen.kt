@@ -28,8 +28,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.textField.DropDownText
-import com.gurkha.hr.components.textField.EPRTextField
 import com.gurkha.hr.components.textField.ERPDateTextField
+import com.gurkha.hr.components.textField.ERPTextField
 import com.gurkha.hr.components.textField.FormValidate
 import com.gurkha.hr.components.textField.FutureAndTodayDate
 import com.gurkha.hr.components.textField.RangeSelectableDates
@@ -215,7 +215,7 @@ fun LeaveRequestScreenForm(
             }
         )
 //        leave reason
-        EPRTextField(
+        ERPTextField(
             text = state.reason,
             label = stringResource(SharedRes.Strings.reason),
             hint = stringResource(SharedRes.Strings.enterReason),

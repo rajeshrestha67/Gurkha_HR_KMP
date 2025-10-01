@@ -67,7 +67,7 @@ kotlin {
                 implementation(compose.runtime)
                 implementation(compose.foundation)
                 implementation(compose.material3)
-
+                implementation(compose.materialIconsExtended)
                 implementation(libs.koin.compose.viewmodel)
                 implementation(compose.components.resources)
                 implementation(libs.kotlinx.serialization.json)
@@ -81,6 +81,8 @@ kotlin {
                 implementation(libs.coil.compose.core)
                 implementation(libs.coil.mp)
                 implementation(libs.coil.network.ktor3)
+
+                implementation(libs.jetbrians.material3)
             }
         }
 

@@ -28,6 +28,26 @@ class ChatRoomViewModel : ViewModel() {
                     it.copy(chatUserData = Json.decodeFromString(action.json))
                 }
             }
+
+            ChatRoomScreenAction.ClearSearch -> {
+                _state.update {
+                    it.copy(
+                        message = ""
+                    )
+                }
+            }
+
+            is ChatRoomScreenAction.SearchQueryChanged -> {
+                _state.update {
+                    it.copy(
+                        message = action.message
+                    )
+                }
+            }
+
+            is ChatRoomScreenAction.Send -> {
+                println("sent")
+            }
         }
     }
 
