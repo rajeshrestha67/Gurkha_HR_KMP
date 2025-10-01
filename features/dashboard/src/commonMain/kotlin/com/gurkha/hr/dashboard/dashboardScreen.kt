@@ -30,6 +30,7 @@ import com.gurkha.hr.components.AnimatedNavHost
 import com.gurkha.hr.components.PlatformMessage
 import com.gurkha.hr.components.navigationBar.ERPNavigationBar
 import com.gurkha.hr.dashboard.graph.attendanceScreen
+import com.gurkha.hr.dashboard.graph.chatScreenBuilder
 import com.gurkha.hr.dashboard.graph.homeScreenBuilder
 import com.gurkha.hr.dashboard.graph.leaveScreenBuilder
 import com.gurkha.hr.dashboard.graph.profileScreenBuilder
@@ -200,6 +201,9 @@ fun DashboardScreenContent(
             )
             reportScreenBuilder(navController = navController)
             settingsScreenBuilder(
+                navController = navController
+            )
+            chatScreenBuilder(
                 navController = navController
             )
         }

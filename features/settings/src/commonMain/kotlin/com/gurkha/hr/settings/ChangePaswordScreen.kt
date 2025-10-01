@@ -38,7 +38,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChangePasswordScreen(
-    onBackPressed: () -> Unit,
+    onBackPressed: () -> Unit
 ) {
 
     val changePasswordViewModel: ChangePasswordViewModel = koinViewModel()

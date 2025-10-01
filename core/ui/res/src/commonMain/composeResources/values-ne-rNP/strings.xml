@@ -102,4 +102,7 @@
     <string name="gender">लिङ्ग</string>
     <string name="nationality">राष्ट्रियता</string>
     <string name="marital_status">वैवाहिक स्थिति</string>
+
+    <string name="chat">बातचीत</string>
+    <string name="search_users">प्रयोगकर्ताहरू खोज्नुहोस्</string>
 </resources>

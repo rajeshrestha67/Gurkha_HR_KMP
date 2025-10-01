@@ -5,6 +5,7 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
+import com.gurkha.hr.dashboard.route.ChatRoute
 import com.gurkha.hr.dashboard.route.DashboardRoute
 import com.gurkha.hr.home.HomeScreen
 
@@ -16,7 +17,13 @@ fun NavGraphBuilder.homeScreenBuilder(
 
     composable<DashboardRoute.HomeRoute> {
         HomeScreen(
-            topAppBarScrollBehavior = topAppBarScrollBehavior
+            topAppBarScrollBehavior = topAppBarScrollBehavior,
+            onChatClick = {
+                navController.navigate(ChatRoute.ChatList)
+            },
+            onNotificationClick = {
+
+            }
         )
     }
 }

@@ -1,9 +1,7 @@
 package com.gurkha.hr.profile.model.profileinfo_screen
 
-import com.gurkha.hr.domain.userDetail.model.UserDetailData
 import com.gurkha.hr.profile.model.profile_screen.AccountList
 import com.gurkha.hr.profile.model.profile_screen.GeneralList
-import com.gurkha.hr.res.SharedRes
 
 data class ProfileInfoScreenState(
     val generalItems: List<GeneralList> = GeneralList.list,
@@ -13,9 +11,9 @@ data class ProfileInfoScreenState(
     val levelName: String = "",
     val userProfileUrl: String? = null,
     val phoneNumber: String = "",
-    val employeeId: String = "",
-    val branchName:String = "",
-    val address:String = "",
+    val employeeId: Int = 0,
+    val branchName: String = "",
+    val address: String = "",
     val joinedDate: String = "",
     var contactInfo: List<ProfileInfo> = emptyList(),
     var personalDetails: List<ProfileInfo> = emptyList(),
@@ -65,5 +63,5 @@ data class ProfileInfoScreenState(
 //            value = "N/A"
 //        )
 //    ),
-    val selectedTab:Int = 0
+    val selectedTab: Int = 0
 )

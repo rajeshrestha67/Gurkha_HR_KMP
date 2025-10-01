@@ -1,6 +1,5 @@
 package com.gurkha.di
 
-import com.gurkha.hr.profile.profile_info.ProfileInfoScreen
 import org.koin.core.context.startKoin
 import org.koin.dsl.KoinAppDeclaration
 import org.koin.ksp.generated.module
@@ -23,7 +22,8 @@ fun initKoin(config: KoinAppDeclaration? = null) {
             ProfileScreenModule().module,
             ChangePasswordModule().module,
             HomeScreenModule().module,
-            ProfileInfoScreenModule().module
+            ProfileInfoScreenModule().module,
+            ChatModule().module
         )
     }
 }

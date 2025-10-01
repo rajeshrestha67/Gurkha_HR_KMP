@@ -31,10 +31,9 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Chat
+import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -77,6 +76,8 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun HomeScreen(
     topAppBarScrollBehavior: TopAppBarScrollBehavior,
+    onChatClick: () -> Unit,
+    onNotificationClick: () -> Unit
 ) {
     val viewModel: HomeScreenViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -126,34 +127,18 @@ fun HomeScreen(
                     }
                 },
                 actions = {
-
-                    IconButton(
-                        onClick = {
-                        }
-                    ) {
+                    IconButton(onClick = onChatClick) {
                         Icon(
-                            Icons.Filled.Search, contentDescription = "notification icon"
+                            imageVector = Icons.AutoMirrored.Filled.Chat,
+                            contentDescription = "chat"
                         )
                     }
-                    IconButton(
-                        onClick = {
-
-                        }
-                    ) {
+                    IconButton(onClick = onNotificationClick) {
                         Icon(
-                            Icons.Filled.Chat, contentDescription = "notification icon"
+                            imageVector = Icons.Filled.Notifications,
+                            contentDescription = "notification icon"
                         )
                     }
-                    IconButton(
-                        onClick = {
-                        }
-                    ) {
-                        Icon(
-                            Icons.Filled.Notifications, contentDescription = "notification icon"
-                        )
-                    }
-
-
                 },
                 scrollBehavior = topAppBarScrollBehavior
             )

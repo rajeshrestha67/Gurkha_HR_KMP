@@ -15,6 +15,7 @@ import gurkhahr.core.ui.res.generated.resources.attendance
 import gurkhahr.core.ui.res.generated.resources.cancel
 import gurkhahr.core.ui.res.generated.resources.cancelled
 import gurkhahr.core.ui.res.generated.resources.change_password
+import gurkhahr.core.ui.res.generated.resources.chat
 import gurkhahr.core.ui.res.generated.resources.company_assets
 import gurkhahr.core.ui.res.generated.resources.confirm
 import gurkhahr.core.ui.res.generated.resources.confirm_password
@@ -80,6 +81,7 @@ import gurkhahr.core.ui.res.generated.resources.reason
 import gurkhahr.core.ui.res.generated.resources.report
 import gurkhahr.core.ui.res.generated.resources.request
 import gurkhahr.core.ui.res.generated.resources.required
+import gurkhahr.core.ui.res.generated.resources.search_users
 import gurkhahr.core.ui.res.generated.resources.select_end_date
 import gurkhahr.core.ui.res.generated.resources.select_leave_duration
 import gurkhahr.core.ui.res.generated.resources.select_leave_type
@@ -223,5 +225,7 @@ object SharedRes {
         val yes = Res.string.yes
         val are_you_sure = Res.string.are_you_sure
         val do_you_really_want_to_logout = Res.string.do_you_really_want_to_logout
+        val chat = Res.string.chat
+        val searchUsers = Res.string.search_users
     }
 }
