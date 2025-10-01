@@ -10,7 +10,7 @@ fun UserDetailResponseDto.toData(): UserDetailData {
         userProfileUrl = detail?.imageUrl ?: "",
         fullName = detail?.fullName ?: "",
         levelName = detail?.levelName ?: "",
-        employeeId = detail?.employeeId.toString() ?: "",
+        employeeId = detail?.employeeId ?: 0,
         address = detail?.employeeDetails?.address ?: "",
         branchName = detail?.employeeDetails?.user?.branch?.branchName ?: "",
         dateOfBirth = detail?.employeeDetails?.dateOfBirth ?: "",
