@@ -13,7 +13,6 @@ import platform.darwin.dispatch_time
 actual class PlatformMessage() {
     @OptIn(ExperimentalForeignApi::class)
     actual fun showToast(message: String) {
-//        println("message")
         val rootVC = UIApplication.sharedApplication.keyWindow?.rootViewController
         rootVC?.let {
             val alert = UIAlertController.alertControllerWithTitle(

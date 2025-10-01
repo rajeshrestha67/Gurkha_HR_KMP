@@ -4,7 +4,6 @@ import com.gurkha.hr.domain.userDetail.model.UserDetailData
 import com.gurkha.model.userDetail.UserDetailResponseDto
 
 fun UserDetailResponseDto.toData(): UserDetailData {
-    println("data $detail")
     return UserDetailData(
         email = detail?.email ?: "",
         phoneNumber = detail?.employeeDetails?.phoneNumber ?: "",
@@ -20,6 +19,6 @@ fun UserDetailResponseDto.toData(): UserDetailData {
         nationality = detail?.employeeDetails?.country ?: "",
         maritalStatus = detail?.employeeDetails?.maritalStatus ?: "",
         guardianName = detail?.employeeDetails?.guardianName ?: "",
-        guardianPhone =detail?. employeeDetails?.guardianNumber ?: "",
+        guardianPhone = detail?.employeeDetails?.guardianNumber ?: "",
     )
 }

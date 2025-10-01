@@ -148,7 +148,6 @@ fun DashboardScreenContent(
                     ERPNavigationBar(
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        println("currentScreen ${state.currentScreen}")
                         state.screens.forEach { item ->
                             NavigationBarItem(
                                 selected = item.route == state.currentScreen,
