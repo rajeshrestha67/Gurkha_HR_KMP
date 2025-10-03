@@ -132,7 +132,6 @@ private fun ChatBottomBar(
             imeAction = ImeAction.Send,
             focusedBorderColor = Color.Transparent,
             unfocusedBorderColor = Color.Transparent,
-            backgroundColor = MaterialTheme.colorScheme.background,
             keyboardActions = KeyboardActions(
                 onSend = {
                     if (message.isNotEmpty()) {
@@ -253,6 +252,9 @@ private fun ChatRoomLazyColumn(
         reverseLayout = true
     ) {
 
+        items(100) {
+            Text("text $it")
+        }
     }
 
 }
