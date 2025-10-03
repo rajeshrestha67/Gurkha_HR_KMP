@@ -1,5 +1,6 @@
 package com.gurkha.hr.chat_room
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -29,6 +30,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -189,7 +191,6 @@ private fun ChatTopBar(
     TopAppBar(
         windowInsets = WindowInsets(),
         title = {
-
             Row(
                 modifier = Modifier.fillMaxWidth()
                     .padding(vertical = MaterialTheme.dimens.small2),
@@ -270,50 +271,66 @@ private fun ChatRoomLazyColumn(
     LaunchedEffect(state.messages) {
         listState.animateScrollToItem(0)
     }
-    LazyColumn(
-        modifier = modifier,
-        state = listState,
-        contentPadding = PaddingValues(
-            start = MaterialTheme.dimens.small3,
-            end = MaterialTheme.dimens.small3,
-            top = MaterialTheme.dimens.small2
-        ),
-        reverseLayout = true
-    ) {
-        item {
-            if (state.isTyping) {
-                TypingIndicator(
-                    modifier = Modifier.animateItem(
-                        fadeInSpec = tween(300),
-                        fadeOutSpec = tween(500)
-                    )
-                )
-            }
-        }
-        state.messages.keys.forEach { key ->
-            state.messages[key]?.let { messages ->
-                items(items = messages, key = { it.hashCode() }) { chatMessage ->
-                    ChatMessageBox(
-                        modifier = Modifier.fillMaxWidth().animateItem(
-                            fadeInSpec = tween(300),
-                            fadeOutSpec = tween(500)
-                        ),
-                        chatMessage = chatMessage
-                    )
-                }
-            }
-            stickyHeader(key = key) {
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = key,
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.titleSmall.copy(
-                        color = MaterialTheme.colorScheme.secondaryTextColor
-                    )
-                )
-            }
-        }
 
+    AnimatedContent(
+        modifier = modifier,
+        targetState = state.isLoading
+    ) { isLoading ->
+        if (isLoading) {
+
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        } else {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                state = listState,
+                contentPadding = PaddingValues(
+                    start = MaterialTheme.dimens.small3,
+                    end = MaterialTheme.dimens.small3,
+                    top = MaterialTheme.dimens.small2
+                ),
+                reverseLayout = true
+            ) {
+                item {
+                    if (state.isTyping) {
+                        TypingIndicator(
+                            modifier = Modifier.animateItem(
+                                fadeInSpec = tween(300),
+                                fadeOutSpec = tween(500)
+                            )
+                        )
+                    }
+                }
+                state.messages.keys.forEach { key ->
+                    state.messages[key]?.let { messages ->
+                        items(items = messages, key = { it.hashCode() }) { chatMessage ->
+                            ChatMessageBox(
+                                modifier = Modifier.fillMaxWidth().animateItem(
+                                    fadeInSpec = tween(300),
+                                    fadeOutSpec = tween(500)
+                                ),
+                                chatMessage = chatMessage
+                            )
+                        }
+                    }
+                    stickyHeader(key = key) {
+                        Text(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = key,
+                            textAlign = TextAlign.Center,
+                            style = MaterialTheme.typography.titleSmall.copy(
+                                color = MaterialTheme.colorScheme.secondaryTextColor
+                            )
+                        )
+                    }
+                }
+
+            }
+        }
     }
 }
 

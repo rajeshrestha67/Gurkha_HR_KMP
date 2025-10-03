@@ -44,14 +44,6 @@ class ChatRoomViewModel(
                 fetchChatMessage(chatUserData = chatUserData)
             }
 
-            ChatRoomScreenAction.ClearSearch -> {
-                _state.update {
-                    it.copy(
-                        message = ""
-                    )
-                }
-            }
-
             is ChatRoomScreenAction.SearchQueryChanged -> {
                 _state.update {
                     it.copy(
@@ -100,17 +92,11 @@ class ChatRoomViewModel(
             page = 0,
             size = 50
         ).onSuccess { data ->
-
-            data.messages.forEach {
-                println("message for $it")
-            }
             _state.update {
                 it.copy(
                     messages = data.messages
-                        .map {
-                            val a = it.toMessage()
-                            println("message $a")
-                            a
+                        .map { chat ->
+                            chat.toMessage()
                         }.groupByTo(LinkedHashMap()) { chatData ->
                             chatData.date
                         }.mapValues { entry -> entry.value.reversed() }
