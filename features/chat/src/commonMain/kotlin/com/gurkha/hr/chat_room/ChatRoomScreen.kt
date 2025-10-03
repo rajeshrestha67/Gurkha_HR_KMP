@@ -60,9 +60,10 @@ fun ChatRoomScreen(
     val viewModel = koinViewModel<ChatRoomViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    LaunchedEffect(chatUserJsonData) {
-        viewModel.onAction(ChatRoomScreenAction.UpdateChatData(chatUserJsonData))
+    LaunchedEffect(key1 = chatUserJsonData) {
+        viewModel.onAction(action = ChatRoomScreenAction.UpdateChatData(json = chatUserJsonData))
     }
+    
     ChatRoomScreenContent(
         onBackPressed = onBackPressed,
         state = state,
@@ -99,7 +100,7 @@ private fun ChatRoomScreenContent(
 
     ) { contentPadding ->
         ChatRoomLazyColumn(
-            modifier = Modifier.padding(contentPadding).fillMaxSize()
+            modifier = Modifier.padding(paddingValues = contentPadding).fillMaxSize()
         )
     }
 
@@ -112,21 +113,23 @@ private fun ChatBottomBar(
 ) {
 
     Row(
-        modifier = Modifier.fillMaxWidth().padding(
-            start = MaterialTheme.dimens.small3,
-            end = MaterialTheme.dimens.small1,
-            top = MaterialTheme.dimens.small2,
-            bottom = MaterialTheme.dimens.small2
-        ),
-        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                start = MaterialTheme.dimens.small3,
+                end = MaterialTheme.dimens.small1,
+                top = MaterialTheme.dimens.small2,
+                bottom = MaterialTheme.dimens.small2
+            ),
+        horizontalArrangement = Arrangement.spacedBy(space = MaterialTheme.dimens.small2),
         verticalAlignment = Alignment.CenterVertically
     ) {
         ERPTextField(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.weight(weight = 1f),
             text = message,
-            hint = stringResource(SharedRes.Strings.type_here),
+            hint = stringResource(resource = SharedRes.Strings.type_here),
             onValueChange = {
-                onAction(ChatRoomScreenAction.SearchQueryChanged(it))
+                onAction(ChatRoomScreenAction.SearchQueryChanged(message = it))
             },
             onErrorStateChange = {},
             imeAction = ImeAction.Send,
@@ -177,9 +180,9 @@ private fun ChatTopBar(
             ) {
                 Box(
                     modifier = Modifier
-                        .size(MaterialTheme.dimens.medium3)
+                        .size(size = MaterialTheme.dimens.medium3)
                         .background(
-                            color = Color(userData.backgroundColor),
+                            color = Color(value = userData.backgroundColor),
                             shape = CircleShape
                         )
                         .border(
@@ -207,7 +210,7 @@ private fun ChatTopBar(
 
 
                 Column(
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(weight = 1f)
                 ) {
                     Text(
                         text = userData.employeeName,
