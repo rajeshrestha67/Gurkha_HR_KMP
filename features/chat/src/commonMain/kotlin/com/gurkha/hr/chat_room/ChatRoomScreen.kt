@@ -1,5 +1,11 @@
 package com.gurkha.hr.chat_room
 
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -7,6 +13,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,7 +21,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -33,18 +43,27 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
+import com.gurkha.hr.chat_room.components.triangle.Triangle
+import com.gurkha.hr.chat_room.model.ChatMessage
 import com.gurkha.hr.chat_room.model.ChatRoomScreenAction
 import com.gurkha.hr.chat_room.model.ChatRoomScreenState
 import com.gurkha.hr.components.textField.ERPTextField
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.borderColor
-import com.gurkha.hr.res.theme.chatTopBarColor
+import com.gurkha.hr.res.theme.chatBackgroundColor
+import com.gurkha.hr.res.theme.chatSecondaryTextColor
 import com.gurkha.hr.res.theme.dimens
+import com.gurkha.hr.res.theme.inComingBubbleColor
+import com.gurkha.hr.res.theme.inComingTextColor
+import com.gurkha.hr.res.theme.outGoingBubbleColor
 import com.gurkha.hr.res.theme.primaryTextColor
 import com.gurkha.hr.res.theme.secondaryTextColor
 import com.gurkha.model.chat.ChatUserData
@@ -63,7 +82,7 @@ fun ChatRoomScreen(
     LaunchedEffect(key1 = chatUserJsonData) {
         viewModel.onAction(action = ChatRoomScreenAction.UpdateChatData(json = chatUserJsonData))
     }
-    
+
     ChatRoomScreenContent(
         onBackPressed = onBackPressed,
         state = state,
@@ -82,7 +101,7 @@ private fun ChatRoomScreenContent(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         contentWindowInsets = WindowInsets(),
-        containerColor = MaterialTheme.colorScheme.chatTopBarColor,
+        containerColor = MaterialTheme.colorScheme.chatBackgroundColor,
         topBar = {
             state.chatUserData?.let {
                 ChatTopBar(
@@ -100,7 +119,8 @@ private fun ChatRoomScreenContent(
 
     ) { contentPadding ->
         ChatRoomLazyColumn(
-            modifier = Modifier.padding(paddingValues = contentPadding).fillMaxSize()
+            modifier = Modifier.padding(paddingValues = contentPadding).fillMaxSize(),
+            state = state
         )
     }
 
@@ -243,21 +263,162 @@ private fun ChatTopBar(
 
 @Composable
 private fun ChatRoomLazyColumn(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    state: ChatRoomScreenState
 ) {
-
+    val listState = rememberLazyListState()
+    LaunchedEffect(state.messages) {
+        listState.animateScrollToItem(0)
+    }
     LazyColumn(
         modifier = modifier,
+        state = listState,
         contentPadding = PaddingValues(
-            horizontal = MaterialTheme.dimens.small3,
-            vertical = MaterialTheme.dimens.small2
+            start = MaterialTheme.dimens.small3,
+            end = MaterialTheme.dimens.small3,
+            top = MaterialTheme.dimens.small2
         ),
         reverseLayout = true
     ) {
+        item {
+            if (state.isTyping) {
+                TypingIndicator(
+                    modifier = Modifier.animateItem(
+                        fadeInSpec = tween(300),
+                        fadeOutSpec = tween(500)
+                    )
+                )
+            }
+        }
+        state.messages.keys.forEach { key ->
+            state.messages[key]?.let { messages ->
+                items(items = messages, key = { it.hashCode() }) { chatMessage ->
+                    ChatMessageBox(
+                        modifier = Modifier.fillMaxWidth().animateItem(
+                            fadeInSpec = tween(300),
+                            fadeOutSpec = tween(500)
+                        ),
+                        chatMessage = chatMessage
+                    )
+                }
+            }
+            stickyHeader(key = key) {
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = key,
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.titleSmall.copy(
+                        color = MaterialTheme.colorScheme.secondaryTextColor
+                    )
+                )
+            }
+        }
 
-        items(100) {
-            Text("text $it")
+    }
+}
+
+@Composable
+private fun ChatMessageBox(
+    modifier: Modifier = Modifier,
+    chatMessage: ChatMessage
+) {
+
+    Box(
+        modifier = modifier,
+        contentAlignment = if (chatMessage.fromMe) Alignment.CenterEnd else Alignment.CenterStart
+    ) {
+
+        Row(verticalAlignment = Alignment.Bottom) {
+            if (!chatMessage.fromMe) {
+                Spacer(Modifier.size(size = MaterialTheme.dimens.small1))
+                Column {
+                    Triangle(
+                        true,
+                        MaterialTheme.colorScheme.outGoingBubbleColor
+                    )
+                }
+            }
+
+            Column {
+                Box(
+                    Modifier.clip(
+                        RoundedCornerShape(
+                            MaterialTheme.dimens.small2,
+                            MaterialTheme.dimens.small2,
+                            if (!chatMessage.fromMe) MaterialTheme.dimens.small2 else 0.dp,
+                            if (!chatMessage.fromMe) 0.dp else MaterialTheme.dimens.small2
+                        )
+                    )
+                        .background(color = if (!chatMessage.fromMe) MaterialTheme.colorScheme.outGoingBubbleColor else MaterialTheme.colorScheme.inComingBubbleColor)
+                        .padding(
+                            start = MaterialTheme.dimens.small2,
+                            top = MaterialTheme.dimens.small1,
+                            end = MaterialTheme.dimens.small2,
+                            bottom = MaterialTheme.dimens.small1
+                        ),
+                ) {
+                    Column {
+                        Text(
+                            text = chatMessage.message,
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                color = MaterialTheme.colorScheme.inComingTextColor
+                            )
+                        )
+                        Spacer(Modifier.size(MaterialTheme.dimens.small1))
+                        Row(
+                            horizontalArrangement = Arrangement.End,
+                            modifier = Modifier.align(Alignment.End)
+                        ) {
+                            Text(
+                                text = chatMessage.time,
+                                textAlign = TextAlign.End,
+                                style = MaterialTheme.typography.labelSmall.copy(
+                                    color = MaterialTheme.colorScheme.chatSecondaryTextColor
+                                )
+                            )
+                        }
+                    }
+                }
+                Box(Modifier.size(MaterialTheme.dimens.small2 + MaterialTheme.dimens.small1 / 2))
+            }
+            if (chatMessage.fromMe) {
+                Column {
+                    Triangle(
+                        false,
+                        MaterialTheme.colorScheme.inComingBubbleColor
+                    )
+                }
+            }
         }
     }
+}
 
+@Composable
+fun TypingIndicator(
+    modifier: Modifier = Modifier,
+    dotColor: Color = MaterialTheme.colorScheme.chatSecondaryTextColor,
+    dotSize: Dp = MaterialTheme.dimens.small2,
+    dotSpacing: Dp = MaterialTheme.dimens.small1
+) {
+    val transition = rememberInfiniteTransition()
+    val delays = listOf(0, 300, 600)
+
+    Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(dotSpacing)) {
+        delays.forEachIndexed { index, delay ->
+            val scale by transition.animateFloat(
+                initialValue = 0.3f,
+                targetValue = 1f,
+                animationSpec = infiniteRepeatable(
+                    animation = tween(600, delayMillis = delay, easing = LinearEasing),
+                    repeatMode = RepeatMode.Reverse
+                )
+            )
+            Box(
+                modifier = Modifier
+                    .size(dotSize)
+                    .graphicsLayer { scaleX = scale; scaleY = scale }
+                    .background(dotColor, shape = CircleShape)
+            )
+        }
+    }
 }

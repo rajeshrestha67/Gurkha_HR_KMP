@@ -117,10 +117,36 @@ val ColorScheme.disabledTextFieldBorderColor: Color
         dark = Color(0xFF444444)
     )
 
-val ColorScheme.chatTopBarColor: Color
+val ColorScheme.chatBackgroundColor: Color
     @Composable get() = extendedColor(
-        light = Color.White,
-        dark = Color.White
+        light = Color(0xFFFAFAFA),
+        dark = Color(0xFF121212)
+    )
+
+val ColorScheme.inComingBubbleColor: Color
+    @Composable get() = extendedColor(
+        light = Color(0x604B662C),
+        dark = Color(0x60B1D18A)
+    )
+
+
+val ColorScheme.outGoingBubbleColor: Color
+    @Composable get() = extendedColor(
+        light = Color(0xFFDDDDDD),
+        dark = Color(0xFF3A3A3A)
+    )
+
+val ColorScheme.inComingTextColor: Color
+    @Composable get() = extendedColor(
+        light = Color(0xFF111111),
+        dark = Color(0xFFE0E0E0)
+    )
+
+
+val ColorScheme.chatSecondaryTextColor: Color
+    @Composable get() = extendedColor(
+        light = Color(0xFF757575),
+        dark = Color(0xFFAAAAAA)
     )
 
 @Composable

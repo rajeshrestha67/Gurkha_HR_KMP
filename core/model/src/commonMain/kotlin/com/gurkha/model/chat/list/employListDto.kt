@@ -21,3 +21,4 @@ data class EmptyListItemResponseDto(
     val hasUnReadMessage: String? = null,
     val sortOrder: Int? = null
 )
+

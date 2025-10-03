@@ -3,6 +3,7 @@ package com.gurkha.hr.res.theme
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.unit.sp
 import com.gurkha.hr.res.SharedRes
 
 import org.jetbrains.compose.resources.Font
@@ -37,5 +38,5 @@ val AppTypography: Typography
         bodySmall = baseline.bodySmall.copy(fontFamily = poppinsFamily),
         labelLarge = baseline.labelLarge.copy(fontFamily = poppinsFamily),
         labelMedium = baseline.labelMedium.copy(fontFamily = poppinsFamily),
-        labelSmall = baseline.labelSmall.copy(fontFamily = poppinsFamily),
+        labelSmall = baseline.labelSmall.copy(fontFamily = poppinsFamily, fontSize = 10.sp),
     )

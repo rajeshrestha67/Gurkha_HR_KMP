@@ -3,8 +3,10 @@ package com.gurkha.di
 import com.gurkha.hr.chat_list.ChatListViewModel
 import com.gurkha.hr.chat_room.ChatRoomViewModel
 import com.gurkha.hr.data.chat.KtorChatRemoteRepository
+import com.gurkha.hr.datastore.user_data.repository.UserDataRepository
 import com.gurkha.hr.domain.chat.repository.ChatRemoteRepository
 import com.gurkha.hr.domain.chat.usecase.ChatListUseCase
+import com.gurkha.hr.domain.chat.usecase.FetchChatMessageUseCase
 import io.ktor.client.HttpClient
 import org.koin.android.annotation.KoinViewModel
 import org.koin.core.annotation.Factory
@@ -19,9 +21,19 @@ class ChatModule {
     fun getChatListUseCase(chatRemoteRepository: ChatRemoteRepository) =
         ChatListUseCase(chatRemoteRepository)
 
+    @Factory
+    fun fetchChatMessageUseCase(
+        chatRemoteRepository: ChatRemoteRepository,
+        userDataRepository: UserDataRepository
+    ) = FetchChatMessageUseCase(
+        chatRemoteRepository = chatRemoteRepository,
+        userDataRepository = userDataRepository
+    )
+
     @KoinViewModel
     fun getChatListViewModel(chatListUseCase: ChatListUseCase) = ChatListViewModel(chatListUseCase)
 
     @KoinViewModel
-    fun getChatRoomViewModel() = ChatRoomViewModel()
+    fun getChatRoomViewModel(fetchChatMessageUseCase: FetchChatMessageUseCase) =
+        ChatRoomViewModel(fetchChatMessageUseCase = fetchChatMessageUseCase)
 }
