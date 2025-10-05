@@ -11,6 +11,7 @@ androidx-lifecycle = "2.9.4"
 androidx-testExt = "1.3.0"
 composeMultiplatform = "1.9.0"
 junit = "4.13.2"
+kmpSocketio = "1.4.0"
 kotlin = "2.2.20"
 kotlin-test = "2.2.10"
 kotlinStdlib = "2.2.20"
@@ -43,6 +44,7 @@ kotlinx-coroutine = "1.10.2"
 
 [libraries]
 androidx-activity = { module = "androidx.activity:activity", version.ref = "androidx-activity" }
+kmp-socketio = { module = "com.piasy:kmp-socketio", version.ref = "kmpSocketio" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin-test" }
 kotlin-testJunit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin-test" }
 junit = { module = "junit:junit", version.ref = "junit" }

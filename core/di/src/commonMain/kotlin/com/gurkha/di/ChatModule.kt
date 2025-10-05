@@ -2,21 +2,36 @@ package com.gurkha.di
 
 import com.gurkha.hr.chat_list.ChatListViewModel
 import com.gurkha.hr.chat_room.ChatRoomViewModel
+import com.gurkha.hr.data.chat.IOChatSocketRepository
 import com.gurkha.hr.data.chat.KtorChatRemoteRepository
 import com.gurkha.hr.datastore.user_data.repository.UserDataRepository
 import com.gurkha.hr.domain.chat.repository.ChatRemoteRepository
+import com.gurkha.hr.domain.chat.repository.ChatSocketRepository
 import com.gurkha.hr.domain.chat.usecase.ChatListUseCase
+import com.gurkha.hr.domain.chat.usecase.ConnectSocketUseCase
+import com.gurkha.hr.domain.chat.usecase.DisconnectSocketUseCase
 import com.gurkha.hr.domain.chat.usecase.FetchChatMessageUseCase
-import com.gurkha.hr.network.WebSocketManager
+import com.gurkha.hr.domain.chat.usecase.JoinRoomUseCase
+import com.gurkha.hr.domain.chat.usecase.ObserveSocketEventsUseCase
+import com.gurkha.hr.domain.chat.usecase.SendMessageUseCase
+import com.gurkha.hr.network.SocketManager
 import io.ktor.client.HttpClient
 import org.koin.android.annotation.KoinViewModel
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Module
+import org.koin.core.annotation.Single
 
 @Module
 class ChatModule {
     @Factory(binds = [ChatRemoteRepository::class])
     fun getChatRemoteRepository(httpClient: HttpClient) = KtorChatRemoteRepository(httpClient)
+
+    @Single
+    fun getSocketManager() = SocketManager()
+
+    @Factory(binds = [ChatSocketRepository::class])
+    fun getChatSocketRepository(socketManager: SocketManager) =
+        IOChatSocketRepository(socketManager)
 
     @Factory
     fun getChatListUseCase(chatRemoteRepository: ChatRemoteRepository) =
@@ -31,14 +46,60 @@ class ChatModule {
         userDataRepository = userDataRepository
     )
 
+
     @Factory
-    fun getWebsocket(httpClient: HttpClient): WebSocketManager =
-        WebSocketManager(client = httpClient)
+    fun getConnectSocketUseCase(
+        chatSocketRepository: ChatSocketRepository,
+        userDataRepository: UserDataRepository
+    ) = ConnectSocketUseCase(
+        chatSocketRepository = chatSocketRepository,
+        userDataRepository = userDataRepository
+    )
+
+    @Factory
+    fun getJoinRoomUseCase(
+        chatSocketRepository: ChatSocketRepository,
+        userDataRepository: UserDataRepository
+    ) = JoinRoomUseCase(
+        chatSocketRepository = chatSocketRepository,
+        userDataRepository = userDataRepository
+    )
+
+    @Factory
+    fun getSendMessageUseCase(
+        chatSocketRepository: ChatSocketRepository,
+        userDataRepository: UserDataRepository
+    ) = SendMessageUseCase(
+        chatSocketRepository = chatSocketRepository,
+        userDataRepository = userDataRepository
+    )
+
+    @Factory
+    fun getObserveSocketEventsUseCase(chatSocketRepository: ChatSocketRepository) =
+        ObserveSocketEventsUseCase(chatSocketRepository)
+
+    @Factory
+    fun getDisconnectSocketUseCase(chatSocketRepository: ChatSocketRepository) =
+        DisconnectSocketUseCase(chatSocketRepository)
+
 
     @KoinViewModel
     fun getChatListViewModel(chatListUseCase: ChatListUseCase) = ChatListViewModel(chatListUseCase)
 
     @KoinViewModel
-    fun getChatRoomViewModel(fetchChatMessageUseCase: FetchChatMessageUseCase) =
-        ChatRoomViewModel(fetchChatMessageUseCase = fetchChatMessageUseCase)
+    fun getChatRoomViewModel(
+        fetchChatMessageUseCase: FetchChatMessageUseCase,
+        connectSocketUseCase: ConnectSocketUseCase,
+        joinRoomUseCase: JoinRoomUseCase,
+        sendMessageUseCase: SendMessageUseCase,
+        observeSocketEventsUseCase: ObserveSocketEventsUseCase,
+        disconnectSocketUseCase: DisconnectSocketUseCase
+    ) = ChatRoomViewModel(
+        fetchChatMessageUseCase = fetchChatMessageUseCase,
+        connectSocketUseCase = connectSocketUseCase,
+        joinRoomUseCase = joinRoomUseCase,
+        sendMessageUseCase = sendMessageUseCase,
+        observeSocketEventsUseCase = observeSocketEventsUseCase,
+        disconnectSocketUseCase = disconnectSocketUseCase
+    )
 }

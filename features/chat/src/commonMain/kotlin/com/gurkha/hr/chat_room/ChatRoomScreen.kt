@@ -1,6 +1,7 @@
 package com.gurkha.hr.chat_room
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -21,6 +22,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -271,65 +273,72 @@ private fun ChatRoomLazyColumn(
     LaunchedEffect(state.messages) {
         listState.animateScrollToItem(0)
     }
-
-    AnimatedContent(
-        modifier = modifier,
-        targetState = state.isLoading
-    ) { isLoading ->
-        if (isLoading) {
-
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
-            }
-        } else {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                state = listState,
-                contentPadding = PaddingValues(
-                    start = MaterialTheme.dimens.small3,
-                    end = MaterialTheme.dimens.small3,
-                    top = MaterialTheme.dimens.small2
-                ),
-                reverseLayout = true
-            ) {
-                item {
-                    if (state.isTyping) {
-                        TypingIndicator(
-                            modifier = Modifier.animateItem(
-                                fadeInSpec = tween(300),
-                                fadeOutSpec = tween(500)
-                            )
-                        )
-                    }
+//    LaunchedEffect(state.isTyping) {
+//        println("🔥 UI recomposed, typing = ${state.isTyping}")
+//        if (state.isTyping) {
+//            listState.animateScrollToItem(0)
+//        }
+//    }
+    Column(
+        modifier = modifier
+    ) {
+        AnimatedContent(
+            modifier = Modifier.weight(1f),
+            targetState = state.isLoading
+        ) { isLoading ->
+            if (isLoading) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
                 }
-                state.messages.keys.forEach { key ->
-                    state.messages[key]?.let { messages ->
-                        items(items = messages, key = { it.hashCode() }) { chatMessage ->
-                            ChatMessageBox(
-                                modifier = Modifier.fillMaxWidth().animateItem(
-                                    fadeInSpec = tween(300),
-                                    fadeOutSpec = tween(500)
-                                ),
-                                chatMessage = chatMessage
+            } else {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    state = listState,
+                    contentPadding = PaddingValues(
+                        start = MaterialTheme.dimens.small3,
+                        end = MaterialTheme.dimens.small3,
+                        top = MaterialTheme.dimens.small2
+                    ),
+                    reverseLayout = true
+                ) {
+                    state.messages.keys.forEach { key ->
+                        state.messages[key]?.let { messages ->
+                            items(items = messages, key = { it.hashCode() }) { chatMessage ->
+                                ChatMessageBox(
+                                    modifier = Modifier.fillMaxWidth().animateItem(
+                                        fadeInSpec = tween(300),
+                                        fadeOutSpec = tween(500)
+                                    ),
+                                    chatMessage = chatMessage
+                                )
+                            }
+                        }
+                        stickyHeader(key = key) {
+                            Text(
+                                modifier = Modifier.fillMaxWidth(),
+                                text = key,
+                                textAlign = TextAlign.Center,
+                                style = MaterialTheme.typography.titleSmall.copy(
+                                    color = MaterialTheme.colorScheme.secondaryTextColor
+                                )
                             )
                         }
                     }
-                    stickyHeader(key = key) {
-                        Text(
-                            modifier = Modifier.fillMaxWidth(),
-                            text = key,
-                            textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.titleSmall.copy(
-                                color = MaterialTheme.colorScheme.secondaryTextColor
-                            )
-                        )
-                    }
-                }
 
+                }
             }
+        }
+
+        AnimatedVisibility(
+            visible = state.isTyping,
+            modifier = Modifier.padding(start = MaterialTheme.dimens.small3)
+        ) {
+            TypingIndicator(
+                modifier = Modifier
+            )
         }
     }
 }
@@ -348,15 +357,18 @@ private fun ChatMessageBox(
         Row(verticalAlignment = Alignment.Bottom) {
             if (!chatMessage.fromMe) {
                 Spacer(Modifier.size(size = MaterialTheme.dimens.small1))
-                Column {
-                    Triangle(
-                        true,
-                        MaterialTheme.colorScheme.outGoingBubbleColor
-                    )
-                }
+
+                Triangle(
+                    true,
+                    MaterialTheme.colorScheme.outGoingBubbleColor
+                )
+
             }
 
-            Column {
+            Column(
+                modifier = Modifier.fillMaxWidth(0.6f),
+                horizontalAlignment = if (chatMessage.fromMe) Alignment.End else Alignment.Start
+            ) {
                 Box(
                     Modifier.clip(
                         RoundedCornerShape(
@@ -368,11 +380,9 @@ private fun ChatMessageBox(
                     )
                         .background(color = if (!chatMessage.fromMe) MaterialTheme.colorScheme.outGoingBubbleColor else MaterialTheme.colorScheme.inComingBubbleColor)
                         .padding(
-                            start = MaterialTheme.dimens.small2,
-                            top = MaterialTheme.dimens.small1,
-                            end = MaterialTheme.dimens.small2,
-                            bottom = MaterialTheme.dimens.small1
-                        ),
+                            horizontal = MaterialTheme.dimens.small2,
+                            vertical = MaterialTheme.dimens.small1
+                        )
                 ) {
                     Column {
                         Text(
@@ -399,19 +409,17 @@ private fun ChatMessageBox(
                 Box(Modifier.size(MaterialTheme.dimens.small2 + MaterialTheme.dimens.small1 / 2))
             }
             if (chatMessage.fromMe) {
-                Column {
-                    Triangle(
-                        false,
-                        MaterialTheme.colorScheme.inComingBubbleColor
-                    )
-                }
+                Triangle(
+                    false,
+                    MaterialTheme.colorScheme.inComingBubbleColor
+                )
             }
         }
     }
 }
 
 @Composable
-fun TypingIndicator(
+private fun TypingIndicator(
     modifier: Modifier = Modifier,
     dotColor: Color = MaterialTheme.colorScheme.chatSecondaryTextColor,
     dotSize: Dp = MaterialTheme.dimens.small2,
@@ -420,22 +428,46 @@ fun TypingIndicator(
     val transition = rememberInfiniteTransition()
     val delays = listOf(0, 300, 600)
 
-    Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(dotSpacing)) {
-        delays.forEachIndexed { index, delay ->
-            val scale by transition.animateFloat(
-                initialValue = 0.3f,
-                targetValue = 1f,
-                animationSpec = infiniteRepeatable(
-                    animation = tween(600, delayMillis = delay, easing = LinearEasing),
-                    repeatMode = RepeatMode.Reverse
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.Bottom
+    ) {
+        Triangle(
+            risingToTheRight = true,
+            background = MaterialTheme.colorScheme.outGoingBubbleColor,
+            bottomPadding = 0.dp
+        )
+        Row(
+            modifier = Modifier.wrapContentWidth()
+                .clip(
+                    shape = RoundedCornerShape(
+                        MaterialTheme.dimens.small2,
+                        MaterialTheme.dimens.small2,
+                        MaterialTheme.dimens.small2,
+                        0.dp
+                    )
                 )
-            )
-            Box(
-                modifier = Modifier
-                    .size(dotSize)
-                    .graphicsLayer { scaleX = scale; scaleY = scale }
-                    .background(dotColor, shape = CircleShape)
-            )
+                .background(MaterialTheme.colorScheme.outGoingBubbleColor)
+                .padding(MaterialTheme.dimens.small2),
+            horizontalArrangement = Arrangement.spacedBy(dotSpacing)
+        ) {
+            delays.forEachIndexed { index, delay ->
+                val scale by transition.animateFloat(
+                    initialValue = 0.3f,
+                    targetValue = 1f,
+                    animationSpec = infiniteRepeatable(
+                        animation = tween(600, delayMillis = delay, easing = LinearEasing),
+                        repeatMode = RepeatMode.Reverse
+                    )
+                )
+                Box(
+                    modifier = Modifier
+                        .size(dotSize)
+                        .graphicsLayer { scaleX = scale; scaleY = scale }
+                        .background(dotColor, shape = CircleShape)
+                )
+            }
         }
     }
+
 }

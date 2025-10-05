@@ -9,15 +9,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.gurkha.hr.res.theme.dimens
 
 @Composable
-fun Triangle(risingToTheRight: Boolean, background: Color) {
+fun Triangle(
+    risingToTheRight: Boolean,
+    background: Color,
+    bottomPadding: Dp = MaterialTheme.dimens.small2 + MaterialTheme.dimens.small1 / 2
+) {
     Box(
         Modifier
             .padding(
-                bottom = MaterialTheme.dimens.small2 + MaterialTheme.dimens.small1 / 2,
+                bottom = bottomPadding,
                 start = 0.dp
             )
             .clip(TriangleEdgeShape(risingToTheRight))

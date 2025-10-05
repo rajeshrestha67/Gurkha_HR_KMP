@@ -8,45 +8,69 @@ import com.gurkha.hr.chat_room.model.ChatRoomScreenState
 import com.gurkha.hr.chat_room.model.toChatMetaData
 import com.gurkha.hr.chat_room.model.toMessage
 import com.gurkha.hr.domain.chat.mapper.getCurrentDataAndTime
+import com.gurkha.hr.domain.chat.usecase.ConnectSocketUseCase
+import com.gurkha.hr.domain.chat.usecase.DisconnectSocketUseCase
 import com.gurkha.hr.domain.chat.usecase.FetchChatMessageUseCase
-import com.gurkha.hr.network.WebSocketManager
+import com.gurkha.hr.domain.chat.usecase.JoinRoomUseCase
+import com.gurkha.hr.domain.chat.usecase.ObserveSocketEventsUseCase
+import com.gurkha.hr.domain.chat.usecase.SendMessageUseCase
 import com.gurkha.hr.networkhelper.onError
 import com.gurkha.hr.networkhelper.onSuccess
 import com.gurkha.model.chat.ChatUserData
-import com.gurkha.model.chat.SendChatMessage
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
-import org.koin.mp.KoinPlatform.getKoin
 import kotlin.time.ExperimentalTime
 
 class ChatRoomViewModel(
-    private val fetchChatMessageUseCase: FetchChatMessageUseCase
+    private val fetchChatMessageUseCase: FetchChatMessageUseCase,
+    private val connectSocketUseCase: ConnectSocketUseCase,
+    private val joinRoomUseCase: JoinRoomUseCase,
+    private val sendMessageUseCase: SendMessageUseCase,
+    private val observeSocketEventsUseCase: ObserveSocketEventsUseCase,
+    private val disconnectSocketUseCase: DisconnectSocketUseCase
 ) : ViewModel() {
-
-    private val webSocketManager = getKoin().get<WebSocketManager>()
 
     private val _state = MutableStateFlow(ChatRoomScreenState())
 
     val state = _state
-        .combine(webSocketManager.isConnected) { state, isConnected ->
-            state.copy(isSocketConnected = isConnected)
-        }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = ChatRoomScreenState()
         )
 
+    init {
+        viewModelScope.launch {
+            observeSocketEventsUseCase.onTyping.collect { isTyping ->
+                _state.update {
+                    it.copy(
+                        isTyping = isTyping
+                    )
+                }
+            }
+        }
+        viewModelScope.launch {
+            observeSocketEventsUseCase.onContent.collect { content ->
+                val chatMessage = createChatMessage(
+                    fromMe = false,
+                    message = content.content
+                )
+                _state.update {
+                    it.copy(
+                        messages = state.value.messages.addMessage(chatMessage)
+                    )
+                }
+            }
+        }
+    }
+
     override fun onCleared() {
         super.onCleared()
-        viewModelScope.launch {
-            webSocketManager.disconnect()
-        }
+        disconnectSocketUseCase()
     }
 
     fun onAction(action: ChatRoomScreenAction) {
@@ -79,27 +103,31 @@ class ChatRoomViewModel(
     private fun sendMessage() = viewModelScope.launch {
 
         val message = state.value.message
-        webSocketManager.sendMessage(
-            SendChatMessage(
-                chatId = state.value.chatUserData?.chatId ?: "",
-                message = message,
-                fromUser = "Shreejesh Pathak"
-            )
+        val chatMessage = createChatMessage(
+            fromMe = true,
+            message = message
         )
-        val messages = state.value.messages
-        val nowPair = getCurrentDataAndTime()
-        val chatMessage = ChatMessage(
-            message = message,
-            date = nowPair.first,
-            time = nowPair.second,
-            fromMe = true
+        sendMessageUseCase(
+            chatId = state.value.chatUserData?.chatId ?: "",
+            message = message
         )
         _state.update {
             it.copy(
-                messages = messages.addMessage(chatMessage),
+                messages = state.value.messages.addMessage(chatMessage),
                 message = ""
             )
         }
+    }
+
+    private fun createChatMessage(fromMe: Boolean, message: String): ChatMessage {
+        val nowPair = getCurrentDataAndTime()
+        return ChatMessage(
+            message = message,
+            date = nowPair.first,
+            time = nowPair.second,
+            fromMe = fromMe
+        )
+
     }
 
     private fun LinkedHashMap<String, List<ChatMessage>>.addMessage(chatMessage: ChatMessage): LinkedHashMap<String, List<ChatMessage>> {
@@ -110,17 +138,18 @@ class ChatRoomViewModel(
     }
 
     private fun initSocket(chatUserData: ChatUserData) = viewModelScope.launch {
-
-        webSocketManager.connect("Shreejesh Pathak")
-        webSocketManager.onConnect.collect {
-            println("webSocketManager connected")
-            webSocketManager.emitJoinRoom(
-                chatId = chatUserData.chatId,
-                fromUser = "Shreejesh Pathak"
-            )
+        connectSocketUseCase(
+            chatId = chatUserData.chatId,
+            socketPrefix = "mbank"
+        )
+        observeSocketEventsUseCase.isConnected.collect {
+            if (it) {
+                joinRoomUseCase(
+                    chatId = chatUserData.chatId,
+                    initiatorId = "app_mbank"
+                )
+            }
         }
-
-
     }
 
     private fun fetchChatMessage(chatUserData: ChatUserData) = viewModelScope.launch {

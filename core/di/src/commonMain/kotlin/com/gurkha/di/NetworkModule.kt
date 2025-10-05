@@ -12,7 +12,6 @@ import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.plugins.logging.SIMPLE
 import io.ktor.client.plugins.observer.ResponseObserver
-import io.ktor.client.plugins.websocket.WebSockets
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
@@ -49,7 +48,6 @@ class NetworkModule {
                 }
             )
         }
-        install(WebSockets)
         install(ResponseObserver) {
             onResponse { response ->
                 if (response.status.value == 401) {
