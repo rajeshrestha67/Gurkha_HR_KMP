@@ -36,15 +36,15 @@ data class LeaveRequestScreenState(
     val leaveDurationList: List<LeaveDurationUi> = listOf(
         LeaveDurationUi(
             name = "Full Day",
-            value = "Full Day"
+            value = "FULL_DAY"
         ),
         LeaveDurationUi(
             name = "Half Day Morning",
-            value = "Half Day Morning"
+            value = "HALF_DAY_MORNING"
         ),
         LeaveDurationUi(
             name = "Half Day Afternoon",
-            value = "Half Day Afternoon"
+            value = "HALF_DAY_AFTERNOON"
         ),
     )
 )

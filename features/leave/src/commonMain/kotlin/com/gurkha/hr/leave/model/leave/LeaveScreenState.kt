@@ -12,7 +12,11 @@ data class LeaveScreenState(
     val attendanceStatus: AttendanceStatusEnum = AttendanceStatusEnum.PENDING,
     val employeeName: String = "",
     val isSelf: String = "",
-    val leaveRequestDataJson: String? = null
+    val leaveRequestDataJson: String? = null,
+
+    val isRequestingLeave: Boolean = false,
+    val leaveRequestError: Boolean = false
+
 )
 
 data class LeaveTapItem(

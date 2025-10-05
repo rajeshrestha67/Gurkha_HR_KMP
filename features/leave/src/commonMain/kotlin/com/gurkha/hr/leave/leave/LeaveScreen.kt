@@ -32,6 +32,9 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -63,6 +66,7 @@ fun LeaveScreen(
 ) {
     val viewModel: LeaveScreenViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
+    var isFetch by remember { mutableStateOf(false) }
 
     val result = navController.currentBackStackEntry
         ?.savedStateHandle
@@ -71,7 +75,16 @@ fun LeaveScreen(
 
     LaunchedEffect(result) {
         viewModel.onAction(LeaveScreenAction.UpdateRequestData(result?.value))
+        isFetch = true
     }
+
+    LaunchedEffect(isFetch) {
+
+    }
+
+
+
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         contentWindowInsets = WindowInsets(0.dp),

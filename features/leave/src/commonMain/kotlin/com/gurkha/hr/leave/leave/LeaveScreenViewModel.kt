@@ -7,11 +7,16 @@ import com.gurkha.hr.leave.model.leave.AttendanceStatusEnum
 import com.gurkha.hr.leave.model.leave.LeaveScreenAction
 import com.gurkha.hr.leave.model.leave.LeaveScreenState
 import com.gurkha.hr.networkhelper.onSuccess
+import com.gurkha.model.leave.leave_request.LeaveRequestData
+import com.gurkha.model.leave.ui.LeaveAssigneeUi
+import com.gurkha.model.leave.ui.LeaveDurationUi
+import com.gurkha.model.leave.ui.LeaveTypeUi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
 
 class LeaveScreenViewModel(
     private val attendanceStatusUseCase: AttendanceStatusUseCase
@@ -61,7 +66,24 @@ class LeaveScreenViewModel(
                         leaveRequestDataJson = action.json
                     )
                 }
+
+                action.json?.let {
+                    val data: LeaveRequestData =
+                        Json.decodeFromString<LeaveRequestData>(action.json)
+                    val assigneeId = Json.decodeFromString<LeaveAssigneeUi>(data.assignee).value
+                    val leaveTypeId = Json.decodeFromString<LeaveTypeUi>(data.leaveType).value
+                    val leaveDuration =
+                        Json.decodeFromString<LeaveDurationUi>(data.leaveDuration).value
+
+                    requestLeave(
+                        data = data,
+                        assigneeId = assigneeId,
+                        leaveTypeId = leaveTypeId,
+                        leaveDuration = leaveDuration
+                    )
+                }
             }
+
         }
     }
 
@@ -144,4 +166,14 @@ class LeaveScreenViewModel(
         }
     }
 
+}
+
+
+private fun requestLeave(
+    data: LeaveRequestData,
+    assigneeId: String,
+    leaveTypeId: String,
+    leaveDuration: String
+) {
+    println("api_called ${data.startDate + data.endDate + assigneeId + leaveDuration + leaveTypeId + data.reason}")
 }

@@ -1,5 +1,7 @@
 package com.gurkha.hr.domain.leave.leaveType.model
 
+import com.gurkha.model.leave.ui.LeaveTypeUi
+
 data class LeaveTypeData(
     val id: Int,
     val createdDate: String,
@@ -14,3 +16,12 @@ data class LeaveTypeData(
     val enableCountWeekend: String,
     val enableCountHoliday: String
 )
+
+
+fun List<LeaveTypeData>.toUiList(): List<LeaveTypeUi> =
+    map {
+        LeaveTypeUi(
+            name = it.typeName,
+            value = it.id.toString()
+        )
+    }
