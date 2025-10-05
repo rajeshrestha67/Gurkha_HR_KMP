@@ -37,7 +37,7 @@ class WebSocketManager(
     private val _onTyping = MutableSharedFlow<String?>()
     val onTyping: SharedFlow<String?> = _onTyping
 
-    private val _onConnect = MutableSharedFlow<Unit>()
+    private val _onConnect = MutableSharedFlow<Unit>(replay = 1)
     val onConnect: SharedFlow<Unit> = _onConnect
 
     private val _isConnected = MutableStateFlow(false)
@@ -65,6 +65,7 @@ class WebSocketManager(
             if (_isConnected.value) {
                 println("✅ WebSocket connected")
                 _onConnect.emit(Unit)
+                emitJoinRoom("", "")
             } else {
                 println("❌ Failed to connect WebSocket")
             }
@@ -138,14 +139,13 @@ class WebSocketManager(
             println("⚠️ Cannot emit, socket not connected")
             return
         }
-        println("called join room emit")
+
         val json = buildJsonObject {
             put("event", event)
             put("data", payload)
         }
         val obj = Json.encodeToString(json)
         println("📤 Sending: $obj")
-        println("called join room emit sending")
 
         session?.send(obj)
 
@@ -154,8 +154,10 @@ class WebSocketManager(
     suspend fun emitJoinRoom(chatId: String, fromUser: String) {
         println("called join room")
         emit("joinRoom", buildJsonObject {
-            put("chatId", chatId)
-            put("fromUser", fromUser)
+            put("chatId", "mbank_161_168")
+//            put("chatId", chatId)
+//            put("fromUser", fromUser)
+            put("fromUser", "Shreejesh Pathak")
             put("initiatorId", "app_mbank")
         })
     }
