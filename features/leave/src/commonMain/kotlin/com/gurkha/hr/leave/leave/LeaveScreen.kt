@@ -41,6 +41,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import com.gurkha.hr.components.PlatformMessage
 import com.gurkha.hr.components.shimmer.ShimmerView
 import com.gurkha.hr.domain.attendance.attendanceStatus.model.AttendanceStatusData
 import com.gurkha.hr.leave.model.leave.AttendanceStatusEnum
@@ -56,6 +57,7 @@ import com.gurkha.hr.res.theme.highLightColor
 import com.gurkha.hr.res.theme.primaryTextColor
 import com.gurkha.hr.res.theme.veryLightGray
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,7 +68,19 @@ fun LeaveScreen(
 ) {
     val viewModel: LeaveScreenViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
-    var isFetch by remember { mutableStateOf(false) }
+
+    val platformMessage: PlatformMessage = koinInject()
+
+    LaunchedEffect(Unit) {
+        viewModel.errorChannel.collect {
+            platformMessage.showToast(it)
+        }
+    }
+    LaunchedEffect(Unit) {
+        viewModel.successChannel.collect {
+            platformMessage.showToast(it)
+        }
+    }
 
     val result = navController.currentBackStackEntry
         ?.savedStateHandle
@@ -75,15 +89,7 @@ fun LeaveScreen(
 
     LaunchedEffect(result) {
         viewModel.onAction(LeaveScreenAction.UpdateRequestData(result?.value))
-        isFetch = true
     }
-
-    LaunchedEffect(isFetch) {
-
-    }
-
-
-
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),

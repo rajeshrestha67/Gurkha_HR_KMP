@@ -3,26 +3,19 @@ package com.gurkha.model.leave.leaveRequest
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class LeaveRequestDtoTypeResponseDto(
-    val status: String? = null,
-    val message: String? = null,
-//    val detail: List<LeaveTypeDetailDto>? = null,
-    val success: Boolean? = null
+data class LeaveRequestDto(
+    val endDate: String? = null,
+    val leaveDuration: String? = null,
+    val leaveTypeId: Int? = null,
+    val reason: String? = null,
+    val startDate: String? = null,
+    val assigneeId: Int? = null
 )
 
-//@Serializable
-//data class LeaveTypeDetailDto(
-//    val id: Int? = null,
-//    val createdDate: String? = null,
-//    val createdByUserId: Int? = null,
-//    val createdBy: String? = null,
-//    val modifiedBy: String? = null,
-//    val lastModified: String? = null,
-//    val typeName: String? = null,
-//    val maxDaysAllowed: Int? = null,
-//    val active: String? = null,
-//    val accumulate: String? = null,
-//    val enableCountWeekend: String? = null,
-//    val enableCountHoliday: String? = null
-//)
 
+@Serializable
+data class LeaveRequestResponseDto(
+    val status: String? = null,
+    val message: String? = null,
+    val success: Boolean? = null
+)

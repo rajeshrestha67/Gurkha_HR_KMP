@@ -6,7 +6,9 @@ import com.gurkha.hr.domain.attendance.attendanceStatus.repository.AttendanceSta
 import com.gurkha.hr.domain.attendance.attendanceStatus.useCase.AttendanceStatusUseCase
 import com.gurkha.hr.domain.form.RequiredValidationUseCase
 import com.gurkha.hr.domain.leave.leaveAssignee.usecase.LeaveAssigneeUseCase
+import com.gurkha.hr.domain.leave.leaveReport.useCase.LeaveReportUseCase
 import com.gurkha.hr.domain.leave.leaveRequest.repository.LeaveRemoteRepository
+import com.gurkha.hr.domain.leave.leaveRequest.usecase.LeaveRequestUseCase
 import com.gurkha.hr.domain.leave.leaveType.usecase.LeaveTypeUseCase
 import com.gurkha.hr.leave.leave.LeaveScreenViewModel
 import com.gurkha.hr.leave.leaveRequestPage.LeaveRequestScreenViewModel
@@ -34,6 +36,14 @@ class LeaveScreenModule {
     )
 
     @Factory
+    fun leaveReportUseCase(
+        leaveRemoteRepository: LeaveRemoteRepository
+    ): LeaveReportUseCase = LeaveReportUseCase(
+        leaveRemoteRepository = leaveRemoteRepository
+    )
+
+
+    @Factory
     fun leaveAssigneeUseCase(
         leaveRemoteRepository: LeaveRemoteRepository
     ): LeaveAssigneeUseCase = LeaveAssigneeUseCase(
@@ -44,11 +54,19 @@ class LeaveScreenModule {
     fun attendanceStatusUseCase(attendanceStatusRemoteRepository: AttendanceStatusRemoteRepository): AttendanceStatusUseCase =
         AttendanceStatusUseCase(attendanceStatusRemoteRepository)
 
+    @Factory
+    fun leaveRequestUseCase(leaveRemoteRepository: LeaveRemoteRepository): LeaveRequestUseCase =
+        LeaveRequestUseCase(leaveRemoteRepository)
+
     @KoinViewModel
     fun getLeaveScreenViewModel(
-        attendanceStatusUseCase: AttendanceStatusUseCase
+        attendanceStatusUseCase: AttendanceStatusUseCase,
+        leaveRequestUseCase: LeaveRequestUseCase,
+        leaveReportUseCase: LeaveReportUseCase
     ): LeaveScreenViewModel = LeaveScreenViewModel(
-        attendanceStatusUseCase = attendanceStatusUseCase
+        attendanceStatusUseCase = attendanceStatusUseCase,
+        leaveRequestUseCase = leaveRequestUseCase,
+        leaveReportUseCase = leaveReportUseCase
     )
 
     @KoinViewModel

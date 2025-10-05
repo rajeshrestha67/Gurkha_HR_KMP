@@ -17,6 +17,7 @@ data class LeaveScreenState(
     val isRequestingLeave: Boolean = false,
     val leaveRequestError: Boolean = false
 
+
 )
 
 data class LeaveTapItem(
