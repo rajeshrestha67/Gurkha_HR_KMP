@@ -24,6 +24,15 @@ class LeaveScreenViewModel(
             initialValue = LeaveScreenState()
         )
 
+    //fetch for the pending in the starting
+    init {
+        fetchAttendanceStatus(
+            attendanceStatus = AttendanceStatusEnum.PENDING,
+            employeeName = "",
+            isSelf = "Y"
+        )
+    }
+
     fun onAction(action: LeaveScreenAction) {
         when (action) {
             is LeaveScreenAction.OnStatusChange -> {

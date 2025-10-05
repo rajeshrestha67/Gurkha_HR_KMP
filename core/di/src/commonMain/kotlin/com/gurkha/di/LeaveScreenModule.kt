@@ -1,14 +1,12 @@
 package com.gurkha.di
 
 import com.gurkha.hr.data.attendanceStatus.KtorAttendanceStatusRemoteRepository
-import com.gurkha.hr.data.leaveAssignee.KtorLeaveAssigneeRemoteRepository
-import com.gurkha.hr.data.leaveType.KtorLeaveTypeRemoteRepository
+import com.gurkha.hr.data.leaveRequest.KtorLeaveRequestRemoteRepository
 import com.gurkha.hr.domain.attendanceStatus.repository.AttendanceStatusRemoteRepository
 import com.gurkha.hr.domain.attendanceStatus.useCase.AttendanceStatusUseCase
 import com.gurkha.hr.domain.form.RequiredValidationUseCase
-import com.gurkha.hr.domain.leaveAssignee.repository.LeaveAssigneeRemoteRepository
 import com.gurkha.hr.domain.leaveAssignee.usecase.LeaveAssigneeUseCase
-import com.gurkha.hr.domain.leaveType.repository.LeaveTypeRemoteRepository
+import com.gurkha.hr.domain.leave.repository.LeaveRemoteRepository
 import com.gurkha.hr.domain.leaveType.usecase.LeaveTypeUseCase
 import com.gurkha.hr.leave.leave.LeaveScreenViewModel
 import com.gurkha.hr.leave.leaveRequestPage.LeaveRequestScreenViewModel
@@ -24,26 +22,22 @@ class LeaveScreenModule {
     fun attendanceStatusRemoteRepository(httpClient: HttpClient) =
         KtorAttendanceStatusRemoteRepository(httpClient)
 
-    @Factory(binds = [LeaveAssigneeRemoteRepository::class])
-    fun leaveAssigneeRemoteRepository(httpClient: HttpClient) =
-        KtorLeaveAssigneeRemoteRepository(httpClient)
-
-    @Factory(binds = [LeaveTypeRemoteRepository::class])
-    fun leaveTypeRemoteRepository(httpClient: HttpClient) =
-        KtorLeaveTypeRemoteRepository(httpClient)
+    @Factory(binds = [LeaveRemoteRepository::class])
+    fun leaveRemoteRepository(httpClient: HttpClient) =
+        KtorLeaveRequestRemoteRepository(httpClient)
 
     @Factory
     fun leaveTypeUseCase(
-        leaveTypeRemoteRepository: LeaveTypeRemoteRepository
+        leaveRemoteRepository: LeaveRemoteRepository
     ): LeaveTypeUseCase = LeaveTypeUseCase(
-        leaveTypeRemoteRepository = leaveTypeRemoteRepository
+        leaveRemoteRepository = leaveRemoteRepository
     )
 
     @Factory
     fun leaveAssigneeUseCase(
-        leaveAssigneeRemoteRepository: LeaveAssigneeRemoteRepository
+        leaveRemoteRepository: LeaveRemoteRepository
     ): LeaveAssigneeUseCase = LeaveAssigneeUseCase(
-        leaveAssigneeRemoteRepository = leaveAssigneeRemoteRepository
+        leaveRemoteRepository = leaveRemoteRepository
     )
 
     @Factory
