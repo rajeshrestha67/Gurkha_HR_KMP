@@ -13,7 +13,8 @@ data class ChatRoomScreenState(
     val chatUserData: ChatUserData? = null,
     val message: String = "",
     val messages: LinkedHashMap<String, List<ChatMessage>> = LinkedHashMap(),
-    val metaData: ChatMetaData? = null
+    val metaData: ChatMetaData? = null,
+    val isSocketConnected: Boolean = false
 )
 
 

@@ -5,19 +5,19 @@ import com.gurkha.model.chat.SendChatMessage
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.websocket.DefaultClientWebSocketSession
 import io.ktor.client.plugins.websocket.webSocketSession
-import io.ktor.http.HttpMethod
-import io.ktor.http.URLProtocol
+import io.ktor.http.encodeURLPath
 import io.ktor.utils.io.InternalAPI
 import io.ktor.websocket.CloseReason
 import io.ktor.websocket.Frame
 import io.ktor.websocket.close
-import io.ktor.websocket.readBytes
 import io.ktor.websocket.readText
 import io.ktor.websocket.send
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.isActive
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
@@ -30,7 +30,6 @@ class WebSocketManager(
     private val client: HttpClient,
 ) {
     private var session: DefaultClientWebSocketSession? = null
-    private var reconnectAttempts = 0
 
     private val _onContent = MutableSharedFlow<Content>()
     val onContent: SharedFlow<Content> = _onContent
@@ -41,76 +40,91 @@ class WebSocketManager(
     private val _onConnect = MutableSharedFlow<Unit>()
     val onConnect: SharedFlow<Unit> = _onConnect
 
+    private val _isConnected = MutableStateFlow(false)
+    val isConnected: StateFlow<Boolean> = _isConnected
+
     @OptIn(InternalAPI::class)
     suspend fun connect(username: String) {
-        session = client.webSocketSession(
-            method = HttpMethod.Get,
-            host = "mbank.gurkhahr.com",
-            port = 443,
-            path = "/socket.io/",
-        ) {
-            url {
-                protocol = URLProtocol.WSS
-                parameters.append("username", username)
-                parameters.append("socketPrefix", "mbank")
-                parameters.append("EIO", "3")
-                parameters.append("transport", "websocket")
-            }
+        if (_isConnected.value) {
+            println("⚠️ Already connected")
+            return
         }
 
-        session?.start()
-        println("✅ WebSocket connected: ${session != null}")
-        // listenMessages()
+        try {
+            val query = listOf(
+                "username=${username.encodeURLPath()}",
+                "socketPrefix=mbank",
+                "EIO=3",
+                "transport=websocket"
+            ).joinToString("&")
+
+            session = client.webSocketSession(
+                urlString = "wss://mbank.gurkhahr.com/socket.io/?$query"
+            )
+            _isConnected.value = session?.isActive == true
+            if (_isConnected.value) {
+                println("✅ WebSocket connected")
+                _onConnect.emit(Unit)
+            } else {
+                println("❌ Failed to connect WebSocket")
+            }
+            listenMessages()
+
+        } catch (e: Exception) {
+            println("🚨 WebSocket connection error: ${e.message}")
+            _isConnected.value = false
+        }
     }
 
     suspend fun listenMessages() {
-        session?.incoming?.receiveAsFlow()?.collect {
-            println("data $it")
-        }
-        session?.incoming?.consumeEach { frame ->
-            println("frame $frame, ${frame.readBytes()}")
-            when (frame) {
-                is Frame.Text -> {
-                    val text = frame.readText()
-                    println("Received: $text")
-
-                    try {
-                        val json = Json.decodeFromString<JsonObject>(text)
-
-                        when (json["event"]?.jsonPrimitive?.content) {
-                            "privateMessage" -> {
-                                val data = Json.decodeFromJsonElement<Content>(json["data"]!!)
-                                _onContent.emit(data)
-                            }
-
-                            "typing" -> {
-                                val fromUser =
-                                    json["data"]?.jsonObject?.get("fromUser")?.jsonPrimitive?.content
-                                _onTyping.emit(fromUser)
-                            }
-
-                            "stopTyping" -> {
-                                _onTyping.emit(null)
-                            }
-                        }
-                    } catch (e: Exception) {
-                        println("Error parsing message: ${e.message}")
+        try {
+            session?.incoming?.consumeEach { frame ->
+                when (frame) {
+                    is Frame.Text -> handleTextFrame(frame)
+                    is Frame.Binary -> println("📩 Received binary data: ${frame.data.size} bytes")
+                    is Frame.Close -> {
+                        println("❌ WebSocket closed")
+                        _isConnected.value = false
                     }
-                }
 
-                is Frame.Binary -> {
-                    println("📩 Received binary data: ${frame.data.size} bytes")
+                    else -> {}
                 }
-
-                else -> {}
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            println("🚨 Error while listening: ${e.message}")
+            _isConnected.value = false
+        }
+    }
+
+    private suspend fun handleTextFrame(frame: Frame.Text) {
+        val text = frame.readText()
+        println("Received: $text")
+        try {
+            val json = Json.decodeFromString<JsonObject>(text)
+            when (json["event"]?.jsonPrimitive?.content) {
+                "privateMessage" -> {
+                    val data = Json.decodeFromJsonElement<Content>(json["data"]!!)
+                    _onContent.emit(data)
+                }
+
+                "typing" -> {
+                    val fromUser = json["data"]?.jsonObject?.get("fromUser")?.jsonPrimitive?.content
+                    _onTyping.emit(fromUser)
+                }
+
+                "stopTyping" -> _onTyping.emit(null)
+            }
+        } catch (e: Exception) {
+            println("Error parsing message: ${e.message}")
         }
     }
 
     suspend fun sendMessage(sendChatMessage: SendChatMessage) {
-//        val byte = Json.encodeToString(sendChatMessage)
-//        session?.send(Frame.Text(message)) ?: println("⚠️ No active session")
-        // session?.send(frame = Frame.Text(byte)) ?: println("⚠️ No active session")
+        if (!_isConnected.value || session == null) {
+            println("⚠️ Not connected — message not sent")
+            return
+        }
         emit("privateMessage", buildJsonObject {
             put("chatId", sendChatMessage.chatId)
             put("fromUser", sendChatMessage.fromUser)
@@ -120,17 +134,25 @@ class WebSocketManager(
 
     @OptIn(InternalAPI::class)
     suspend fun emit(event: String, payload: JsonObject) {
+        if (!_isConnected.value || session == null) {
+            println("⚠️ Cannot emit, socket not connected")
+            return
+        }
+        println("called join room emit")
         val json = buildJsonObject {
             put("event", event)
             put("data", payload)
         }
         val obj = Json.encodeToString(json)
-        println("obj $obj")
+        println("📤 Sending: $obj")
+        println("called join room emit sending")
+
         session?.send(obj)
 
     }
 
     suspend fun emitJoinRoom(chatId: String, fromUser: String) {
+        println("called join room")
         emit("joinRoom", buildJsonObject {
             put("chatId", chatId)
             put("fromUser", fromUser)

@@ -16,6 +16,7 @@ import com.gurkha.model.chat.ChatUserData
 import com.gurkha.model.chat.SendChatMessage
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -32,6 +33,9 @@ class ChatRoomViewModel(
     private val _state = MutableStateFlow(ChatRoomScreenState())
 
     val state = _state
+        .combine(webSocketManager.isConnected) { state, isConnected ->
+            state.copy(isSocketConnected = isConnected)
+        }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
@@ -73,6 +77,7 @@ class ChatRoomViewModel(
 
     @OptIn(ExperimentalTime::class)
     private fun sendMessage() = viewModelScope.launch {
+
         val message = state.value.message
         webSocketManager.sendMessage(
             SendChatMessage(
@@ -84,7 +89,7 @@ class ChatRoomViewModel(
         val messages = state.value.messages
         val nowPair = getCurrentDataAndTime()
         val chatMessage = ChatMessage(
-            message = state.value.message,
+            message = message,
             date = nowPair.first,
             time = nowPair.second,
             fromMe = true
@@ -105,11 +110,17 @@ class ChatRoomViewModel(
     }
 
     private fun initSocket(chatUserData: ChatUserData) = viewModelScope.launch {
-        webSocketManager.emitJoinRoom(
-            chatId = chatUserData.chatId,
-            fromUser = chatUserData.employeeName
-        )
-        webSocketManager.connect(chatUserData.employeeName)
+
+        webSocketManager.connect("Shreejesh Pathak")
+        webSocketManager.onConnect.collect {
+            println("webSocketManager connected")
+            webSocketManager.emitJoinRoom(
+                chatId = chatUserData.chatId,
+                fromUser = "Shreejesh Pathak"
+            )
+        }
+
+
     }
 
     private fun fetchChatMessage(chatUserData: ChatUserData) = viewModelScope.launch {
@@ -127,10 +138,16 @@ class ChatRoomViewModel(
                     messages = data.messages
                         .map { chat ->
                             chat.toMessage()
-                        }.groupByTo(LinkedHashMap()) { chatData ->
+                        }
+                        .groupByTo(LinkedHashMap()) { chatData ->
                             chatData.date
-                        }.mapValues { entry -> entry.value.reversed() }
-                        .let { LinkedHashMap(it) },
+                        }
+                        .mapValues { entry ->
+                            entry.value.reversed()
+                        }
+                        .toList()
+                        .asReversed()
+                        .toMap(LinkedHashMap()),
                     metaData = data.metaData?.toChatMetaData(),
                     isLoading = false
                 )
