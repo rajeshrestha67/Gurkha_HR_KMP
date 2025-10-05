@@ -2,7 +2,7 @@ package com.gurkha.hr.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gurkha.hr.domain.attendance.usecase.AttendanceUseCase
+import com.gurkha.hr.domain.attendance.attendanceReport.usecase.AttendanceUseCase
 import com.gurkha.hr.domain.upComingBirthday.usecase.UpComingBirthdayUseCase
 import com.gurkha.hr.domain.upComingWorkAnniversaries.useCase.UpComingWorkAnniversaryUseCase
 import com.gurkha.hr.domain.userDetail.usecase.FetchRemoteUserDetailUseCase

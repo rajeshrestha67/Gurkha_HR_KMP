@@ -2,12 +2,12 @@ package com.gurkha.di
 
 import com.gurkha.hr.data.attendanceStatus.KtorAttendanceStatusRemoteRepository
 import com.gurkha.hr.data.leaveRequest.KtorLeaveRequestRemoteRepository
-import com.gurkha.hr.domain.attendanceStatus.repository.AttendanceStatusRemoteRepository
-import com.gurkha.hr.domain.attendanceStatus.useCase.AttendanceStatusUseCase
+import com.gurkha.hr.domain.attendance.attendanceStatus.repository.AttendanceStatusRemoteRepository
+import com.gurkha.hr.domain.attendance.attendanceStatus.useCase.AttendanceStatusUseCase
 import com.gurkha.hr.domain.form.RequiredValidationUseCase
-import com.gurkha.hr.domain.leaveAssignee.usecase.LeaveAssigneeUseCase
-import com.gurkha.hr.domain.leave.repository.LeaveRemoteRepository
-import com.gurkha.hr.domain.leaveType.usecase.LeaveTypeUseCase
+import com.gurkha.hr.domain.leave.leaveAssignee.usecase.LeaveAssigneeUseCase
+import com.gurkha.hr.domain.leave.leaveRequest.repository.LeaveRemoteRepository
+import com.gurkha.hr.domain.leave.leaveType.usecase.LeaveTypeUseCase
 import com.gurkha.hr.leave.leave.LeaveScreenViewModel
 import com.gurkha.hr.leave.leaveRequestPage.LeaveRequestScreenViewModel
 import io.ktor.client.HttpClient

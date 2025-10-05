@@ -2,7 +2,7 @@ package com.gurkha.hr.leave.leave
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gurkha.hr.domain.attendanceStatus.useCase.AttendanceStatusUseCase
+import com.gurkha.hr.domain.attendance.attendanceStatus.useCase.AttendanceStatusUseCase
 import com.gurkha.hr.leave.model.leave.AttendanceStatusEnum
 import com.gurkha.hr.leave.model.leave.LeaveScreenAction
 import com.gurkha.hr.leave.model.leave.LeaveScreenState

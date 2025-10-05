@@ -1,11 +1,6 @@
 package com.gurkha.hr.home.model
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.EditCalendar
-import androidx.compose.material.icons.filled.LockClock
-import androidx.compose.material.icons.filled.SyncLock
-import androidx.compose.material.icons.filled.TimeToLeave
-import com.gurkha.hr.domain.attendance.model.AttendanceData
+import com.gurkha.hr.domain.attendance.attendanceReport.model.AttendanceData
 import com.gurkha.hr.domain.upComingBirthday.model.UpComingBirthdayData
 import com.gurkha.hr.domain.upComingWorkAnniversaries.model.UpComingWorkAnniversaryData
 import com.gurkha.hr.domain.userDetail.model.UserDetailData

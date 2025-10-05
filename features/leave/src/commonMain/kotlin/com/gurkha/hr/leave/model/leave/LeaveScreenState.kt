@@ -1,6 +1,6 @@
 package com.gurkha.hr.leave.model.leave
 
-import com.gurkha.hr.domain.attendanceStatus.model.AttendanceStatusData
+import com.gurkha.hr.domain.attendance.attendanceStatus.model.AttendanceStatusData
 
 data class LeaveScreenState(
     val pendingTapItem: LeaveTapItem = LeaveTapItem(),

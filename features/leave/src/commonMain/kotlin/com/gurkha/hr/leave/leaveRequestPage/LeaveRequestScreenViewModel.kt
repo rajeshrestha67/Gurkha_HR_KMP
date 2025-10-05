@@ -4,13 +4,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gurkha.hr.components.textField.DateData
 import com.gurkha.hr.domain.form.RequiredValidationUseCase
-import com.gurkha.hr.domain.leaveAssignee.usecase.LeaveAssigneeUseCase
-import com.gurkha.hr.domain.leaveType.usecase.LeaveTypeUseCase
+import com.gurkha.hr.domain.leave.leaveAssignee.usecase.LeaveAssigneeUseCase
+import com.gurkha.hr.domain.leave.leaveType.usecase.LeaveTypeUseCase
 import com.gurkha.hr.leave.model.leave_request.LeaveRequestScreenAction
 import com.gurkha.hr.leave.model.leave_request.LeaveRequestScreenState
 import com.gurkha.hr.networkhelper.onError
 import com.gurkha.hr.networkhelper.onSuccess
-import com.gurkha.model.leave_request.LeaveRequestData
+import com.gurkha.model.leave.leave_request.LeaveRequestData
+import com.gurkha.model.leave.ui.LeaveAssigneeUi
+import com.gurkha.model.leave.ui.LeaveDurationUi
+import com.gurkha.model.leave.ui.LeaveTypeUi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -39,8 +42,6 @@ class LeaveRequestScreenViewModel(
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = LeaveRequestScreenState()
         )
-
-    //startDate: String, endDate: String, leaveDuration: String, leaveType: String, reason: String
     private val _dataChannel = Channel<LeaveRequestData?>()
     val dataChannel = _dataChannel.receiveAsFlow()
 
@@ -53,10 +54,19 @@ class LeaveRequestScreenViewModel(
                             leaveRequestData = safeData,
                             startDate = DateData.fromDisplay(safeData.startDate),
                             endDate = DateData.fromDisplay(safeData.endDate),
-                            leaveDuration = safeData.leaveDuration,
-                            leaveType = safeData.leaveType,
+                            leaveDuration = LeaveDurationUi(
+                                name = safeData.leaveDuration,
+                                value = safeData.leaveDuration
+                            ),
+                            leaveType = LeaveTypeUi(
+                                name = safeData.leaveType,
+                                value = safeData.leaveType
+                            ),
                             reason = safeData.reason,
-                            assignee = safeData.assignee
+                            assignee = LeaveAssigneeUi(
+                                name = safeData.assignee,
+                                value = safeData.assignee
+                            )
                         )
                     }
                 }
@@ -142,10 +152,10 @@ class LeaveRequestScreenViewModel(
     private fun submit() = viewModelScope.launch {
         val startDateError = requiredValidationUseCase(state.value.startDate?.displayValue)
         val endDateError = requiredValidationUseCase(state.value.endDate?.displayValue)
-        val leaveDurationError = requiredValidationUseCase(state.value.leaveDuration)
-        val leaveTypeError = requiredValidationUseCase(state.value.leaveType)
+        val leaveDurationError = requiredValidationUseCase(state.value.leaveDuration?.value)
+        val leaveTypeError = requiredValidationUseCase(state.value.leaveType?.value)
         val reasonError = requiredValidationUseCase(state.value.reason)
-        val assigneeError = requiredValidationUseCase(state.value.assignee)
+        val assigneeError = requiredValidationUseCase(state.value.assignee?.value)
 
         when {
             startDateError != null -> {
@@ -213,10 +223,10 @@ class LeaveRequestScreenViewModel(
                     LeaveRequestData(
                         startDate = state.value.startDate?.displayValue ?: "",
                         endDate = state.value.endDate?.displayValue ?: "",
-                        leaveDuration = state.value.leaveDuration,
-                        leaveType = state.value.leaveType,
+                        leaveDuration = state.value.leaveDuration?.value ?: "",
+                        leaveType = state.value.leaveType?.value ?: "",
                         reason = state.value.reason,
-                        assignee = state.value.assignee
+                        assignee = state.value.assignee?.value ?: ""
                     )
                 )
             }
@@ -233,7 +243,12 @@ class LeaveRequestScreenViewModel(
             _state.update {
                 it.copy(
                     isAssigneeLoading = false,
-                    leaveAssigneeList = data
+                    leaveAssigneeList = data.map { it ->
+                        LeaveAssigneeUi(
+                            name = it.fullName,
+                            value = it.fullName
+                        )
+                    }
                 )
             }
         }.onError {
@@ -255,7 +270,12 @@ class LeaveRequestScreenViewModel(
             _state.update {
                 it.copy(
                     isLeaveTypeLoading = false,
-                    leaveTypeList = data
+                    leaveTypeList = data.map { it ->
+                        LeaveTypeUi(
+                            name = it.typeName,
+                            value = it.typeName
+                        )
+                    }
                 )
             }
         }.onError {

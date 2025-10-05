@@ -33,13 +33,12 @@ import com.gurkha.hr.components.textField.ERPDateTextField
 import com.gurkha.hr.components.textField.FormValidate
 import com.gurkha.hr.components.textField.FutureAndTodayDate
 import com.gurkha.hr.components.textField.RangeSelectableDates
-import com.gurkha.hr.leave.model.leave_request.LeaveDurationList
 import com.gurkha.hr.leave.model.leave_request.LeaveRequestScreenAction
 import com.gurkha.hr.leave.model.leave_request.LeaveRequestScreenState
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.primaryTextColor
-import com.gurkha.model.leave_request.LeaveRequestData
+import com.gurkha.model.leave.leave_request.LeaveRequestData
 import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -148,7 +147,7 @@ fun LeaveRequestScreenForm(
             .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
     ) {
-
+//start date
         ERPDateTextField(
             modifier = Modifier
                 .fillMaxWidth(),
@@ -181,22 +180,21 @@ fun LeaveRequestScreenForm(
                 onAction(LeaveRequestScreenAction.OnEndDateChange(it))
             }
         )
-        //        assignee =
+
+        //        assignee
         DropDownText(
             label = SharedRes.Strings.assignee,
             hint = SharedRes.Strings.select_assignee,
             rules = FormValidate.requiredValidationRules,
             isFetching = state.isAssigneeLoading,
             isFetchingError = state.isAssigneeFetchingError,
-            listOfItems = state.leaveAssigneeList?.map {
-                it.fullName
-            } ?: emptyList(),
-            selectedValue = state.assignee,
+            listOfItems = state.leaveAssigneeList ?: emptyList(),
+            selectedValue = state.assignee?.name ?: "",
             onError = {
             },
             error = state.assigneeError,
             itemClicked = {
-                onAction(LeaveRequestScreenAction.OnAssigneeChange(it))
+                onAction(LeaveRequestScreenAction.OnAssigneeChange(assignee = it))
             },
             onRetry = {
                 onAction(LeaveRequestScreenAction.OnRefetchAssignee)
@@ -209,8 +207,8 @@ fun LeaveRequestScreenForm(
             label = SharedRes.Strings.leave_duration,
             hint = SharedRes.Strings.select_leave_duration,
             rules = FormValidate.requiredValidationRules,
-            listOfItems = LeaveDurationList.map { stringResource(it.title) },
-            selectedValue = state.leaveDuration,
+            listOfItems = state.leaveDurationList,
+            selectedValue = state.leaveDuration?.name ?: "",
             onError = {
             },
             error = state.leaveDurationError,
@@ -225,10 +223,8 @@ fun LeaveRequestScreenForm(
             rules = FormValidate.requiredValidationRules,
             isFetching = state.isLeaveTypeLoading,
             isFetchingError = state.isLeaveTypeFetchingError,
-            listOfItems = state.leaveTypeList?.map {
-                it.typeName
-            } ?: emptyList(),
-            selectedValue = state.leaveType,
+            listOfItems = state.leaveTypeList ?: emptyList(),
+            selectedValue = state.leaveType?.name ?: "",
             onError = {
             },
             error = state.leaveTypeError,
@@ -239,6 +235,7 @@ fun LeaveRequestScreenForm(
                 onAction(LeaveRequestScreenAction.OnRefetchLeaveType)
             }
         )
+
 //        leave reason
         EPRTextField(
             text = state.reason,

@@ -1,14 +1,14 @@
 package com.gurkha.hr.data.leaveRequest
 
-import com.gurkha.hr.domain.leave.repository.LeaveRemoteRepository
+import com.gurkha.hr.domain.leave.leaveRequest.repository.LeaveRemoteRepository
 import com.gurkha.hr.networkhelper.BaseUrl
 import com.gurkha.hr.networkhelper.DataError
 import com.gurkha.hr.networkhelper.ERPResult
 import com.gurkha.hr.networkhelper.EndPoint
 import com.gurkha.hr.networkhelper.get
 import com.gurkha.hr.networkhelper.safeCall
-import com.gurkha.model.leaveAssignee.LeaveAssigneeResponseDto
-import com.gurkha.model.leaveType.LeaveTypeResponseDto
+import com.gurkha.model.leave.leaveAssignee.LeaveAssigneeResponseDto
+import com.gurkha.model.leave.leaveType.LeaveTypeResponseDto
 import io.ktor.client.HttpClient
 
 class KtorLeaveRequestRemoteRepository(
