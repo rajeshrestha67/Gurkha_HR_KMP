@@ -9,20 +9,25 @@ import com.gurkha.hr.chat_room.model.toChatMetaData
 import com.gurkha.hr.chat_room.model.toMessage
 import com.gurkha.hr.domain.chat.mapper.getCurrentDataAndTime
 import com.gurkha.hr.domain.chat.usecase.FetchChatMessageUseCase
+import com.gurkha.hr.network.WebSocketManager
 import com.gurkha.hr.networkhelper.onError
 import com.gurkha.hr.networkhelper.onSuccess
 import com.gurkha.model.chat.ChatUserData
+import com.gurkha.model.chat.SendChatMessage
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
+import org.koin.mp.KoinPlatform.getKoin
 import kotlin.time.ExperimentalTime
 
 class ChatRoomViewModel(
     private val fetchChatMessageUseCase: FetchChatMessageUseCase
 ) : ViewModel() {
+
+    private val webSocketManager = getKoin().get<WebSocketManager>()
 
     private val _state = MutableStateFlow(ChatRoomScreenState())
 
@@ -33,6 +38,13 @@ class ChatRoomViewModel(
             initialValue = ChatRoomScreenState()
         )
 
+    override fun onCleared() {
+        super.onCleared()
+        viewModelScope.launch {
+            webSocketManager.disconnect()
+        }
+    }
+
     fun onAction(action: ChatRoomScreenAction) {
         when (action) {
 
@@ -41,6 +53,7 @@ class ChatRoomViewModel(
                 _state.update {
                     it.copy(chatUserData = chatUserData)
                 }
+                initSocket(chatUserData = chatUserData)
                 fetchChatMessage(chatUserData = chatUserData)
             }
 
@@ -60,6 +73,14 @@ class ChatRoomViewModel(
 
     @OptIn(ExperimentalTime::class)
     private fun sendMessage() = viewModelScope.launch {
+        val message = state.value.message
+        webSocketManager.sendMessage(
+            SendChatMessage(
+                chatId = state.value.chatUserData?.chatId ?: "",
+                message = message,
+                fromUser = "Shreejesh Pathak"
+            )
+        )
         val messages = state.value.messages
         val nowPair = getCurrentDataAndTime()
         val chatMessage = ChatMessage(
@@ -83,7 +104,16 @@ class ChatRoomViewModel(
         }
     }
 
+    private fun initSocket(chatUserData: ChatUserData) = viewModelScope.launch {
+        webSocketManager.emitJoinRoom(
+            chatId = chatUserData.chatId,
+            fromUser = chatUserData.employeeName
+        )
+        webSocketManager.connect(chatUserData.employeeName)
+    }
+
     private fun fetchChatMessage(chatUserData: ChatUserData) = viewModelScope.launch {
+
         _state.update {
             it.copy(isLoading = true)
         }

@@ -7,6 +7,7 @@ import com.gurkha.hr.datastore.user_data.repository.UserDataRepository
 import com.gurkha.hr.domain.chat.repository.ChatRemoteRepository
 import com.gurkha.hr.domain.chat.usecase.ChatListUseCase
 import com.gurkha.hr.domain.chat.usecase.FetchChatMessageUseCase
+import com.gurkha.hr.network.WebSocketManager
 import io.ktor.client.HttpClient
 import org.koin.android.annotation.KoinViewModel
 import org.koin.core.annotation.Factory
@@ -29,6 +30,10 @@ class ChatModule {
         chatRemoteRepository = chatRemoteRepository,
         userDataRepository = userDataRepository
     )
+
+    @Factory
+    fun getWebsocket(httpClient: HttpClient): WebSocketManager =
+        WebSocketManager(client = httpClient)
 
     @KoinViewModel
     fun getChatListViewModel(chatListUseCase: ChatListUseCase) = ChatListViewModel(chatListUseCase)
