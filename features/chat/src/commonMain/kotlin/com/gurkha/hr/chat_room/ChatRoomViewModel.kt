@@ -14,6 +14,7 @@ import com.gurkha.hr.domain.chat.usecase.FetchChatMessageUseCase
 import com.gurkha.hr.domain.chat.usecase.JoinRoomUseCase
 import com.gurkha.hr.domain.chat.usecase.ObserveSocketEventsUseCase
 import com.gurkha.hr.domain.chat.usecase.SendMessageUseCase
+import com.gurkha.hr.domain.chat.usecase.SendTypingUseCase
 import com.gurkha.hr.networkhelper.onError
 import com.gurkha.hr.networkhelper.onSuccess
 import com.gurkha.model.chat.ChatUserData
@@ -30,6 +31,7 @@ class ChatRoomViewModel(
     private val connectSocketUseCase: ConnectSocketUseCase,
     private val joinRoomUseCase: JoinRoomUseCase,
     private val sendMessageUseCase: SendMessageUseCase,
+    private val sendTypingUseCase: SendTypingUseCase,
     private val observeSocketEventsUseCase: ObserveSocketEventsUseCase,
     private val disconnectSocketUseCase: DisconnectSocketUseCase
 ) : ViewModel() {
@@ -85,7 +87,7 @@ class ChatRoomViewModel(
                 fetchChatMessage(chatUserData = chatUserData)
             }
 
-            is ChatRoomScreenAction.SearchQueryChanged -> {
+            is ChatRoomScreenAction.MessageChanged -> {
                 _state.update {
                     it.copy(
                         message = action.message
@@ -93,15 +95,25 @@ class ChatRoomViewModel(
                 }
             }
 
+            is ChatRoomScreenAction.OnTyping -> {
+                sendTyping(isTyping = action.isTyping)
+            }
+
             is ChatRoomScreenAction.Send -> {
-                sendMessage()
+                if (state.value.message.isNotEmpty()) {
+                    sendMessage()
+                }
             }
         }
     }
 
+    private fun sendTyping(isTyping: Boolean) = viewModelScope.launch {
+        sendTypingUseCase(isTyping = isTyping, chatId = state.value.chatUserData?.chatId ?: "")
+    }
+
     @OptIn(ExperimentalTime::class)
     private fun sendMessage() = viewModelScope.launch {
-
+        sendTyping(isTyping = false)
         val message = state.value.message
         val chatMessage = createChatMessage(
             fromMe = true,

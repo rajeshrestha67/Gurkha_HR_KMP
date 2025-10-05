@@ -43,6 +43,10 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -71,6 +75,9 @@ import com.gurkha.hr.res.theme.outGoingBubbleColor
 import com.gurkha.hr.res.theme.primaryTextColor
 import com.gurkha.hr.res.theme.secondaryTextColor
 import com.gurkha.model.chat.ChatUserData
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -135,7 +142,8 @@ private fun ChatBottomBar(
     message: String,
     onAction: (ChatRoomScreenAction) -> Unit
 ) {
-
+    var typingJob by remember { mutableStateOf<Job?>(null) }
+    val coroutineScope = rememberCoroutineScope()
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -153,7 +161,13 @@ private fun ChatBottomBar(
             text = message,
             hint = stringResource(resource = SharedRes.Strings.type_here),
             onValueChange = {
-                onAction(ChatRoomScreenAction.SearchQueryChanged(message = it))
+                onAction(ChatRoomScreenAction.MessageChanged(message = it))
+                typingJob?.cancel()
+                onAction(ChatRoomScreenAction.OnTyping(isTyping = it.isNotEmpty()))
+                typingJob = coroutineScope.launch {
+                    delay(600)
+                    onAction(ChatRoomScreenAction.OnTyping(isTyping = false))
+                }
             },
             onErrorStateChange = {},
             imeAction = ImeAction.Send,
@@ -161,9 +175,7 @@ private fun ChatBottomBar(
             unfocusedBorderColor = Color.Transparent,
             keyboardActions = KeyboardActions(
                 onSend = {
-                    if (message.isNotEmpty()) {
-                        onAction(ChatRoomScreenAction.Send)
-                    }
+                    onAction(ChatRoomScreenAction.Send)
                 }
             )
         )
@@ -273,12 +285,7 @@ private fun ChatRoomLazyColumn(
     LaunchedEffect(state.messages) {
         listState.animateScrollToItem(0)
     }
-//    LaunchedEffect(state.isTyping) {
-//        println("🔥 UI recomposed, typing = ${state.isTyping}")
-//        if (state.isTyping) {
-//            listState.animateScrollToItem(0)
-//        }
-//    }
+
     Column(
         modifier = modifier
     ) {

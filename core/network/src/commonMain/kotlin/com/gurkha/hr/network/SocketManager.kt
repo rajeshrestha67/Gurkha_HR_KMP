@@ -114,6 +114,14 @@ class SocketManager {
         })
     }
 
+    fun sendTyping(isTyping: Boolean, chatId: String, fromUser: String) {
+        socket?.emit(if (isTyping) TYPING else STOP_TYPING, buildJsonObject {
+            put(CHAT_ID, chatId)
+            put(FROM_USER, fromUser)
+        })
+    }
+
+
     fun disconnect() {
         socket?.close()
         socket = null

@@ -20,6 +20,10 @@ class IOChatSocketRepository(
     override fun sendMessage(chatId: String, fromUser: String, message: String) =
         socketManager.sendMessage(chatId, fromUser, message)
 
+    override fun sendTyping(isTyping: Boolean, chatId: String, fromUser: String) {
+        socketManager.sendTyping(isTyping, chatId, fromUser)
+    }
+
     override fun disconnect() {
         socketManager.disconnect()
     }
