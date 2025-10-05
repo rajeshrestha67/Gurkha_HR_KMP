@@ -8,6 +8,7 @@ import com.gurkha.hr.domain.leaveAssignee.usecase.LeaveAssigneeUseCase
 import com.gurkha.hr.domain.leaveType.usecase.LeaveTypeUseCase
 import com.gurkha.hr.leave.model.leave_request.LeaveRequestScreenAction
 import com.gurkha.hr.leave.model.leave_request.LeaveRequestScreenState
+import com.gurkha.hr.networkhelper.onError
 import com.gurkha.hr.networkhelper.onSuccess
 import com.gurkha.model.leave_request.LeaveRequestData
 import kotlinx.coroutines.channels.Channel
@@ -117,6 +118,24 @@ class LeaveRequestScreenViewModel(
             LeaveRequestScreenAction.Submit -> {
                 submit()
             }
+
+            LeaveRequestScreenAction.OnRefetchAssignee -> {
+                _state.update {
+                    it.copy(
+                        isAssigneeFetchingError = false
+                    )
+                }
+                fetchAssignee()
+            }
+
+            LeaveRequestScreenAction.OnRefetchLeaveType -> {
+                _state.update {
+                    it.copy(
+                        isLeaveTypeFetchingError = false
+                    )
+                }
+                fetchLeaveType()
+            }
         }
     }
 
@@ -178,7 +197,6 @@ class LeaveRequestScreenViewModel(
             }
 
 
-
             else -> {
                 _state.update {
                     it.copy(
@@ -218,6 +236,12 @@ class LeaveRequestScreenViewModel(
                     leaveAssigneeList = data
                 )
             }
+        }.onError {
+            _state.update {
+                it.copy(
+                    isAssigneeFetchingError = true
+                )
+            }
         }
     }
 
@@ -232,6 +256,12 @@ class LeaveRequestScreenViewModel(
                 it.copy(
                     isLeaveTypeLoading = false,
                     leaveTypeList = data
+                )
+            }
+        }.onError {
+            _state.update {
+                it.copy(
+                    isLeaveTypeFetchingError = true
                 )
             }
         }

@@ -36,7 +36,6 @@ import com.gurkha.hr.components.textField.RangeSelectableDates
 import com.gurkha.hr.leave.model.leave_request.LeaveDurationList
 import com.gurkha.hr.leave.model.leave_request.LeaveRequestScreenAction
 import com.gurkha.hr.leave.model.leave_request.LeaveRequestScreenState
-import com.gurkha.hr.leave.model.leave_request.LeaveTypeList
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.primaryTextColor
@@ -105,7 +104,7 @@ fun LeaveRequestPageContent(
                     IconButton(
                         onClick = onBackClicked,
                         content = {
-                            Icon(Icons.Filled.ArrowBack, contentDescription = "")
+                            Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "")
                         }
                     )
                 },
@@ -159,7 +158,6 @@ fun LeaveRequestScreenForm(
             hint = stringResource(SharedRes.Strings.selectStartDate),
             error = state.startDateError,
             onErrorStateChange = {
-                //onAction(LeaveRequestScreenAction.OnStartDateError(it))
             },
             selectableDates = FutureAndTodayDate,
             onDateSelected = {
@@ -175,7 +173,6 @@ fun LeaveRequestScreenForm(
             rules = FormValidate.requiredValidationRules,
             error = state.endDateError,
             onErrorStateChange = {
-                //onAction(LeaveRequestScreenAction.OnEndDateError(it))
             },
             selectableDates = RangeSelectableDates(
                 minDateMillis = state.startDate?.actualValue?.plus(1.days.toLong(DurationUnit.DAYS))
@@ -189,16 +186,20 @@ fun LeaveRequestScreenForm(
             label = SharedRes.Strings.assignee,
             hint = SharedRes.Strings.select_assignee,
             rules = FormValidate.requiredValidationRules,
+            isFetching = state.isAssigneeLoading,
+            isFetchingError = state.isAssigneeFetchingError,
             listOfItems = state.leaveAssigneeList?.map {
                 it.fullName
             } ?: emptyList(),
             selectedValue = state.assignee,
             onError = {
-                //onAction(LeaveRequestScreenAction.OnLeaveTypeError(it))
             },
             error = state.assigneeError,
             itemClicked = {
                 onAction(LeaveRequestScreenAction.OnAssigneeChange(it))
+            },
+            onRetry = {
+                onAction(LeaveRequestScreenAction.OnRefetchAssignee)
             }
         )
 
@@ -211,7 +212,6 @@ fun LeaveRequestScreenForm(
             listOfItems = LeaveDurationList.map { stringResource(it.title) },
             selectedValue = state.leaveDuration,
             onError = {
-                // onAction(LeaveRequestScreenAction.OnLeaveDurationError(it))
             },
             error = state.leaveDurationError,
             itemClicked = {
@@ -223,16 +223,20 @@ fun LeaveRequestScreenForm(
             label = SharedRes.Strings.leaveType,
             hint = SharedRes.Strings.selectLeaveType,
             rules = FormValidate.requiredValidationRules,
+            isFetching = state.isLeaveTypeLoading,
+            isFetchingError = state.isLeaveTypeFetchingError,
             listOfItems = state.leaveTypeList?.map {
                 it.typeName
             } ?: emptyList(),
             selectedValue = state.leaveType,
             onError = {
-                //onAction(LeaveRequestScreenAction.OnLeaveTypeError(it))
             },
             error = state.leaveTypeError,
             itemClicked = {
                 onAction(LeaveRequestScreenAction.OnLeaveTypeChange(it))
+            },
+            onRetry = {
+                onAction(LeaveRequestScreenAction.OnRefetchLeaveType)
             }
         )
 //        leave reason

@@ -14,6 +14,9 @@ sealed interface LeaveRequestScreenAction {
     data class OnReasonError(val error: StringResource?) : LeaveRequestScreenAction
     data class OnAssigneeError(val error: StringResource?) : LeaveRequestScreenAction
 
+    data object OnRefetchAssignee : LeaveRequestScreenAction
+    data object OnRefetchLeaveType : LeaveRequestScreenAction
+
     data class UpdateLeaveRequestData(val data: LeaveRequestData?) : LeaveRequestScreenAction
     data object Submit : LeaveRequestScreenAction
 }

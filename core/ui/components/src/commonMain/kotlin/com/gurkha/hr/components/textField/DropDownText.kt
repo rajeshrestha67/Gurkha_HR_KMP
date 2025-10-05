@@ -2,13 +2,17 @@ package com.gurkha.hr.components.textField
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Replay
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,6 +23,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.disabledTextFieldBorderColor
 import com.gurkha.hr.res.theme.primaryTextColor
 import org.jetbrains.compose.resources.StringResource
@@ -36,7 +41,10 @@ fun <T> DropDownText(
     onError: (StringResource?) -> Unit,
     listOfItems: List<T>,
     rules: List<Rule> = listOf(),
-    itemClicked: (T) -> Unit
+    itemClicked: (T) -> Unit,
+    isFetching: Boolean = false,
+    isFetchingError: Boolean = false,
+    onRetry: (() -> Unit)? = null
 ) {
 
     var expandedState by remember { mutableStateOf(false) }
@@ -58,21 +66,43 @@ fun <T> DropDownText(
                 hint
             ),
             trailingIcon = {
-                Icon(
-                    imageVector = Icons.Filled.ArrowDropDown,
-                    contentDescription = "drop down",
-                    tint = if (enabled) MaterialTheme.colorScheme.primaryTextColor else MaterialTheme.colorScheme.disabledTextFieldBorderColor
-                )
+                if (isFetchingError) {
+                    IconButton(
+                        onClick = {
+                            onRetry?.invoke()
+                        },
+                        modifier = Modifier.size(MaterialTheme.dimens.medium1),
+                        content = {
+                            Icon(
+                                imageVector = Icons.Filled.Replay,
+                                contentDescription = "retry",
+                                tint = MaterialTheme.colorScheme.error
+                            )
+                        }
+//
+                    )
+                } else if (isFetching) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(MaterialTheme.dimens.medium1),
+                        strokeWidth = MaterialTheme.dimens.extraSmall
+                    )
+                } else {
+                    Icon(
+                        imageVector = Icons.Filled.ArrowDropDown,
+                        contentDescription = "drop down",
+                        tint = if (enabled) MaterialTheme.colorScheme.primaryTextColor else MaterialTheme.colorScheme.disabledTextFieldBorderColor
+                    )
+                }
+
             },
             onErrorStateChange = { err ->
                 onError(err)
-
             },
             enabled = enabled,
             error = error,
             rules = rules,
             onDropDown = {
-                expandedState = true
+                if (!isFetchingError && !isFetching) expandedState = true else false
             }
         )
 
