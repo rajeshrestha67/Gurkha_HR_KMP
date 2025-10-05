@@ -32,9 +32,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -43,11 +40,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.gurkha.hr.components.PlatformMessage
 import com.gurkha.hr.components.shimmer.ShimmerView
-import com.gurkha.hr.domain.attendance.attendanceStatus.model.AttendanceStatusData
-import com.gurkha.hr.leave.model.leave.AttendanceStatusEnum
+import com.gurkha.hr.domain.leave.leaveReport.model.LeaveReportData
 import com.gurkha.hr.leave.model.leave.LeaveItem
 import com.gurkha.hr.leave.model.leave.LeaveScreenAction
 import com.gurkha.hr.leave.model.leave.LeaveScreenState
+import com.gurkha.hr.leave.model.leave.LeaveStatusEnum
 import com.gurkha.hr.leave.model.leave.leaveItemsList
 import com.gurkha.hr.leave.model.leave.tabItemsList
 import com.gurkha.hr.res.SharedRes
@@ -56,6 +53,7 @@ import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.highLightColor
 import com.gurkha.hr.res.theme.primaryTextColor
 import com.gurkha.hr.res.theme.veryLightGray
+import kotlinx.datetime.toLocalDate
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
@@ -146,7 +144,7 @@ fun LeaveScreenContent(
 
 //        show the tabs for the attendance status
         leaveStatusTab(
-            selectedItem = state.attendanceStatus,
+            selectedItem = state.leaveStatus,
             onAction = onAction
         )
 
@@ -216,7 +214,7 @@ fun LeaveBox(
 }
 
 fun LazyListScope.leaveStatusTab(
-    selectedItem: AttendanceStatusEnum = AttendanceStatusEnum.PENDING,
+    selectedItem: LeaveStatusEnum = LeaveStatusEnum.PENDING,
     onAction: (LeaveScreenAction) -> Unit
 ) {
     stickyHeader(key = "leaveStatusTab") {
@@ -304,7 +302,7 @@ fun LazyListScope.attendanceResult(
 
 @Composable
 fun ResultBox(
-    item: AttendanceStatusData
+    item: LeaveReportData
 ) {
     Column(
         modifier = Modifier
@@ -329,7 +327,7 @@ fun ResultBox(
                 )
             )
             Text(
-                text = item.requestedDate,
+                text = item.requestedDate.split("T").first(),
                 style = MaterialTheme.typography.titleSmall.copy(
                     color = MaterialTheme.colorScheme.primaryTextColor
                 )
@@ -353,7 +351,7 @@ fun ResultBox(
                     )
                 )
                 Text(
-                    text = "3 days",
+                    text = item.totalDays.toString(),
                     style = MaterialTheme.typography.titleSmall.copy(
                         color = MaterialTheme.colorScheme.primaryTextColor
                     )
@@ -362,13 +360,13 @@ fun ResultBox(
 
             Column {
                 Text(
-                    text = "Leave Balance",
+                    text = "Approver",
                     style = MaterialTheme.typography.titleSmall.copy(
                         color = MaterialTheme.colorScheme.darkPrimaryTextColor
                     )
                 )
                 Text(
-                    text = "16", style = MaterialTheme.typography.titleSmall.copy(
+                    text = item.assigneeName, style = MaterialTheme.typography.titleSmall.copy(
                         color = MaterialTheme.colorScheme.primaryTextColor
                     )
                 )
@@ -376,13 +374,13 @@ fun ResultBox(
 
             Column {
                 Text(
-                    text = "Approved By",
+                    text = "Leave Status",
                     style = MaterialTheme.typography.titleSmall.copy(
                         color = MaterialTheme.colorScheme.darkPrimaryTextColor
                     )
                 )
                 Text(
-                    text = item.assignedTo,
+                    text = item.leaveStatus,
                     style = MaterialTheme.typography.titleSmall.copy(
                         color = MaterialTheme.colorScheme.primaryTextColor
                     )

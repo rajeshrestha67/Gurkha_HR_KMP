@@ -5,9 +5,9 @@ import androidx.lifecycle.viewModelScope
 import com.gurkha.hr.domain.attendance.attendanceStatus.useCase.AttendanceStatusUseCase
 import com.gurkha.hr.domain.leave.leaveReport.useCase.LeaveReportUseCase
 import com.gurkha.hr.domain.leave.leaveRequest.usecase.LeaveRequestUseCase
-import com.gurkha.hr.leave.model.leave.AttendanceStatusEnum
 import com.gurkha.hr.leave.model.leave.LeaveScreenAction
 import com.gurkha.hr.leave.model.leave.LeaveScreenState
+import com.gurkha.hr.leave.model.leave.LeaveStatusEnum
 import com.gurkha.hr.networkhelper.onError
 import com.gurkha.hr.networkhelper.onSuccess
 import com.gurkha.hr.networkhelper.toErrorMessage
@@ -39,11 +39,6 @@ class LeaveScreenViewModel(
 
 
     val state = _state
-        .onStart {
-            fetchLeaveReport(
-                leaveStatus = "PENDING"
-            )
-        }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
@@ -52,10 +47,8 @@ class LeaveScreenViewModel(
 
     //fetch for the pending in the starting
     init {
-        fetchAttendanceStatus(
-            attendanceStatus = AttendanceStatusEnum.PENDING,
-            employeeName = "",
-            isSelf = "Y"
+        fetchLeaveReport(
+            leaveStatus = LeaveStatusEnum.PENDING,
         )
     }
 
@@ -64,19 +57,17 @@ class LeaveScreenViewModel(
             is LeaveScreenAction.OnStatusChange -> {
                 _state.update {
                     it.copy(
-                        attendanceStatus = action.status,
+                        leaveStatus = action.status,
                         currentTapItem = when (action.status) {
-                            AttendanceStatusEnum.PENDING -> it.pendingTapItem
-                            AttendanceStatusEnum.APPROVED -> it.approvedTapItem
+                            LeaveStatusEnum.PENDING -> it.pendingTapItem
+                            LeaveStatusEnum.APPROVED -> it.approvedTapItem
                             else -> it.cancelTapItem
                         }
                     )
                 }
                 if (state.value.currentTapItem.result.isEmpty()) {
-                    fetchAttendanceStatus(
-                        attendanceStatus = state.value.attendanceStatus,
-                        employeeName = "",
-                        isSelf = "Y"
+                    fetchLeaveReport(
+                        leaveStatus = state.value.leaveStatus,
                     )
                 }
             }
@@ -120,21 +111,21 @@ class LeaveScreenViewModel(
         }
     }
 
-    fun fetchAttendanceStatus(
-        attendanceStatus: AttendanceStatusEnum,
-        employeeName: String,
-        isSelf: String
+
+//    fetch leave report
+    fun fetchLeaveReport(
+        leaveStatus: LeaveStatusEnum,
     ) = viewModelScope.launch {
 
         _state.update {
-            when (attendanceStatus) {
-                AttendanceStatusEnum.PENDING -> {
+            when (leaveStatus) {
+                LeaveStatusEnum.PENDING -> {
                     it.copy(
                         pendingTapItem = it.pendingTapItem.copy(isLoading = true)
                     )
                 }
 
-                AttendanceStatusEnum.APPROVED -> {
+                LeaveStatusEnum.APPROVED -> {
                     it.copy(
                         approvedTapItem = it.approvedTapItem.copy(isLoading = true)
                     )
@@ -148,13 +139,11 @@ class LeaveScreenViewModel(
             }
 
         }
-        attendanceStatusUseCase(
-            attendanceStatus = attendanceStatus.value,
-            employeeName = employeeName,
-            isSelf = isSelf
+        leaveReportUseCase(
+            leaveStatus = leaveStatus.value,
         ).onSuccess { data ->
-            when (attendanceStatus) {
-                AttendanceStatusEnum.PENDING -> {
+            when (leaveStatus) {
+                LeaveStatusEnum.PENDING -> {
                     _state.update {
                         it.copy(
                             pendingTapItem = it.pendingTapItem.copy(
@@ -165,7 +154,7 @@ class LeaveScreenViewModel(
                     }
                 }
 
-                AttendanceStatusEnum.APPROVED -> {
+                LeaveStatusEnum.APPROVED -> {
                     _state.update {
                         it.copy(
                             approvedTapItem = it.approvedTapItem.copy(
@@ -189,9 +178,9 @@ class LeaveScreenViewModel(
             }
             _state.update {
                 it.copy(
-                    currentTapItem = when (attendanceStatus) {
-                        AttendanceStatusEnum.PENDING -> it.pendingTapItem
-                        AttendanceStatusEnum.APPROVED -> it.approvedTapItem
+                    currentTapItem = when (leaveStatus) {
+                        LeaveStatusEnum.PENDING -> it.pendingTapItem
+                        LeaveStatusEnum.APPROVED -> it.approvedTapItem
                         else -> it.cancelTapItem
                     }
                 )
@@ -217,12 +206,19 @@ class LeaveScreenViewModel(
             leaveTypeId = leaveTypeId,
             reason = data.reason,
             assigneeId = assigneeId
-        ).onSuccess {
+        ).onSuccess {data ->
             _state.update {
                 it.copy(
-                    isRequestingLeave = false
+                    isRequestingLeave = false,
                 )
             }
+
+//            refetch the pending data
+            fetchLeaveReport(
+                leaveStatus = LeaveStatusEnum.PENDING
+            )
+
+//            temporary use
             _successChannel.send("Leave Request Successfully")
         }.onError {error->
             _state.update {
@@ -234,15 +230,5 @@ class LeaveScreenViewModel(
         }
     }
 
-    private fun fetchLeaveReport(
-        leaveStatus : String
-    ) = viewModelScope.launch {
-        leaveReportUseCase(
-            leaveStatus = leaveStatus
-        ).onSuccess {
-            println("data_is $it")
-        }
-
-    }
 }
 
