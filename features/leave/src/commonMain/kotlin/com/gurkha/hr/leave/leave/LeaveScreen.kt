@@ -57,7 +57,6 @@ import com.gurkha.hr.leave.model.leave.LeaveItem
 import com.gurkha.hr.leave.model.leave.LeaveScreenAction
 import com.gurkha.hr.leave.model.leave.LeaveScreenState
 import com.gurkha.hr.leave.model.leave.LeaveStatusEnum
-import com.gurkha.hr.leave.model.leave.leaveItemsList
 import com.gurkha.hr.leave.model.leave.tabItemsList
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.darkPrimaryTextColor
@@ -211,7 +210,9 @@ fun LeaveScreenContent(
         ),
     ) {
 //        show the 4 leave options
-        leaveOptions()
+        leaveOptions(
+            state = state
+        )
 
 //        show the tabs for the attendance status
         leaveStatusTab(
@@ -225,8 +226,8 @@ fun LeaveScreenContent(
 }
 
 
-fun LazyListScope.leaveOptions(itemsPerRow: Int = 2) {
-    leaveItemsList.chunked(itemsPerRow).forEach { rowItems ->
+fun LazyListScope.leaveOptions(itemsPerRow: Int = 2, state: LeaveScreenState) {
+   state.leaveItemsList.chunked(itemsPerRow).forEach { rowItems ->
         item {
             Row(
                 modifier = Modifier
