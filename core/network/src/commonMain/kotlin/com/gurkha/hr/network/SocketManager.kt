@@ -1,5 +1,6 @@
 package com.gurkha.hr.network
 
+import com.gurkha.hr.logger.AppLogger
 import com.gurkha.model.chat.Content
 import com.piasy.kmp.socketio.socketio.IO
 import com.piasy.kmp.socketio.socketio.Socket
@@ -53,6 +54,7 @@ class SocketManager {
         }
         IO.socket(SOCKET_URL, opts) { socket ->
             socket.on(Socket.EVENT_CONNECT) {
+                AppLogger.i(TAG, "socket connected")
                 this.socket = socket
                 _isConnected.update {
                     true
@@ -62,12 +64,14 @@ class SocketManager {
                 }
             }
             socket.on(Socket.EVENT_DISCONNECT) {
+                AppLogger.i(TAG, "socket disconnected")
                 this.socket = null
                 _isConnected.update {
                     false
                 }
             }
             socket.on(Socket.EVENT_CONNECT_ERROR) {
+                AppLogger.i(TAG, "socket connection error")
                 this.socket = null
                 _isConnected.update {
                     it
@@ -79,6 +83,7 @@ class SocketManager {
                     if (arg is JsonObject) {
                         val json = Json { ignoreUnknownKeys = true }
                         val content = json.decodeFromString<Content>(string = arg.toString())
+                        AppLogger.i(TAG, "socket new message $arg")
                         scope.launch {
                             _onContent.emit(content)
                         }
@@ -86,13 +91,15 @@ class SocketManager {
                 }
             }
             socket.on("$TYPING:$chatId") {
+                AppLogger.i(TAG, "socket typing")
                 scope.launch {
                     _onTyping.emit(Unit)
                 }
 
             }
-            
+
             socket.on("$STOP_TYPING:$chatId") {
+                AppLogger.i(TAG, "socket stop typing")
                 scope.launch {
                     _onTypingStop.emit(Unit)
                 }
@@ -103,6 +110,7 @@ class SocketManager {
 
 
     fun joinRoom(chatId: String, fromUser: String, initiatorId: String) {
+        AppLogger.i(TAG, "socket room join")
         socket?.emit(JOIN_ROOM, buildJsonObject {
             put(CHAT_ID, chatId)
             put(FROM_USER, fromUser)
@@ -111,6 +119,7 @@ class SocketManager {
     }
 
     fun sendMessage(chatId: String, fromUser: String, message: String) {
+        AppLogger.i(TAG, "socket send message")
         socket?.emit(PRIVATE_MESSAGE, buildJsonObject {
             put(CHAT_ID, chatId)
             put(FROM_USER, fromUser)
@@ -120,6 +129,7 @@ class SocketManager {
 
 
     fun sendStartTyping(chatId: String, fromUser: String) {
+        AppLogger.i(TAG, "socket send start typing")
         socket?.emit(TYPING, buildJsonObject {
             put(CHAT_ID, chatId)
             put(FROM_USER, fromUser)
@@ -127,6 +137,7 @@ class SocketManager {
     }
 
     fun sendStopTyping(chatId: String, fromUser: String) {
+        AppLogger.i(TAG, "socket send stop typing")
         socket?.emit(STOP_TYPING, buildJsonObject {
             put(CHAT_ID, chatId)
             put(FROM_USER, fromUser)
@@ -135,6 +146,7 @@ class SocketManager {
 
 
     fun disconnect() {
+        AppLogger.i(TAG, "socket closed")
         socket?.close()
         scope.cancel()
         socket = null
@@ -159,6 +171,7 @@ class SocketManager {
         private const val STOP_TYPING = "stopTyping"
         private val TRANSPORTS = listOf("websocket")
 
+        private const val TAG = "SocketManager"
 
     }
 }

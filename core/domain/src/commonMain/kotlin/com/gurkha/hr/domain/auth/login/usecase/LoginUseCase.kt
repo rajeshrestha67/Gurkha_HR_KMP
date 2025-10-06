@@ -7,10 +7,10 @@ import com.gurkha.hr.datastore.user_data.repository.UserDataRepository
 import com.gurkha.hr.domain.auth.login.mapper.toData
 import com.gurkha.hr.domain.auth.login.model.LoginData
 import com.gurkha.hr.domain.auth.login.repository.UserRemoteRepository
-import com.gurkha.hr.networkhelper.DataError
 import com.gurkha.hr.networkhelper.ERPResult
 import com.gurkha.hr.networkhelper.map
 import com.gurkha.hr.networkhelper.onSuccess
+import com.gurkha.model.network.DataError
 import kotlinx.coroutines.flow.firstOrNull
 
 class LoginUseCase(
@@ -25,7 +25,7 @@ class LoginUseCase(
         return userRemoteRepository.login(username, password).map {
             it.toData()
         }.onSuccess { data ->
-            
+
             val token = tokenRepository.token.firstOrNull() ?: Token()
             tokenRepository.saveToken(token.copy(data.token))
 

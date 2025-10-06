@@ -1,5 +1,6 @@
 package com.gurkha.hr.networkhelper
 
+import com.gurkha.model.network.DataError
 import io.ktor.client.network.sockets.SocketTimeoutException
 import kotlinx.io.IOException
 

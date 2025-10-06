@@ -3,9 +3,9 @@ package com.gurkha.hr.domain.attendanceStatus.useCase
 import com.gurkha.hr.domain.attendanceStatus.mapper.toData
 import com.gurkha.hr.domain.attendanceStatus.model.AttendanceStatusData
 import com.gurkha.hr.domain.attendanceStatus.repository.AttendanceStatusRemoteRepository
-import com.gurkha.hr.networkhelper.DataError
 import com.gurkha.hr.networkhelper.ERPResult
 import com.gurkha.hr.networkhelper.map
+import com.gurkha.model.network.DataError
 
 class AttendanceStatusUseCase(
     private val attendanceStatusRemoteRepository: AttendanceStatusRemoteRepository

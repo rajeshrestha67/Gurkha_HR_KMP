@@ -65,7 +65,7 @@ kotlin {
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.okio)
                 implementation(libs.kotlinx.coroutine)
-                implementation(projects.core.networkHelper)
+                implementation(projects.core.model)
             }
         }
 

@@ -3,9 +3,9 @@ package com.gurkha.hr.domain.chat.usecase
 import com.gurkha.hr.domain.chat.mapper.toChatItem
 import com.gurkha.hr.domain.chat.model.ChatItem
 import com.gurkha.hr.domain.chat.repository.ChatRemoteRepository
-import com.gurkha.hr.networkhelper.DataError
 import com.gurkha.hr.networkhelper.ERPResult
 import com.gurkha.hr.networkhelper.map
+import com.gurkha.model.network.DataError
 
 class ChatListUseCase(
     private val chatRemoteRepository: ChatRemoteRepository

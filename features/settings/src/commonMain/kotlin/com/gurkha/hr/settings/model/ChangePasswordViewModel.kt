@@ -6,8 +6,8 @@ import com.gurkha.hr.domain.changePassword.usecase.ChangePasswordUseCase
 import com.gurkha.hr.domain.form.PasswordValidateUseCase
 import com.gurkha.hr.networkhelper.onError
 import com.gurkha.hr.networkhelper.onSuccess
-import com.gurkha.hr.networkhelper.toErrorMessage
 import com.gurkha.hr.res.SharedRes
+import com.gurkha.model.network.toErrorMessage
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

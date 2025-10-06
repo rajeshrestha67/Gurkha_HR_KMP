@@ -1,6 +1,7 @@
 package com.gurkha.hr.networkhelper
 
 
+import com.gurkha.model.network.DataError
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 

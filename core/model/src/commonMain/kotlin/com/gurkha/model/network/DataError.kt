@@ -1,4 +1,4 @@
-package com.gurkha.hr.networkhelper
+package com.gurkha.model.network
 
 
 sealed interface DataError : ERPError {

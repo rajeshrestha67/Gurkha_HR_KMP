@@ -1,6 +1,6 @@
 package com.gurkha.hr.logger
 
-import com.gurkha.hr.networkhelper.DataError
+import com.gurkha.model.network.DataError
 
 interface Logger {
     fun d(tag: String, message: String)

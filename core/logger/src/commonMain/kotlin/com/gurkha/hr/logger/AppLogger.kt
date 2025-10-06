@@ -1,8 +1,9 @@
 package com.gurkha.hr.logger
 
 import com.gurkha.hr.logger.remote.RemoteLogger
-import com.gurkha.hr.networkhelper.DataError
-import com.gurkha.hr.networkhelper.toException
+import com.gurkha.model.network.DataError
+import com.gurkha.model.network.toException
+
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -31,6 +32,8 @@ object AppLogger : Logger {
 
     override fun d(tag: String, message: String) = log("DEBUG", tag, message)
     override fun i(tag: String, message: String) = log("INFO", tag, message)
+
+
     override fun w(tag: String, message: String, error: DataError?) =
         log("WARN", tag, message, error)
 

@@ -1,5 +1,7 @@
 package com.gurkha.hr.networkhelper
 
+import com.gurkha.model.network.ERPError
+
 
 public sealed interface ERPResult<out D, out E : ERPError> {
     data class Success<out D>(val data: D) : ERPResult<D, Nothing>
