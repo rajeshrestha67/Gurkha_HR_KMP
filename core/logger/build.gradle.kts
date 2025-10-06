@@ -2,10 +2,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.android.kotlin.multiplatform.library)
     alias(libs.plugins.android.lint)
-//    alias(libs.plugins.io.kotest)
-    alias(libs.plugins.ksp)
-    alias(libs.plugins.composeCompiler)
-    alias(libs.plugins.composeMultiplatform)
+    alias(libs.plugins.jetbrains.kotlin.serialization)
 }
 
 kotlin {
@@ -14,7 +11,7 @@ kotlin {
     // which platforms this KMP module supports.
     // See: https://kotlinlang.org/docs/multiplatform-discover-project.html#targets
     androidLibrary {
-        namespace = "com.gurkha.hr.domain"
+        namespace = "com.gurkha.hr.logger"
         compileSdk = 36
         minSdk = 24
 
@@ -35,7 +32,7 @@ kotlin {
     // A step-by-step guide on how to include this library in an XCode
     // project can be found here:
     // https://developer.android.com/kotlin/multiplatform/migrate
-    val xcfName = "core:domainKit"
+    val xcfName = "core:loggerKit"
 
     iosX64 {
         binaries.framework {
@@ -65,18 +62,10 @@ kotlin {
             dependencies {
                 implementation(libs.kotlin.stdlib)
                 // Add KMP dependencies here
-                implementation(compose.runtime)
-                implementation(compose.components.resources)
-                implementation(compose.foundation)
-                implementation(compose.material3)
-
-                implementation(projects.core.model)
+                implementation(libs.kotlinx.serialization.json)
+                implementation(libs.okio)
+                implementation(libs.kotlinx.coroutine)
                 implementation(projects.core.networkHelper)
-                implementation(projects.core.persistance.datastore)
-                implementation(projects.core.ui.components)
-                implementation(projects.core.logger)
-
-                implementation(libs.kotlinx.datetime)
             }
         }
 

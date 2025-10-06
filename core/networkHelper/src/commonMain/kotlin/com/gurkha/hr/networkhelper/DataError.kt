@@ -43,3 +43,21 @@ fun DataError.toErrorMessage(): String {
         }
     }
 }
+
+fun DataError.toException(): Exception {
+    return when (this) {
+        DataError.NetworkError.RequestTimeout -> Exception("Request timed out")
+        DataError.NetworkError.NoInternet -> Exception("No internet connection")
+        DataError.NetworkError.Serialization -> Exception("Serialization error")
+        DataError.NetworkError.UnAuthorized -> Exception("Unauthorized")
+        DataError.NetworkError.Conflict -> Exception("Conflict occurred")
+        DataError.NetworkError.TooManyRequest -> Exception("Too many requests")
+        DataError.NetworkError.PayloadTooLarge -> Exception("Payload too large")
+        DataError.NetworkError.Server -> Exception("Server error")
+        DataError.NetworkError.DataUnknown -> Exception("Unknown network error")
+        is DataError.NetworkError.Custom -> Exception(this.message)
+        DataError.LocalError.DiskFull -> Exception("Disk full")
+        DataError.LocalError.NoData -> Exception("No data")
+        DataError.LocalError.UnKnown -> Exception("Unknown local error")
+    }
+}

@@ -7,6 +7,7 @@ import com.gurkha.hr.domain.auth.login.usecase.LoginUseCase
 import com.gurkha.hr.domain.form.EmailValidateUseCase
 import com.gurkha.hr.domain.form.PasswordValidateUseCase
 import com.gurkha.hr.domain.splash.UpdateFirstTimeCheckUseCase
+import com.gurkha.hr.logger.AppLogger
 import com.gurkha.hr.login.model.LoginScreenAction
 import com.gurkha.hr.login.model.LoginScreenState
 import com.gurkha.hr.networkhelper.onError
@@ -97,10 +98,10 @@ class LoginViewModel(
     }
 
     private fun login() = viewModelScope.launch {
-//        loginUseCase("Chirag.dangol@mbank.com.np", "OVf#9PfTs")
         _state.update {
             it.copy(isLoading = true)
         }
+
         loginUseCase(
             username = state.value.username,
             password = state.value.password
@@ -109,15 +110,21 @@ class LoginViewModel(
                 it.copy(isLoading = false)
             }
             _successChannel.send(true)
+            AppLogger.i(TAG, "login: api response $data")
         }.onError { error ->
             _state.update {
                 it.copy(isLoading = false)
             }
             _errorChannel.send(error.toErrorMessage())
+            AppLogger.e(TAG, "login: api response", error)
         }
     }
 
     private fun updateFirstTimeUser() = viewModelScope.launch {
         updateFirstTimeCheckUseCase()
+    }
+
+    companion object {
+        private const val TAG = "LoginViewModel"
     }
 }

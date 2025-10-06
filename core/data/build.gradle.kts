@@ -67,6 +67,8 @@ kotlin {
                 implementation(projects.core.domain)
                 implementation(projects.core.networkHelper)
                 implementation(projects.core.network)
+
+                implementation(projects.core.logger)
             }
         }
 
