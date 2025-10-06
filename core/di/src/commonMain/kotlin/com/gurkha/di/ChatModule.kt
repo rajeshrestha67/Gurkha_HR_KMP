@@ -14,6 +14,7 @@ import com.gurkha.hr.domain.chat.usecase.FetchChatMessageUseCase
 import com.gurkha.hr.domain.chat.usecase.JoinRoomUseCase
 import com.gurkha.hr.domain.chat.usecase.ObserveSocketEventsUseCase
 import com.gurkha.hr.domain.chat.usecase.SendMessageUseCase
+import com.gurkha.hr.domain.chat.usecase.SendStopTypingUseCase
 import com.gurkha.hr.domain.chat.usecase.SendTypingUseCase
 import com.gurkha.hr.network.SocketManager
 import io.ktor.client.HttpClient
@@ -85,6 +86,15 @@ class ChatModule {
     )
 
     @Single
+    fun getSendStopTypingUseCase(
+        chatSocketRepository: ChatSocketRepository,
+        userDataRepository: UserDataRepository
+    ) = SendStopTypingUseCase(
+        chatSocketRepository = chatSocketRepository,
+        userDataRepository = userDataRepository
+    )
+
+    @Single
     fun getObserveSocketEventsUseCase(chatSocketRepository: ChatSocketRepository) =
         ObserveSocketEventsUseCase(chatSocketRepository)
 
@@ -103,6 +113,7 @@ class ChatModule {
         joinRoomUseCase: JoinRoomUseCase,
         sendMessageUseCase: SendMessageUseCase,
         sendTypingUseCase: SendTypingUseCase,
+        sendStopTypingUseCase: SendStopTypingUseCase,
         observeSocketEventsUseCase: ObserveSocketEventsUseCase,
         disconnectSocketUseCase: DisconnectSocketUseCase
     ) = ChatRoomViewModel(
@@ -111,6 +122,7 @@ class ChatModule {
         joinRoomUseCase = joinRoomUseCase,
         sendMessageUseCase = sendMessageUseCase,
         sendTypingUseCase = sendTypingUseCase,
+        sendStopTypingUseCase = sendStopTypingUseCase,
         observeSocketEventsUseCase = observeSocketEventsUseCase,
         disconnectSocketUseCase = disconnectSocketUseCase
     )

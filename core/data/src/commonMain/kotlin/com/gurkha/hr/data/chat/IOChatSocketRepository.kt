@@ -9,6 +9,7 @@ class IOChatSocketRepository(
     override val onConnect = socketManager.onConnect
     override val onContent = socketManager.onContent
     override val onTyping = socketManager.onTyping
+    override val onTypingStop = socketManager.onTypingStop
     override val isConnected = socketManager.isConnected
 
     override suspend fun connect(username: String, chatId: String, socketPrefix: String) =
@@ -20,8 +21,12 @@ class IOChatSocketRepository(
     override fun sendMessage(chatId: String, fromUser: String, message: String) =
         socketManager.sendMessage(chatId, fromUser, message)
 
-    override fun sendTyping(isTyping: Boolean, chatId: String, fromUser: String) {
-        socketManager.sendTyping(isTyping, chatId, fromUser)
+    override fun sendTyping(chatId: String, fromUser: String) {
+        socketManager.sendStartTyping(chatId, fromUser)
+    }
+
+    override fun sendStopTyping(chatId: String, fromUser: String) {
+        socketManager.sendStopTyping(chatId, fromUser)
     }
 
     override fun disconnect() {

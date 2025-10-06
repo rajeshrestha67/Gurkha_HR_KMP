@@ -27,8 +27,10 @@ class SocketManager {
     private val _onContent = MutableSharedFlow<Content>()
     val onContent: SharedFlow<Content> = _onContent
 
-    private val _onTyping = MutableSharedFlow<Boolean>()
-    val onTyping: SharedFlow<Boolean> = _onTyping
+    private val _onTyping = MutableSharedFlow<Unit>()
+    val onTyping: SharedFlow<Unit> = _onTyping
+    private val _onTypingStop = MutableSharedFlow<Unit>()
+    val onTypingStop: SharedFlow<Unit> = _onTypingStop
     private val _isConnected = MutableStateFlow(false)
     val isConnected: StateFlow<Boolean> = _isConnected
 
@@ -50,7 +52,6 @@ class SocketManager {
             }
         }
         IO.socket(SOCKET_URL, opts) { socket ->
-            //socket.off(Socket.EVENT_CONNECT)
             socket.on(Socket.EVENT_CONNECT) {
                 this.socket = socket
                 _isConnected.update {
@@ -59,26 +60,20 @@ class SocketManager {
                 scope.launch {
                     _onConnect.emit(Unit)
                 }
-                println("socket connected")
             }
-            //socket.off(Socket.EVENT_DISCONNECT)
             socket.on(Socket.EVENT_DISCONNECT) {
+                this.socket = null
                 _isConnected.update {
                     false
                 }
-                this.socket = null
-                println("socket disconnected")
             }
-            //socket.off(Socket.EVENT_CONNECT_ERROR)
             socket.on(Socket.EVENT_CONNECT_ERROR) {
+                this.socket = null
                 _isConnected.update {
                     it
                     false
                 }
-                this.socket = null
-                println("socket error")
             }
-            //socket.off("$PRIVATE:$chatId")
             socket.on("$PRIVATE:$chatId") { args ->
                 args.firstOrNull()?.let { arg ->
                     if (arg is JsonObject) {
@@ -90,19 +85,16 @@ class SocketManager {
                     }
                 }
             }
-            //socket.off("$TYPING:$chatId")
             socket.on("$TYPING:$chatId") {
                 scope.launch {
-                    _onTyping.emit(true)
-                    println("SocketManager typing")
+                    _onTyping.emit(Unit)
                 }
 
             }
-            //socket.off("$STOP_TYPING:$chatId")
+            
             socket.on("$STOP_TYPING:$chatId") {
                 scope.launch {
-                    _onTyping.emit(false)
-                    println("SocketManager stop typing")
+                    _onTypingStop.emit(Unit)
                 }
             }
             socket.open()
@@ -126,13 +118,6 @@ class SocketManager {
         })
     }
 
-    fun sendTyping(isTyping: Boolean, chatId: String, fromUser: String) {
-        if (isTyping) {
-            sendStartTyping(chatId, fromUser)
-        } else {
-            sendStopTyping(chatId, fromUser)
-        }
-    }
 
     fun sendStartTyping(chatId: String, fromUser: String) {
         socket?.emit(TYPING, buildJsonObject {

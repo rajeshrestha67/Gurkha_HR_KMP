@@ -4,7 +4,7 @@ import com.gurkha.hr.datastore.user_data.repository.UserDataRepository
 import com.gurkha.hr.domain.chat.repository.ChatSocketRepository
 import kotlinx.coroutines.flow.firstOrNull
 
-class SendTypingUseCase(
+class SendStopTypingUseCase(
     private val chatSocketRepository: ChatSocketRepository,
     private val userDataRepository: UserDataRepository
 ) {

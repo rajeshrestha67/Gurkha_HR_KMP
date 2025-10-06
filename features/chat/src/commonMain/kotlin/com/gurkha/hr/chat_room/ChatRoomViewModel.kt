@@ -14,6 +14,7 @@ import com.gurkha.hr.domain.chat.usecase.FetchChatMessageUseCase
 import com.gurkha.hr.domain.chat.usecase.JoinRoomUseCase
 import com.gurkha.hr.domain.chat.usecase.ObserveSocketEventsUseCase
 import com.gurkha.hr.domain.chat.usecase.SendMessageUseCase
+import com.gurkha.hr.domain.chat.usecase.SendStopTypingUseCase
 import com.gurkha.hr.domain.chat.usecase.SendTypingUseCase
 import com.gurkha.hr.networkhelper.onError
 import com.gurkha.hr.networkhelper.onSuccess
@@ -32,13 +33,13 @@ class ChatRoomViewModel(
     private val joinRoomUseCase: JoinRoomUseCase,
     private val sendMessageUseCase: SendMessageUseCase,
     private val sendTypingUseCase: SendTypingUseCase,
+    private val sendStopTypingUseCase: SendStopTypingUseCase,
     private val observeSocketEventsUseCase: ObserveSocketEventsUseCase,
     private val disconnectSocketUseCase: DisconnectSocketUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ChatRoomScreenState())
 
-    //    val manager: SocketManager = getKoin().get()
     val state = _state
         .stateIn(
             scope = viewModelScope,
@@ -48,15 +49,20 @@ class ChatRoomViewModel(
 
     init {
         viewModelScope.launch {
-            observeSocketEventsUseCase.onTyping.collect { isTyping ->
+            observeSocketEventsUseCase.onTyping.collect {
                 _state.update {
                     it.copy(
-                        isTyping = isTyping
+                        isTyping = true
                     )
                 }
             }
-        }
-        viewModelScope.launch {
+            observeSocketEventsUseCase.onTypingStop.collect {
+                _state.update {
+                    it.copy(
+                        isTyping = false
+                    )
+                }
+            }
             observeSocketEventsUseCase.onContent.collect { content ->
                 val chatMessage = createChatMessage(
                     fromMe = false,
@@ -112,7 +118,11 @@ class ChatRoomViewModel(
 //        _state.update {
 //            it.copy(isUserTyping = isTyping)
 //        }
-        sendTypingUseCase(isTyping = isTyping, chatId = state.value.chatUserData?.chatId ?: "")
+        if (isTyping) {
+            sendTypingUseCase(chatId = state.value.chatUserData?.chatId ?: "")
+        } else {
+            sendStopTypingUseCase(chatId = state.value.chatUserData?.chatId ?: "")
+        }
 
     }
 
