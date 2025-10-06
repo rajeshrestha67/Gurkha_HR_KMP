@@ -57,6 +57,7 @@ import gurkhahr.core.ui.res.generated.resources.leave_balance
 import gurkhahr.core.ui.res.generated.resources.leave_cancelled
 import gurkhahr.core.ui.res.generated.resources.leave_duration
 import gurkhahr.core.ui.res.generated.resources.leave_pending
+import gurkhahr.core.ui.res.generated.resources.leave_processing
 import gurkhahr.core.ui.res.generated.resources.leave_request_form
 import gurkhahr.core.ui.res.generated.resources.leave_type
 import gurkhahr.core.ui.res.generated.resources.light_mode
@@ -70,6 +71,7 @@ import gurkhahr.core.ui.res.generated.resources.nationality
 import gurkhahr.core.ui.res.generated.resources.new_password
 import gurkhahr.core.ui.res.generated.resources.next
 import gurkhahr.core.ui.res.generated.resources.no
+import gurkhahr.core.ui.res.generated.resources.ok
 import gurkhahr.core.ui.res.generated.resources.password
 import gurkhahr.core.ui.res.generated.resources.pending
 import gurkhahr.core.ui.res.generated.resources.password_does_not_match
@@ -219,6 +221,9 @@ object SharedRes {
 
         val assignee = Res.string.assignee
         val select_assignee = Res.string.select_assignee
+
+        val leave_processing = Res.string.leave_processing
+        val ok = Res.string.ok
 
 
         val log_out = Res.string.log_out

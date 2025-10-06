@@ -51,6 +51,9 @@
     <string name="assignee">Assignee</string>">
     <string name="select_assignee">Select Assignee</string>">
 
+    <string name="leave_processing">Leave Processing</string>">
+    <string name="ok">OK</string>">
+
 
     <string name="leave_duration">Leave Duration</string>
     <string name="select_leave_duration">Select Leave Duration</string>

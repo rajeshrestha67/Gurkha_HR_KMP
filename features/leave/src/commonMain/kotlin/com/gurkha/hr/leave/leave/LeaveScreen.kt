@@ -31,6 +31,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SecondaryTabRow
+import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -63,10 +64,12 @@ import com.gurkha.hr.res.theme.darkPrimaryTextColor
 import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.highLightColor
 import com.gurkha.hr.res.theme.primaryTextColor
+import com.gurkha.hr.res.theme.secondaryTextColor
 import com.gurkha.hr.res.theme.veryLightGray
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -98,24 +101,27 @@ fun LeaveScreen(
 
             launch(context = Dispatchers.Main.immediate) {
                 delay(500)
-                leaveListState.animateScrollToItem(state.currentTapItem.result.lastIndex+1)
+                leaveListState.animateScrollToItem(state.currentTapItem.result.lastIndex + 1)
             }
         }
     }
 
     LaunchedEffect(Unit) {
+        val okText = getString(SharedRes.Strings.ok)
         viewModel.errorChannel.collect {
             snackBarHost.showSnackbar(
                 message = it,
                 duration = SnackbarDuration.Short,
-                actionLabel = "Ok"
+                actionLabel = okText
             )
         }
     }
+
     LaunchedEffect(state.isRequestingLeave) {
+        val message = getString(SharedRes.Strings.leave_processing)
         if (state.isRequestingLeave) {
             snackBarHost.showSnackbar(
-                message = "Processing Leave",
+                message = message,
                 duration = SnackbarDuration.Indefinite,
             )
         }
@@ -166,8 +172,14 @@ fun LeaveScreen(
         },
         snackbarHost = {
             SnackbarHost(
-                hostState = snackBarHost,
-            )
+                hostState = snackBarHost
+            ) { data ->
+                Snackbar(
+                    snackbarData = data,
+                    actionColor = MaterialTheme.colorScheme.secondaryTextColor,
+                    containerColor = MaterialTheme.colorScheme.primary
+                )
+            }
         },
     ) { contentPadding ->
         LeaveScreenContent(
