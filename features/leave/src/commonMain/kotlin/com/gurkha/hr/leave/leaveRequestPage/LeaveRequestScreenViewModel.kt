@@ -4,30 +4,43 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gurkha.hr.components.textField.DateData
 import com.gurkha.hr.domain.form.RequiredValidationUseCase
+import com.gurkha.hr.domain.leave.leaveAssignee.model.toUiList
+import com.gurkha.hr.domain.leave.leaveAssignee.usecase.LeaveAssigneeUseCase
+import com.gurkha.hr.domain.leave.leaveType.model.toUiList
+import com.gurkha.hr.domain.leave.leaveType.usecase.LeaveTypeUseCase
 import com.gurkha.hr.leave.model.leave_request.LeaveRequestScreenAction
 import com.gurkha.hr.leave.model.leave_request.LeaveRequestScreenState
-import com.gurkha.model.leave_request.LeaveRequestData
+import com.gurkha.hr.networkhelper.onError
+import com.gurkha.hr.networkhelper.onSuccess
+import com.gurkha.model.leave.leave_request.LeaveRequestData
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
 
 class LeaveRequestScreenViewModel(
-    private val requiredValidationUseCase: RequiredValidationUseCase
+    private val requiredValidationUseCase: RequiredValidationUseCase,
+    private val leaveAssigneeUseCase: LeaveAssigneeUseCase,
+    private val leaveTypeUseCase: LeaveTypeUseCase
 ) : ViewModel() {
-
     private val _state = MutableStateFlow(LeaveRequestScreenState())
 
-    val state = _state.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = LeaveRequestScreenState()
-    )
+    val state = _state
+        .onStart {
+            fetchAssignee()
+            fetchLeaveType()
+        }
 
-    //startDate: String, endDate: String, leaveDuration: String, leaveType: String, reason: String
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = LeaveRequestScreenState()
+        )
     private val _dataChannel = Channel<LeaveRequestData?>()
     val dataChannel = _dataChannel.receiveAsFlow()
 
@@ -40,13 +53,13 @@ class LeaveRequestScreenViewModel(
                             leaveRequestData = safeData,
                             startDate = DateData.fromDisplay(safeData.startDate),
                             endDate = DateData.fromDisplay(safeData.endDate),
-                            leaveDuration = safeData.leaveDuration,
-                            leaveType = safeData.leaveType,
+                            leaveDuration = Json.decodeFromString(safeData.leaveDuration),
+                            leaveType = Json.decodeFromString(safeData.leaveType),
+                            assignee = Json.decodeFromString(safeData.assignee),
                             reason = safeData.reason
                         )
                     }
                 }
-
             }
 
             is LeaveRequestScreenAction.OnEndDateChange -> {
@@ -64,6 +77,20 @@ class LeaveRequestScreenViewModel(
             is LeaveRequestScreenAction.OnLeaveTypeChange -> {
                 _state.update {
                     it.copy(leaveType = action.leaveType, leaveTypeError = null)
+                }
+            }
+
+            is LeaveRequestScreenAction.OnAssigneeChange -> {
+                _state.update {
+                    it.copy(assignee = action.assignee, assigneeError = null)
+                }
+            }
+
+            is LeaveRequestScreenAction.OnAssigneeError -> {
+                _state.update {
+                    it.copy(
+                        assigneeError = action.error
+                    )
                 }
             }
 
@@ -87,9 +114,26 @@ class LeaveRequestScreenViewModel(
                 }
             }
 
-
             LeaveRequestScreenAction.Submit -> {
                 submit()
+            }
+
+            LeaveRequestScreenAction.OnRefetchAssignee -> {
+                _state.update {
+                    it.copy(
+                        isAssigneeFetchingError = false
+                    )
+                }
+                fetchAssignee()
+            }
+
+            LeaveRequestScreenAction.OnRefetchLeaveType -> {
+                _state.update {
+                    it.copy(
+                        isLeaveTypeFetchingError = false
+                    )
+                }
+                fetchLeaveType()
             }
         }
     }
@@ -97,9 +141,10 @@ class LeaveRequestScreenViewModel(
     private fun submit() = viewModelScope.launch {
         val startDateError = requiredValidationUseCase(state.value.startDate?.displayValue)
         val endDateError = requiredValidationUseCase(state.value.endDate?.displayValue)
-        val leaveDurationError = requiredValidationUseCase(state.value.leaveDuration)
-        val leaveTypeError = requiredValidationUseCase(state.value.leaveType)
+        val leaveDurationError = requiredValidationUseCase(state.value.leaveDuration?.value)
+        val leaveTypeError = requiredValidationUseCase(state.value.leaveType?.value)
         val reasonError = requiredValidationUseCase(state.value.reason)
+        val assigneeError = requiredValidationUseCase(state.value.assignee?.value)
 
         when {
             startDateError != null -> {
@@ -114,6 +159,14 @@ class LeaveRequestScreenViewModel(
                 _state.update {
                     it.copy(
                         endDateError = endDateError
+                    )
+                }
+            }
+
+            assigneeError != null -> {
+                _state.update {
+                    it.copy(
+                        assigneeError = assigneeError
                     )
                 }
             }
@@ -142,6 +195,7 @@ class LeaveRequestScreenViewModel(
                 }
             }
 
+
             else -> {
                 _state.update {
                     it.copy(
@@ -149,7 +203,8 @@ class LeaveRequestScreenViewModel(
                         endDateError = null,
                         leaveDurationError = null,
                         leaveTypeError = null,
-                        reasonError = null
+                        reasonError = null,
+                        assigneeError = null
                     )
                 }
 
@@ -157,10 +212,73 @@ class LeaveRequestScreenViewModel(
                     LeaveRequestData(
                         startDate = state.value.startDate?.displayValue ?: "",
                         endDate = state.value.endDate?.displayValue ?: "",
-                        leaveDuration = state.value.leaveDuration,
-                        leaveType = state.value.leaveType,
-                        reason = state.value.reason
+                        leaveDuration = state.value.leaveDuration?.let {
+                            Json.encodeToString(it)
+                        } ?: "",
+                        leaveType = state.value.leaveType?.let {
+                            Json.encodeToString(it)
+                        } ?: "",
+                        assignee = state.value.assignee?.let {
+                            Json.encodeToString(it)
+                        } ?: "",
+                        reason = state.value.reason ?: "",
+                    ),
+                )
+
+                _state.update {
+                    it.copy(
+                        leaveRequestData = null,
+                        startDate = null,
+                        endDate = null,
+                        leaveDuration = null,
+                        leaveType = null,
+                        assignee = null,
+                        reason = null
                     )
+                }
+            }
+        }
+    }
+
+    private fun fetchAssignee() = viewModelScope.launch {
+        _state.update {
+            it.copy(
+                isAssigneeLoading = true
+            )
+        }
+        leaveAssigneeUseCase().onSuccess { data ->
+            _state.update {
+                it.copy(
+                    isAssigneeLoading = false,
+                    leaveAssigneeList = data.toUiList()
+                )
+            }
+        }.onError {
+            _state.update {
+                it.copy(
+                    isAssigneeFetchingError = true
+                )
+            }
+        }
+    }
+
+    private fun fetchLeaveType() = viewModelScope.launch {
+        _state.update {
+            it.copy(
+                isLeaveTypeLoading = true
+            )
+        }
+        leaveTypeUseCase().onSuccess { data ->
+            _state.update {
+                it.copy(
+                    isLeaveTypeLoading = false,
+                    leaveTypeList = data.toUiList()
+                )
+            }
+        }.onError {
+            _state.update {
+                it.copy(
+                    isLeaveTypeFetchingError = true
                 )
             }
         }

@@ -7,8 +7,8 @@ import com.gurkha.hr.data.userDetail.KtorUserDetailRemoteRepository
 import com.gurkha.hr.datastore.user_data.local.UserDataDataStore
 import com.gurkha.hr.datastore.user_data.repository.LocalUserDataRepository
 import com.gurkha.hr.datastore.user_data.repository.UserDataRepository
-import com.gurkha.hr.domain.attendance.repository.AttendanceRemoteRepository
-import com.gurkha.hr.domain.attendance.usecase.AttendanceUseCase
+import com.gurkha.hr.domain.attendance.attendanceReport.repository.AttendanceRemoteRepository
+import com.gurkha.hr.domain.attendance.attendanceReport.usecase.AttendanceUseCase
 import com.gurkha.hr.domain.upComingBirthday.repository.UpComingBirthdayRemoteRepository
 import com.gurkha.hr.domain.upComingBirthday.usecase.UpComingBirthdayUseCase
 import com.gurkha.hr.domain.upComingWorkAnniversaries.repository.UpComingWorkAnniversaryRemoteRepository

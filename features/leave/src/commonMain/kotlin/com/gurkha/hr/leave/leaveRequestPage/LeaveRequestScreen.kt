@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -23,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
@@ -33,14 +36,12 @@ import com.gurkha.hr.components.textField.ERPTextField
 import com.gurkha.hr.components.textField.FormValidate
 import com.gurkha.hr.components.textField.FutureAndTodayDate
 import com.gurkha.hr.components.textField.RangeSelectableDates
-import com.gurkha.hr.leave.model.leave_request.LeaveDurationList
 import com.gurkha.hr.leave.model.leave_request.LeaveRequestScreenAction
 import com.gurkha.hr.leave.model.leave_request.LeaveRequestScreenState
-import com.gurkha.hr.leave.model.leave_request.LeaveTypeList
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.primaryTextColor
-import com.gurkha.model.leave_request.LeaveRequestData
+import com.gurkha.model.leave.leave_request.LeaveRequestData
 import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -81,7 +82,7 @@ fun LeaveRequestScreen(
     LeaveRequestPageContent(
         onBackClicked = onBackClicked,
         state = state,
-        onAction = viewModel::onAction
+        onAction = viewModel::onAction,
     )
 
 }
@@ -91,7 +92,7 @@ fun LeaveRequestScreen(
 fun LeaveRequestPageContent(
     onBackClicked: () -> Unit,
     state: LeaveRequestScreenState,
-    onAction: (LeaveRequestScreenAction) -> Unit
+    onAction: (LeaveRequestScreenAction) -> Unit,
 ) {
 
     Scaffold(
@@ -105,7 +106,7 @@ fun LeaveRequestPageContent(
                     IconButton(
                         onClick = onBackClicked,
                         content = {
-                            Icon(Icons.Filled.ArrowBack, contentDescription = "")
+                            Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "")
                         }
                     )
                 },
@@ -136,7 +137,7 @@ fun LeaveRequestScreenForm(
     modifier: Modifier = Modifier,
     state: LeaveRequestScreenState,
     onBackClicked: () -> Unit,
-    onAction: (LeaveRequestScreenAction) -> Unit
+    onAction: (LeaveRequestScreenAction) -> Unit,
 ) {
 
     Column(
@@ -149,7 +150,7 @@ fun LeaveRequestScreenForm(
             .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
     ) {
-
+//start date
         ERPDateTextField(
             modifier = Modifier
                 .fillMaxWidth(),
@@ -159,7 +160,6 @@ fun LeaveRequestScreenForm(
             hint = stringResource(SharedRes.Strings.selectStartDate),
             error = state.startDateError,
             onErrorStateChange = {
-                //onAction(LeaveRequestScreenAction.OnStartDateError(it))
             },
             selectableDates = FutureAndTodayDate,
             onDateSelected = {
@@ -175,7 +175,6 @@ fun LeaveRequestScreenForm(
             rules = FormValidate.requiredValidationRules,
             error = state.endDateError,
             onErrorStateChange = {
-                //onAction(LeaveRequestScreenAction.OnEndDateError(it))
             },
             selectableDates = RangeSelectableDates(
                 minDateMillis = state.startDate?.actualValue?.plus(1.days.toLong(DurationUnit.DAYS))
@@ -184,15 +183,36 @@ fun LeaveRequestScreenForm(
                 onAction(LeaveRequestScreenAction.OnEndDateChange(it))
             }
         )
+
+        //        assignee
+        DropDownText(
+            label = SharedRes.Strings.assignee,
+            hint = SharedRes.Strings.select_assignee,
+            rules = FormValidate.requiredValidationRules,
+            isFetching = state.isAssigneeLoading,
+            isFetchingError = state.isAssigneeFetchingError,
+            listOfItems = state.leaveAssigneeList ?: emptyList(),
+            selectedValue = state.assignee?.name ?: "",
+            onError = {
+            },
+            error = state.assigneeError,
+            itemClicked = {
+                onAction(LeaveRequestScreenAction.OnAssigneeChange(assignee = it))
+            },
+            onRetry = {
+                onAction(LeaveRequestScreenAction.OnRefetchAssignee)
+            }
+        )
+
+
 //        leave duration
         DropDownText(
             label = SharedRes.Strings.leave_duration,
             hint = SharedRes.Strings.select_leave_duration,
             rules = FormValidate.requiredValidationRules,
-            listOfItems = LeaveDurationList.map { stringResource(it.title) },
-            selectedValue = state.leaveDuration,
+            listOfItems = state.leaveDurationList,
+            selectedValue = state.leaveDuration?.name ?: "",
             onError = {
-                // onAction(LeaveRequestScreenAction.OnLeaveDurationError(it))
             },
             error = state.leaveDurationError,
             itemClicked = {
@@ -204,34 +224,41 @@ fun LeaveRequestScreenForm(
             label = SharedRes.Strings.leaveType,
             hint = SharedRes.Strings.selectLeaveType,
             rules = FormValidate.requiredValidationRules,
-            listOfItems = LeaveTypeList.map { stringResource(it.title) },
-            selectedValue = state.leaveType,
+            isFetching = state.isLeaveTypeLoading,
+            isFetchingError = state.isLeaveTypeFetchingError,
+            listOfItems = state.leaveTypeList ?: emptyList(),
+            selectedValue = state.leaveType?.name ?: "",
             onError = {
-                //onAction(LeaveRequestScreenAction.OnLeaveTypeError(it))
             },
             error = state.leaveTypeError,
             itemClicked = {
                 onAction(LeaveRequestScreenAction.OnLeaveTypeChange(it))
+            },
+            onRetry = {
+                onAction(LeaveRequestScreenAction.OnRefetchLeaveType)
             }
         )
+
 //        leave reason
         ERPTextField(
-            text = state.reason,
+            text = state.reason ?: "",
             label = stringResource(SharedRes.Strings.reason),
             hint = stringResource(SharedRes.Strings.enterReason),
             onValueChange = {
                 onAction(LeaveRequestScreenAction.OnReasonChange(it))
             },
+            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Send),
             rules = FormValidate.requiredValidationRules,
             error = state.reasonError,
             onErrorStateChange = {
                 onAction(LeaveRequestScreenAction.OnReasonError(it))
             },
+            onImeAction = {
+                onAction(LeaveRequestScreenAction.Submit)
+            },
             height = MaterialTheme.dimens.reasonTextField
         )
-        Spacer(
-            modifier = Modifier.weight(1f)
-        )
+
 
 //        buttons for cancel and submit
         Column(

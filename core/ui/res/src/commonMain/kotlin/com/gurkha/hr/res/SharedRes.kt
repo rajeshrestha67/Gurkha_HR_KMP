@@ -14,6 +14,7 @@ import gurkhahr.core.ui.res.generated.resources.are_you_sure
 import gurkhahr.core.ui.res.generated.resources.attendance
 import gurkhahr.core.ui.res.generated.resources.cancel
 import gurkhahr.core.ui.res.generated.resources.cancelled
+import gurkhahr.core.ui.res.generated.resources.assignee
 import gurkhahr.core.ui.res.generated.resources.change_password
 import gurkhahr.core.ui.res.generated.resources.chat
 import gurkhahr.core.ui.res.generated.resources.company_assets
@@ -56,6 +57,7 @@ import gurkhahr.core.ui.res.generated.resources.leave_balance
 import gurkhahr.core.ui.res.generated.resources.leave_cancelled
 import gurkhahr.core.ui.res.generated.resources.leave_duration
 import gurkhahr.core.ui.res.generated.resources.leave_pending
+import gurkhahr.core.ui.res.generated.resources.leave_processing
 import gurkhahr.core.ui.res.generated.resources.leave_request_form
 import gurkhahr.core.ui.res.generated.resources.leave_type
 import gurkhahr.core.ui.res.generated.resources.log_out
@@ -68,6 +70,7 @@ import gurkhahr.core.ui.res.generated.resources.nationality
 import gurkhahr.core.ui.res.generated.resources.new_password
 import gurkhahr.core.ui.res.generated.resources.next
 import gurkhahr.core.ui.res.generated.resources.no
+import gurkhahr.core.ui.res.generated.resources.ok
 import gurkhahr.core.ui.res.generated.resources.outline_logout_24
 import gurkhahr.core.ui.res.generated.resources.password
 import gurkhahr.core.ui.res.generated.resources.password_does_not_match
@@ -81,6 +84,7 @@ import gurkhahr.core.ui.res.generated.resources.reason
 import gurkhahr.core.ui.res.generated.resources.report
 import gurkhahr.core.ui.res.generated.resources.request
 import gurkhahr.core.ui.res.generated.resources.required
+import gurkhahr.core.ui.res.generated.resources.select_assignee
 import gurkhahr.core.ui.res.generated.resources.search_users
 import gurkhahr.core.ui.res.generated.resources.select_end_date
 import gurkhahr.core.ui.res.generated.resources.select_leave_duration
@@ -220,6 +224,12 @@ object SharedRes {
         val account = Res.string.account
         val cancel = Res.string.cancel
         val submit = Res.string.submit
+
+        val assignee = Res.string.assignee
+        val select_assignee = Res.string.select_assignee
+
+        val leave_processing = Res.string.leave_processing
+        val ok = Res.string.ok
 
 
         val log_out = Res.string.log_out

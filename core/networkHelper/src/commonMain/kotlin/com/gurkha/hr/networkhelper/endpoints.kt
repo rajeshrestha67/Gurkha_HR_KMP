@@ -8,6 +8,10 @@ object EndPoint {
     const val UPCOMING_BIRTHDAY_END_POINT = "api/birthday/upcomingBirthdays"
     const val UPCOMING_WORK_ANNIVERSARY_END_POINT = "api/birthday/allWorkingAnniversaries"
     const val ATTENDANCE_STATUS_REPORT_ENDPOINT = "api/attendance/attendanceStatus"
+    const val LEAVE_STATUS_REPORT_ENDPOINT = "api/leave-request/employee/report"
+    const val LEAVE_ASSIGNEE_END_POINT = "api/user/fetch-assignee"
+    const val LEAVE_TYPE_END_POINT = "api/leave-type"
+    const val LEAVE_REQUEST_END_POINT = "api/leave-request"
     const val EMPLOY_LIST_ENDPOINT = "api/chat/employee"
     const val CHAT_MESSAGE_ENDPOINT = "api/external-chat/messages"
 

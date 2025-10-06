@@ -273,7 +273,8 @@ fun ERPTextField(
     shape: Shape = MaterialTheme.shapes.medium,
     focusedBorderColor: Color = MaterialTheme.colorScheme.primary,
     unfocusedBorderColor: Color = MaterialTheme.colorScheme.borderColor,
-    onDropDown: (() -> Unit)? = null
+    onDropDown: (() -> Unit)? = null,
+    onImeAction: (() -> Unit)? = null
 ) {
     var textFieldValueState by remember { mutableStateOf(TextFieldValue(text = text)) }
 
@@ -293,7 +294,11 @@ fun ERPTextField(
         validateOnFocusChanged = validateOnFocusChanged,
         visualTransformation = visualTransformation,
         keyboardOptions = keyboardOptions.copy(imeAction = imeAction),
-        keyboardActions = keyboardActions,
+        keyboardActions = KeyboardActions(
+            onSend = {
+                onImeAction?.invoke()
+            }
+        ),
         readOnly = readOnly,
         error = error,
         maxLength = maxLength,
