@@ -5,8 +5,9 @@ import ComposeApp
 struct iOSApp: App {
 
 
-    init(){
+    init() {
         IOSKoinInitKt.iOSKoinInit()
+        SetupLoggerKt.setupLogger(platform: "iOS")
     }
 
     var body: some Scene {
@@ -14,4 +15,5 @@ struct iOSApp: App {
             ContentView()
         }
     }
+
 }
