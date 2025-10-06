@@ -5,7 +5,7 @@ import com.gurkha.hr.domain.leave.leaveReport.model.LeaveReportData
 data class LeaveScreenState(
     val pendingTapItem: LeaveTapItem = LeaveTapItem(),
     val approvedTapItem: LeaveTapItem = LeaveTapItem(),
-    val cancelTapItem: LeaveTapItem = LeaveTapItem(),
+    val rejectedTapItem: LeaveTapItem = LeaveTapItem(),
     val currentTapItem: LeaveTapItem = LeaveTapItem(),
     val fromDate: String = "",
     val toDate: String = "",

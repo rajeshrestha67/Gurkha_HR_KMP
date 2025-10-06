@@ -335,7 +335,7 @@ fun LazyListScope.leaveResults(
     state: LeaveScreenState
 ) {
     when {
-        state.pendingTapItem.isLoading || state.approvedTapItem.isLoading || state.cancelTapItem.isLoading ->
+        state.pendingTapItem.isLoading || state.approvedTapItem.isLoading || state.rejectedTapItem.isLoading ->
             item {
                 Column(
                     modifier = Modifier.fillMaxWidth()

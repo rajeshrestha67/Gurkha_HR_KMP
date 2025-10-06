@@ -60,7 +60,7 @@ class LeaveScreenViewModel(
                         currentTapItem = when (action.status) {
                             LeaveStatusEnum.PENDING -> it.pendingTapItem
                             LeaveStatusEnum.APPROVED -> it.approvedTapItem
-                            else -> it.cancelTapItem
+                            else -> it.rejectedTapItem
                         }
                     )
                 }
@@ -122,7 +122,7 @@ class LeaveScreenViewModel(
 
                 else -> {
                     it.copy(
-                        cancelTapItem = it.cancelTapItem.copy(isLoading = true)
+                        rejectedTapItem = it.rejectedTapItem.copy(isLoading = true)
                     )
                 }
             }
@@ -157,7 +157,7 @@ class LeaveScreenViewModel(
                 else -> {
                     _state.update {
                         it.copy(
-                            cancelTapItem = it.cancelTapItem.copy(
+                            rejectedTapItem = it.rejectedTapItem.copy(
                                 isLoading = false,
                                 result = data
                             )
@@ -170,7 +170,7 @@ class LeaveScreenViewModel(
                     currentTapItem = when (leaveStatus) {
                         LeaveStatusEnum.PENDING -> it.pendingTapItem
                         LeaveStatusEnum.APPROVED -> it.approvedTapItem
-                        else -> it.cancelTapItem
+                        else -> it.rejectedTapItem
                     }
                 )
             }

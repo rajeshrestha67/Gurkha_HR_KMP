@@ -13,7 +13,7 @@ data class LeaveItem(
 enum class LeaveStatusEnum(val value: String) {
     PENDING("Pending"),
     APPROVED("Approved"),
-    CANCELLED("Cancelled");
+    REJECTED("Rejected");
 
     companion object {
         private val typeMap =
