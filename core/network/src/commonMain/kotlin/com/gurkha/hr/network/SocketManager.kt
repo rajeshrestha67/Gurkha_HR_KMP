@@ -6,6 +6,8 @@ import com.piasy.kmp.socketio.socketio.Socket
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -29,7 +31,12 @@ class SocketManager {
     val onTyping: SharedFlow<Boolean> = _onTyping
     private val _isConnected = MutableStateFlow(false)
     val isConnected: StateFlow<Boolean> = _isConnected
-    suspend fun connect(username: String, chatId: String, socketPrefix: String) {
+
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    fun connect(username: String, chatId: String, socketPrefix: String) {
+        if (isConnected.value) {
+            return
+        }
         val opts = IO.Options().apply {
             path = PATH
             reconnection = true
@@ -43,17 +50,18 @@ class SocketManager {
             }
         }
         IO.socket(SOCKET_URL, opts) { socket ->
-
+            //socket.off(Socket.EVENT_CONNECT)
             socket.on(Socket.EVENT_CONNECT) {
                 this.socket = socket
                 _isConnected.update {
                     true
                 }
-                CoroutineScope(Dispatchers.IO).launch {
+                scope.launch {
                     _onConnect.emit(Unit)
                 }
                 println("socket connected")
             }
+            //socket.off(Socket.EVENT_DISCONNECT)
             socket.on(Socket.EVENT_DISCONNECT) {
                 _isConnected.update {
                     false
@@ -61,6 +69,7 @@ class SocketManager {
                 this.socket = null
                 println("socket disconnected")
             }
+            //socket.off(Socket.EVENT_CONNECT_ERROR)
             socket.on(Socket.EVENT_CONNECT_ERROR) {
                 _isConnected.update {
                     it
@@ -69,26 +78,29 @@ class SocketManager {
                 this.socket = null
                 println("socket error")
             }
+            //socket.off("$PRIVATE:$chatId")
             socket.on("$PRIVATE:$chatId") { args ->
                 args.firstOrNull()?.let { arg ->
                     if (arg is JsonObject) {
                         val json = Json { ignoreUnknownKeys = true }
                         val content = json.decodeFromString<Content>(string = arg.toString())
-                        CoroutineScope(Dispatchers.IO).launch {
+                        scope.launch {
                             _onContent.emit(content)
                         }
                     }
                 }
             }
+            //socket.off("$TYPING:$chatId")
             socket.on("$TYPING:$chatId") {
-                CoroutineScope(Dispatchers.IO).launch {
+                scope.launch {
                     _onTyping.emit(true)
                     println("SocketManager typing")
                 }
 
             }
+            //socket.off("$STOP_TYPING:$chatId")
             socket.on("$STOP_TYPING:$chatId") {
-                CoroutineScope(Dispatchers.IO).launch {
+                scope.launch {
                     _onTyping.emit(false)
                     println("SocketManager stop typing")
                 }
@@ -115,7 +127,22 @@ class SocketManager {
     }
 
     fun sendTyping(isTyping: Boolean, chatId: String, fromUser: String) {
-        socket?.emit(if (isTyping) TYPING else STOP_TYPING, buildJsonObject {
+        if (isTyping) {
+            sendStartTyping(chatId, fromUser)
+        } else {
+            sendStopTyping(chatId, fromUser)
+        }
+    }
+
+    fun sendStartTyping(chatId: String, fromUser: String) {
+        socket?.emit(TYPING, buildJsonObject {
+            put(CHAT_ID, chatId)
+            put(FROM_USER, fromUser)
+        })
+    }
+
+    fun sendStopTyping(chatId: String, fromUser: String) {
+        socket?.emit(STOP_TYPING, buildJsonObject {
             put(CHAT_ID, chatId)
             put(FROM_USER, fromUser)
         })
@@ -124,6 +151,7 @@ class SocketManager {
 
     fun disconnect() {
         socket?.close()
+        scope.cancel()
         socket = null
     }
 

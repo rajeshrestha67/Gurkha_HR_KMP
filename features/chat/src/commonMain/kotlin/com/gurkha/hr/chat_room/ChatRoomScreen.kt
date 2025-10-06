@@ -283,7 +283,15 @@ private fun ChatRoomLazyColumn(
 ) {
     val listState = rememberLazyListState()
     LaunchedEffect(state.messages) {
-        listState.animateScrollToItem(0)
+        if (state.messages.isNotEmpty()) {
+            //listState.animateScrollToItem(0)
+            val allMessages = state.messages.values.flatten()
+
+            if (allMessages.isNotEmpty()) {
+                // Scroll to the last item
+                listState.animateScrollToItem(allMessages.lastIndex)
+            }
+        }
     }
 
     Column(
@@ -308,21 +316,10 @@ private fun ChatRoomLazyColumn(
                         start = MaterialTheme.dimens.small3,
                         end = MaterialTheme.dimens.small3,
                         top = MaterialTheme.dimens.small2
-                    ),
-                    reverseLayout = true
+                    )
                 ) {
                     state.messages.keys.forEach { key ->
-                        state.messages[key]?.let { messages ->
-                            items(items = messages, key = { it.hashCode() }) { chatMessage ->
-                                ChatMessageBox(
-                                    modifier = Modifier.fillMaxWidth().animateItem(
-                                        fadeInSpec = tween(300),
-                                        fadeOutSpec = tween(500)
-                                    ),
-                                    chatMessage = chatMessage
-                                )
-                            }
-                        }
+
                         stickyHeader(key = key) {
                             Text(
                                 modifier = Modifier.fillMaxWidth(),
@@ -332,6 +329,17 @@ private fun ChatRoomLazyColumn(
                                     color = MaterialTheme.colorScheme.secondaryTextColor
                                 )
                             )
+                        }
+                        state.messages[key]?.let { messages ->
+                            items(items = messages, key = { it.id }) { chatMessage ->
+                                ChatMessageBox(
+                                    modifier = Modifier.fillMaxWidth().animateItem(
+                                        fadeInSpec = tween(300),
+                                        fadeOutSpec = tween(500)
+                                    ),
+                                    chatMessage = chatMessage
+                                )
+                            }
                         }
                     }
 

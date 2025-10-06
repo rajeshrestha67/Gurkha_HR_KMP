@@ -30,7 +30,7 @@ class ChatModule {
     @Single
     fun getSocketManager() = SocketManager()
 
-    @Factory(binds = [ChatSocketRepository::class])
+    @Single(binds = [ChatSocketRepository::class])
     fun getChatSocketRepository(socketManager: SocketManager) =
         IOChatSocketRepository(socketManager)
 
@@ -48,7 +48,7 @@ class ChatModule {
     )
 
 
-    @Factory
+    @Single
     fun getConnectSocketUseCase(
         chatSocketRepository: ChatSocketRepository,
         userDataRepository: UserDataRepository
@@ -57,7 +57,7 @@ class ChatModule {
         userDataRepository = userDataRepository
     )
 
-    @Factory
+    @Single
     fun getJoinRoomUseCase(
         chatSocketRepository: ChatSocketRepository,
         userDataRepository: UserDataRepository
@@ -66,7 +66,7 @@ class ChatModule {
         userDataRepository = userDataRepository
     )
 
-    @Factory
+    @Single
     fun getSendMessageUseCase(
         chatSocketRepository: ChatSocketRepository,
         userDataRepository: UserDataRepository
@@ -75,7 +75,7 @@ class ChatModule {
         userDataRepository = userDataRepository
     )
 
-    @Factory
+    @Single
     fun getSendTypingUseCase(
         chatSocketRepository: ChatSocketRepository,
         userDataRepository: UserDataRepository
@@ -84,11 +84,11 @@ class ChatModule {
         userDataRepository = userDataRepository
     )
 
-    @Factory
+    @Single
     fun getObserveSocketEventsUseCase(chatSocketRepository: ChatSocketRepository) =
         ObserveSocketEventsUseCase(chatSocketRepository)
 
-    @Factory
+    @Single
     fun getDisconnectSocketUseCase(chatSocketRepository: ChatSocketRepository) =
         DisconnectSocketUseCase(chatSocketRepository)
 

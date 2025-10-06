@@ -38,6 +38,7 @@ class ChatRoomViewModel(
 
     private val _state = MutableStateFlow(ChatRoomScreenState())
 
+    //    val manager: SocketManager = getKoin().get()
     val state = _state
         .stateIn(
             scope = viewModelScope,
@@ -108,7 +109,11 @@ class ChatRoomViewModel(
     }
 
     private fun sendTyping(isTyping: Boolean) = viewModelScope.launch {
+//        _state.update {
+//            it.copy(isUserTyping = isTyping)
+//        }
         sendTypingUseCase(isTyping = isTyping, chatId = state.value.chatUserData?.chatId ?: "")
+
     }
 
     @OptIn(ExperimentalTime::class)
@@ -119,16 +124,17 @@ class ChatRoomViewModel(
             fromMe = true,
             message = message
         )
-        sendMessageUseCase(
-            chatId = state.value.chatUserData?.chatId ?: "",
-            message = message
-        )
         _state.update {
             it.copy(
                 messages = state.value.messages.addMessage(chatMessage),
                 message = ""
             )
         }
+        sendMessageUseCase(
+            chatId = state.value.chatUserData?.chatId ?: "",
+            message = message
+        )
+
     }
 
     private fun createChatMessage(fromMe: Boolean, message: String): ChatMessage {
@@ -142,18 +148,24 @@ class ChatRoomViewModel(
 
     }
 
-    private fun LinkedHashMap<String, List<ChatMessage>>.addMessage(chatMessage: ChatMessage): LinkedHashMap<String, List<ChatMessage>> {
+    private fun LinkedHashMap<String, List<ChatMessage>>.addMessage(
+        chatMessage: ChatMessage
+    ): LinkedHashMap<String, List<ChatMessage>> {
         val dateKey = chatMessage.date
         return LinkedHashMap(this).apply {
-            this[dateKey] = listOf(chatMessage) + (this[dateKey] ?: emptyList())
+            this[dateKey] = (this[dateKey] ?: emptyList()) + chatMessage
         }
     }
 
+    /*
+    private fun LinkedHashMap<String, List<ChatMessage>>.addMessage(chatMessage: ChatMessage): LinkedHashMap<String, List<ChatMessage>> { val dateKey = chatMessage.date return LinkedHashMap(this).apply { this[dateKey] = listOf(chatMessage) + (this[dateKey] ?: emptyList()) } }
+     */
     private fun initSocket(chatUserData: ChatUserData) = viewModelScope.launch {
         connectSocketUseCase(
             chatId = chatUserData.chatId,
             socketPrefix = "mbank"
         )
+
         observeSocketEventsUseCase.isConnected.collect {
             if (it) {
                 joinRoomUseCase(
@@ -183,11 +195,11 @@ class ChatRoomViewModel(
                         .groupByTo(LinkedHashMap()) { chatData ->
                             chatData.date
                         }
-                        .mapValues { entry ->
-                            entry.value.reversed()
-                        }
+//                        .mapValues { entry ->
+//                            entry.value.reversed()
+//                        }
                         .toList()
-                        .asReversed()
+//                        .asReversed()
                         .toMap(LinkedHashMap()),
                     metaData = data.metaData?.toChatMetaData(),
                     isLoading = false

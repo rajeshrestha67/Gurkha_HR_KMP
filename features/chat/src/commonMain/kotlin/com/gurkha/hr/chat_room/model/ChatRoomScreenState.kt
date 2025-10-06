@@ -5,11 +5,13 @@ import com.gurkha.hr.domain.chat.mapper.toChatFormattedTime
 import com.gurkha.hr.domain.chat.model.ChatMessageContent
 import com.gurkha.hr.domain.chat.model.ChatMessageMetaData
 import com.gurkha.model.chat.ChatUserData
+import kotlin.random.Random
 import kotlin.time.ExperimentalTime
 
 data class ChatRoomScreenState(
     val isLoading: Boolean = false,
     val isTyping: Boolean = false,
+    val isUserTyping: Boolean = false,
     val chatUserData: ChatUserData? = null,
     val message: String = "",
     val messages: LinkedHashMap<String, List<ChatMessage>> = LinkedHashMap(),
@@ -19,6 +21,7 @@ data class ChatRoomScreenState(
 
 
 data class ChatMessage @OptIn(ExperimentalTime::class) constructor(
+    val id: Int = Random.nextInt(Int.MAX_VALUE),
     val message: String,
     val date: String,
     val time: String,
