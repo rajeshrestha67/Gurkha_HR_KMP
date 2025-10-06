@@ -1,6 +1,5 @@
 package com.gurkha.hr.leave.model.leave
 
-import com.gurkha.hr.domain.attendance.attendanceStatus.model.AttendanceStatusData
 import com.gurkha.hr.domain.leave.leaveReport.model.LeaveReportData
 
 data class LeaveScreenState(
@@ -10,7 +9,6 @@ data class LeaveScreenState(
     val currentTapItem: LeaveTapItem = LeaveTapItem(),
     val fromDate: String = "",
     val toDate: String = "",
-//    val attendanceStatus: AttendanceStatusEnum = AttendanceStatusEnum.PENDING,
     val leaveStatus: LeaveStatusEnum = LeaveStatusEnum.PENDING,
     val employeeName: String = "",
     val isSelf: String = "",
@@ -21,11 +19,6 @@ data class LeaveScreenState(
 
 
 )
-
-//data class LeaveTapItem(
-//    val isLoading: Boolean = false,
-//    val result: List<AttendanceStatusData> = emptyList(),
-//)
 data class LeaveTapItem(
     val isLoading: Boolean = false,
     val result: List<LeaveReportData> = emptyList(),

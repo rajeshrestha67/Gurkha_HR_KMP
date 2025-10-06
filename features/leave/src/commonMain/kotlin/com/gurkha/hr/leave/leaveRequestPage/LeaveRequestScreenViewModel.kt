@@ -221,9 +221,21 @@ class LeaveRequestScreenViewModel(
                         assignee = state.value.assignee?.let {
                             Json.encodeToString(it)
                         } ?: "",
-                        reason = state.value.reason,
+                        reason = state.value.reason ?: "",
                     ),
                 )
+
+                _state.update {
+                    it.copy(
+                        leaveRequestData = null,
+                        startDate = null,
+                        endDate = null,
+                        leaveDuration = null,
+                        leaveType = null,
+                        assignee = null,
+                        reason = null
+                    )
+                }
             }
         }
     }

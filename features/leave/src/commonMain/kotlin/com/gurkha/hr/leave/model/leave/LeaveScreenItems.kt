@@ -10,25 +10,6 @@ data class LeaveItem(
     val color: Color,
     val backGroundColor: Color
 )
-
-//enum class AttendanceStatusEnum(val value: String) {
-//    PENDING("Pending"),
-//    APPROVED("Approved"),
-//    CANCELLED("Cancelled");
-//
-//    companion object {
-//        private val typeMap =
-//            enumValues<AttendanceStatusEnum>().associateBy { it.value.lowercase() }
-//
-//        fun get(typeName: String): AttendanceStatusEnum =
-//            AttendanceStatusEnum.typeMap[typeName.trim().lowercase()] ?: PENDING
-//
-//        val list: List<AttendanceStatusEnum>
-//            get() = entries.toList().map { it }
-//    }
-//
-//}
-
 enum class LeaveStatusEnum(val value: String) {
     PENDING("Pending"),
     APPROVED("Approved"),

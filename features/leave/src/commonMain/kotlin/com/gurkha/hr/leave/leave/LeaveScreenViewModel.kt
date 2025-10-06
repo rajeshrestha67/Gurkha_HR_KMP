@@ -3,6 +3,7 @@ package com.gurkha.hr.leave.leave
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gurkha.hr.domain.attendance.attendanceStatus.useCase.AttendanceStatusUseCase
+import com.gurkha.hr.domain.leave.leaveReport.model.LeaveReportData
 import com.gurkha.hr.domain.leave.leaveReport.useCase.LeaveReportUseCase
 import com.gurkha.hr.domain.leave.leaveRequest.usecase.LeaveRequestUseCase
 import com.gurkha.hr.leave.model.leave.LeaveScreenAction
@@ -39,18 +40,16 @@ class LeaveScreenViewModel(
 
 
     val state = _state
+        .onStart {
+            fetchLeaveReport(
+                leaveStatus = LeaveStatusEnum.PENDING,
+            )
+        }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = LeaveScreenState()
         )
-
-    //fetch for the pending in the starting
-    init {
-        fetchLeaveReport(
-            leaveStatus = LeaveStatusEnum.PENDING,
-        )
-    }
 
     fun onAction(action: LeaveScreenAction) {
         when (action) {
@@ -89,7 +88,7 @@ class LeaveScreenViewModel(
                     val leaveDuration =
                         Json.decodeFromString<LeaveDurationUi>(data.leaveDuration).value
 
-//                  call the request leave function
+//                  call the request leave function if json is not empty
                     requestLeave(
                         data = data,
                         assigneeId = assigneeId,
@@ -98,21 +97,11 @@ class LeaveScreenViewModel(
                     )
                 }
             }
-
-            is LeaveScreenAction.OnLeaveRequest -> {
-                _state.update {
-                    it.copy(
-                        isRequestingLeave = true
-                    )
-                }
-
-
-            }
         }
     }
 
 
-//    fetch leave report
+    //    fetch leave report
     fun fetchLeaveReport(
         leaveStatus: LeaveStatusEnum,
     ) = viewModelScope.launch {
@@ -206,29 +195,47 @@ class LeaveScreenViewModel(
             leaveTypeId = leaveTypeId,
             reason = data.reason,
             assigneeId = assigneeId
-        ).onSuccess {data ->
+        ).onSuccess { response ->
+            _state.update { currentState ->
+                val updatedPendingList = currentState.pendingTapItem.result + LeaveReportData(
+                    employeeId = 0,
+                    startDate = data.startDate,
+                    endDate = data.endDate,
+                    leaveStatus = LeaveStatusEnum.PENDING.value,
+                    reason = data.reason,
+                    leaveDuration = data.leaveDuration,
+                    assigneeName = Json.decodeFromString<LeaveAssigneeUi>(data.assignee).value,
+                    totalDays = 0.0,
+                    leaveType = Json.decodeFromString<LeaveTypeUi>(data.leaveType).value,
+                    requestedDate = ""
+                )
+
+                val updatedPendingTab =
+                    currentState.pendingTapItem.copy(result = updatedPendingList)
+
+                currentState.copy(
+                    pendingTapItem = updatedPendingTab,
+                    currentTapItem = if (currentState.leaveStatus == LeaveStatusEnum.PENDING) updatedPendingTab
+                    else currentState.currentTapItem,
+                    isRequestingLeave = false,
+                    leaveRequestDataJson = null
+                )
+            }
+//            send the success message
+            _successChannel.send(response.message)
+
+
+        }.onError { error ->
             _state.update {
                 it.copy(
                     isRequestingLeave = false,
-                )
-            }
-
-//            refetch the pending data
-            fetchLeaveReport(
-                leaveStatus = LeaveStatusEnum.PENDING
-            )
-
-//            temporary use
-            _successChannel.send("Leave Request Successfully")
-        }.onError {error->
-            _state.update {
-                it.copy(
-                    isRequestingLeave = false
+                    leaveRequestDataJson = null
                 )
             }
             _errorChannel.send(error.toErrorMessage())
         }
     }
+
 
 }
 

@@ -14,7 +14,7 @@ data class LeaveRequestScreenState(
     val leaveDuration: LeaveDurationUi? = null,
     val leaveType: LeaveTypeUi? = null,
     val assignee: LeaveAssigneeUi? = null,
-    val reason: String = "",
+    val reason: String? = "",
 
     val startDateError: StringResource? = null,
     val endDateError: StringResource? = null,

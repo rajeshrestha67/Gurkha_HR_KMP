@@ -272,7 +272,8 @@ fun EPRTextField(
     shape: Shape = MaterialTheme.shapes.medium,
     focusedBorderColor: Color = MaterialTheme.colorScheme.primary,
     unfocusedBorderColor: Color = MaterialTheme.colorScheme.borderColor,
-    onDropDown: (() -> Unit)? = null
+    onDropDown: (() -> Unit)? = null,
+    onImeAction: (() -> Unit)? = null
 ) {
     var textFieldValueState by remember { mutableStateOf(TextFieldValue(text = text)) }
 
@@ -292,7 +293,11 @@ fun EPRTextField(
         validateOnFocusChanged = validateOnFocusChanged,
         visualTransformation = visualTransformation,
         keyboardOptions = keyboardOptions,
-        keyboardActions = keyboardActions,
+        keyboardActions = KeyboardActions(
+            onSend = {
+                onImeAction?.invoke()
+            }
+        ),
         readOnly = readOnly,
         error = error,
         maxLength = maxLength,

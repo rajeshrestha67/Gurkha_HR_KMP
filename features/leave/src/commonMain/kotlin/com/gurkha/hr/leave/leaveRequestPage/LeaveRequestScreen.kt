@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -23,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
@@ -238,22 +241,24 @@ fun LeaveRequestScreenForm(
 
 //        leave reason
         EPRTextField(
-            text = state.reason,
+            text = state.reason ?: "",
             label = stringResource(SharedRes.Strings.reason),
             hint = stringResource(SharedRes.Strings.enterReason),
             onValueChange = {
                 onAction(LeaveRequestScreenAction.OnReasonChange(it))
             },
+            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Send),
             rules = FormValidate.requiredValidationRules,
             error = state.reasonError,
             onErrorStateChange = {
                 onAction(LeaveRequestScreenAction.OnReasonError(it))
             },
+            onImeAction = {
+                onAction(LeaveRequestScreenAction.Submit)
+            },
             height = MaterialTheme.dimens.reasonTextField
         )
-        Spacer(
-            modifier = Modifier.weight(1f)
-        )
+
 
 //        buttons for cancel and submit
         Column(
