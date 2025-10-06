@@ -11,11 +11,11 @@ import com.gurkha.hr.leave.model.leave.LeaveScreenState
 import com.gurkha.hr.leave.model.leave.LeaveStatusEnum
 import com.gurkha.hr.networkhelper.onError
 import com.gurkha.hr.networkhelper.onSuccess
-import com.gurkha.hr.networkhelper.toErrorMessage
 import com.gurkha.model.leave.leave_request.LeaveRequestData
 import com.gurkha.model.leave.ui.LeaveAssigneeUi
 import com.gurkha.model.leave.ui.LeaveDurationUi
 import com.gurkha.model.leave.ui.LeaveTypeUi
+import com.gurkha.model.network.toErrorMessage
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -235,7 +235,5 @@ class LeaveScreenViewModel(
             _errorChannel.send(error.toErrorMessage())
         }
     }
-
-
 }
 

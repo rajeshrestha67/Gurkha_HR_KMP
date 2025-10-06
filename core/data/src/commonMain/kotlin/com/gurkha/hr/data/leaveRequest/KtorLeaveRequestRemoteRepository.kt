@@ -2,7 +2,6 @@ package com.gurkha.hr.data.leaveRequest
 
 import com.gurkha.hr.domain.leave.leaveRequest.repository.LeaveRemoteRepository
 import com.gurkha.hr.networkhelper.BaseUrl
-import com.gurkha.hr.networkhelper.DataError
 import com.gurkha.hr.networkhelper.ERPResult
 import com.gurkha.hr.networkhelper.EndPoint
 import com.gurkha.hr.networkhelper.get
@@ -14,6 +13,7 @@ import com.gurkha.model.leave.leaveReport.LeaveReportResponseDto
 import com.gurkha.model.leave.leaveRequest.LeaveRequestDto
 import com.gurkha.model.leave.leaveRequest.LeaveRequestResponseDto
 import com.gurkha.model.leave.leaveType.LeaveTypeResponseDto
+import com.gurkha.model.network.DataError
 import io.ktor.client.HttpClient
 import io.ktor.client.request.setBody
 
