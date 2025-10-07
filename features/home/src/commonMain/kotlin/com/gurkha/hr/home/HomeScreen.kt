@@ -2,6 +2,10 @@ package com.gurkha.hr.home
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -12,7 +16,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -44,21 +47,24 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil3.compose.AsyncImage
 import com.gurkha.hr.components.ProfilePicture
+import com.gurkha.hr.components.extractInitials
 import com.gurkha.hr.components.graphLine.SmoothLineGraph
 import com.gurkha.hr.components.shimmer.ShimmerView
+import com.gurkha.hr.components.swipeToDismiss.SwipeToDismissBox
 import com.gurkha.hr.home.model.AttendanceItem
 import com.gurkha.hr.home.model.CalendarItem
 import com.gurkha.hr.home.model.HomeScreenActions
@@ -82,6 +88,7 @@ fun HomeScreen(
 ) {
     val viewModel: HomeScreenViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
+
 
     Scaffold(
         contentWindowInsets = WindowInsets(),
@@ -154,6 +161,7 @@ fun HomeScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreenContent(
     modifier: Modifier = Modifier,
@@ -161,11 +169,54 @@ fun HomeScreenContent(
     onFetchAttendance: () -> Unit
 ) {
     val pagerState = rememberPagerState(pageCount = { 2 })
-    val listState = rememberLazyListState()
+    val calendarListState = rememberLazyListState()
     val activeIndex = state.calendarItem.indexOfFirst { it.active }
     val (showNotification, onChangeNotification) = rememberSaveable {
         mutableStateOf(true)
     }
+    val mainListState = rememberLazyListState()
+    var previousIndex by remember { mutableStateOf(0) }
+    var previousScrollOffset by remember { mutableStateOf(0) }
+
+// Derived state for scroll direction
+    val isScrollingUp by remember {
+        derivedStateOf {
+            val currentIndex = mainListState.firstVisibleItemIndex
+            val currentOffset = mainListState.firstVisibleItemScrollOffset
+
+            val scrollingUp = when {
+                currentIndex < previousIndex -> true
+                currentIndex > previousIndex -> false
+                else -> currentOffset < previousScrollOffset
+            }
+
+            previousIndex = currentIndex
+            previousScrollOffset = currentOffset
+
+            scrollingUp
+        }
+    }
+
+    val isAtTop by remember {
+        derivedStateOf {
+            mainListState.firstVisibleItemIndex == 0 &&
+                    mainListState.firstVisibleItemScrollOffset == 0
+        }
+    }
+    val isAtEnd by remember {
+        derivedStateOf {
+            val lastVisibleItem = mainListState.layoutInfo.visibleItemsInfo.lastOrNull()
+            val totalItemsCount = mainListState.layoutInfo.totalItemsCount
+
+            // Check if the last visible item is the last item in the list
+            lastVisibleItem != null && lastVisibleItem.index == totalItemsCount - 1
+        }
+    }
+
+    val shouldShowSwipeToDismiss by remember {
+        derivedStateOf { isScrollingUp || isAtTop || isAtEnd }
+    }
+
 
 //to show the active week date and day starting from the sunday
     LaunchedEffect(activeIndex) {
@@ -182,7 +233,7 @@ fun HomeScreenContent(
                 else -> 0
             }
             val sundayIndex = (activeIndex - dayOfWeekNumber + 1).coerceAtLeast(0)
-            listState.scrollToItem(sundayIndex)
+            calendarListState.scrollToItem(sundayIndex)
         }
     }
 
@@ -197,11 +248,12 @@ fun HomeScreenContent(
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
+            state = mainListState,
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3),
             horizontalAlignment = Alignment.CenterHorizontally,
             contentPadding = PaddingValues(
                 top = MaterialTheme.dimens.small2,
-                bottom = MaterialTheme.dimens.medium3
+                bottom = MaterialTheme.dimens.swipeToDismissHeight
             )
         ) {
             //    Notification part
@@ -212,7 +264,7 @@ fun HomeScreenContent(
 
             //            calender part
             calendarView(
-                listState = listState,
+                listState = calendarListState,
                 calendarItem = state.calendarItem
             )
 
@@ -233,9 +285,25 @@ fun HomeScreenContent(
             attendanceSection(
                 pagerState = pagerState
             )
+
+        }
+        AnimatedVisibility(
+            visible = shouldShowSwipeToDismiss,
+            enter = slideInVertically(initialOffsetY = { it }) + fadeIn(),
+            exit = slideOutVertically(targetOffsetY = { it }) + fadeOut(),
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+        ) {
+            SwipeToDismissBox(
+                text = "Swipe to Check In",
+                onDismissed = {
+
+                }
+            )
         }
     }
 }
+
 
 fun LazyListScope.anniversarySection(
     state: HomeScreenState
@@ -523,22 +591,45 @@ fun LazyListScope.notificationView(
     onChangeNotification: (Boolean) -> Unit
 ) {
     item(key = "notification") {
-        AnimatedVisibility(showNotification) {
+        AnimatedVisibility(
+            visible = showNotification,
+            enter = slideInVertically(
+                initialOffsetY = { -it }
+            ) + fadeIn(),
+            exit = slideOutVertically(
+                targetOffsetY = { -it / 2 }
+            ) + fadeOut()
+        ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(
-                        end = MaterialTheme.dimens.small1,
+                        end = MaterialTheme.dimens.small3,
                         start = MaterialTheme.dimens.small3
+                    ).background(
+                        color = MaterialTheme.colorScheme.error,
+                        shape = MaterialTheme.shapes.medium
                     ),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Notification view")
+                Text(
+                    modifier = Modifier.padding(
+                        all = MaterialTheme.dimens.small2
+                    ),
+                    text = "Notification view",
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        color = MaterialTheme.colorScheme.onError
+                    )
+                )
                 IconButton(onClick = {
                     onChangeNotification(!showNotification)
                 }) {
-                    Icon(Icons.Filled.Close, contentDescription = "close icon")
+                    Icon(
+                        imageVector = Icons.Filled.Close,
+                        contentDescription = "close icon",
+                        tint = MaterialTheme.colorScheme.onError
+                    )
                 }
             }
         }
@@ -626,16 +717,19 @@ fun EventCard(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small1)
         ) {
-            AsyncImage(
-                model = imageUrl,
-                contentDescription = fullName,
-                contentScale = ContentScale.Fit,
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .size(MaterialTheme.dimens.medium2)
-                    .aspectRatio(ratio = 1f)
-                    .background(Color.Black)
+
+            ProfilePicture(
+                imageUrl = imageUrl,
+                employeeName = fullName,
+                nameInitials = fullName.extractInitials(),
+                size = MaterialTheme.dimens.medium2,
+                shape = CircleShape,
+                background = MaterialTheme.colorScheme.imageBackgroundColor,
+                borderWidth = 0.dp,
+                borderColor = Color.Transparent,
+                ratio = 1f
             )
+
             Text(
                 text = "",
                 style = MaterialTheme.typography.titleSmall.copy(
