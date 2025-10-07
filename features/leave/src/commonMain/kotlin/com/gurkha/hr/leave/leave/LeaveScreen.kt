@@ -227,7 +227,7 @@ fun LeaveScreenContent(
 
 
 fun LazyListScope.leaveOptions(itemsPerRow: Int = 2, state: LeaveScreenState) {
-   state.leaveItemsList.chunked(itemsPerRow).forEach { rowItems ->
+    state.leaveItemsList.chunked(itemsPerRow).forEach { rowItems ->
         item {
             Row(
                 modifier = Modifier
@@ -421,7 +421,7 @@ fun LazyItemScope.ResultBox(
         {
             Column {
                 Text(
-                    text = "Apply Days",
+                    text = stringResource(SharedRes.Strings.applyDays),
                     style = MaterialTheme.typography.titleSmall.copy(
                         color = MaterialTheme.colorScheme.darkPrimaryTextColor
                     )
@@ -436,7 +436,7 @@ fun LazyItemScope.ResultBox(
 
             Column {
                 Text(
-                    text = "Approver",
+                    text = stringResource(SharedRes.Strings.approver),
                     style = MaterialTheme.typography.titleSmall.copy(
                         color = MaterialTheme.colorScheme.darkPrimaryTextColor
                     )
@@ -450,7 +450,7 @@ fun LazyItemScope.ResultBox(
 
             Column {
                 Text(
-                    text = "Leave Type",
+                    text = stringResource(SharedRes.Strings.leaveType),
                     style = MaterialTheme.typography.titleSmall.copy(
                         color = MaterialTheme.colorScheme.darkPrimaryTextColor
                     )
@@ -473,12 +473,13 @@ fun LazyItemScope.ResultBox(
         )
         {
             Text(
-                text = "Reason", style = MaterialTheme.typography.titleSmall.copy(
+                text = stringResource(SharedRes.Strings.reason), style = MaterialTheme.typography.titleSmall.copy(
                     color = MaterialTheme.colorScheme.darkPrimaryTextColor
                 )
             )
             Text(
                 text = item.reason,
+                maxLines = 3,
                 style = MaterialTheme.typography.titleSmall.copy(
                     color = MaterialTheme.colorScheme.primaryTextColor
                 )

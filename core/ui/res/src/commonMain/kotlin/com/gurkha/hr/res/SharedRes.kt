@@ -9,7 +9,9 @@ import gurkhahr.core.ui.res.generated.resources.address
 import gurkhahr.core.ui.res.generated.resources.all_leaves
 import gurkhahr.core.ui.res.generated.resources.allocated_leave
 import gurkhahr.core.ui.res.generated.resources.annual_leave
+import gurkhahr.core.ui.res.generated.resources.apply_days
 import gurkhahr.core.ui.res.generated.resources.approved
+import gurkhahr.core.ui.res.generated.resources.approver
 import gurkhahr.core.ui.res.generated.resources.are_you_sure
 import gurkhahr.core.ui.res.generated.resources.attendance
 import gurkhahr.core.ui.res.generated.resources.cancel
@@ -22,6 +24,7 @@ import gurkhahr.core.ui.res.generated.resources.confirm
 import gurkhahr.core.ui.res.generated.resources.confirm_password
 import gurkhahr.core.ui.res.generated.resources.contact_info
 import gurkhahr.core.ui.res.generated.resources.current_password
+import gurkhahr.core.ui.res.generated.resources.date
 import gurkhahr.core.ui.res.generated.resources.date_of_birth
 import gurkhahr.core.ui.res.generated.resources.do_you_really_want_to_logout
 import gurkhahr.core.ui.res.generated.resources.document
@@ -171,6 +174,11 @@ object SharedRes {
         val annualLeave = Res.string.annual_leave
         val maternityLeave = Res.string.maternity_leave
         val mourningLeave = Res.string.mourning_leave
+
+        val date = Res.string.date
+        val approver = Res.string.approver
+        val applyDays = Res.string.apply_days
+        val leave_type = Res.string.leave_type
 
         val invalidEmailAddress = Res.string.invalid_email_address
         val email = Res.string.email

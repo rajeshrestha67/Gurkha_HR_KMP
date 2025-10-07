@@ -41,6 +41,9 @@
     <string name="leave_processing">प्रशोधन छोड्नुहोस्</string>">
     <string name="ok">ठीक छ</string>">
 
+    <string name="date">मिति</string>
+    <string name="apply_days">दिनहरू लागू गर्नुहोस्</string>
+    <string name="approver">अनुमोदनकर्ता</string>
 
     <string name="view_all">सबै हेर्नुहोस्</string>
     <string name="profile">प्रोफाइल</string>
