@@ -312,7 +312,6 @@ fun LazyListScope.leaveStatusTab(
                                 item
                             )
                         )
-
                     },
                     text = {
                         val color =

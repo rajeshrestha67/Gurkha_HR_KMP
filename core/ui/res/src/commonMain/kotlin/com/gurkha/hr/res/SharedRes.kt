@@ -17,6 +17,9 @@ import gurkhahr.core.ui.res.generated.resources.attendance
 import gurkhahr.core.ui.res.generated.resources.cancel
 import gurkhahr.core.ui.res.generated.resources.cancelled
 import gurkhahr.core.ui.res.generated.resources.assignee
+import gurkhahr.core.ui.res.generated.resources.attendance_approved
+import gurkhahr.core.ui.res.generated.resources.attendance_cancelled
+import gurkhahr.core.ui.res.generated.resources.attendance_pending
 import gurkhahr.core.ui.res.generated.resources.change_password
 import gurkhahr.core.ui.res.generated.resources.chat
 import gurkhahr.core.ui.res.generated.resources.company_assets
@@ -67,6 +70,7 @@ import gurkhahr.core.ui.res.generated.resources.log_out
 import gurkhahr.core.ui.res.generated.resources.login
 import gurkhahr.core.ui.res.generated.resources.marital_status
 import gurkhahr.core.ui.res.generated.resources.maternity_leave
+import gurkhahr.core.ui.res.generated.resources.missed_attendance
 import gurkhahr.core.ui.res.generated.resources.mourning_leave
 import gurkhahr.core.ui.res.generated.resources.my_attendance
 import gurkhahr.core.ui.res.generated.resources.nationality
@@ -179,6 +183,11 @@ object SharedRes {
         val approver = Res.string.approver
         val applyDays = Res.string.apply_days
         val leave_type = Res.string.leave_type
+
+        val missed_attendance = Res.string.missed_attendance
+        val attendance_approved = Res.string.attendance_approved
+        val attendance_cancelled = Res.string.attendance_cancelled
+        val attendance_pending = Res.string.attendance_pending
 
         val invalidEmailAddress = Res.string.invalid_email_address
         val email = Res.string.email

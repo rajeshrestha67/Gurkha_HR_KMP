@@ -45,6 +45,11 @@
     <string name="apply_days">दिनहरू लागू गर्नुहोस्</string>
     <string name="approver">अनुमोदनकर्ता</string>
 
+    <string name="missed_attendance">छुटेको\nउपस्थिति</string>
+    <string name="attendance_approved">उपस्थिति\nअनुमोदित</string>
+    <string name="attendance_cancelled">उपस्थिति\nरद्द गरियो</string>
+    <string name="attendance_pending">उपस्थिति\nविचाराधिन</string>
+
     <string name="view_all">सबै हेर्नुहोस्</string>
     <string name="profile">प्रोफाइल</string>
     <string name="time_and_attendance">समय र उपस्थिति</string>
