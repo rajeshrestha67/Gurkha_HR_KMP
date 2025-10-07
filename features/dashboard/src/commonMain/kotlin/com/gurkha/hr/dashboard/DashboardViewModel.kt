@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.gurkha.hr.dashboard.model.DashboardScreenAction
 import com.gurkha.hr.dashboard.model.DashboardScreenState
 import com.gurkha.hr.dashboard.route.DashboardRoute
-import com.gurkha.hr.domain.userDetail.usecase.FetchRemoteUserDetailUseCase
+import com.gurkha.hr.domain.userDetail.usecase.FetchUserDetailUseCase
 import com.gurkha.hr.networkhelper.onError
 import com.gurkha.hr.networkhelper.onSuccess
 import com.gurkha.model.AuthState
@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class DashboardViewModel(
-    private val userDetailUseCase: FetchRemoteUserDetailUseCase,
+    private val userDetailUseCase: FetchUserDetailUseCase,
     private val authState: AuthState
 ) : ViewModel() {
     private val _state = MutableStateFlow(DashboardScreenState())

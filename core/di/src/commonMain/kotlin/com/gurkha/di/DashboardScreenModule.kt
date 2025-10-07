@@ -4,7 +4,7 @@ import com.gurkha.hr.dashboard.DashboardViewModel
 import com.gurkha.hr.data.userDetail.KtorUserDetailRemoteRepository
 import com.gurkha.hr.datastore.user_data.repository.UserDataRepository
 import com.gurkha.hr.domain.userDetail.repository.UserDetailRemoteRepository
-import com.gurkha.hr.domain.userDetail.usecase.FetchRemoteUserDetailUseCase
+import com.gurkha.hr.domain.userDetail.usecase.FetchUserDetailUseCase
 import com.gurkha.model.AuthState
 import io.ktor.client.HttpClient
 import org.koin.android.annotation.KoinViewModel
@@ -22,8 +22,8 @@ class DashboardScreenModule {
     fun userDetailUseCase(
         userDetailRemoteRepository: UserDetailRemoteRepository,
         userDataRepository: UserDataRepository
-    ): FetchRemoteUserDetailUseCase =
-        FetchRemoteUserDetailUseCase(
+    ): FetchUserDetailUseCase =
+        FetchUserDetailUseCase(
             userDetailRemoteRepository,
             userDataRepository
         )
@@ -31,7 +31,7 @@ class DashboardScreenModule {
 
     @KoinViewModel
     fun getDashboardViewModel(
-        userDetailUseCase: FetchRemoteUserDetailUseCase,
+        userDetailUseCase: FetchUserDetailUseCase,
         authState: AuthState
     ) = DashboardViewModel(
         userDetailUseCase = userDetailUseCase,

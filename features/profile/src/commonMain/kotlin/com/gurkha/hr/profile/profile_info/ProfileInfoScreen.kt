@@ -81,11 +81,11 @@ fun ProfileInfoScreenContainer(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
-
+        contentWindowInsets = WindowInsets(),
 
         topBar = {
             TopAppBar(
-
+                windowInsets = WindowInsets(),
                 title = { Text(stringResource(SharedRes.Strings.profile)) },
                 navigationIcon = {
                     IconButton(onClick = onBackPressed) {
