@@ -56,6 +56,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
+import com.gurkha.hr.components.ProfilePicture
 import com.gurkha.hr.components.graphLine.SmoothLineGraph
 import com.gurkha.hr.components.shimmer.ShimmerView
 import com.gurkha.hr.home.model.AttendanceItem
@@ -65,6 +66,7 @@ import com.gurkha.hr.home.model.HomeScreenState
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.borderColor
 import com.gurkha.hr.res.theme.dimens
+import com.gurkha.hr.res.theme.imageBackgroundColor
 import com.gurkha.hr.res.theme.linkColor
 import com.gurkha.hr.res.theme.primaryTextColor
 import org.jetbrains.compose.resources.StringResource
@@ -82,7 +84,7 @@ fun HomeScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     Scaffold(
-        contentWindowInsets = WindowInsets(0.dp),
+        contentWindowInsets = WindowInsets(),
         modifier = Modifier
             .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
             .fillMaxSize(),
@@ -90,20 +92,21 @@ fun HomeScreen(
         topBar = {
             TopAppBar(
                 modifier = Modifier.fillMaxWidth(),
-                windowInsets = WindowInsets(0.dp),
+                windowInsets = WindowInsets(),
                 title = {
                     Row(
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        AsyncImage(
-                            modifier = Modifier
-                                .clip(shape = CircleShape)
-                                .size(size = MaterialTheme.dimens.medium3)
-                                .aspectRatio(ratio = 1f)
-                                .background(Color.Black),
-                            model = SharedRes.getRes(path = "drawable/gurkha_hr.png"),
-                            contentDescription = "avatar",
-                            contentScale = ContentScale.Fit,
+                        ProfilePicture(
+                            imageUrl = state.userProfileUrl,
+                            employeeName = state.fullName,
+                            nameInitials = state.initials,
+                            size = MaterialTheme.dimens.medium3,
+                            shape = CircleShape,
+                            background = MaterialTheme.colorScheme.imageBackgroundColor,
+                            borderWidth = 0.5.dp,
+                            borderColor = MaterialTheme.colorScheme.borderColor,
+                            ratio = 1f
                         )
 
                         Column(

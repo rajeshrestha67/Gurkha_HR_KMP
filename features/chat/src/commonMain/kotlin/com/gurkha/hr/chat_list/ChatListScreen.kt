@@ -2,7 +2,6 @@ package com.gurkha.hr.chat_list
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -38,13 +37,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil3.compose.AsyncImage
 import com.gurkha.hr.chat_list.model.ChatListScreenAction
 import com.gurkha.hr.chat_list.model.ChatListScreenState
+import com.gurkha.hr.components.ProfilePicture
 import com.gurkha.hr.components.shimmer.ShimmerView
 import com.gurkha.hr.components.textField.ERPTextField
 import com.gurkha.hr.domain.chat.model.ChatItem
@@ -264,32 +262,18 @@ private fun ChatListItem(chatItem: ChatItem, onClick: () -> Unit) {
         ),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Box(
-            modifier = Modifier
-                .size(MaterialTheme.dimens.medium3)
-                .background(color = chatItem.backgroundColor, shape = CircleShape)
-                .border(
-                    width = 0.5.dp,
-                    color = MaterialTheme.colorScheme.borderColor,
-                    shape = CircleShape
-                )
-                .aspectRatio(1f)
-        ) {
-            chatItem.profileImageUrl?.let {
-                AsyncImage(
-                    modifier = Modifier.fillMaxSize().clip(CircleShape),
-                    model = chatItem.profileImageUrl,
-                    contentDescription = chatItem.employeeName,
-                    contentScale = ContentScale.Crop
-                )
-            } ?: Text(
-                modifier = Modifier.align(Alignment.Center),
-                text = chatItem.nameInitials,
-                style = MaterialTheme.typography.titleLarge.copy(
-                    color = MaterialTheme.colorScheme.primaryTextColor
-                )
-            )
-        }
+
+        ProfilePicture(
+            imageUrl = chatItem.profileImageUrl,
+            employeeName = chatItem.employeeName,
+            nameInitials = chatItem.nameInitials,
+            size = MaterialTheme.dimens.medium3,
+            shape = CircleShape,
+            background = chatItem.backgroundColor,
+            borderWidth = 0.5.dp,
+            borderColor = MaterialTheme.colorScheme.borderColor,
+            ratio = 1f
+        )
 
 
         Column(
@@ -305,7 +289,7 @@ private fun ChatListItem(chatItem: ChatItem, onClick: () -> Unit) {
 
                 Box(
                     modifier = Modifier
-                        .size(size = MaterialTheme.dimens.medium1)
+                        .size(size = MaterialTheme.dimens.small3)
                         .aspectRatio(ratio = 1f)
                         .background(color = MaterialTheme.colorScheme.error, shape = CircleShape)
 

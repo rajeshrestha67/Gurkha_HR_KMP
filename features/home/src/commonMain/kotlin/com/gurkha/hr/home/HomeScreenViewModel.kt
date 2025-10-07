@@ -113,6 +113,7 @@ class HomeScreenViewModel(
                 it.copy(
                     isProfileLoading = false,
                     fullName = data.fullName,
+                    initials = data.initials,
                     levelName = data.levelName,
                     email = data.email,
                     userProfileUrl = data.userProfileUrl,

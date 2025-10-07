@@ -41,9 +41,9 @@ class ProfileScreenViewModel(
                     levelName = data.levelName,
                     userProfileUrl = data.userProfileUrl,
                     phoneNumber = data.phoneNumber,
+                    initials = data.initials
 
-
-                    )
+                )
             }
         }.onError {
             _state.update {

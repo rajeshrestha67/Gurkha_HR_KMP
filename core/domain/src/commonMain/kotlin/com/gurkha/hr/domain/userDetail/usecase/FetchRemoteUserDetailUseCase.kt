@@ -1,5 +1,6 @@
 package com.gurkha.hr.domain.userDetail.usecase
 
+import com.gurkha.hr.components.extractInitials
 import com.gurkha.hr.datastore.user_data.model.UserData
 import com.gurkha.hr.datastore.user_data.repository.UserDataRepository
 import com.gurkha.hr.domain.userDetail.mapper.toData
@@ -26,6 +27,7 @@ class FetchRemoteUserDetailUseCase(
                         email = userDetail.email,
                         phoneNumber = userDetail.phoneNumber,
                         fullName = userDetail.fullName,
+                        initials = userDetail.fullName.extractInitials(),
                         levelName = userDetail.levelName,
                         employeeId = userDetail.employeeId,
                         branchName = userDetail.branchName,

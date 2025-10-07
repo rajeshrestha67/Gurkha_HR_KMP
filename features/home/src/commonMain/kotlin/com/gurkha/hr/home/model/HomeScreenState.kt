@@ -11,6 +11,7 @@ data class HomeScreenState(
 //    val requestRow2: List<AttendanceItem> = attendanceList2,
     val homeGridItemsToShow: List<AttendanceItem> = homeGridItems,
     val fullName: String = "",
+    val initials: String = "",
     val levelName: String = "",
     val email: String = "",
     val userProfileUrl: String? = null,

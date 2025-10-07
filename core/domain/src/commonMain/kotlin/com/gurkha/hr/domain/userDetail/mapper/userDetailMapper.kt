@@ -1,5 +1,6 @@
 package com.gurkha.hr.domain.userDetail.mapper
 
+import com.gurkha.hr.components.extractInitials
 import com.gurkha.hr.domain.userDetail.model.UserDetailData
 import com.gurkha.model.userDetail.UserDetailResponseDto
 
@@ -20,5 +21,6 @@ fun UserDetailResponseDto.toData(): UserDetailData {
         maritalStatus = detail?.employeeDetails?.maritalStatus ?: "",
         guardianName = detail?.employeeDetails?.guardianName ?: "",
         guardianPhone = detail?.employeeDetails?.guardianNumber ?: "",
+        initials = detail?.fullName?.extractInitials() ?: ""
     )
 }
