@@ -50,6 +50,8 @@
     <string name="attendance_cancelled">उपस्थिति\nरद्द गरियो</string>
     <string name="attendance_pending">उपस्थिति\nविचाराधिन</string>
 
+    <string name="no_data_found">कुनै डेटा फेला परेन</string>
+
     <string name="view_all">सबै हेर्नुहोस्</string>
     <string name="profile">प्रोफाइल</string>
     <string name="time_and_attendance">समय र उपस्थिति</string>

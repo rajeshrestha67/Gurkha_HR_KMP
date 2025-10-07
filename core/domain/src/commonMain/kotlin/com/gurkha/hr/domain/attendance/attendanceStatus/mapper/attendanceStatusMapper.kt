@@ -8,9 +8,9 @@ fun AttendanceStatusResponseDto.toData(): List<AttendanceStatusData> {
         AttendanceStatusData(
             requestedDate = it.requestedDate ?: "",
             requestRemarks = it.requestRemarks ?: "",
-            clockInTime = it.clockInTime ?: "",
-            clockOutTime = it.clockOutTime ?: "",
-            assignedTo = it.assignedTo ?: "",
+            clockInTime = it.clockInTime ?: "--:--",
+            clockOutTime = it.clockOutTime ?: "--:--",
+            assignedTo = it.assignedTo ?: "-",
             approvedRemarks = it.approvedRemarks ?: "",
             lastModifiedBy = it.lastModifiedBy ?: "",
             lastModifiedDate = it.lastModifiedDate ?: "",

@@ -77,6 +77,7 @@ import gurkhahr.core.ui.res.generated.resources.nationality
 import gurkhahr.core.ui.res.generated.resources.new_password
 import gurkhahr.core.ui.res.generated.resources.next
 import gurkhahr.core.ui.res.generated.resources.no
+import gurkhahr.core.ui.res.generated.resources.no_data_found
 import gurkhahr.core.ui.res.generated.resources.ok
 import gurkhahr.core.ui.res.generated.resources.outline_logout_24
 import gurkhahr.core.ui.res.generated.resources.password
@@ -188,6 +189,8 @@ object SharedRes {
         val attendance_approved = Res.string.attendance_approved
         val attendance_cancelled = Res.string.attendance_cancelled
         val attendance_pending = Res.string.attendance_pending
+
+        val no_data_found = Res.string.no_data_found
 
         val invalidEmailAddress = Res.string.invalid_email_address
         val email = Res.string.email

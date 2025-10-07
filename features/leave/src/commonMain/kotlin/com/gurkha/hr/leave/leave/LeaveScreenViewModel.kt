@@ -27,7 +27,6 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
 class LeaveScreenViewModel(
-    private val attendanceStatusUseCase: AttendanceStatusUseCase,
     private val leaveRequestUseCase: LeaveRequestUseCase,
     private val leaveReportUseCase: LeaveReportUseCase
 ) : ViewModel() {

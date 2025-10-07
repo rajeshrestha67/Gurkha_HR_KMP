@@ -13,8 +13,6 @@ data class LeaveScreenState(
     val fromDate: String = "",
     val toDate: String = "",
     val leaveStatus: LeaveStatusEnum = LeaveStatusEnum.PENDING,
-    val employeeName: String = "",
-    val isSelf: String = "",
     val leaveRequestDataJson: String? = null,
 
     val isRequestingLeave: Boolean = false,

@@ -1,8 +1,8 @@
 package com.gurkha.di
 
-import com.gurkha.hr.data.attendanceStatus.KtorAttendanceStatusRemoteRepository
+import com.gurkha.hr.data.attendance.KtorAttendanceRemoteRepository
 import com.gurkha.hr.data.leaveRequest.KtorLeaveRequestRemoteRepository
-import com.gurkha.hr.domain.attendance.attendanceStatus.repository.AttendanceStatusRemoteRepository
+import com.gurkha.hr.domain.attendance.attendanceReport.repository.AttendanceRemoteRepository
 import com.gurkha.hr.domain.attendance.attendanceStatus.useCase.AttendanceStatusUseCase
 import com.gurkha.hr.domain.form.RequiredValidationUseCase
 import com.gurkha.hr.domain.leave.leaveAssignee.usecase.LeaveAssigneeUseCase
@@ -20,9 +20,9 @@ import org.koin.core.annotation.Module
 
 @Module
 class LeaveScreenModule {
-    @Factory(binds = [AttendanceStatusRemoteRepository::class])
-    fun attendanceStatusRemoteRepository(httpClient: HttpClient) =
-        KtorAttendanceStatusRemoteRepository(httpClient)
+    @Factory(binds = [AttendanceRemoteRepository::class])
+    fun attendanceRemoteRepository(httpClient: HttpClient) =
+        KtorAttendanceRemoteRepository(httpClient)
 
     @Factory(binds = [LeaveRemoteRepository::class])
     fun leaveRemoteRepository(httpClient: HttpClient) =
@@ -51,8 +51,8 @@ class LeaveScreenModule {
     )
 
     @Factory
-    fun attendanceStatusUseCase(attendanceStatusRemoteRepository: AttendanceStatusRemoteRepository): AttendanceStatusUseCase =
-        AttendanceStatusUseCase(attendanceStatusRemoteRepository)
+    fun attendanceStatusUseCase(attendanceRemoteRepository: AttendanceRemoteRepository): AttendanceStatusUseCase =
+        AttendanceStatusUseCase(attendanceRemoteRepository = attendanceRemoteRepository)
 
     @Factory
     fun leaveRequestUseCase(leaveRemoteRepository: LeaveRemoteRepository): LeaveRequestUseCase =
@@ -60,11 +60,9 @@ class LeaveScreenModule {
 
     @KoinViewModel
     fun getLeaveScreenViewModel(
-        attendanceStatusUseCase: AttendanceStatusUseCase,
         leaveRequestUseCase: LeaveRequestUseCase,
         leaveReportUseCase: LeaveReportUseCase
     ): LeaveScreenViewModel = LeaveScreenViewModel(
-        attendanceStatusUseCase = attendanceStatusUseCase,
         leaveRequestUseCase = leaveRequestUseCase,
         leaveReportUseCase = leaveReportUseCase
     )

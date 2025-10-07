@@ -8,6 +8,8 @@ import com.gurkha.hr.networkhelper.post
 import com.gurkha.hr.networkhelper.safeCall
 import com.gurkha.model.attendance.attendanceReport.AttendanceRequestDto
 import com.gurkha.model.attendance.attendanceReport.AttendanceResponseDto
+import com.gurkha.model.attendance.attendanceStatus.AttendanceStatusRequestDto
+import com.gurkha.model.attendance.attendanceStatus.AttendanceStatusResponseDto
 import com.gurkha.model.network.DataError
 import io.ktor.client.HttpClient
 import io.ktor.client.request.setBody
@@ -25,6 +27,21 @@ class KtorAttendanceRemoteRepository(
                 endPoint = EndPoint.FETCH_ATTENDANCE_END_POINT
             ) {
                 setBody(AttendanceRequestDto(dateFrom, toDate))
+            }
+        }
+    }
+
+    override suspend fun fetchAttendanceStatus(
+        attendanceStatus: String,
+        employeeName: String,
+        isSelf: String
+    ): ERPResult<AttendanceStatusResponseDto, DataError> {
+        return safeCall {
+            httpClient.post(
+                baseUrl = BaseUrl.Generic,
+                endPoint = EndPoint.ATTENDANCE_STATUS_REPORT_ENDPOINT,
+            ) {
+                setBody(AttendanceStatusRequestDto(attendanceStatus, employeeName, isSelf))
             }
         }
     }

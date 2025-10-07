@@ -360,7 +360,7 @@ fun LazyListScope.leaveResults(
                 }
             } else {
                 item {
-                    Text(text = "No Data Found!")
+                    Text(text = stringResource(SharedRes.Strings.no_data_found))
                 }
             }
         }
@@ -396,7 +396,7 @@ fun LazyItemScope.ResultBox(
         )
         {
             Text(
-                text = "Date", style = MaterialTheme.typography.titleSmall.copy(
+                text = stringResource(SharedRes.Strings.date), style = MaterialTheme.typography.titleSmall.copy(
                     color = MaterialTheme.colorScheme.darkPrimaryTextColor
                 )
             )

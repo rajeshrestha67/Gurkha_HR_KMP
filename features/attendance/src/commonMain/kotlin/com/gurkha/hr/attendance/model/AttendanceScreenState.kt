@@ -2,12 +2,20 @@ package com.gurkha.hr.attendance.model
 
 import androidx.compose.ui.graphics.Color
 import com.gurkha.hr.domain.attendance.attendanceReport.model.AttendanceData
+import com.gurkha.hr.domain.attendance.attendanceStatus.model.AttendanceStatusData
+import com.gurkha.hr.domain.leave.leaveReport.model.LeaveReportData
 import com.gurkha.hr.res.SharedRes
 import org.jetbrains.compose.resources.StringResource
 
 data class AttendanceScreenState(
     val attendanceList: List<AttendanceData> = emptyList(),
     val isLoading: Boolean = false,
+    val pendingTapItem: AttendanceTabItem = AttendanceTabItem(),
+    val approvedTapItem: AttendanceTabItem = AttendanceTabItem(),
+    val rejectedTapItem: AttendanceTabItem = AttendanceTabItem(),
+    val currentTapItem: AttendanceTabItem = AttendanceTabItem(),
+    val employeeName: String = "",
+    val isSelf: String = "Y",
 
     val tabItemsList: List<TabItemsEnums> = TabItemsEnums.list,
 
@@ -47,4 +55,10 @@ data class AttendanceItem(
     val color: Color,
     val backGroundColor: Color
 )
+
+data class AttendanceTabItem(
+    val isLoading: Boolean = false,
+    val result: List<AttendanceStatusData> = emptyList(),
+)
+
 
