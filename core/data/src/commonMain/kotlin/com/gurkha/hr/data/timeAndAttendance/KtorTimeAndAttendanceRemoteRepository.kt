@@ -5,17 +5,15 @@ import com.gurkha.hr.networkhelper.BaseUrl
 import com.gurkha.hr.networkhelper.DataError
 import com.gurkha.hr.networkhelper.ERPResult
 import com.gurkha.hr.networkhelper.EndPoint
-import com.gurkha.hr.networkhelper.get
 import com.gurkha.hr.networkhelper.post
 import com.gurkha.hr.networkhelper.safeCall
 import com.gurkha.model.timeandAttendance.TimeAttendanceReportRequestDTO
 import com.gurkha.model.timeandAttendance.TimeAttendanceReportResponseDTO
 import io.ktor.client.HttpClient
-import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 
-class KtorTimeAndAttendanceRemoteRepository(private val httpClient: HttpClient):
-TimeAndAttendanceRemoteRepository{
+class KtorTimeAndAttendanceRemoteRepository(private val httpClient: HttpClient) :
+    TimeAndAttendanceRemoteRepository {
     override suspend fun fetchTimeAndAttendance(
         dateFrom: String,
         toDate: String
@@ -24,11 +22,13 @@ TimeAndAttendanceRemoteRepository{
             httpClient.post(
                 baseUrl = BaseUrl.Generic,
                 endPoint = EndPoint.TIME_AND_ATTENDANCE_ENDPOINT
-            ){
-                setBody(TimeAttendanceReportRequestDTO(
-                    toDate = toDate,
-                    fromDate = dateFrom
-                ))
+            ) {
+                setBody(
+                    TimeAttendanceReportRequestDTO(
+                        toDate = toDate,
+                        fromDate = dateFrom
+                    )
+                )
             }
         }
     }

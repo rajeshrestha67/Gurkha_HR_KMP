@@ -1,6 +1,6 @@
-package com.gurkha.hr.domain.timeAndAttendance.model
+package com.gurkha.hr.domain.history.model
 
-data class TimeAndAttendanceData (
+data class HistoryData(
     val date: String,
     val day: String,
     val clockInTime: String,
@@ -8,8 +8,5 @@ data class TimeAndAttendanceData (
     val status: String,
     val isPresent: Boolean,
     val isHoliday: Boolean,
-    val isLate: Boolean,
-    val isEarlyOut: Boolean,
+    val isAbsent: Boolean,
 )
-
-

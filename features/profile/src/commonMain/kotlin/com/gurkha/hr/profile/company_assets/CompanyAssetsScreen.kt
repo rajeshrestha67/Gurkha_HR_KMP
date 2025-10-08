@@ -20,6 +20,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.dimens
@@ -130,6 +131,10 @@ fun CompanyAssetsRow(
             name = SharedRes.Strings.assignedDate
         )
     }
+    Text(
+        modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center,
+        text = "No Asset Found"
+    )
 
 }
 
