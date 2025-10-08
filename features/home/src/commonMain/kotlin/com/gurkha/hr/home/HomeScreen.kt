@@ -560,7 +560,7 @@ fun LazyListScope.calendarView(
                             ),
                             shape = MaterialTheme.shapes.medium
                         )
-                        .size(size = MaterialTheme.dimens.extraLarge + if (item.active) MaterialTheme.dimens.small2 else 0.dp)
+                        .size(size = MaterialTheme.dimens.extraLarge)
                         .clickable(onClick = {
 //                                    send the date to find there activities for that date
                         }),
