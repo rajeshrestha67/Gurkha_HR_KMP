@@ -71,6 +71,9 @@ fun NavGraphBuilder.profileScreenBuilder(
                     GeneralList.History -> {
                         navController.navigate(ProfileRoute.HistoryScreenRoute)
                     }
+
+                    GeneralList.Report ->
+                        TODO()
                 }
             }
         )

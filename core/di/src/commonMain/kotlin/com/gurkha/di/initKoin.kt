@@ -23,7 +23,8 @@ fun initKoin(config: KoinAppDeclaration? = null) {
             ProfileScreenModule().module,
             ChangePasswordModule().module,
             HomeScreenModule().module,
-            ProfileInfoScreenModule().module
+            ProfileInfoScreenModule().module,
+            AllocatedLeaveModule().module
         )
     }
 }

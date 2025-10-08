@@ -27,7 +27,7 @@ class FetchRemoteUserDetailUseCase(
                     phoneNumber = userDetail.phoneNumber,
                     fullName =userDetail.fullName ,
                     levelName = userDetail.levelName,
-                    employeeId = userDetail.employeeId,
+                    employeeId = userDetail.employeeId.toString(),
                     branchName = userDetail.branchName,
                     joinedDate = userDetail.joinedDate,
                     address = userDetail.address,
