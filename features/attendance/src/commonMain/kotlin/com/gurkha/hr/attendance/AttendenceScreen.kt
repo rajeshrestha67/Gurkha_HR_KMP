@@ -126,8 +126,7 @@ fun LazyListScope.showAttendanceOptions(
         item {
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = MaterialTheme.dimens.small3),
+                    .fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
             ) {
                 rowItems.forEach { attendanceItem ->
@@ -168,14 +167,14 @@ fun AttendanceBox(
     ) {
         Text(
             text = stringResource(item.title),
-            style = MaterialTheme.typography.titleLarge.copy(
+            style = MaterialTheme.typography.titleMedium.copy(
                 color = MaterialTheme.colorScheme.darkPrimaryTextColor
             )
         )
 
         Text(
             text = item.days.toString(),
-            style = MaterialTheme.typography.titleLarge.copy(
+            style = MaterialTheme.typography.titleMedium.copy(
                 color = MaterialTheme.colorScheme.primaryTextColor
             )
         )

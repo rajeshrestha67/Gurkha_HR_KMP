@@ -273,12 +273,12 @@ fun LeaveBox(
     ) {
         Text(
             text = stringResource(item.title),
-            style = MaterialTheme.typography.titleLarge.copy(
+            style = MaterialTheme.typography.titleMedium.copy(
                 color = MaterialTheme.colorScheme.darkPrimaryTextColor
             )
         )
         Text(
-            text = item.days, style = MaterialTheme.typography.titleLarge.copy(
+            text = item.days, style = MaterialTheme.typography.titleMedium.copy(
                 color = MaterialTheme.colorScheme.primaryTextColor
             )
         )
