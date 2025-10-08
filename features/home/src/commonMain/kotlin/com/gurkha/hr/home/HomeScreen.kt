@@ -52,7 +52,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -175,25 +174,11 @@ fun HomeScreenContent(
         mutableStateOf(true)
     }
     val mainListState = rememberLazyListState()
-    var previousIndex by remember { mutableStateOf(0) }
-    var previousScrollOffset by remember { mutableStateOf(0) }
 
-// Derived state for scroll direction
-    val isScrollingUp by remember {
+
+    val isScrolling by remember {
         derivedStateOf {
-            val currentIndex = mainListState.firstVisibleItemIndex
-            val currentOffset = mainListState.firstVisibleItemScrollOffset
-
-            val scrollingUp = when {
-                currentIndex < previousIndex -> true
-                currentIndex > previousIndex -> false
-                else -> currentOffset < previousScrollOffset
-            }
-
-            previousIndex = currentIndex
-            previousScrollOffset = currentOffset
-
-            scrollingUp
+            mainListState.isScrollInProgress
         }
     }
 
@@ -214,7 +199,7 @@ fun HomeScreenContent(
     }
 
     val shouldShowSwipeToDismiss by remember {
-        derivedStateOf { isScrollingUp || isAtTop || isAtEnd }
+        derivedStateOf { !isScrolling || isAtTop || isAtEnd }
     }
 
 
@@ -346,14 +331,13 @@ fun LazyListScope.anniversarySection(
                         .fillMaxWidth(),
                     contentPadding = PaddingValues(horizontal = MaterialTheme.dimens.small3),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = (state.upComingWorkAnniversary?.size
-                        ?: 0).let { size ->
+                    horizontalArrangement = state.upComingWorkAnniversary.size.let { size ->
                         if (size > 2) Arrangement.spacedBy(MaterialTheme.dimens.medium3)
                         else Arrangement.SpaceBetween
                     }
 
                 ) {
-                    items(state.upComingWorkAnniversary ?: emptyList()) { item ->
+                    items(state.upComingWorkAnniversary) { item ->
                         EventCard(
                             fullName = item.fullName,
                             imageUrl = item.imageUrl,
@@ -407,14 +391,13 @@ fun LazyListScope.birthDaySection(
                         .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                     contentPadding = PaddingValues(horizontal = MaterialTheme.dimens.small3),
-                    horizontalArrangement = (state.upComingBirthday?.size
-                        ?: 0).let { size ->
+                    horizontalArrangement = state.upComingBirthday.size.let { size ->
                         if (size > 2) Arrangement.spacedBy(MaterialTheme.dimens.medium3)
                         else Arrangement.SpaceBetween
                     }
 
                 ) {
-                    items(state.upComingBirthday ?: emptyList()) { item ->
+                    items(state.upComingBirthday) { item ->
                         EventCard(
                             fullName = item.fullName,
                             imageUrl = item.imageUrl,
