@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.gurkha.hr.components.textField.DateData
 import com.gurkha.hr.domain.form.RequiredValidationUseCase
 import com.gurkha.hr.domain.leave.leaveAssignee.model.toUiList
-import com.gurkha.hr.domain.leave.leaveAssignee.usecase.LeaveAssigneeUseCase
+import com.gurkha.hr.domain.leave.leaveAssignee.usecase.AssigneeUseCase
 import com.gurkha.hr.domain.leave.leaveType.model.toUiList
 import com.gurkha.hr.domain.leave.leaveType.usecase.LeaveTypeUseCase
 import com.gurkha.hr.leave.model.leave_request.LeaveRequestScreenAction
@@ -25,7 +25,7 @@ import kotlinx.serialization.json.Json
 
 class LeaveRequestScreenViewModel(
     private val requiredValidationUseCase: RequiredValidationUseCase,
-    private val leaveAssigneeUseCase: LeaveAssigneeUseCase,
+    private val assigneeUseCase: AssigneeUseCase,
     private val leaveTypeUseCase: LeaveTypeUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(LeaveRequestScreenState())
@@ -246,7 +246,7 @@ class LeaveRequestScreenViewModel(
                 isAssigneeLoading = true
             )
         }
-        leaveAssigneeUseCase().onSuccess { data ->
+        assigneeUseCase().onSuccess { data ->
             _state.update {
                 it.copy(
                     isAssigneeLoading = false,

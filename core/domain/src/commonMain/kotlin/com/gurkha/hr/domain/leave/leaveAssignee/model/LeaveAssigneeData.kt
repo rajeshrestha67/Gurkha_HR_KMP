@@ -1,6 +1,6 @@
 package com.gurkha.hr.domain.leave.leaveAssignee.model
 
-import com.gurkha.model.leave.ui.LeaveAssigneeUi
+import com.gurkha.model.leave.ui.AssigneeUi
 
 data class LeaveAssigneeData(
     val id: Int,
@@ -13,9 +13,9 @@ data class LeaveAssigneeData(
     val allowAttendanceApproval: String
 )
 
-fun List<LeaveAssigneeData>.toUiList(): List<LeaveAssigneeUi> =
+fun List<LeaveAssigneeData>.toUiList(): List<AssigneeUi> =
     map {
-        LeaveAssigneeUi(
+        AssigneeUi(
             name = it.fullName,
             value = it.id.toString()
         )

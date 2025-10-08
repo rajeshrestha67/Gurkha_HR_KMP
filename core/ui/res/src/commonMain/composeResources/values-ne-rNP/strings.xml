@@ -52,6 +52,12 @@
 
     <string name="no_data_found">कुनै डेटा फेला परेन</string>
 
+    <string name="select_date">मिति चयन गर्नुहोस्</string>
+    <string name="clock_in_time">घडी भित्रको समय</string>
+    <string name="clock_out_time">घडी बाहिरको समय</string>
+
+    <string name="attendance_request_form">उपस्थिति अनुरोध फारम</string>
+
     <string name="view_all">सबै हेर्नुहोस्</string>
     <string name="profile">प्रोफाइल</string>
     <string name="time_and_attendance">समय र उपस्थिति</string>

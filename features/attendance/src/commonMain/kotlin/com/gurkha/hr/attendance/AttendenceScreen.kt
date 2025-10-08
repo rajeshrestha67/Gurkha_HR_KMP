@@ -1,5 +1,6 @@
 package com.gurkha.hr.attendance
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -28,22 +29,30 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SecondaryTabRow
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.gurkha.hr.attendance.model.AttendanceAction
-import com.gurkha.hr.attendance.model.AttendanceItem
-import com.gurkha.hr.attendance.model.AttendanceScreenState
+import androidx.navigation.NavHostController
+import com.gurkha.hr.model.attendanceScreen.AttendanceAction
+import com.gurkha.hr.model.attendanceScreen.AttendanceItem
+import com.gurkha.hr.model.attendanceScreen.AttendanceScreenState
 import com.gurkha.hr.components.shimmer.ShimmerView
 import com.gurkha.hr.domain.attendance.attendanceStatus.model.AttendanceStatusData
 import com.gurkha.hr.res.SharedRes
@@ -58,12 +67,79 @@ import org.koin.compose.viewmodel.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AttendanceScreen(
-    onGoToAttendanceRequestScreen: () -> Unit
+    navController: NavHostController,
+    onGoToAttendanceRequestScreen: (String?) -> Unit
 
 ) {
     val viewModel: AttendanceViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
+    val snackBarHost = remember { SnackbarHostState() }
+    var isSnackBarVisible by remember{ mutableStateOf<Boolean>(false)}
+
+    LaunchedEffect(snackBarHost) {
+        snapshotFlow { snackBarHost.currentSnackbarData }
+            .collect { data ->
+                isSnackBarVisible = data != null
+            }
+    }
+
+    LaunchedEffect(Unit){
+        viewModel.successChannel.collect {
+            snackBarHost.showSnackbar(message = it, duration = SnackbarDuration.Short)
+        }
+    }
+
+    LaunchedEffect(Unit){
+        viewModel.errorChannel.collect {
+            snackBarHost.showSnackbar(message = it, duration = SnackbarDuration.Short, withDismissAction = true)
+        }
+    }
+
+    val result = navController.currentBackStackEntry
+        ?.savedStateHandle
+        ?.getStateFlow<String?>("data", null)
+        ?.collectAsStateWithLifecycle()
+
+    LaunchedEffect(result?.value){
+        val json = result?.value
+        if(!json.isNullOrBlank()){
+            viewModel.onAction(AttendanceAction.OnUpdateAttendanceJsonData(json))
+        }
+        navController.currentBackStackEntry?.savedStateHandle?.set("data", null)
+
+    }
+
+    LaunchedEffect(state.isRequestingAttendance){
+        if(state.isRequestingAttendance){
+            snackBarHost.showSnackbar(
+                message = "Attendance Request Sent",
+                withDismissAction = true,
+                duration = SnackbarDuration.Indefinite
+            )
+        }
+    }
+
+    AttendanceScreenMain(
+        isSnackBarVisible = isSnackBarVisible,
+        onGoToAttendanceRequestScreen = onGoToAttendanceRequestScreen,
+        state = state,
+        snackBarHost = snackBarHost,
+        onAction = viewModel::onAction
+    )
+
+
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AttendanceScreenMain(
+    isSnackBarVisible: Boolean,
+    onGoToAttendanceRequestScreen: (String?) -> Unit,
+    state: AttendanceScreenState,
+    snackBarHost: SnackbarHostState,
+    onAction: (AttendanceAction) -> Unit
+){
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         contentWindowInsets = WindowInsets(0.dp),
@@ -79,10 +155,27 @@ fun AttendanceScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = onGoToAttendanceRequestScreen
-            ){
-                Icon(Icons.Filled.Add, contentDescription = "Go to attendance Request Screen")
+            AnimatedVisibility(visible = !isSnackBarVisible){
+                FloatingActionButton(
+                    onClick = {
+                        onGoToAttendanceRequestScreen(state.leaveRequestDataJson)
+                    }
+                ){
+                    Icon(Icons.Filled.Add, contentDescription = "Go to attendance Request Screen")
+                }
+            }
+        },
+        snackbarHost = {
+            SnackbarHost(
+                hostState = snackBarHost,
+                modifier = Modifier.fillMaxWidth()
+            ){data ->
+                Snackbar(
+                    snackbarData =  data,
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                )
+
             }
         }
     ) { contentPadding ->
@@ -91,7 +184,7 @@ fun AttendanceScreen(
                 .fillMaxSize()
                 .padding(contentPadding),
             state = state,
-            onAction = viewModel::onAction
+            onAction = onAction
         )
     }
 }

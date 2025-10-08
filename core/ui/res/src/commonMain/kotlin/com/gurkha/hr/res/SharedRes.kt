@@ -20,8 +20,11 @@ import gurkhahr.core.ui.res.generated.resources.assignee
 import gurkhahr.core.ui.res.generated.resources.attendance_approved
 import gurkhahr.core.ui.res.generated.resources.attendance_cancelled
 import gurkhahr.core.ui.res.generated.resources.attendance_pending
+import gurkhahr.core.ui.res.generated.resources.attendance_request_form
 import gurkhahr.core.ui.res.generated.resources.change_password
 import gurkhahr.core.ui.res.generated.resources.chat
+import gurkhahr.core.ui.res.generated.resources.clock_in_time
+import gurkhahr.core.ui.res.generated.resources.clock_out_time
 import gurkhahr.core.ui.res.generated.resources.company_assets
 import gurkhahr.core.ui.res.generated.resources.confirm
 import gurkhahr.core.ui.res.generated.resources.confirm_password
@@ -94,6 +97,7 @@ import gurkhahr.core.ui.res.generated.resources.request
 import gurkhahr.core.ui.res.generated.resources.required
 import gurkhahr.core.ui.res.generated.resources.select_assignee
 import gurkhahr.core.ui.res.generated.resources.search_users
+import gurkhahr.core.ui.res.generated.resources.select_date
 import gurkhahr.core.ui.res.generated.resources.select_end_date
 import gurkhahr.core.ui.res.generated.resources.select_leave_duration
 import gurkhahr.core.ui.res.generated.resources.select_leave_type
@@ -191,6 +195,12 @@ object SharedRes {
         val attendance_pending = Res.string.attendance_pending
 
         val no_data_found = Res.string.no_data_found
+
+        val select_date = Res.string.select_date
+        val clock_in_time = Res.string.clock_in_time
+        val clock_out_time = Res.string.clock_out_time
+
+        val attendance_request_form = Res.string.attendance_request_form
 
         val invalidEmailAddress = Res.string.invalid_email_address
         val email = Res.string.email

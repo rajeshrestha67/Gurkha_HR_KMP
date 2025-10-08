@@ -15,4 +15,5 @@ object EndPoint {
     const val EMPLOY_LIST_ENDPOINT = "api/chat/employee"
     const val CHAT_MESSAGE_ENDPOINT = "api/external-chat/messages"
 
+    const val ATTENDANCE_REQUEST_END_POINT = "api/attendance/request"
 }

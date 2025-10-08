@@ -1,6 +1,7 @@
 package com.gurkha.hr.networkhelper
 
 import com.gurkha.model.ErrorData
+import com.gurkha.model.attendance.attendanceRequest.AttendanceRequestResponseDto
 import com.gurkha.model.auth.login.LoginResponseDto
 import com.gurkha.model.network.DataError
 import com.gurkha.model.leave.leaveRequest.LeaveRequestResponseDto

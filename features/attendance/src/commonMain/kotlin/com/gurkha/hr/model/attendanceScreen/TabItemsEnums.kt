@@ -1,4 +1,4 @@
-package com.gurkha.hr.attendance.model
+package com.gurkha.hr.model.attendanceScreen
 
 enum class TabItemsEnums(val value: String) {
     PENDING("Pending"),
