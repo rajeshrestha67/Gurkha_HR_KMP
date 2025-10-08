@@ -1,0 +1,142 @@
+package com.gurkha.hr.date.data.model
+
+import com.gurkha.hr.date.BSPointer
+import com.gurkha.hr.date.DateConverter
+import com.gurkha.hr.date.Year
+import com.gurkha.hr.date.data.CalendarDate
+import com.gurkha.hr.date.data.CalendarMonth
+import com.gurkha.hr.date.months
+import com.gurkha.hr.date.nepaliDigits
+import kotlinx.datetime.DatePeriod
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.daysUntil
+import kotlinx.datetime.format
+import kotlinx.datetime.format.MonthNames
+import kotlinx.datetime.isoDayNumber
+import kotlinx.datetime.number
+import kotlinx.datetime.plus
+import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
+
+class CalendarModelImpl : CalendarModel() {
+    override val weekdayNames: List<String> = listOf(
+        "आइत",
+        "सोम",
+        "मंगल",
+        "बुध",
+        "बिही",
+        "शुक्र",
+        "शनि"
+    )
+    override val today: CalendarDate
+        get() {
+            val today = LocalDate.now()
+            val nepaliDate = DateConverter.adToBs(
+                year = today.year,
+                month = today.month.number,
+                day = today.dayOfMonth
+            )
+            return CalendarDate(
+                year = nepaliDate.year,
+                month = nepaliDate.month,
+                dayOfMonth = nepaliDate.day,
+                page = getPage(
+                    nepaliDate.year, month = nepaliDate.month
+                )
+            )
+        }
+
+    override fun getPage(year: Int, month: Int): Int {
+        return BSPointer.getPageIndex(
+            year = Year.ofValue(year),
+            month = month
+        )
+    }
+
+
+    override fun getYearRange(): IntRange {
+        return IntRange(BSPointer.getFirstDay().first, BSPointer.getLastDay().first)
+    }
+
+    override fun getMonth(calendarDate: CalendarDate): CalendarMonth {
+        return getMonth(calendarDate.page)
+    }
+
+    override fun getMonth(page: Int): CalendarMonth {
+
+        val (yearIndex, month) = BSPointer.getYearAndMonth(page)
+        val year = BSPointer.getYear(yearIndex)
+        val englishDate = DateConverter.bsToAd(
+            year = year, month = month, day = 1
+        )
+
+        val local = LocalDate(
+            englishDate.year,
+            englishDate.month,
+            englishDate.day
+        )
+        val numberOfDays = local.daysInMonth()
+        val week = local.dayOfWeek
+        return CalendarMonth(
+            year = year,
+            month = month,
+            numberOfDays = BSPointer.getNumOfDaysInMonth(Year.ofIndex(yearIndex), month),
+            daysFromStartOfWeekToFirstOfMonth = week.isoDayNumber % 7,
+            pageNum = page,
+            startDate = englishDate.day,
+            endDate = numberOfDays,
+        )
+    }
+
+
+    override fun getNumberOfMonths(): Int {
+        return BSPointer.getNumberOfAvailableMonths()
+    }
+
+
+}
+
+@OptIn(ExperimentalTime::class)
+fun LocalDate.Companion.now(): LocalDate =
+    Clock.System.now()
+        .toLocalDateTime(TimeZone.currentSystemDefault())
+        .date
+
+fun LocalDate.daysInMonth(): Int {
+    val firstDayOfMonth = LocalDate(year, month, 1)
+    val firstDayOfNextMonth = firstDayOfMonth.plus(DatePeriod(months = 1))
+    return firstDayOfMonth.daysUntil(firstDayOfNextMonth)
+}
+
+fun CalendarModel.todayFormattedBSDate(): String {
+    return "${today.dayOfMonth.nepaliDigits} ${months[today.month - 1].second}, ${today.year.nepaliDigits} ${weekdayNames[(today.dayOfMonth % 7) - 1]}"
+}
+
+@OptIn(ExperimentalTime::class)
+fun CalendarModel.todayFormattedADDate(): String {
+    return try {
+
+        val instant = Clock.System.now()
+        val localDateTime = instant.toLocalDateTime(TimeZone.currentSystemDefault())
+
+        val dayOfWeekName = localDateTime.date.dayOfWeek.name.lowercase()
+            .replaceFirstChar { it.uppercase() }
+        localDateTime.format(
+            LocalDateTime.Format {
+                dayOfMonth() // Day (no padding)
+                chars(" ")
+                monthName(MonthNames.ENGLISH_FULL) // Full month name (e.g., "June")
+                chars(", ")
+                year() // Year
+                chars(" ")
+                chars(dayOfWeekName)
+            }
+        )
+    } catch (e: Exception) {
+        e.printStackTrace()
+        "Invalid date: $this" // Fallback for parsing errors
+    }
+}
