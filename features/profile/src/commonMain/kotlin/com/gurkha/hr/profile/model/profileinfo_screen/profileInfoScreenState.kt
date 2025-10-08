@@ -8,6 +8,7 @@ data class ProfileInfoScreenState(
     val accountItems: List<AccountList> = AccountList.list,
     val isProfileLoading: Boolean = false,
     val fullName: String = "",
+    val initials: String = "",
     val levelName: String = "",
     val userProfileUrl: String? = null,
     val phoneNumber: String = "",

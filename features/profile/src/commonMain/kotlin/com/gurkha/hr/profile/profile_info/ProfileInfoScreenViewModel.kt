@@ -57,6 +57,7 @@ class ProfileInfoScreenViewModel(
                     it.copy(
                         isProfileLoading = false,
                         fullName = userDetail.fullName,
+                        initials = userDetail.initials,
                         levelName = userDetail.levelName,
                         employeeId = userDetail.employeeId,
                         branchName = userDetail.branchName,
