@@ -19,12 +19,18 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
+import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -51,7 +57,10 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AttendanceScreen() {
+fun AttendanceScreen(
+    onGoToAttendanceRequestScreen: () -> Unit
+
+) {
     val viewModel: AttendanceViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -68,6 +77,13 @@ fun AttendanceScreen() {
                     )
                 }
             )
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = onGoToAttendanceRequestScreen
+            ){
+                Icon(Icons.Filled.Add, contentDescription = "Go to attendance Request Screen")
+            }
         }
     ) { contentPadding ->
         AttendanceContent(
@@ -189,14 +205,12 @@ fun LazyListScope.attendanceStatusTab(
     onAction: (AttendanceAction) -> Unit
 ) {
     stickyHeader(key = "AttendanceStatus") {
-        TabRow(
-            modifier = modifier
+        SecondaryTabRow(
+            state.selectedTab.ordinal,
+            modifier
                 .fillMaxWidth(),
-            selectedTabIndex = state.selectedTab.ordinal,
-            divider = {},
-            indicator = {},
-
-            ) {
+            TabRowDefaults.primaryContainerColor, TabRowDefaults.primaryContentColor, {},
+            {}) {
             state.tabItemsList.forEach { item ->
                 val isSelected = state.selectedTab == item
                 Tab(

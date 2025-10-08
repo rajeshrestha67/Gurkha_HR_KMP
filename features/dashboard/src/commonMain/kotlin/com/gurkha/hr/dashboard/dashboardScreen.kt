@@ -29,7 +29,7 @@ import androidx.navigation.compose.rememberNavController
 import com.gurkha.hr.components.AnimatedNavHost
 import com.gurkha.hr.components.PlatformMessage
 import com.gurkha.hr.components.navigationBar.ERPNavigationBar
-import com.gurkha.hr.dashboard.graph.attendanceScreen
+import com.gurkha.hr.dashboard.graph.attendanceScreenBuilder
 import com.gurkha.hr.dashboard.graph.chatScreenBuilder
 import com.gurkha.hr.dashboard.graph.homeScreenBuilder
 import com.gurkha.hr.dashboard.graph.leaveScreenBuilder
@@ -38,6 +38,7 @@ import com.gurkha.hr.dashboard.graph.reportScreenBuilder
 import com.gurkha.hr.dashboard.graph.settingsScreenBuilder
 import com.gurkha.hr.dashboard.model.DashboardScreenAction
 import com.gurkha.hr.dashboard.model.DashboardScreenState
+import com.gurkha.hr.dashboard.route.AttendanceRoute
 import com.gurkha.hr.dashboard.route.DashboardRoute
 import com.gurkha.hr.dashboard.route.LeaveRoute
 import com.gurkha.hr.res.SharedRes
@@ -192,7 +193,12 @@ fun DashboardScreenContent(
                 onLogout = onLogout,
                 navController = navController
             )
-            attendanceScreen(navController = navController)
+            attendanceScreenBuilder(
+                navController = navController,
+                onGoToAttendanceRequestScreen = {
+                    navController.navigate(AttendanceRoute.AttendanceRequestScreen)
+                }
+            )
             leaveScreenBuilder(
                 navController = navController,
                 onGoToLeaveRequestPage = { leaveRequestJson ->

@@ -72,10 +72,24 @@ kotlin {
 
                 implementation(libs.koin.compose.viewmodel)
                 implementation(compose.components.resources)
+                implementation(compose.materialIconsExtended)
 
                 implementation(projects.core.domain)
                 implementation(projects.core.networkHelper)
                 implementation(projects.core.model)
+                implementation(projects.core.ui.res)
+                implementation(projects.core.ui.components)
+
+                implementation(libs.androidx.lifecycle.viewmodelCompose)
+                implementation(libs.androidx.lifecycle.runtimeCompose)
+
+                implementation(libs.koin.compose.viewmodel)
+                implementation(compose.components.resources)
+                implementation(compose.materialIconsExtended)
+
+                implementation(projects.core.domain)
+                implementation(projects.core.model)
+                implementation(projects.core.networkHelper)
                 implementation(projects.core.ui.res)
                 implementation(projects.core.ui.components)
 
@@ -84,6 +98,12 @@ kotlin {
                 implementation(libs.coil.mp)
                 implementation(libs.coil.network.ktor3)
 
+                implementation(libs.kotlinx.datetime)
+
+                implementation(libs.jetbrians.material3)
+                implementation(libs.org.jetbrains.navigation)
+
+                implementation(libs.kotlinx.serialization.json)
 
             }
         }

@@ -1,6 +1,7 @@
 package com.gurkha.di
 
 import com.gurkha.hr.attendance.AttendanceViewModel
+import com.gurkha.hr.attendanceRequestScreen.AttendanceRequestViewModel
 import com.gurkha.hr.data.attendance.KtorAttendanceRemoteRepository
 import com.gurkha.hr.domain.attendance.attendanceReport.repository.AttendanceRemoteRepository
 import com.gurkha.hr.domain.attendance.attendanceStatus.useCase.AttendanceStatusUseCase
@@ -29,5 +30,10 @@ class AttendanceScreenModule {
         attendanceStatusUseCase: AttendanceStatusUseCase
     ): AttendanceViewModel = AttendanceViewModel(
         attendanceStatusUseCase = attendanceStatusUseCase
+    )
+
+    @KoinViewModel
+    fun getAttendanceRequestScreenViewModel(
+    ): AttendanceRequestViewModel = AttendanceRequestViewModel(
     )
 }
