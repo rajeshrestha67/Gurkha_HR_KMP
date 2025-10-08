@@ -2,6 +2,7 @@ package com.gurkha.hr.profile.time_and_attendance
 
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -12,10 +13,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.gurkha.hr.profile.model.time_and_attendance_screen.TimeAndAttendanceState
 import com.gurkha.hr.res.SharedRes
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -25,13 +30,16 @@ fun TimeAndAttendanceScreen(
 
 
     ) {
+    val viewModel: TimeAndAttendanceViewModel = koinViewModel()
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
-
+        contentWindowInsets = WindowInsets(0.dp),
         topBar = {
             TopAppBar(
+                windowInsets = WindowInsets(0.dp),
                 title = { Text(stringResource(SharedRes.Strings.time_and_attendance)) },
                 navigationIcon = {
                     IconButton(
@@ -47,7 +55,21 @@ fun TimeAndAttendanceScreen(
             )
         }
     ) { paddingValues ->
+        TimeAndAttendanceScreenContainer(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues),
+            state = state
+        )
 
 
     }
+}
+@Composable
+fun TimeAndAttendanceScreenContainer(
+    state : TimeAndAttendanceState,
+    modifier: Modifier = Modifier,
+
+    ){
+
 }

@@ -24,7 +24,8 @@ fun initKoin(config: KoinAppDeclaration? = null) {
             ChangePasswordModule().module,
             HomeScreenModule().module,
             ProfileInfoScreenModule().module,
-            AllocatedLeaveModule().module
+            AllocatedLeaveModule().module,
+            TimeAndAttendanceModule().module,
         )
     }
 }
