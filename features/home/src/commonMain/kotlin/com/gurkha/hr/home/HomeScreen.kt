@@ -530,7 +530,10 @@ fun LazyListScope.calendarView(
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.background),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(space = MaterialTheme.dimens.small2),
+            horizontalArrangement = Arrangement.spacedBy(
+                space = MaterialTheme.dimens.small2,
+                alignment = Alignment.CenterHorizontally
+            ),
             contentPadding = PaddingValues(
                 horizontal = MaterialTheme.dimens.small3,
                 vertical = MaterialTheme.dimens.small2
