@@ -42,6 +42,7 @@ import gurkhahr.core.ui.res.generated.resources.enter_your_password
 import gurkhahr.core.ui.res.generated.resources.enter_your_username
 import gurkhahr.core.ui.res.generated.resources.experience_document
 import gurkhahr.core.ui.res.generated.resources.faq
+import gurkhahr.core.ui.res.generated.resources.from_date
 import gurkhahr.core.ui.res.generated.resources.full_day
 import gurkhahr.core.ui.res.generated.resources.gender
 import gurkhahr.core.ui.res.generated.resources.general
@@ -115,6 +116,7 @@ import gurkhahr.core.ui.res.generated.resources.system_default
 import gurkhahr.core.ui.res.generated.resources.terms_and_services
 import gurkhahr.core.ui.res.generated.resources.theme
 import gurkhahr.core.ui.res.generated.resources.time_and_attendance
+import gurkhahr.core.ui.res.generated.resources.to_date
 import gurkhahr.core.ui.res.generated.resources.total_days
 import gurkhahr.core.ui.res.generated.resources.unknown_error_occurred
 import gurkhahr.core.ui.res.generated.resources.upcoming_birthday
@@ -231,6 +233,7 @@ object SharedRes {
         val status = Res.string.status
 
 
+
         val invalidEmailAddress = Res.string.invalid_email_address
         val email = Res.string.email
         val enterYourEmail = Res.string.enter_your_email
@@ -250,6 +253,8 @@ object SharedRes {
         val confirm_password = Res.string.confirm_password
         val new_password = Res.string.new_password
         val current_password = Res.string.current_password
+        val fromDate = Res.string.from_date
+        val toDate = Res.string.to_date
 
         val setting = Res.string.setting
         val theme = Res.string.theme

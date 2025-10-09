@@ -78,7 +78,8 @@
     <string name= "clockIn">Clock In</string>
     <string name= "clockOut">Clock Out</string>
     <string name= "status">Status</string>
-
+    <string name= "from_date">From Date</string>
+    <string name= "to_date">To Date</string>
 
 
 
