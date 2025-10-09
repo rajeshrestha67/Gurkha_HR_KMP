@@ -1,7 +1,6 @@
 package com.gurkha.hr.model.attendanceScreen
 
 import androidx.compose.ui.graphics.Color
-import com.gurkha.hr.model.attendanceScreen.TabItemsEnums
 import com.gurkha.hr.domain.attendance.attendanceReport.model.AttendanceData
 import com.gurkha.hr.domain.attendance.attendanceStatus.model.AttendanceStatusData
 import com.gurkha.hr.res.SharedRes
@@ -23,9 +22,8 @@ data class AttendanceScreenState(
     val tabItemsList: List<TabItemsEnums> = TabItemsEnums.Companion.list,
 
     val selectedTab: TabItemsEnums = TabItemsEnums.PENDING,
-    val leaveRequestDataJson: String? = null,
 
-    val isRequestingAttendance : Boolean = false,
+    val isRequestingAttendance: Boolean = false,
 
     val attendanceGridOptions: List<AttendanceItem> = listOf(
         AttendanceItem(
@@ -56,8 +54,8 @@ data class AttendanceScreenState(
 )
 
 data class AttendanceItem(
-    val title : StringResource,
-    val days : Int,
+    val title: StringResource,
+    val days: Int,
     val color: Color,
     val backGroundColor: Color
 )

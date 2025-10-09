@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 sealed interface AttendanceRoute {
     @Serializable
-    data class AttendanceRequestScreen(val json: String?) : AttendanceRoute
+    data object AttendanceRequestScreen : AttendanceRoute
 }

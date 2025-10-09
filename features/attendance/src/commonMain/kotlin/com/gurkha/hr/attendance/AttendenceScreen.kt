@@ -68,8 +68,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun AttendanceScreen(
     navController: NavHostController,
-    onGoToAttendanceRequestScreen: (String?) -> Unit
-
+    onGoToAttendanceRequestScreen: () -> Unit
 ) {
     val viewModel: AttendanceViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -133,7 +132,7 @@ fun AttendanceScreen(
 @Composable
 fun AttendanceScreenMain(
     isSnackBarVisible: Boolean,
-    onGoToAttendanceRequestScreen: (String?) -> Unit,
+    onGoToAttendanceRequestScreen: () -> Unit,
     state: AttendanceScreenState,
     snackBarHost: SnackbarHostState,
     onAction: (AttendanceAction) -> Unit
@@ -155,9 +154,7 @@ fun AttendanceScreenMain(
         floatingActionButton = {
             AnimatedVisibility(visible = !isSnackBarVisible){
                 FloatingActionButton(
-                    onClick = {
-                        onGoToAttendanceRequestScreen(state.leaveRequestDataJson)
-                    }
+                    onClick = onGoToAttendanceRequestScreen
                 ){
                     Icon(Icons.Filled.Add, contentDescription = "Go to attendance Request Screen")
                 }

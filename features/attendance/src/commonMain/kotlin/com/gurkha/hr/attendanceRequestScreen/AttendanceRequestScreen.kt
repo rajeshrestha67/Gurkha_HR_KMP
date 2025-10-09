@@ -65,7 +65,6 @@ import org.koin.compose.viewmodel.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AttendanceRequestScreen(
-    json: String?,
     navController: NavHostController,
     onBackClicked: () -> Unit
 ) {
@@ -73,37 +72,37 @@ fun AttendanceRequestScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
     var showSuccessDialogue by remember { mutableStateOf(false) }
     var showFailedDialogue by remember { mutableStateOf(false) }
-    var message by rememberSaveable{ mutableStateOf("")}
-    var sendData by remember{ mutableStateOf(false)}
+    var message by rememberSaveable { mutableStateOf("") }
+    var sendData by remember { mutableStateOf(false) }
 
     LaunchedEffect(sendData) {
-        if(sendData){
+        if (sendData) {
             val data = AttendanceRequestData(
-                assigneeId = state.attendanceRequestData?.assigneeId ?: "" ,
+                assigneeId = state.attendanceRequestData?.assigneeId ?: "",
                 date = state.attendanceRequestData?.date ?: "",
-                clockInTime = state.attendanceRequestData?.clockInTime ?:"",
-                clockOutTime = state.attendanceRequestData?.clockOutTime ?:"",
-                remarks = state.attendanceRequestData?.remarks ?:"",
+                clockInTime = state.attendanceRequestData?.clockInTime ?: "",
+                clockOutTime = state.attendanceRequestData?.clockOutTime ?: "",
+                remarks = state.attendanceRequestData?.remarks ?: "",
             )
             data.let {
                 val stringData = Json.encodeToString(data)
                 navController.previousBackStackEntry
                     ?.savedStateHandle
                     ?.set("data", stringData)
-                navController.popBackStack()
+//                navController.popBackStack()
             }
         }
     }
 
-    LaunchedEffect(Unit){
-        viewModel.dataChannel.collect { it->
+    LaunchedEffect(Unit) {
+        viewModel.dataChannel.collect { it ->
             it?.let {
                 viewModel.onAction(AttendanceRequestAction.OnUpdateAttendanceRequestData(it))
             }
         }
     }
 
-    LaunchedEffect(Unit){
+    LaunchedEffect(Unit) {
         viewModel.successChannel.collect {
             it?.let {
                 showSuccessDialogue = true
@@ -112,7 +111,7 @@ fun AttendanceRequestScreen(
         }
     }
 
-    LaunchedEffect(Unit){
+    LaunchedEffect(Unit) {
         viewModel.errorChannel.collect {
             it?.let {
                 showFailedDialogue = true
@@ -123,7 +122,7 @@ fun AttendanceRequestScreen(
 
     BoxWithConstraints(
         modifier = Modifier.fillMaxSize()
-    ){
+    ) {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             contentWindowInsets = WindowInsets(0.dp),
@@ -156,18 +155,18 @@ fun AttendanceRequestScreen(
                 state = state,
                 showSuccessDialogue = showSuccessDialogue,
                 showFailedDialogue = showFailedDialogue,
-                successMsg = message,
-                onSendData ={
+                message = message,
+                onSendData = {
                     sendData = true
                 }
             )
         }
 
-        if(state.isRequestingAttendance){
+        if (state.isRequestingAttendance) {
             Box(
                 modifier = Modifier.fillMaxSize().background(color = Color(0x80000000)),
                 contentAlignment = Alignment.Center
-            ){
+            ) {
                 CircularProgressIndicator(
                     modifier = Modifier.size(MaterialTheme.dimens.medium3),
                     color = MaterialTheme.colorScheme.secondaryContainer
@@ -184,10 +183,10 @@ fun AttendanceRequestScreenContent(
     onBackClicked: () -> Unit,
     onAction: (AttendanceRequestAction) -> Unit,
     state: AttendanceRequestState,
-    showSuccessDialogue : Boolean,
-    showFailedDialogue : Boolean,
-    successMsg : String,
-    onSendData:()-> Unit
+    showSuccessDialogue: Boolean,
+    showFailedDialogue: Boolean,
+    message: String,
+    onSendData: () -> Unit
 ) {
     val radioOptions = listOf("Clock In", "Clock Out")
     val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[0]) }
@@ -350,16 +349,21 @@ fun AttendanceRequestScreenContent(
         }
 
 //        show the success modal
-        if(showSuccessDialogue){
+        if (showSuccessDialogue) {
             PromptModalBottomSheet(
-                text =successMsg ,
-                onBackClicked = onBackClicked
+                text = message,
+                onBackClicked = {
+//                    trigger the send data back launched effect
+                    onSendData()
+//                    go to prev screen
+                    onBackClicked()
+                }
             )
         }
 //        show error modal
-        if(showFailedDialogue){
+        if (showFailedDialogue) {
             PromptModalBottomSheet(
-                text =successMsg ,
+                text = message,
                 promptType = PromptType.FAILED,
                 buttonText = SharedRes.Strings.cancel,
                 onBackClicked = onBackClicked

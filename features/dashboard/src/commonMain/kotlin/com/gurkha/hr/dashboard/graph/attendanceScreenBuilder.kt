@@ -3,16 +3,14 @@ package com.gurkha.hr.dashboard.graph
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
-import androidx.navigation.toRoute
 import com.gurkha.hr.attendance.AttendanceScreen
 import com.gurkha.hr.attendanceRequestScreen.AttendanceRequestScreen
 import com.gurkha.hr.dashboard.route.AttendanceRoute
 import com.gurkha.hr.dashboard.route.DashboardRoute
-import com.gurkha.hr.dashboard.route.LeaveRoute
 
 fun NavGraphBuilder.attendanceScreenBuilder(
     navController: NavHostController,
-    onGoToAttendanceRequestScreen: (String?) -> Unit
+    onGoToAttendanceRequestScreen: () -> Unit
 ) {
     composable<DashboardRoute.AttendanceRoute> {
         AttendanceScreen(
@@ -21,12 +19,10 @@ fun NavGraphBuilder.attendanceScreenBuilder(
         )
     }
 
-    composable<AttendanceRoute.AttendanceRequestScreen>{
-        val json: String? = it.toRoute<AttendanceRoute.AttendanceRequestScreen>().json
+    composable<AttendanceRoute.AttendanceRequestScreen> {
         AttendanceRequestScreen(
-            json = json,
             navController = navController,
-            onBackClicked={
+            onBackClicked = {
                 navController.popBackStack()
             }
         )
