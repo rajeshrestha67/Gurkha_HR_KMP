@@ -23,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChange
@@ -54,9 +55,11 @@ fun SwipeToDismissBox(
                 shape = MaterialTheme.shapes.medium
             )
             .padding(
-                horizontal = MaterialTheme.dimens.small2,
-                vertical = MaterialTheme.dimens.small2
+                start = MaterialTheme.dimens.small2,
+                top = MaterialTheme.dimens.small2,
+                bottom = MaterialTheme.dimens.small2
             )
+            .clipToBounds()
             .swipeToDismiss(onDismissed),
         horizontalArrangement = Arrangement.spacedBy(
             space = MaterialTheme.dimens.medium3,
