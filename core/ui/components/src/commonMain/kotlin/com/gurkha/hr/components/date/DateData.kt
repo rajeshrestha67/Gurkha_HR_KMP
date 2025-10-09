@@ -1,4 +1,4 @@
-package com.gurkha.hr.components.textField
+package com.gurkha.hr.components.date
 
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -28,7 +28,7 @@ data class DateData(
         fun fromDisplay(
             displayValue: String,
             pattern: String = "yyyy-MM-dd",
-            timeZone: TimeZone = TimeZone.currentSystemDefault()
+            timeZone: TimeZone = TimeZone.Companion.currentSystemDefault()
         ): DateData {
             val localDate = when (pattern) {
                 "MM/dd/yyyy" -> {

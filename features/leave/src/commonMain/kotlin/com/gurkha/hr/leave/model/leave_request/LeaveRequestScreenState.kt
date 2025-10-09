@@ -1,6 +1,6 @@
 package com.gurkha.hr.leave.model.leave_request
 
-import com.gurkha.hr.components.textField.DateData
+import com.gurkha.hr.components.date.DateData
 import com.gurkha.model.leave.leave_request.LeaveRequestData
 import com.gurkha.model.leave.ui.LeaveAssigneeUi
 import com.gurkha.model.leave.ui.LeaveDurationUi
@@ -28,11 +28,11 @@ data class LeaveRequestScreenState(
     val isAssigneeLoading: Boolean = false,
     val isLeaveTypeLoading: Boolean = false,
 
-    val isAssigneeFetchingError : Boolean = false,
-    val isLeaveTypeFetchingError : Boolean = false,
+    val isAssigneeFetchingError: Boolean = false,
+    val isLeaveTypeFetchingError: Boolean = false,
 
-    val leaveTypeList : List<LeaveTypeUi>? = null,
-    val leaveAssigneeList : List<LeaveAssigneeUi>? = null,
+    val leaveTypeList: List<LeaveTypeUi>? = null,
+    val leaveAssigneeList: List<LeaveAssigneeUi>? = null,
     val leaveDurationList: List<LeaveDurationUi> = listOf(
         LeaveDurationUi(
             name = "Full Day",
