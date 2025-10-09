@@ -12,8 +12,8 @@ class AttendanceRequestUseCase(
 ) {
     suspend operator fun invoke(
         assigneeId: Int,
-        clockInTime: String,
-        clockOutTime: String,
+        clockInTime: String? = "",
+        clockOutTime: String? = "",
         date: String,
         remarks: String
     ): ERPResult<AttendanceRequestData, DataError> {
@@ -23,8 +23,6 @@ class AttendanceRequestUseCase(
             clockOutTime = clockOutTime,
             date = date,
             remarks = remarks
-        ).map {
-            it.toData()
-        }
+        ).map { it.toData() }
     }
 }

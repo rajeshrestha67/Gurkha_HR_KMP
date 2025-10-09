@@ -195,8 +195,8 @@ fun DashboardScreenContent(
             )
             attendanceScreenBuilder(
                 navController = navController,
-                onGoToAttendanceRequestScreen = { attendanceRequestJson ->
-                    navController.navigate(AttendanceRoute.AttendanceRequestScreen(json = attendanceRequestJson))
+                onGoToAttendanceRequestScreen = {
+                    navController.navigate(AttendanceRoute.AttendanceRequestScreen)
                 }
             )
             leaveScreenBuilder(

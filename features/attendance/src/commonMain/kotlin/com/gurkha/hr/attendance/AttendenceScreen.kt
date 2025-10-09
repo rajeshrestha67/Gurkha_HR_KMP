@@ -102,12 +102,11 @@ fun AttendanceScreen(
         ?.collectAsStateWithLifecycle()
 
     LaunchedEffect(result?.value){
+        println("success_data ${result?.value}")
         val json = result?.value
         if(!json.isNullOrBlank()){
             viewModel.onAction(AttendanceAction.OnUpdateAttendanceJsonData(json))
         }
-        navController.currentBackStackEntry?.savedStateHandle?.set("data", null)
-
     }
 
     LaunchedEffect(state.isRequestingAttendance){

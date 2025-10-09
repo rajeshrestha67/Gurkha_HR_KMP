@@ -2,13 +2,16 @@ package com.gurkha.hr.attendanceRequestScreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gurkha.hr.model.attendanceRequestScreen.AttendanceRequestAction
-import com.gurkha.hr.model.attendanceRequestScreen.AttendanceRequestState
+import com.gurkha.hr.domain.attendance.attendanceRequest.useCase.AttendanceRequestUseCase
 import com.gurkha.hr.domain.form.RequiredValidationUseCase
 import com.gurkha.hr.domain.leave.leaveAssignee.model.toUiList
 import com.gurkha.hr.domain.leave.leaveAssignee.usecase.AssigneeUseCase
+import com.gurkha.hr.model.attendanceRequestScreen.AttendanceRequestAction
+import com.gurkha.hr.model.attendanceRequestScreen.AttendanceRequestState
+import com.gurkha.hr.networkhelper.onError
 import com.gurkha.hr.networkhelper.onSuccess
 import com.gurkha.model.attendance.attendanceRequest.AttendanceRequestData
+import com.gurkha.model.network.toErrorMessage
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -21,10 +24,17 @@ import kotlinx.coroutines.launch
 class AttendanceRequestViewModel(
     private val requiredValidationUseCase: RequiredValidationUseCase,
     private val assigneeUseCase: AssigneeUseCase,
+    private val attendanceRequestUseCase: AttendanceRequestUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(AttendanceRequestState())
     private val _dataChannel = Channel<AttendanceRequestData?>()
     val dataChannel = _dataChannel.receiveAsFlow()
+
+    private val _successChannel = Channel<String?>()
+    val successChannel = _successChannel.receiveAsFlow()
+
+    private val _errorChannel = Channel<String?>()
+    val errorChannel = _errorChannel.receiveAsFlow()
     val state = _state
         .onStart {
             fetchAssignee()
@@ -50,7 +60,7 @@ class AttendanceRequestViewModel(
                 _state.update {
                     it.copy(
                         clockInTime = action.clockInTime,
-                        clockInTimeError = null
+                        clockInOutError = null
                     )
                 }
             }
@@ -85,6 +95,10 @@ class AttendanceRequestViewModel(
             is AttendanceRequestAction.OnSubmit -> {
                 submit()
             }
+
+            is AttendanceRequestAction.OnGoBackAfterSuccess -> {
+                sendSuccessData()
+            }
         }
     }
 
@@ -106,10 +120,13 @@ class AttendanceRequestViewModel(
 
     private fun submit() = viewModelScope.launch {
         val dateError = requiredValidationUseCase(state.value.date?.displayValue)
-        val clockInError = requiredValidationUseCase(state.value.clockInTime)
-        val clockOutError = requiredValidationUseCase(state.value.clockOutTime)
         val assigneeError = requiredValidationUseCase(state.value.assignee?.value)
         val reasonError = requiredValidationUseCase(state.value.reason)
+
+        val hasClockInOrOut =
+            !state.value.clockInTime.isNullOrBlank() || !state.value.clockOutTime.isNullOrBlank()
+        val clockInOutError = if (hasClockInOrOut) null else requiredValidationUseCase(null)
+
 
         when {
             dateError != null -> {
@@ -120,21 +137,14 @@ class AttendanceRequestViewModel(
                 }
             }
 
-            clockInError != null -> {
+            clockInOutError != null -> {
                 _state.update {
                     it.copy(
-                        clockInTimeError = clockInError
+                        clockInOutError = clockInOutError
                     )
                 }
             }
 
-            clockOutError != null -> {
-                _state.update {
-                    it.copy(
-                        clockOutTimeError = clockOutError
-                    )
-                }
-            }
 
             assigneeError != null -> {
                 _state.update {
@@ -156,22 +166,14 @@ class AttendanceRequestViewModel(
                 _state.update {
                     it.copy(
                         dateError = null,
-                        clockInTimeError = null,
+                        clockInOutError = null,
                         clockOutTimeError = null,
                         assigneeError = null,
                         reasonError = null
                     )
                 }
 
-                _dataChannel.send(
-                    AttendanceRequestData(
-                        assignedId = state.value.assignee?.value ?: "",
-                        date = state.value.date?.displayValue ?: "",
-                        clockInTime = state.value.clockInTime ?: "",
-                        clockOutTime = state.value.clockOutTime ?: "",
-                        remarks = state.value.reason ?: ""
-                    )
-                )
+                requestAttendance()
                 _state.update {
                     it.copy(
                         date = null,
@@ -183,6 +185,47 @@ class AttendanceRequestViewModel(
                 }
             }
         }
+    }
 
+    private fun requestAttendance() = viewModelScope.launch {
+        _state.update {
+            it.copy(
+                isRequestingAttendance = true
+            )
+        }
+        attendanceRequestUseCase(
+            assigneeId = state.value.assignee?.value?.toInt() ?: 0,
+            clockInTime = state.value.clockInTime,
+            clockOutTime = state.value.clockOutTime,
+            date = state.value.date?.displayValue ?: "",
+            remarks = state.value.reason.toString()
+        ).onSuccess { data ->
+            _state.update {
+                it.copy(
+                    isRequestingAttendance = false
+                )
+            }
+            _successChannel.send(data.message)
+        }.onError { error ->
+            _state.update {
+                it.copy(
+                    isRequestingAttendance = false
+                )
+            }
+            _errorChannel.send(error.toErrorMessage())
+        }
+
+    }
+
+    private fun sendSuccessData() = viewModelScope.launch {
+        _dataChannel.send(
+            AttendanceRequestData(
+                assigneeId = state.value.assignee?.value ?: "",
+                date = state.value.date?.displayValue ?: "",
+                clockInTime = state.value.clockInTime ?: "",
+                clockOutTime = state.value.clockOutTime ?: "",
+                remarks = state.value.reason ?: ""
+            )
+        )
     }
 }

@@ -50,8 +50,8 @@ class KtorAttendanceRemoteRepository(
 
     override suspend fun requestAttendance(
         assigneeId: Int,
-        clockInTime: String,
-        clockOutTime: String,
+        clockInTime: String?,
+        clockOutTime: String?,
         date: String,
         remarks: String
     ): ERPResult<AttendanceRequestResponseDto, DataError> {
@@ -61,7 +61,7 @@ class KtorAttendanceRemoteRepository(
                 endPoint = EndPoint.ATTENDANCE_REQUEST_END_POINT
             ){
                 setBody(AttendanceRequestDto(
-                    assignedId = assigneeId,
+                    assigneeId = assigneeId,
                     clockInTime = clockInTime,
                     clockOutTime = clockOutTime,
                     date = date,

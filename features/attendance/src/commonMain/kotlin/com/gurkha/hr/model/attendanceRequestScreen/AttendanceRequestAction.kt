@@ -11,4 +11,6 @@ interface AttendanceRequestAction {
     data class OnReasonChange(val reason : String) : AttendanceRequestAction
 
     data object OnSubmit: AttendanceRequestAction
+
+    data object OnGoBackAfterSuccess: AttendanceRequestAction
 }

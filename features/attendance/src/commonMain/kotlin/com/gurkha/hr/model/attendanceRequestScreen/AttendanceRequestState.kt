@@ -9,7 +9,7 @@ data class AttendanceRequestState(
     val dateError: StringResource? = null,
 
     val clockInTime: String? = null,
-    val clockInTimeError: StringResource? = null,
+    val clockInOutError: StringResource? = null,
 
     val clockOutTime: String? = null,
     val clockOutTimeError: StringResource? = null,
@@ -22,4 +22,6 @@ data class AttendanceRequestState(
     val assignee: AssigneeUi? = null,
     val assigneeList: List<AssigneeUi>? = emptyList(),
     val assigneeError: StringResource? = null,
+
+    val isRequestingAttendance : Boolean = false,
 )

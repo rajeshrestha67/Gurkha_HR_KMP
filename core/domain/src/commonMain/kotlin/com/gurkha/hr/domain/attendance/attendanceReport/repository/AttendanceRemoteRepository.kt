@@ -1,7 +1,6 @@
 package com.gurkha.hr.domain.attendance.attendanceReport.repository
 
 import com.gurkha.hr.networkhelper.ERPResult
-import com.gurkha.model.ErrorData
 import com.gurkha.model.attendance.attendanceReport.AttendanceResponseDto
 import com.gurkha.model.attendance.attendanceRequest.AttendanceRequestResponseDto
 import com.gurkha.model.attendance.attendanceStatus.AttendanceStatusResponseDTO
@@ -21,8 +20,8 @@ interface AttendanceRemoteRepository {
 
     suspend fun requestAttendance(
         assigneeId : Int,
-        clockInTime : String,
-        clockOutTime : String,
+        clockInTime : String?,
+        clockOutTime : String?,
         date : String,
         remarks : String
     ): ERPResult<AttendanceRequestResponseDto, DataError>

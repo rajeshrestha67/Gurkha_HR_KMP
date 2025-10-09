@@ -1,44 +1,63 @@
 package com.gurkha.hr.attendanceRequestScreen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import com.gurkha.hr.model.attendanceRequestScreen.AttendanceRequestAction
-import com.gurkha.hr.model.attendanceRequestScreen.AttendanceRequestState
 import com.gurkha.hr.components.ERPButton
+import com.gurkha.hr.components.prompts.PromptModalBottomSheet
+import com.gurkha.hr.components.prompts.PromptType
 import com.gurkha.hr.components.textField.DropDownText
 import com.gurkha.hr.components.textField.ERPDateTextField
 import com.gurkha.hr.components.textField.ERPTextField
 import com.gurkha.hr.components.textField.ERPTimeTestField
 import com.gurkha.hr.components.textField.FormValidate
 import com.gurkha.hr.components.textField.FutureAndTodayDate
+import com.gurkha.hr.model.attendanceRequestScreen.AttendanceRequestAction
+import com.gurkha.hr.model.attendanceRequestScreen.AttendanceRequestState
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.dimens
+import com.gurkha.hr.res.theme.primaryTextColor
+import com.gurkha.hr.res.theme.secondaryTextColor
+import com.gurkha.model.attendance.attendanceRequest.AttendanceRequestData
 import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -47,15 +66,27 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun AttendanceRequestScreen(
     navController: NavHostController,
-    json: String?,
     onBackClicked: () -> Unit
 ) {
     val viewModel: AttendanceRequestViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
+    var showSuccessDialogue by remember { mutableStateOf(true) }
+    var showFailedDialogue by remember { mutableStateOf(false) }
+    var message by rememberSaveable{ mutableStateOf("")}
+    var sendData by remember{ mutableStateOf(false)}
 
-    LaunchedEffect(Unit) {
-        viewModel.dataChannel.collect { data ->
-            data?.let {
+
+
+    LaunchedEffect(sendData) {
+        if(sendData){
+            val data = AttendanceRequestData(
+                assigneeId = state.assignee?.value ?:"suneel",
+                date = state.date?.displayValue ?: "",
+                clockInTime = state.clockInTime ?:"",
+                clockOutTime = state.clockOutTime ?: "",
+                remarks = state.reason ?:""
+            )
+            data.let {
                 val stringData = Json.encodeToString(data)
                 navController.previousBackStackEntry
                     ?.savedStateHandle
@@ -65,37 +96,77 @@ fun AttendanceRequestScreen(
         }
     }
 
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        contentWindowInsets = WindowInsets(0.dp),
-        topBar = {
-            TopAppBar(
-                windowInsets = WindowInsets(0.dp),
-                title = {
-                    Text(text = stringResource(SharedRes.Strings.attendance_request_form))
-                },
-                navigationIcon = {
-                    IconButton(
-                        onClick = onBackClicked,
-                        content = {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = ""
-                            )
-                        }
-                    )
-                },
+    LaunchedEffect(Unit){
+        viewModel.successChannel.collect {
+            it?.let {
+                showSuccessDialogue = true
+                message = it
+            }
+        }
+    }
+
+    LaunchedEffect(Unit){
+        viewModel.errorChannel.collect {
+            it?.let {
+                showFailedDialogue = true
+                message = it
+            }
+        }
+    }
+
+    BoxWithConstraints(
+        modifier = Modifier.fillMaxSize()
+    ){
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            contentWindowInsets = WindowInsets(0.dp),
+            topBar = {
+                TopAppBar(
+                    windowInsets = WindowInsets(0.dp),
+                    title = {
+                        Text(text = stringResource(SharedRes.Strings.attendance_request_form))
+                    },
+                    navigationIcon = {
+                        IconButton(
+                            onClick = onBackClicked,
+                            content = {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                    contentDescription = ""
+                                )
+                            }
+                        )
+                    },
+                )
+            },
+        ) { contentPadding ->
+            AttendanceRequestScreenContent(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(contentPadding),
+                onAction = viewModel::onAction,
+                onBackClicked = onBackClicked,
+                state = state,
+                showSuccessDialogue = showSuccessDialogue,
+                showFailedDialogue = showFailedDialogue,
+                successMsg = message,
+                onSendData ={
+                    sendData = true
+                }
             )
-        },
-    ) { contentPadding ->
-        AttendanceRequestScreenContent(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(contentPadding),
-            onAction = viewModel::onAction,
-            onBackClicked = onBackClicked,
-            state = state
-        )
+        }
+
+        if(state.isRequestingAttendance){
+            Box(
+                modifier = Modifier.fillMaxSize().background(color = Color(0x80000000)),
+                contentAlignment = Alignment.Center
+            ){
+                CircularProgressIndicator(
+                    modifier = Modifier.size(MaterialTheme.dimens.medium3),
+                    color = MaterialTheme.colorScheme.secondaryContainer
+                )
+            }
+        }
     }
 }
 
@@ -105,8 +176,15 @@ fun AttendanceRequestScreenContent(
     modifier: Modifier = Modifier,
     onBackClicked: () -> Unit,
     onAction: (AttendanceRequestAction) -> Unit,
-    state: AttendanceRequestState
+    state: AttendanceRequestState,
+    showSuccessDialogue : Boolean,
+    showFailedDialogue : Boolean,
+    successMsg : String,
+    onSendData:()-> Unit
 ) {
+    val radioOptions = listOf("Clock In", "Clock Out")
+    val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[0]) }
+
     Column(
         modifier = modifier.fillMaxWidth()
             .padding(
@@ -134,38 +212,72 @@ fun AttendanceRequestScreenContent(
                 onAction(AttendanceRequestAction.OnDateChange(it))
             }
         )
+//radio option for the clock in time or clock out time selection
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            radioOptions.forEach { text ->
+                Row(
+                    Modifier
+                        .weight(1f)
+                        .selectable(
+                            selected = (text == selectedOption),
+                            onClick = {
+                                onOptionSelected(text)
+                            }
+                        ),
+                    verticalAlignment = Alignment.CenterVertically
 
-//        clock in time
-        ERPTimeTestField(
-            modifier = Modifier.fillMaxWidth(),
-            rules = FormValidate.requiredValidationRules,
-            value = state.clockInTime,
-            label = stringResource(SharedRes.Strings.clock_in_time),
-            hint = stringResource(SharedRes.Strings.clock_in_time),
-            enabled = true,
-            error = state.clockInTimeError,
-            onErrorStateChange = {
-            },
-            onTimeSelected = {
-                onAction(AttendanceRequestAction.OnClockInTimeChange(it))
+                ) {
+                    RadioButton(
+                        selected = (text == selectedOption),
+                        onClick = { onOptionSelected(text) }
+                    )
+                    Text(
+                        text = text,
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            color = if (text == selectedOption) MaterialTheme.colorScheme.primaryTextColor else MaterialTheme.colorScheme.secondaryTextColor
+                        ),
+                    )
+                }
             }
-        )
+        }
 
-//        clock out time
-        ERPTimeTestField(
-            modifier = Modifier.fillMaxWidth(),
-            value = state.clockOutTime,
-            label = stringResource(SharedRes.Strings.clock_out_time),
-            hint = stringResource(SharedRes.Strings.clock_out_time),
-            enabled = true,
-            rules = FormValidate.requiredValidationRules,
-            error = state.clockOutTimeError,
-            onErrorStateChange = {
-            },
-            onTimeSelected = {
-                onAction(AttendanceRequestAction.OnClockOutTimeChange(it))
-            }
-        )
+        if (selectedOption == radioOptions[0]) {
+            //        clock in time
+            ERPTimeTestField(
+                modifier = Modifier.fillMaxWidth(),
+                rules = FormValidate.requiredValidationRules,
+                value = state.clockInTime,
+                label = stringResource(SharedRes.Strings.clock_in_time),
+                hint = stringResource(SharedRes.Strings.clock_in_time),
+                enabled = true,
+                error = state.clockInOutError,
+                onErrorStateChange = {
+                },
+                onTimeSelected = {
+                    onAction(AttendanceRequestAction.OnClockInTimeChange(it))
+                }
+            )
+        } else {
+            //        clock out time
+            ERPTimeTestField(
+                modifier = Modifier.fillMaxWidth(),
+                value = state.clockOutTime,
+                label = stringResource(SharedRes.Strings.clock_out_time),
+                hint = stringResource(SharedRes.Strings.clock_out_time),
+                enabled = true,
+                rules = FormValidate.requiredValidationRules,
+                error = state.clockInOutError,
+                onErrorStateChange = {
+                },
+                onTimeSelected = {
+                    onAction(AttendanceRequestAction.OnClockOutTimeChange(it))
+                }
+            )
+        }
+
 
 //        select assignee
         DropDownText(
@@ -201,6 +313,7 @@ fun AttendanceRequestScreenContent(
             onErrorStateChange = {
             },
             onImeAction = {
+                onAction(AttendanceRequestAction.OnSubmit)
             },
             height = MaterialTheme.dimens.reasonTextField
         )
@@ -228,6 +341,26 @@ fun AttendanceRequestScreenContent(
                 text = stringResource(SharedRes.Strings.cancel),
             )
         }
-    }
 
+//        show the success modal
+        if(showSuccessDialogue){
+            PromptModalBottomSheet(
+                text =successMsg ,
+                onBackClicked = {
+                    onSendData()
+                    onBackClicked()
+                }
+            )
+        }
+//        show error modal
+        if(showFailedDialogue){
+            PromptModalBottomSheet(
+                text =successMsg ,
+                promptType = PromptType.FAILED,
+                buttonText = SharedRes.Strings.cancel,
+                onBackClicked = onBackClicked
+            )
+        }
+    }
 }
+

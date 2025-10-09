@@ -47,18 +47,18 @@ class AttendanceScreenModule {
     @KoinViewModel
     fun getAttendanceViewModel(
         attendanceStatusUseCase: AttendanceStatusUseCase,
-        attendanceRequestUseCase: AttendanceRequestUseCase
     ): AttendanceViewModel = AttendanceViewModel(
-        attendanceRequestUseCase = attendanceRequestUseCase,
         attendanceStatusUseCase = attendanceStatusUseCase,
     )
 
     @KoinViewModel
     fun getAttendanceRequestScreenViewModel(
         requiredValidationUseCase: RequiredValidationUseCase,
+        attendanceRequestUseCase: AttendanceRequestUseCase,
         assigneeUseCase: AssigneeUseCase
     ): AttendanceRequestViewModel = AttendanceRequestViewModel(
         assigneeUseCase = assigneeUseCase,
+        attendanceRequestUseCase = attendanceRequestUseCase,
         requiredValidationUseCase = requiredValidationUseCase
     )
 }

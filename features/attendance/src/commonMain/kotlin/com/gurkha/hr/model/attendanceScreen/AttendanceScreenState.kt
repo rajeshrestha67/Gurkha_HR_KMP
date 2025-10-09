@@ -17,6 +17,9 @@ data class AttendanceScreenState(
     val employeeName: String = "",
     val isSelf: String = "Y",
 
+    val attendanceStatus: TabItemsEnums = TabItemsEnums.PENDING,
+
+
     val tabItemsList: List<TabItemsEnums> = TabItemsEnums.Companion.list,
 
     val selectedTab: TabItemsEnums = TabItemsEnums.PENDING,

@@ -1,13 +1,14 @@
 package com.gurkha.hr.attendance
 
+//import com.gurkha.hr.domain.attendance.attendanceRequest.useCase.AttendanceRequestUseCase
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gurkha.hr.domain.attendance.attendanceRequest.useCase.AttendanceRequestUseCase
-//import com.gurkha.hr.domain.attendance.attendanceRequest.useCase.AttendanceRequestUseCase
+import com.gurkha.hr.domain.attendance.attendanceStatus.model.AttendanceStatusData
+import com.gurkha.hr.domain.attendance.attendanceStatus.useCase.AttendanceStatusUseCase
 import com.gurkha.hr.model.attendanceScreen.AttendanceAction
 import com.gurkha.hr.model.attendanceScreen.AttendanceScreenState
 import com.gurkha.hr.model.attendanceScreen.TabItemsEnums
-import com.gurkha.hr.domain.attendance.attendanceStatus.useCase.AttendanceStatusUseCase
 import com.gurkha.hr.networkhelper.onError
 import com.gurkha.hr.networkhelper.onSuccess
 import com.gurkha.model.attendance.attendanceRequest.AttendanceRequestData
@@ -24,7 +25,6 @@ import kotlinx.serialization.json.Json
 
 class AttendanceViewModel(
     private val attendanceStatusUseCase: AttendanceStatusUseCase,
-    private val attendanceRequestUseCase: AttendanceRequestUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(AttendanceScreenState())
 
@@ -43,14 +43,14 @@ class AttendanceViewModel(
             )
         }
         .stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = AttendanceScreenState()
-    )
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = AttendanceScreenState()
+        )
 
     fun onAction(action: AttendanceAction) {
-        when(action){
-            is AttendanceAction.OnUpdateAttendanceJsonData->{
+        when (action) {
+            is AttendanceAction.OnUpdateAttendanceJsonData -> {
                 _state.update {
                     it.copy(
                         leaveRequestDataJson = action.json
@@ -59,21 +59,24 @@ class AttendanceViewModel(
                 action.json?.let {
                     val data: AttendanceRequestData =
                         Json.decodeFromString<AttendanceRequestData>(action.json)
-                    requestAttendance(data = data)
+
+//                    requestAttendance(data = data)
+                    println("dataAfterSuccess $data")
                 }
             }
-            is AttendanceAction.OnStatusChange->{
+
+            is AttendanceAction.OnStatusChange -> {
                 _state.update {
                     it.copy(
                         selectedTab = action.status,
-                        currentTapItem = when(action.status){
+                        currentTapItem = when (action.status) {
                             TabItemsEnums.PENDING -> it.pendingTapItem
                             TabItemsEnums.APPROVED -> it.approvedTapItem
                             else -> it.rejectedTapItem
                         }
                     )
                 }
-                if(state.value.currentTapItem.result.isEmpty()){
+                if (state.value.currentTapItem.result.isEmpty()) {
                     fetchAttendance(
                         attendanceStatus = state.value.selectedTab,
                         employeeName = state.value.employeeName,
@@ -83,23 +86,26 @@ class AttendanceViewModel(
             }
         }
     }
+
     private fun fetchAttendance(
         attendanceStatus: TabItemsEnums,
         employeeName: String,
         isSelf: String
-    ) = viewModelScope.launch{
+    ) = viewModelScope.launch {
         _state.update {
-            when(attendanceStatus){
+            when (attendanceStatus) {
                 TabItemsEnums.PENDING -> {
                     it.copy(
                         pendingTapItem = it.pendingTapItem.copy(isLoading = true)
                     )
                 }
+
                 TabItemsEnums.APPROVED -> {
                     it.copy(
                         approvedTapItem = it.approvedTapItem.copy(isLoading = true)
                     )
                 }
+
                 TabItemsEnums.REJECTED -> {
                     it.copy(
                         rejectedTapItem = it.rejectedTapItem.copy(isLoading = true)
@@ -111,7 +117,7 @@ class AttendanceViewModel(
             attendanceStatus = attendanceStatus.value,
             employeeName = employeeName,
             isSelf = isSelf
-        ).onSuccess {data ->
+        ).onSuccess { data ->
             when (attendanceStatus) {
                 TabItemsEnums.PENDING -> {
                     _state.update {
@@ -187,42 +193,52 @@ class AttendanceViewModel(
                     }
                 }
             }
-            _state.update {
-                it.copy(
-                    currentTapItem = when (attendanceStatus) {
-                        TabItemsEnums.PENDING -> it.pendingTapItem
-                        TabItemsEnums.APPROVED -> it.approvedTapItem
-                        else -> it.rejectedTapItem
-                    }
-                )
-            }
         }
     }
 
-    private fun requestAttendance(
-        data: AttendanceRequestData
-    )=viewModelScope.launch {
-        attendanceRequestUseCase(
-            assigneeId = data.assignedId.toInt(),
-            clockInTime = data.clockInTime,
-            clockOutTime = data.clockOutTime,
-            date = data.date,
-            remarks = data.remarks
-        ).onSuccess {data->
-            _state.update {
-                it.copy(
-                    leaveRequestDataJson = null
-                )
-            }
-            _successChannel.send(data.message)
-        }
-            .onError { error ->
-                _state.update {
-                    it.copy(
-                        leaveRequestDataJson = null
-                    )
-                }
-                _errorChannel.send(error.toErrorMessage())
-            }
-    }
+//    private fun requestAttendance(
+//        data: AttendanceRequestData
+//    ) = viewModelScope.launch {
+//        attendanceRequestUseCase(
+//            assigneeId = data.assigneeId.toInt(),
+//            clockInTime = data.clockInTime,
+//            clockOutTime = data.clockOutTime,
+//            date = data.date,
+//            remarks = data.remarks
+//        ).onSuccess { response ->
+//            _state.update { currentState ->
+//                val updatedPendingList = currentState.pendingTapItem.result + AttendanceStatusData(
+//                    requestedDate = data.date,
+//                    clockInTime = data.clockInTime,
+//                    clockOutTime = data.clockOutTime,
+//                    requestRemarks = data.remarks,
+//                    assignedTo = data.assigneeId,
+//                    approvedRemarks = "",
+//                    lastModifiedBy = "",
+//                    lastModifiedDate = "",
+//                    attendanceStatus = TabItemsEnums.PENDING.value
+//                )
+//
+//                val updatedPendingTab =
+//                    currentState.pendingTapItem.copy(result = updatedPendingList)
+//
+//                currentState.copy(
+//                    pendingTapItem = updatedPendingTab,
+//                    currentTapItem = if (currentState.selectedTab == TabItemsEnums.PENDING) updatedPendingTab
+//                    else currentState.currentTapItem,
+//                    isRequestingAttendance = false,
+//                    leaveRequestDataJson = null
+//                )
+//            }
+//            _successChannel.send(response.message)
+//        }
+//            .onError { error ->
+//                _state.update {
+//                    it.copy(
+//                        leaveRequestDataJson = null
+//                    )
+//                }
+//                _errorChannel.send(error.toErrorMessage())
+//            }
+//    }
 }
