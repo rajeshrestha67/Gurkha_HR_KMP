@@ -16,7 +16,7 @@ import com.gurkha.hr.components.date.DaysInWeek
 import com.gurkha.hr.components.date.RecommendedSizeForAccessibility
 import com.gurkha.hr.date.data.CalendarDate
 import com.gurkha.hr.date.data.CalendarMonth
-import com.gurkha.hr.date.nepaliDigits
+import com.gurkha.hr.date.mapNumbers
 import com.gurkha.hr.res.theme.dimens
 import kotlin.math.ceil
 
@@ -85,7 +85,7 @@ fun Month(
                             DayItem(
                                 isBS = false,
                                 dateInAD = dateInAD.toString(),
-                                dateInBS = dateInBS.toString().nepaliDigits,
+                                dateInBS = dateInBS.toString().mapNumbers,
                                 isHoliday = isSaturday,
                                 isSelected = isSelected
                             )

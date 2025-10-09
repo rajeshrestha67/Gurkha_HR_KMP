@@ -117,4 +117,41 @@
     <string name="bs">वि.सं.</string>
     <string name="today">आज</string>
 
+
+    <string-array name="months">
+        <item>बैशाख</item>
+        <item>जेठ</item>
+        <item>असार</item>
+        <item>साउन</item>
+        <item>भदौ</item>
+        <item>असोज</item>
+        <item>कार्तिक</item>
+        <item>मंसिर</item>
+        <item>पुष</item>
+        <item>माघ</item>
+        <item>फाल्गुन</item>
+        <item>चैत</item>
+    </string-array>
+
+    <string-array name="weeks_days">
+        <item>आइत</item>
+        <item>सोम</item>
+        <item>मंगल</item>
+        <item>बुध</item>
+        <item>बिही</item>
+        <item>शुक्र</item>
+        <item>शनि</item>
+    </string-array>
+    <string-array name="numbers">
+        <item>०</item>
+        <item>१</item>
+        <item>२</item>
+        <item>३</item>
+        <item>४</item>
+        <item>५</item>
+        <item>६</item>
+        <item>७</item>
+        <item>८</item>
+        <item>९</item>
+    </string-array>
 </resources>

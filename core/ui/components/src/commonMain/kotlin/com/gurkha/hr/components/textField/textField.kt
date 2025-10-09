@@ -131,11 +131,7 @@ fun ERPBaseTextField(
                 }.then(updatedModifier),
             shape = shape,
             leadingIcon = leadingIcon,
-            trailingIcon = {
-                trailingIcon?.let {
-                    it()
-                }
-            },
+            trailingIcon = trailingIcon,
             maxLines = maxLines,
             value = textFieldValue,
             textStyle = MaterialTheme.typography.bodySmall.copy(

@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.PagerState
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -26,8 +27,7 @@ fun DateContent(
     state: DatePickerStateImpl,
     calendarModel: CalendarModel,
     monthPagerState: PagerState,
-    onDateSelected: (CalendarDate) -> Unit,
-    onPickerShouldOpen: () -> Unit
+    onDateSelected: (CalendarDate) -> Unit
 ) {
 
     val coroutineScope = rememberCoroutineScope()
@@ -49,7 +49,6 @@ fun DateContent(
                 ),
             bsDate = calendarModel.todayFormattedBSDate(),
             adDate = calendarModel.todayFormattedADDate(),
-            onPickerShouldOpen = onPickerShouldOpen,
             onTodayClick = {
                 onDateSelected(calendarModel.today)
                 coroutineScope.launch {
@@ -58,13 +57,15 @@ fun DateContent(
 
             }
         )
-
+        HorizontalDivider(
+            modifier = Modifier.padding(
+                horizontal = MaterialTheme.dimens.medium1,
+                vertical = MaterialTheme.dimens.small2
+            )
+        )
         DatePickerContent(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(
-                    vertical = MaterialTheme.dimens.small1
-                )
                 .clip(
                     shape = MaterialTheme.shapes.small
                 ),

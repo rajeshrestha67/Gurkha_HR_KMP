@@ -117,4 +117,42 @@
     <string name="invalid_password_digit">Must contain at least one digit</string>
     <string name="invalid_password_special_char">Must contain at least one special character</string>
 
+
+    <string-array name="months">
+        <item>Baisakh</item>
+        <item>Jestha</item>
+        <item>Asar</item>
+        <item>Shrawan</item>
+        <item>Bhadra</item>
+        <item>Asoj</item>
+        <item>Kartik</item>
+        <item>Mangsir</item>
+        <item>Poush</item>
+        <item>Magh</item>
+        <item>Falgun</item>
+        <item>Chaitra</item>
+    </string-array>
+
+    <string-array name="weeks_days">
+        <item>Sun</item>
+        <item>Mon</item>
+        <item>Tue</item>
+        <item>Wed</item>
+        <item>Thu</item>
+        <item>Fri</item>
+        <item>Sat</item>
+    </string-array>
+
+    <string-array name="numbers">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+    </string-array>
 </resources>

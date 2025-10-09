@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -15,12 +14,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.gurkha.hr.components.date.DaySize
+import com.gurkha.hr.date.mapNumbers
 import com.gurkha.hr.res.theme.borderColor
-import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.primaryTextColor
-import com.gurkha.hr.res.theme.secondaryTextColor
 
 
 @Composable
@@ -97,22 +94,22 @@ fun DayItem(
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = dateInBS,
+            text = dateInBS.mapNumbers,
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.bodyMedium
         )
 
-        Text(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(horizontal = MaterialTheme.dimens.small1)
-                .padding(bottom = MaterialTheme.dimens.small1 / 2),
-            text = dateInAD,
-            textAlign = TextAlign.Right,
-            style = MaterialTheme.typography.bodySmall.copy(
-                color = if (isHoliday && isSelected) MaterialTheme.colorScheme.onPrimary else if (isHoliday) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.secondaryTextColor,
-                fontSize = 10.sp
-            )
-        )
+//        Text(
+//            modifier = Modifier
+//                .align(Alignment.BottomEnd)
+//                .padding(horizontal = MaterialTheme.dimens.small1)
+//                .padding(bottom = MaterialTheme.dimens.small1 / 2),
+//            text = dateInAD,
+//            textAlign = TextAlign.Right,
+//            style = MaterialTheme.typography.bodySmall.copy(
+//                color = if (isHoliday && isSelected) MaterialTheme.colorScheme.onPrimary else if (isHoliday) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.secondaryTextColor,
+//                fontSize = 10.sp
+//            )
+//        )
     }
 }

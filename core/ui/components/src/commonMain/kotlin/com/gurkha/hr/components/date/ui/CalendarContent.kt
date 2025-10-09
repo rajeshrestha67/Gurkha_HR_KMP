@@ -33,10 +33,7 @@ fun CalendarContent(
         state = state,
         calendarModel = calendarModel,
         monthPagerState = monthPagerState,
-        onDateSelected = onDateSelected,
-        onPickerShouldOpen = {
-            //onBottomSheetToggle(true)
-        }
+        onDateSelected = onDateSelected
     )
 }
 

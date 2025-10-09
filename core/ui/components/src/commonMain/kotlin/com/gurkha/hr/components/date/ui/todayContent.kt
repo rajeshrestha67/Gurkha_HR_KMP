@@ -8,7 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.gurkha.hr.components.ERPButton
-import com.gurkha.hr.components.noRippleClickable
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.primaryTextColor
 import com.gurkha.hr.res.theme.secondaryTextColor
@@ -19,8 +18,7 @@ fun TodayContent(
     modifier: Modifier = Modifier,
     bsDate: String,
     adDate: String,
-    onTodayClick: () -> Unit,
-    onPickerShouldOpen: () -> Unit
+    onTodayClick: () -> Unit
 ) {
     Row(
         modifier = modifier,
@@ -29,9 +27,6 @@ fun TodayContent(
         Column(
             modifier = Modifier
                 .weight(1f)
-                .noRippleClickable {
-                    onPickerShouldOpen()
-                }
         ) {
 
             Text(

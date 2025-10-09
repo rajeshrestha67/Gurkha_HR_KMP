@@ -241,7 +241,7 @@ fun LeaveRequestScreenForm(
 
 //        leave reason
         ERPTextField(
-            text = state.reason ?: "",
+            text = state.reason,
             label = stringResource(SharedRes.Strings.reason),
             hint = stringResource(SharedRes.Strings.enterReason),
             onValueChange = {

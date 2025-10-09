@@ -28,7 +28,7 @@ fun HorizontalMonthsList(
     HorizontalPager(
         modifier = Modifier.padding(
             start = MaterialTheme.dimens.small1,
-            end = MaterialTheme.dimens.medium1
+            end = MaterialTheme.dimens.small1
         ),
         state = pagerState
     ) {

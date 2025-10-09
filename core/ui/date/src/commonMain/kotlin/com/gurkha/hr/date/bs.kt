@@ -1,5 +1,8 @@
 package com.gurkha.hr.date
 
+import androidx.compose.runtime.Composable
+import com.gurkha.hr.res.SharedRes
+import org.jetbrains.compose.resources.stringArrayResource
 import kotlin.jvm.JvmInline
 import kotlin.math.floor
 import kotlin.math.sign
@@ -151,6 +154,8 @@ class BSPointer(
             12,
             BS_DATES.last().last()
         )
+
+
     }
 
 
@@ -280,36 +285,42 @@ private val BS_DATES: Array<Array<Int>> = arrayOf(
     arrayOf(2090, 30, 32, 31, 32, 31, 30, 30, 30, 29, 30, 30, 30)
 )
 
-val String.nepaliDigits: String
+
+val String.mapNumbers: String
+    @Composable
     get() = this.map {
+        val numbers = stringArrayResource(SharedRes.Arrays.numbers)
         when (it) {
-            '0' -> '\u0966'  // ०
-            '1' -> '\u0967'  // १
-            '2' -> '\u0968'  // २
-            '3' -> '\u0969'  // ३
-            '4' -> '\u096A'  // ४
-            '5' -> '\u096B'  // ५
-            '6' -> '\u096C'  // ६
-            '7' -> '\u096D'  // ७
-            '8' -> '\u096E'  // ८
-            '9' -> '\u096F'  // ९
+            '0' -> numbers[0] // ०
+            '1' -> numbers[1]  // १
+            '2' -> numbers[2]  // २
+            '3' -> numbers[3]  // ३
+            '4' -> numbers[4]  // ४
+            '5' -> numbers[5]  // ५
+            '6' -> numbers[6]  // ६
+            '7' -> numbers[7]  // ७
+            '8' -> numbers[8]  // ८
+            '9' -> numbers[9]  // ९
             else -> it
         }
     }.joinToString("")
-val Int.nepaliDigits: String
-    get() = this.toString().nepaliDigits
+val Int.mapNumbers: String
+    @Composable
+    get() = this.toString().mapNumbers
 
-val months = listOf(
-    1 to "बैशाख",
-    2 to "जेठ",
-    3 to "असार",
-    4 to "साउन",
-    5 to "भदौ",
-    6 to "असोज",
-    7 to "कार्तिक",
-    8 to "मंसिर",
-    9 to "पुष",
-    10 to "माघ",
-    11 to "फाल्गुन",
-    12 to "चैत"
-)
+//val months_ = SharedRes.Arrays.months
+
+//val months = listOf(
+//    1 to "बैशाख",
+//    2 to "जेठ",
+//    3 to "असार",
+//    4 to "साउन",
+//    5 to "भदौ",
+//    6 to "असोज",
+//    7 to "कार्तिक",
+//    8 to "मंसिर",
+//    9 to "पुष",
+//    10 to "माघ",
+//    11 to "फाल्गुन",
+//    12 to "चैत"
+//)

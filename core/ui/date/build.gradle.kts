@@ -69,6 +69,8 @@ kotlin {
                 implementation(compose.materialIconsExtended)
                 implementation(libs.kotlinx.datetime)
                 implementation(libs.jetbrians.material3)
+                implementation(compose.components.resources)
+                implementation(projects.core.ui.res)
             }
         }
 

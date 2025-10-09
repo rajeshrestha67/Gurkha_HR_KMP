@@ -1,6 +1,6 @@
 package com.gurkha.hr.components.date.ui
 
-import androidx.compose.foundation.clickable
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -13,13 +13,17 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.text.style.TextAlign
+import com.gurkha.hr.components.noRippleClickable
 import com.gurkha.hr.date.data.CalendarMonth
-import com.gurkha.hr.date.months
+import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.primaryTextColor
+import org.jetbrains.compose.resources.stringArrayResource
 
 @Composable
 fun MonthNavigation(
@@ -27,11 +31,19 @@ fun MonthNavigation(
     displayMonth: CalendarMonth,
     nextAvailable: Boolean,
     previousAvailable: Boolean,
+    monthPickerExpand: Boolean,
+    yearPickerExpand: Boolean,
     onPreviousClick: () -> Unit,
     onNextClick: () -> Unit,
-    onYearClick: () -> Unit
+    onYearClick: () -> Unit,
+    onMonthClick: () -> Unit
 ) {
-
+    val monthRotationAngle by animateFloatAsState(
+        targetValue = if (monthPickerExpand) 180f else 0f, label = "Arrow Rotation"
+    )
+    val yearRotationAngle by animateFloatAsState(
+        targetValue = if (yearPickerExpand) 180f else 0f, label = "Arrow Rotation"
+    )
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
@@ -63,20 +75,43 @@ fun MonthNavigation(
 //        )
 
         Row(
-            modifier = Modifier.wrapContentWidth().clickable(onClick = onYearClick),
+            modifier = Modifier.wrapContentWidth().noRippleClickable(onClick = onYearClick),
             horizontalArrangement = Arrangement.spacedBy(
                 space = MaterialTheme.dimens.small1,
                 alignment = Alignment.CenterHorizontally
             )
         ) {
             Text(
-                text = "${months[displayMonth.month - 1].second}, ${displayMonth.year}",
+                text = "${displayMonth.year}",
                 style = MaterialTheme.typography.titleMedium.copy(
                     color = MaterialTheme.colorScheme.primaryTextColor
                 ),
                 textAlign = TextAlign.Center
             )
             Icon(
+                modifier = Modifier.rotate(yearRotationAngle),
+                imageVector = Icons.Filled.ArrowDropDown,
+                contentDescription = "drop down",
+                tint = MaterialTheme.colorScheme.primaryTextColor
+            )
+        }
+
+        Row(
+            modifier = Modifier.wrapContentWidth().noRippleClickable(onClick = onMonthClick),
+            horizontalArrangement = Arrangement.spacedBy(
+                space = MaterialTheme.dimens.small1,
+                alignment = Alignment.CenterHorizontally
+            )
+        ) {
+            Text(
+                text = stringArrayResource(SharedRes.Arrays.months)[displayMonth.month - 1],
+                style = MaterialTheme.typography.titleMedium.copy(
+                    color = MaterialTheme.colorScheme.primaryTextColor
+                ),
+                textAlign = TextAlign.Center
+            )
+            Icon(
+                modifier = Modifier.rotate(monthRotationAngle),
                 imageVector = Icons.Filled.ArrowDropDown,
                 contentDescription = "drop down",
                 tint = MaterialTheme.colorScheme.primaryTextColor

@@ -17,6 +17,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SelectableDates
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -30,6 +32,7 @@ import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.date.ui.CalendarContent
 import com.gurkha.hr.components.textField.ERPTextField
 import com.gurkha.hr.components.textField.Rule
+import com.gurkha.hr.date.data.CalendarDate
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.disabledTextFieldBorderColor
@@ -59,6 +62,7 @@ fun ERPDateTextField(
 ) {
 
     var showDateDialog by rememberSaveable { mutableStateOf(false) }
+    var displayInAd by rememberSaveable { mutableStateOf(false) }
 
     Box(
         modifier = modifier.wrapContentHeight(),
@@ -66,7 +70,7 @@ fun ERPDateTextField(
     ) {
 
         ERPTextField(
-            text = value?.displayValue ?: "",
+            text = if (displayInAd) value?.displayValueAD ?: "" else value?.displayValueBS ?: "",
             label = label,
             hint = hint,
             onValueChange = {
@@ -78,11 +82,41 @@ fun ERPDateTextField(
             error = error,
             onErrorStateChange = onErrorStateChange,
             trailingIcon = {
-                Icon(
-                    imageVector = Icons.Filled.CalendarMonth,
-                    contentDescription = "date",
-                    tint = if (enabled) MaterialTheme.colorScheme.primaryTextColor else MaterialTheme.colorScheme.disabledTextFieldBorderColor
-                )
+                Row(
+                    modifier = Modifier.padding(end = MaterialTheme.dimens.small3),
+                    horizontalArrangement = Arrangement.spacedBy(
+                        space = MaterialTheme.dimens.small1,
+                        alignment = Alignment.CenterHorizontally
+                    ),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    TextButton(
+                        enabled = enabled && value != null,
+                        onClick = {
+                            displayInAd = !displayInAd
+                        }
+                    ) {
+                        value?.let {
+                            Text(
+                                text = stringResource(
+                                    resource =
+                                        if (displayInAd) SharedRes.Strings.ad else SharedRes.Strings.bs
+                                ),
+                                style = MaterialTheme.typography.bodyLarge.copy(
+                                    color = MaterialTheme.colorScheme.primaryTextColor.copy(
+                                        alpha = if (enabled) 1f else 0.5f
+                                    )
+                                )
+                            )
+                        }
+                    }
+                    Icon(
+                        imageVector = Icons.Filled.CalendarMonth,
+                        contentDescription = "date",
+                        tint = if (enabled) MaterialTheme.colorScheme.primaryTextColor else MaterialTheme.colorScheme.disabledTextFieldBorderColor
+                    )
+                }
+
             },
             readOnly = true,
             onDropDown = {
@@ -104,6 +138,10 @@ fun ERPDateTextField(
 //            )
             DatePickerModalBottomSheet(
                 onDismiss = {
+                    showDateDialog = false
+                },
+                onDatePick = {
+                    onDateSelected(it)
                     showDateDialog = false
                 }
             )
@@ -144,8 +182,11 @@ private fun DatePickerDialog(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DatePickerModalBottomSheet(
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    onDatePick: (DateData) -> Unit
 ) {
+
+    var selectedDate by rememberSaveable { mutableStateOf<CalendarDate?>(null) }
 
     val sheet = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
@@ -164,7 +205,7 @@ fun DatePickerModalBottomSheet(
         ) {
             CalendarContent(
                 onDateSelected = {
-
+                    selectedDate = it
                 }
             )
 
@@ -184,11 +225,15 @@ fun DatePickerModalBottomSheet(
                 ERPButton(
                     onClick = {
                         onDismiss()
-//                        state.selectedDateMillis?.let { millis ->
-//                            onDatePick(
-//                                DateData.fromMillis(millis = millis)
-//                            )
-//                        }
+                        selectedDate?.let { dateInBS ->
+                            onDatePick(
+                                DateData.fromDisplayBS(
+                                    displayValue = "${dateInBS.year}-${
+                                        dateInBS.month.toString().padStart(2, '0')
+                                    }-${dateInBS.dayOfMonth.toString().padStart(2, '0')}"
+                                )
+                            )
+                        }
                     },
                     text = stringResource(SharedRes.Strings.confirm)
                 )

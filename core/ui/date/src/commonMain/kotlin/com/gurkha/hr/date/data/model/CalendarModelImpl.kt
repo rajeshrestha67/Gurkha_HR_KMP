@@ -1,12 +1,13 @@
 package com.gurkha.hr.date.data.model
 
+import androidx.compose.runtime.Composable
 import com.gurkha.hr.date.BSPointer
 import com.gurkha.hr.date.DateConverter
 import com.gurkha.hr.date.Year
 import com.gurkha.hr.date.data.CalendarDate
 import com.gurkha.hr.date.data.CalendarMonth
-import com.gurkha.hr.date.months
-import com.gurkha.hr.date.nepaliDigits
+import com.gurkha.hr.date.mapNumbers
+import com.gurkha.hr.res.SharedRes
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
@@ -18,19 +19,12 @@ import kotlinx.datetime.isoDayNumber
 import kotlinx.datetime.number
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
+import org.jetbrains.compose.resources.stringArrayResource
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 class CalendarModelImpl : CalendarModel() {
-    override val weekdayNames: List<String> = listOf(
-        "आइत",
-        "सोम",
-        "मंगल",
-        "बुध",
-        "बिही",
-        "शुक्र",
-        "शनि"
-    )
+
     override val today: CalendarDate
         get() {
             val today = LocalDate.now()
@@ -111,8 +105,11 @@ fun LocalDate.daysInMonth(): Int {
     return firstDayOfMonth.daysUntil(firstDayOfNextMonth)
 }
 
+@Composable
 fun CalendarModel.todayFormattedBSDate(): String {
-    return "${today.dayOfMonth.nepaliDigits} ${months[today.month - 1].second}, ${today.year.nepaliDigits} ${weekdayNames[(today.dayOfMonth % 7) - 1]}"
+    val months = stringArrayResource(SharedRes.Arrays.months)
+    val weeks = stringArrayResource(SharedRes.Arrays.weeksDays)
+    return "${today.dayOfMonth.mapNumbers} ${months[today.month - 1]}, ${today.year.mapNumbers} ${weeks[(today.dayOfMonth % 7) - 1]}"
 }
 
 @OptIn(ExperimentalTime::class)
