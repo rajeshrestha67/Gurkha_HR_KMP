@@ -113,4 +113,8 @@
     <string name="search_users">प्रयोगकर्ताहरू खोज्नुहोस्</string>
     <string name="type_here">यहाँ टाइप गर्नुहोस्...</string>
     <string name="typing">टाइप गर्दै...</string>
+    <string name="ad">ई.सं.</string>
+    <string name="bs">वि.सं.</string>
+    <string name="today">आज</string>
+
 </resources>

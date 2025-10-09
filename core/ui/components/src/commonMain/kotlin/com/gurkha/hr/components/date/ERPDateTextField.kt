@@ -1,17 +1,24 @@
 package com.gurkha.hr.components.date
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
-import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -20,9 +27,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.gurkha.hr.components.ERPButton
+import com.gurkha.hr.components.date.ui.CalendarContent
 import com.gurkha.hr.components.textField.ERPTextField
 import com.gurkha.hr.components.textField.Rule
 import com.gurkha.hr.res.SharedRes
+import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.disabledTextFieldBorderColor
 import com.gurkha.hr.res.theme.primaryTextColor
 import kotlinx.datetime.TimeZone
@@ -82,14 +91,19 @@ fun ERPDateTextField(
         )
 
         if (showDateDialog) {
-            DatePickerDialog(
+//            DatePickerDialog(
+//                onDismiss = {
+//                    showDateDialog = false
+//                },
+//                initialSelectedDateMillis = value?.actualValue,
+//                selectableDates = selectableDates,
+//                onDatePick = {
+//                    onDateSelected(it)
+//                    showDateDialog = false
+//                }
+//            )
+            DatePickerModalBottomSheet(
                 onDismiss = {
-                    showDateDialog = false
-                },
-                initialSelectedDateMillis = value?.actualValue,
-                selectableDates = selectableDates,
-                onDatePick = {
-                    onDateSelected(it)
                     showDateDialog = false
                 }
             )
@@ -112,17 +126,7 @@ private fun DatePickerDialog(
     DatePickerDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
-            ERPButton(
-                onClick = {
-                    onDismiss()
-                    state.selectedDateMillis?.let { millis ->
-                        onDatePick(
-                            DateData.fromMillis(millis = millis)
-                        )
-                    }
-                },
-                text = stringResource(SharedRes.Strings.confirm)
-            )
+
         },
         dismissButton = {
             ERPButton(
@@ -132,9 +136,65 @@ private fun DatePickerDialog(
             )
         }
     ) {
-        DatePicker(
-            state = state
-        )
+
+    }
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DatePickerModalBottomSheet(
+    onDismiss: () -> Unit
+) {
+
+    val sheet = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true
+    )
+    ModalBottomSheet(
+        sheetState = sheet,
+        modifier = Modifier
+            .fillMaxWidth()
+            .statusBarsPadding(),
+        onDismissRequest = onDismiss,
+        containerColor = MaterialTheme.colorScheme.background,
+    ) {
+
+        Column(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            CalendarContent(
+                onDateSelected = {
+
+                }
+            )
+
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(
+                    space = MaterialTheme.dimens.small2,
+                    alignment = Alignment.End
+                ),
+                modifier = Modifier.fillMaxWidth().padding(all = MaterialTheme.dimens.small2)
+            ) {
+
+                ERPButton(
+                    onClick = onDismiss,
+                    backgroundColor = MaterialTheme.colorScheme.error,
+                    text = stringResource(SharedRes.Strings.cancel)
+                )
+                ERPButton(
+                    onClick = {
+                        onDismiss()
+//                        state.selectedDateMillis?.let { millis ->
+//                            onDatePick(
+//                                DateData.fromMillis(millis = millis)
+//                            )
+//                        }
+                    },
+                    text = stringResource(SharedRes.Strings.confirm)
+                )
+            }
+        }
+
     }
 }
 

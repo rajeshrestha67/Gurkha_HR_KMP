@@ -70,6 +70,7 @@ kotlin {
                 implementation(compose.materialIconsExtended)
 
                 implementation(projects.core.ui.res)
+                implementation(projects.core.ui.date)
                 implementation(projects.core.model)
 
                 implementation(libs.koin.core)

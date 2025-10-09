@@ -5,16 +5,18 @@ import gurkhahr.core.ui.res.generated.resources.Poppins_Italic
 import gurkhahr.core.ui.res.generated.resources.Poppins_Medium
 import gurkhahr.core.ui.res.generated.resources.Res
 import gurkhahr.core.ui.res.generated.resources.account
+import gurkhahr.core.ui.res.generated.resources.ad
 import gurkhahr.core.ui.res.generated.resources.address
 import gurkhahr.core.ui.res.generated.resources.all_leaves
 import gurkhahr.core.ui.res.generated.resources.allocated_leave
 import gurkhahr.core.ui.res.generated.resources.annual_leave
 import gurkhahr.core.ui.res.generated.resources.approved
 import gurkhahr.core.ui.res.generated.resources.are_you_sure
+import gurkhahr.core.ui.res.generated.resources.assignee
 import gurkhahr.core.ui.res.generated.resources.attendance
+import gurkhahr.core.ui.res.generated.resources.bs
 import gurkhahr.core.ui.res.generated.resources.cancel
 import gurkhahr.core.ui.res.generated.resources.cancelled
-import gurkhahr.core.ui.res.generated.resources.assignee
 import gurkhahr.core.ui.res.generated.resources.change_password
 import gurkhahr.core.ui.res.generated.resources.chat
 import gurkhahr.core.ui.res.generated.resources.company_assets
@@ -84,8 +86,8 @@ import gurkhahr.core.ui.res.generated.resources.reason
 import gurkhahr.core.ui.res.generated.resources.report
 import gurkhahr.core.ui.res.generated.resources.request
 import gurkhahr.core.ui.res.generated.resources.required
-import gurkhahr.core.ui.res.generated.resources.select_assignee
 import gurkhahr.core.ui.res.generated.resources.search_users
+import gurkhahr.core.ui.res.generated.resources.select_assignee
 import gurkhahr.core.ui.res.generated.resources.select_end_date
 import gurkhahr.core.ui.res.generated.resources.select_leave_duration
 import gurkhahr.core.ui.res.generated.resources.select_leave_type
@@ -100,6 +102,7 @@ import gurkhahr.core.ui.res.generated.resources.system_default
 import gurkhahr.core.ui.res.generated.resources.terms_and_services
 import gurkhahr.core.ui.res.generated.resources.theme
 import gurkhahr.core.ui.res.generated.resources.time_and_attendance
+import gurkhahr.core.ui.res.generated.resources.today
 import gurkhahr.core.ui.res.generated.resources.type_here
 import gurkhahr.core.ui.res.generated.resources.typing
 import gurkhahr.core.ui.res.generated.resources.unknown_error_occurred
@@ -241,5 +244,8 @@ object SharedRes {
         val searchUsers = Res.string.search_users
         val type_here = Res.string.type_here
         val typing = Res.string.typing
+        val ad = Res.string.ad
+        val bs = Res.string.bs
+        val today = Res.string.today
     }
 }

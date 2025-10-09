@@ -108,6 +108,9 @@
     <string name="search_users">Search Users</string>
     <string name="type_here">Type here...</string>
     <string name="typing">Typing...</string>
+    <string name="ad">AD</string>
+    <string name="bs">BS</string>
+    <string name="today">Today</string>
     <string name="invalid_password_length">Password must be at least 6 characters long</string>
     <string name="invalid_password_uppercase">Must contain at least one uppercase letter</string>
     <string name="invalid_password_lowercase">Must contain at least one lowercase letter</string>
