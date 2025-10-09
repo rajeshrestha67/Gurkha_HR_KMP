@@ -3,7 +3,6 @@ package com.gurkha.hr.attendance
 //import com.gurkha.hr.domain.attendance.attendanceRequest.useCase.AttendanceRequestUseCase
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gurkha.hr.domain.attendance.attendanceRequest.useCase.AttendanceRequestUseCase
 import com.gurkha.hr.domain.attendance.attendanceStatus.model.AttendanceStatusData
 import com.gurkha.hr.domain.attendance.attendanceStatus.useCase.AttendanceStatusUseCase
 import com.gurkha.hr.model.attendanceScreen.AttendanceAction
@@ -12,7 +11,6 @@ import com.gurkha.hr.model.attendanceScreen.TabItemsEnums
 import com.gurkha.hr.networkhelper.onError
 import com.gurkha.hr.networkhelper.onSuccess
 import com.gurkha.model.attendance.attendanceRequest.AttendanceRequestData
-import com.gurkha.model.network.toErrorMessage
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -51,17 +49,11 @@ class AttendanceViewModel(
     fun onAction(action: AttendanceAction) {
         when (action) {
             is AttendanceAction.OnUpdateAttendanceJsonData -> {
-                _state.update {
-                    it.copy(
-                        leaveRequestDataJson = action.json
-                    )
-                }
                 action.json?.let {
                     val data: AttendanceRequestData =
                         Json.decodeFromString<AttendanceRequestData>(action.json)
 
-//                    requestAttendance(data = data)
-                    println("dataAfterSuccess $data")
+                    requestAttendance(data = data)
                 }
             }
 
@@ -196,49 +188,31 @@ class AttendanceViewModel(
         }
     }
 
-//    private fun requestAttendance(
-//        data: AttendanceRequestData
-//    ) = viewModelScope.launch {
-//        attendanceRequestUseCase(
-//            assigneeId = data.assigneeId.toInt(),
-//            clockInTime = data.clockInTime,
-//            clockOutTime = data.clockOutTime,
-//            date = data.date,
-//            remarks = data.remarks
-//        ).onSuccess { response ->
-//            _state.update { currentState ->
-//                val updatedPendingList = currentState.pendingTapItem.result + AttendanceStatusData(
-//                    requestedDate = data.date,
-//                    clockInTime = data.clockInTime,
-//                    clockOutTime = data.clockOutTime,
-//                    requestRemarks = data.remarks,
-//                    assignedTo = data.assigneeId,
-//                    approvedRemarks = "",
-//                    lastModifiedBy = "",
-//                    lastModifiedDate = "",
-//                    attendanceStatus = TabItemsEnums.PENDING.value
-//                )
-//
-//                val updatedPendingTab =
-//                    currentState.pendingTapItem.copy(result = updatedPendingList)
-//
-//                currentState.copy(
-//                    pendingTapItem = updatedPendingTab,
-//                    currentTapItem = if (currentState.selectedTab == TabItemsEnums.PENDING) updatedPendingTab
-//                    else currentState.currentTapItem,
-//                    isRequestingAttendance = false,
-//                    leaveRequestDataJson = null
-//                )
-//            }
-//            _successChannel.send(response.message)
-//        }
-//            .onError { error ->
-//                _state.update {
-//                    it.copy(
-//                        leaveRequestDataJson = null
-//                    )
-//                }
-//                _errorChannel.send(error.toErrorMessage())
-//            }
-//    }
+    private fun requestAttendance(
+        data: AttendanceRequestData
+    ) = viewModelScope.launch {
+        _state.update { currentState ->
+            val updatedPendingList = currentState.pendingTapItem.result + AttendanceStatusData(
+                requestedDate = data.date,
+                clockInTime = data.clockInTime,
+                clockOutTime = data.clockOutTime,
+                requestRemarks = data.remarks,
+                assignedTo = data.assigneeId,
+                approvedRemarks = "",
+                lastModifiedBy = "",
+                lastModifiedDate = "",
+                attendanceStatus = TabItemsEnums.PENDING.value
+            )
+
+            val updatedPendingTab =
+                currentState.pendingTapItem.copy(result = updatedPendingList)
+
+            currentState.copy(
+                pendingTapItem = updatedPendingTab,
+                currentTapItem = if (currentState.selectedTab == TabItemsEnums.PENDING) updatedPendingTab
+                else currentState.currentTapItem,
+                isRequestingAttendance = false,
+            )
+        }
+    }
 }

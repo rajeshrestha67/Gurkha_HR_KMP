@@ -22,7 +22,9 @@ fun NavGraphBuilder.attendanceScreenBuilder(
     }
 
     composable<AttendanceRoute.AttendanceRequestScreen>{
+        val json: String? = it.toRoute<AttendanceRoute.AttendanceRequestScreen>().json
         AttendanceRequestScreen(
+            json = json,
             navController = navController,
             onBackClicked={
                 navController.popBackStack()

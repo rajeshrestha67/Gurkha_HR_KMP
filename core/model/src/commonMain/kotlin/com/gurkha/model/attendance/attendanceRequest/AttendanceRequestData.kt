@@ -10,3 +10,4 @@ data class AttendanceRequestData(
     val clockOutTime: String,
     val remarks: String
 )
+

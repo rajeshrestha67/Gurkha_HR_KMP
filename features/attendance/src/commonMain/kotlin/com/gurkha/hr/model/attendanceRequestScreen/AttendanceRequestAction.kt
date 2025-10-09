@@ -1,6 +1,7 @@
 package com.gurkha.hr.model.attendanceRequestScreen
 
 import com.gurkha.hr.components.textField.DateData
+import com.gurkha.model.attendance.attendanceRequest.AttendanceRequestData
 import com.gurkha.model.leave.ui.AssigneeUi
 
 interface AttendanceRequestAction {
@@ -12,5 +13,5 @@ interface AttendanceRequestAction {
 
     data object OnSubmit: AttendanceRequestAction
 
-    data object OnGoBackAfterSuccess: AttendanceRequestAction
+    data class OnUpdateAttendanceRequestData(val data : AttendanceRequestData): AttendanceRequestAction
 }

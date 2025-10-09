@@ -65,26 +65,25 @@ import org.koin.compose.viewmodel.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AttendanceRequestScreen(
+    json: String?,
     navController: NavHostController,
     onBackClicked: () -> Unit
 ) {
     val viewModel: AttendanceRequestViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
-    var showSuccessDialogue by remember { mutableStateOf(true) }
+    var showSuccessDialogue by remember { mutableStateOf(false) }
     var showFailedDialogue by remember { mutableStateOf(false) }
     var message by rememberSaveable{ mutableStateOf("")}
     var sendData by remember{ mutableStateOf(false)}
 
-
-
     LaunchedEffect(sendData) {
         if(sendData){
             val data = AttendanceRequestData(
-                assigneeId = state.assignee?.value ?:"suneel",
-                date = state.date?.displayValue ?: "",
-                clockInTime = state.clockInTime ?:"",
-                clockOutTime = state.clockOutTime ?: "",
-                remarks = state.reason ?:""
+                assigneeId = state.attendanceRequestData?.assigneeId ?: "" ,
+                date = state.attendanceRequestData?.date ?: "",
+                clockInTime = state.attendanceRequestData?.clockInTime ?:"",
+                clockOutTime = state.attendanceRequestData?.clockOutTime ?:"",
+                remarks = state.attendanceRequestData?.remarks ?:"",
             )
             data.let {
                 val stringData = Json.encodeToString(data)
@@ -92,6 +91,14 @@ fun AttendanceRequestScreen(
                     ?.savedStateHandle
                     ?.set("data", stringData)
                 navController.popBackStack()
+            }
+        }
+    }
+
+    LaunchedEffect(Unit){
+        viewModel.dataChannel.collect { it->
+            it?.let {
+                viewModel.onAction(AttendanceRequestAction.OnUpdateAttendanceRequestData(it))
             }
         }
     }
@@ -346,10 +353,7 @@ fun AttendanceRequestScreenContent(
         if(showSuccessDialogue){
             PromptModalBottomSheet(
                 text =successMsg ,
-                onBackClicked = {
-                    onSendData()
-                    onBackClicked()
-                }
+                onBackClicked = onBackClicked
             )
         }
 //        show error modal

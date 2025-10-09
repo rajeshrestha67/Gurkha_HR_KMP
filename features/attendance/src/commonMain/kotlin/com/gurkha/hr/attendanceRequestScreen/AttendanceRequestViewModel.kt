@@ -96,8 +96,12 @@ class AttendanceRequestViewModel(
                 submit()
             }
 
-            is AttendanceRequestAction.OnGoBackAfterSuccess -> {
-                sendSuccessData()
+            is AttendanceRequestAction.OnUpdateAttendanceRequestData -> {
+                _state.update {
+                    it.copy(
+                        attendanceRequestData = action.data
+                    )
+                }
             }
         }
     }
@@ -169,10 +173,18 @@ class AttendanceRequestViewModel(
                         clockInOutError = null,
                         clockOutTimeError = null,
                         assigneeError = null,
-                        reasonError = null
+                        reasonError = null,
                     )
-                }
 
+                }
+                val data = AttendanceRequestData(
+                    assigneeId = state.value.assignee?.value.toString(),
+                    clockInTime = state.value.clockInTime ?:"",
+                    clockOutTime = state.value.clockOutTime ?:"",
+                    date = state.value.date?.displayValue ?: "",
+                    remarks = state.value.reason.toString()
+                )
+                _dataChannel.send(data)
                 requestAttendance()
                 _state.update {
                     it.copy(
@@ -206,6 +218,15 @@ class AttendanceRequestViewModel(
                 )
             }
             _successChannel.send(data.message)
+            _state.update {
+                it.copy(
+                    date = null,
+                    clockInTime = null,
+                    clockOutTime = null,
+                    assignee = null,
+                    reason = null
+                )
+            }
         }.onError { error ->
             _state.update {
                 it.copy(
@@ -215,17 +236,5 @@ class AttendanceRequestViewModel(
             _errorChannel.send(error.toErrorMessage())
         }
 
-    }
-
-    private fun sendSuccessData() = viewModelScope.launch {
-        _dataChannel.send(
-            AttendanceRequestData(
-                assigneeId = state.value.assignee?.value ?: "",
-                date = state.value.date?.displayValue ?: "",
-                clockInTime = state.value.clockInTime ?: "",
-                clockOutTime = state.value.clockOutTime ?: "",
-                remarks = state.value.reason ?: ""
-            )
-        )
     }
 }
