@@ -57,10 +57,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gurkha.hr.components.ProfilePicture
+import com.gurkha.hr.components.date.horizontalCalendar.HorizontalCalendar
 import com.gurkha.hr.components.extractInitials
 import com.gurkha.hr.components.graphLine.SmoothLineGraph
 import com.gurkha.hr.components.shimmer.ShimmerView
@@ -524,68 +524,11 @@ fun LazyListScope.calendarView(
     calendarItem: List<CalendarItem>
 ) {
     stickyHeader(key = "calender") {
-        LazyRow(
-            state = listState,
+        HorizontalCalendar(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.background),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(
-                space = MaterialTheme.dimens.small2,
-                alignment = Alignment.CenterHorizontally
-            ),
-            contentPadding = PaddingValues(
-                horizontal = MaterialTheme.dimens.small3,
-                vertical = MaterialTheme.dimens.small2
-            )
-        ) {
-            items(calendarItem) { item ->
-                val color = if (item.active)
-                    MaterialTheme.colorScheme.primary
-                else
-                    MaterialTheme.colorScheme.background
-                val textColor = if (item.active) {
-                    MaterialTheme.colorScheme.onPrimary
-                } else {
-                    MaterialTheme.colorScheme.primaryTextColor
-                }
-                Column(
-                    modifier = Modifier
-                        .clip(MaterialTheme.shapes.medium)
-                        .background(color = color)
-                        .border(
-                            width = 0.5.dp,
-                            color = MaterialTheme.colorScheme.borderColor.copy(
-                                alpha = 0.5f
-                            ),
-                            shape = MaterialTheme.shapes.medium
-                        )
-                        .size(size = MaterialTheme.dimens.extraLarge)
-                        .clickable(onClick = {
-//                                    send the date to find there activities for that date
-                        }),
-                    verticalArrangement = Arrangement.spacedBy(
-                        space = MaterialTheme.dimens.small1,
-                        alignment = Alignment.CenterVertically
-                    ),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = item.day,
-                        style = MaterialTheme.typography.titleMedium.copy(
-                            color = textColor
-                        )
-                    )
-                    Text(
-                        text = item.date,
-                        style = MaterialTheme.typography.titleSmall.copy(
-                            color = textColor,
-                            fontWeight = FontWeight.Bold
-                        )
-                    )
-                }
-            }
-        }
+                .background(color = MaterialTheme.colorScheme.background)
+        )
     }
 }
 

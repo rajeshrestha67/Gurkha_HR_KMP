@@ -43,6 +43,14 @@ class CalendarModelImpl : CalendarModel() {
             )
         }
 
+    override fun numberOfDaysInMonth(): List<Int> {
+        val range = 1..BSPointer.getNumOfDaysInMonth(
+            year = Year.ofValue(today.year),
+            month = today.month
+        )
+        return range.toList()
+    }
+
     override fun getPage(year: Int, month: Int): Int {
         return BSPointer.getPageIndex(
             year = Year.ofValue(year),
