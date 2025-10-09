@@ -35,14 +35,19 @@
 
     <string name = "assigned_assets">तोकिएका सम्पत्तिहरू</string>
     <string name = "asset_name">सम्पत्तिको नाम</string>
+    <string name = "date">मिति</string>
     <string name = "description">विवरण</string>
     <string name = "assigned_date">तोकिएको मिति</string>
 
-    <string name= "leave_summary"> सारांश छोड्नुहोस्</string>
-    <string name= "leave_type_name"> बिदाको प्रकारको नाम</string>
-    <string name= "total_days"> कुल दिनहरू</string>">
-    <string name= "leave_taken"> बिदा लिइयो</string>">
-    <string name= "remaining_leave"> बाँकी बिदा</string>">
+    <string name= "clockIn">घडी भित्र</string>
+    <string name= "clockOut">घडी बाहिर</string>
+    <string name= "status">स्थिति</string>
+
+    <string name= "leave_summary">सारांश छोड्नुहोस्</string>
+    <string name= "leave_type_name">बिदाको प्रकारको नाम</string>
+    <string name= "total_days">कुल दिनहरू</string>">
+    <string name= "leave_taken">बिदा लिइयो</string>">
+    <string name= "remaining_leave">बाँकी बिदा</string>">
 
     <string name="leave_duration">बिदा अवधि</string>
     <string name="start_date">सुरुवात मिति</string>

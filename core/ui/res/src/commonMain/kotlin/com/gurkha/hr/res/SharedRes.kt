@@ -21,11 +21,14 @@ import gurkhahr.core.ui.res.generated.resources.cancelled
 import gurkhahr.core.ui.res.generated.resources.change_password
 import gurkhahr.core.ui.res.generated.resources.citizenship_back
 import gurkhahr.core.ui.res.generated.resources.citizenship_front
+import gurkhahr.core.ui.res.generated.resources.clockIn
+import gurkhahr.core.ui.res.generated.resources.clockOut
 import gurkhahr.core.ui.res.generated.resources.company_assets
 import gurkhahr.core.ui.res.generated.resources.confirm
 import gurkhahr.core.ui.res.generated.resources.confirm_password
 import gurkhahr.core.ui.res.generated.resources.contact_info
 import gurkhahr.core.ui.res.generated.resources.current_password
+import gurkhahr.core.ui.res.generated.resources.date
 import gurkhahr.core.ui.res.generated.resources.date_of_birth
 import gurkhahr.core.ui.res.generated.resources.description
 import gurkhahr.core.ui.res.generated.resources.do_you_really_want_to_logout
@@ -105,6 +108,7 @@ import gurkhahr.core.ui.res.generated.resources.sick_leave
 import gurkhahr.core.ui.res.generated.resources.skip
 import gurkhahr.core.ui.res.generated.resources.slc_marksheet
 import gurkhahr.core.ui.res.generated.resources.start_date
+import gurkhahr.core.ui.res.generated.resources.status
 import gurkhahr.core.ui.res.generated.resources.submit
 import gurkhahr.core.ui.res.generated.resources.support
 import gurkhahr.core.ui.res.generated.resources.system_default
@@ -221,8 +225,10 @@ object SharedRes {
         val assetName = Res.string.asset_name
         val description = Res.string.description
         val assignedDate = Res.string.assigned_date
-
-
+        val date = Res.string.date
+        val clockIn = Res.string.clockIn
+        val clockOut = Res.string.clockOut
+        val status = Res.string.status
 
 
         val invalidEmailAddress = Res.string.invalid_email_address

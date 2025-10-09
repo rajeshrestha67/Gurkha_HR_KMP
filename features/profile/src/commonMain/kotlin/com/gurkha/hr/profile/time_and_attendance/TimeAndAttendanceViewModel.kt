@@ -29,7 +29,9 @@ class TimeAndAttendanceViewModel(
         )
 
     private fun onFetchData() = viewModelScope.launch {
-        _state.update { it.copy(isLoading = true)}
+        _state.update { it.copy(
+            isLoading = true,
+            )}
         timeAndAttendanceUseCase(
             toDate = "",
             fromDate = ""

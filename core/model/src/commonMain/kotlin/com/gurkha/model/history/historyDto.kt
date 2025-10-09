@@ -23,8 +23,8 @@ data class DailyAttendance(
     val dateBs: String,
     val day: String,
     val employeeId: Int,
-    val clockInTime: String?,        // Nullable because some days are null
-    val clockOutTime: String?,       // Nullable because some days are null
+    val clockInTime: String?,
+    val clockOutTime: String?,
     val attendanceStatus: String,
     val workedHours: String?,
     val lateInTime: String?,

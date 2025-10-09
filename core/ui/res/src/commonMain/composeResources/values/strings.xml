@@ -74,11 +74,12 @@
 
     <string name="cancel">Cancel</string>">
     <string name="submit">Submit</string>">
+    <string name="date">Date</string>">
+    <string name= "clockIn">Clock In</string>
+    <string name= "clockOut">Clock Out</string>
+    <string name= "status">Status</string>
 
-    <string name = "assigned_assets">Assigned Assets</string>
-    <string name = "asset_name">Asset Name</string>
-    <string name = "description">Description</string>
-    <string name = "assigned_date">Assigned Date</string>
+
 
 
     <string name="leave_duration">Leave Duration</string>

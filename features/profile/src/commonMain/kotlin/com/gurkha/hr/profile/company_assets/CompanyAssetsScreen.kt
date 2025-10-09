@@ -110,7 +110,7 @@ fun CompanyAssetsRow(
         modifier = Modifier
             .fillMaxWidth()
             .padding(
-                horizontal = MaterialTheme.dimens.small3,
+                horizontal = MaterialTheme.dimens.small2,
                 vertical = MaterialTheme.dimens.small2
             ),
 //            .border(
