@@ -5,6 +5,7 @@ import com.gurkha.hr.date.BSPointer
 import com.gurkha.hr.date.DateConverter
 import com.gurkha.hr.date.Year
 import com.gurkha.hr.date.data.CalendarDate
+import com.gurkha.hr.date.data.CalendarDay
 import com.gurkha.hr.date.data.CalendarMonth
 import com.gurkha.hr.date.mapNumbers
 import com.gurkha.hr.res.SharedRes
@@ -31,7 +32,7 @@ class CalendarModelImpl : CalendarModel() {
             val nepaliDate = DateConverter.adToBs(
                 year = today.year,
                 month = today.month.number,
-                day = today.dayOfMonth
+                day = today.day
             )
             return CalendarDate(
                 year = nepaliDate.year,
@@ -43,12 +44,29 @@ class CalendarModelImpl : CalendarModel() {
             )
         }
 
-    override fun numberOfDaysInMonth(): List<Int> {
+    override fun numberOfDaysInMonth(): List<CalendarDay> {
         val range = 1..BSPointer.getNumOfDaysInMonth(
             year = Year.ofValue(today.year),
             month = today.month
         )
-        return range.toList()
+
+        val firstDayAD = DateConverter.bsToAd(today.year, today.month, 1)
+        val localDate = LocalDate(firstDayAD.year, firstDayAD.month, firstDayAD.day)
+        var dayOfWeek = getDayNumberSundayFirst(localDate)
+        return range.toList().map { day ->
+
+            if (dayOfWeek == 8) {
+                dayOfWeek = 1
+            }
+            val dayCalendar = CalendarDay(dayOfWeek, day, dayOfWeek == 7)
+            dayOfWeek++
+            dayCalendar
+        }
+    }
+
+    private fun getDayNumberSundayFirst(date: LocalDate = LocalDate.now()): Int {
+        val day = date.dayOfWeek.isoDayNumber
+        return if (day == 7) 1 else day + 1
     }
 
     override fun getPage(year: Int, month: Int): Int {

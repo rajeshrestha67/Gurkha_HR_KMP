@@ -1,13 +1,14 @@
 package com.gurkha.hr.date.data.model
 
 import com.gurkha.hr.date.data.CalendarDate
+import com.gurkha.hr.date.data.CalendarDay
 import com.gurkha.hr.date.data.CalendarMonth
 
 abstract class CalendarModel {
     abstract val today: CalendarDate
 
     //    abstract val weekdayNames: List<String>
-    abstract fun numberOfDaysInMonth(): List<Int>
+    abstract fun numberOfDaysInMonth(): List<CalendarDay>
 
     abstract fun getPage(year: Int, month: Int): Int
 
