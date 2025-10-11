@@ -2,11 +2,11 @@ package com.gurkha.hr.data.timeAndAttendance
 
 import com.gurkha.hr.domain.timeAndAttendance.repository.TimeAndAttendanceRemoteRepository
 import com.gurkha.hr.networkhelper.BaseUrl
-import com.gurkha.hr.networkhelper.DataError
 import com.gurkha.hr.networkhelper.ERPResult
 import com.gurkha.hr.networkhelper.EndPoint
 import com.gurkha.hr.networkhelper.post
 import com.gurkha.hr.networkhelper.safeCall
+import com.gurkha.model.network.DataError
 import com.gurkha.model.timeandAttendance.TimeAttendanceReportRequestDTO
 import com.gurkha.model.timeandAttendance.TimeAttendanceReportResponseDTO
 import io.ktor.client.HttpClient

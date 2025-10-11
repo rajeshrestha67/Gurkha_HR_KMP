@@ -46,12 +46,11 @@
     <string name="master">Master</string>
     <string name="experience_document">Experience Document</string>
 
-    <string name= "leave_summary"> Leave Summary</string>
-    <string name= "leave_type_name"> Leave Type\nName</string>
-    <string name= "total_days"> Total Days</string>">
-    <string name= "leave_taken"> Leave Taken</string>">
-    <string name= "remaining_leave"> Remaining Leave</string>">
-
+    <string name="leave_summary"> Leave Summary</string>
+    <string name="leave_type_name"> Leave Type\nName</string>
+    <string name="total_days"> Total Days</string>">
+    <string name="leave_taken"> Leave Taken</string>">
+    <string name="remaining_leave"> Remaining Leave</string>">
 
 
     <string name="start_date">Start Date</string>
@@ -75,11 +74,11 @@
     <string name="cancel">Cancel</string>">
     <string name="submit">Submit</string>">
     <string name="date">Date</string>">
-    <string name= "clockIn">Clock In</string>
-    <string name= "clockOut">Clock Out</string>
-    <string name= "status">Status</string>
-    <string name= "from_date">From Date</string>
-    <string name= "to_date">To Date</string>
+    <string name="clockIn">Clock In</string>
+    <string name="clockOut">Clock Out</string>
+    <string name="status">Status</string>
+    <string name="from_date">From Date</string>
+    <string name="to_date">To Date</string>
 
 
     <string name="assignee">Assignee</string>">
@@ -97,7 +96,7 @@
     <string name="leave_pending">Leave\nPending</string>
     <string name="leave_cancelled">Leave\nCancelled</string>
 
-    <string name="date">Date</string>
+
     <string name="apply_days">Apply Days</string>
     <string name="approver">Approver</string>
 
@@ -164,6 +163,10 @@
     <string name="ad">AD</string>
     <string name="bs">BS</string>
     <string name="today">Today</string>
+    <string name="assigned_assets">Assigned Assets</string>
+    <string name="asset_name">Asset Name</string>
+    <string name="description">Description</string>
+    <string name="assigned_date">Assigned Date</string>
     <string name="invalid_password_length">Password must be at least 6 characters long</string>
     <string name="invalid_password_uppercase">Must contain at least one uppercase letter</string>
     <string name="invalid_password_lowercase">Must contain at least one lowercase letter</string>

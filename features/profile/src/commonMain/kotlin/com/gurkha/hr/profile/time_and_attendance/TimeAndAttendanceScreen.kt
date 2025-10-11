@@ -44,9 +44,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gurkha.hr.components.ERPButton
-import com.gurkha.hr.components.textField.ERPDateTextField
+import com.gurkha.hr.components.date.ERPDateTextField
+import com.gurkha.hr.components.date.FutureAndTodayDate
+
 import com.gurkha.hr.components.textField.FormValidate
-import com.gurkha.hr.components.textField.FutureAndTodayDate
+
 import com.gurkha.hr.domain.timeAndAttendance.model.TimeAndAttendanceData
 import com.gurkha.hr.profile.model.time_and_attendance_screen.TimeAndAttendanceState
 import com.gurkha.hr.profile.model.time_and_attendance_screen.TimeAndAttendanceViewAction

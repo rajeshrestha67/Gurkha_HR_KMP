@@ -3,9 +3,9 @@ package com.gurkha.hr.domain.timeAndAttendance.usecase
 import com.gurkha.hr.domain.timeAndAttendance.mapper.toData
 import com.gurkha.hr.domain.timeAndAttendance.model.TimeAndAttendanceData
 import com.gurkha.hr.domain.timeAndAttendance.repository.TimeAndAttendanceRemoteRepository
-import com.gurkha.hr.networkhelper.DataError
 import com.gurkha.hr.networkhelper.ERPResult
 import com.gurkha.hr.networkhelper.map
+import com.gurkha.model.network.DataError
 
 class TimeAndAttendanceUseCase(
     private val timeAndAttendanceRemoteRepository: TimeAndAttendanceRemoteRepository,
@@ -17,7 +17,7 @@ class TimeAndAttendanceUseCase(
         return timeAndAttendanceRemoteRepository.fetchTimeAndAttendance(
             dateFrom = fromDate,
             toDate = toDate
-        ).map{
+        ).map {
             it.toData()
         }
     }
