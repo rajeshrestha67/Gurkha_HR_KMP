@@ -25,6 +25,9 @@ fun initKoin(config: KoinAppDeclaration? = null) {
             ProfileInfoScreenModule().module,
             ChatModule().module,
             AttendanceScreenModule().module
+            ProfileInfoScreenModule().module,
+            AllocatedLeaveModule().module,
+            TimeAndAttendanceModule().module,
         )
     }
 }

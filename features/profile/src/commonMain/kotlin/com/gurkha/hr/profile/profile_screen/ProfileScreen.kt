@@ -173,7 +173,7 @@ fun ProfileScreenContainer(
             ProfileItemRow(
                 text = stringResource(item.title),
                 onClick = { onGeneralClick(item) },
-                showDivider = item != GeneralList.History
+                showDivider = item != GeneralList.Report
             )
 
         }

@@ -75,15 +75,16 @@ fun ProfileInfoScreenContainer(
     state: ProfileInfoScreenState,
     onAction: (ProfileInfoViewAction) -> Unit,
 ) {
-
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
         contentWindowInsets = WindowInsets(),
 
         topBar = {
+
             TopAppBar(
-                windowInsets = WindowInsets(),
+                windowInsets = WindowInsets(0.dp),
+                modifier = Modifier.padding(top = MaterialTheme.dimens.small1),
                 title = { Text(stringResource(SharedRes.Strings.profile)) },
                 navigationIcon = {
                     IconButton(onClick = onBackPressed) {

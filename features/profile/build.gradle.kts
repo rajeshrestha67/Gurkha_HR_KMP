@@ -87,6 +87,8 @@ kotlin {
                 implementation(libs.coil.mp)
                 implementation(libs.coil.network.ktor3)
                 implementation(libs.ui.backhandler)
+
+                implementation(libs.jetbrians.material3)
             }
         }
 
