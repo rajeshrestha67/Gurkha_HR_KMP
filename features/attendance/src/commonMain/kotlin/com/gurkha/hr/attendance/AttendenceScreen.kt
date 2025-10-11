@@ -74,7 +74,7 @@ fun AttendanceScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     val snackBarHost = remember { SnackbarHostState() }
-    var isSnackBarVisible by remember{ mutableStateOf<Boolean>(false)}
+    var isSnackBarVisible by remember{ mutableStateOf(false)}
 
     LaunchedEffect(snackBarHost) {
         snapshotFlow { snackBarHost.currentSnackbarData }

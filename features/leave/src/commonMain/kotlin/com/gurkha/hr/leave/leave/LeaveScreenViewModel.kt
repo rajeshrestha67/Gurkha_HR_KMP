@@ -6,6 +6,7 @@ import com.gurkha.hr.domain.attendance.attendanceStatus.useCase.AttendanceStatus
 import com.gurkha.hr.domain.leave.leaveReport.model.LeaveReportData
 import com.gurkha.hr.domain.leave.leaveReport.useCase.LeaveReportUseCase
 import com.gurkha.hr.domain.leave.leaveRequest.usecase.LeaveRequestUseCase
+import com.gurkha.hr.domain.leave.leaveSummary.useCase.LeaveSummaryUseCase
 import com.gurkha.hr.leave.model.leave.LeaveScreenAction
 import com.gurkha.hr.leave.model.leave.LeaveScreenState
 import com.gurkha.hr.leave.model.leave.LeaveStatusEnum
@@ -29,6 +30,7 @@ import kotlinx.serialization.json.Json
 class LeaveScreenViewModel(
     private val leaveRequestUseCase: LeaveRequestUseCase,
     private val leaveReportUseCase: LeaveReportUseCase,
+    private val leaveSummaryUseCase : LeaveSummaryUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(LeaveScreenState())
     private val _errorChannel = Channel<String>()
@@ -40,6 +42,7 @@ class LeaveScreenViewModel(
 
     val state = _state
         .onStart {
+            fetchLeaveSummary()
             fetchLeaveReport(
                 leaveStatus = LeaveStatusEnum.PENDING,
             )
@@ -232,6 +235,12 @@ class LeaveScreenViewModel(
                 )
             }
             _errorChannel.send(error.toErrorMessage())
+        }
+    }
+
+    private fun fetchLeaveSummary()=viewModelScope.launch{
+        leaveSummaryUseCase().onSuccess {
+
         }
     }
 }

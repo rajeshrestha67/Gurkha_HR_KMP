@@ -102,7 +102,7 @@ fun PromptModalBottomSheet(
                    PromptType.FAILED -> {
                        Icon(
                            imageVector =  Icons.Filled.Close,
-                           contentDescription = "Success",
+                           contentDescription = "Error",
                            tint = MaterialTheme.colorScheme.onError,
                            modifier = Modifier.size(MaterialTheme.dimens.medium3)
                        )

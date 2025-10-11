@@ -12,6 +12,7 @@ import com.gurkha.model.leave.leaveReport.LeaveReportRequestDto
 import com.gurkha.model.leave.leaveReport.LeaveReportResponseDto
 import com.gurkha.model.leave.leaveRequest.LeaveRequestDto
 import com.gurkha.model.leave.leaveRequest.LeaveRequestResponseDto
+import com.gurkha.model.leave.leaveSummary.LeaveSummaryResponseDto
 import com.gurkha.model.leave.leaveType.LeaveTypeResponseDto
 import com.gurkha.model.network.DataError
 import io.ktor.client.HttpClient
@@ -79,6 +80,15 @@ class KtorLeaveRequestRemoteRepository(
                     )
                 )
             }
+        }
+    }
+
+    override suspend fun fetchLeaveSummary(): ERPResult<LeaveSummaryResponseDto, DataError> {
+        return safeCall {
+            httpClient.get(
+                baseUrl = BaseUrl.Generic,
+                endPoint = EndPoint.LEAVE_SUMMARY_END_POINT
+            )
         }
     }
 }

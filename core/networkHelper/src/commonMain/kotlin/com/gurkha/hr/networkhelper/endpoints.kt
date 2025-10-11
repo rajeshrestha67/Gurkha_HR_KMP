@@ -16,4 +16,5 @@ object EndPoint {
     const val CHAT_MESSAGE_ENDPOINT = "api/external-chat/messages"
 
     const val ATTENDANCE_REQUEST_END_POINT = "api/attendance/request"
+    const val LEAVE_SUMMARY_END_POINT = "api/leave-request/overall-leave-detail"
 }
