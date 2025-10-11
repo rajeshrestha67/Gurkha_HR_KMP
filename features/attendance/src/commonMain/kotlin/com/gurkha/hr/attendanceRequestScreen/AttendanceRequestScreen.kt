@@ -43,14 +43,16 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.gurkha.hr.components.ERPButton
+import com.gurkha.hr.components.date.ERPDateTextField
+import com.gurkha.hr.components.date.FutureAndTodayDate
 import com.gurkha.hr.components.prompts.PromptModalBottomSheet
 import com.gurkha.hr.components.prompts.PromptType
 import com.gurkha.hr.components.textField.DropDownText
-import com.gurkha.hr.components.textField.ERPDateTextField
+
 import com.gurkha.hr.components.textField.ERPTextField
 import com.gurkha.hr.components.textField.ERPTimeTestField
 import com.gurkha.hr.components.textField.FormValidate
-import com.gurkha.hr.components.textField.FutureAndTodayDate
+
 import com.gurkha.hr.model.attendanceRequestScreen.AttendanceRequestAction
 import com.gurkha.hr.model.attendanceRequestScreen.AttendanceRequestState
 import com.gurkha.hr.res.SharedRes
@@ -317,9 +319,6 @@ fun AttendanceRequestScreenContent(
             rules = FormValidate.requiredValidationRules,
             error = state.reasonError,
             onErrorStateChange = {
-            },
-            onImeAction = {
-                onAction(AttendanceRequestAction.OnSubmit)
             },
             height = MaterialTheme.dimens.reasonTextField
         )

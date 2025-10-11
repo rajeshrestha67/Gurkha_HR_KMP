@@ -123,7 +123,7 @@ class AttendanceRequestViewModel(
     }
 
     private fun submit() = viewModelScope.launch {
-        val dateError = requiredValidationUseCase(state.value.date?.displayValue)
+        val dateError = requiredValidationUseCase(state.value.date?.displayValueAD)
         val assigneeError = requiredValidationUseCase(state.value.assignee?.value)
         val reasonError = requiredValidationUseCase(state.value.reason)
 
@@ -179,9 +179,9 @@ class AttendanceRequestViewModel(
                 }
                 val data = AttendanceRequestData(
                     assigneeId = state.value.assignee?.value.toString(),
-                    clockInTime = state.value.clockInTime ?:"",
-                    clockOutTime = state.value.clockOutTime ?:"",
-                    date = state.value.date?.displayValue ?: "",
+                    clockInTime = state.value.clockInTime ?: "",
+                    clockOutTime = state.value.clockOutTime ?: "",
+                    date = state.value.date?.displayValueAD ?: "",
                     remarks = state.value.reason.toString()
                 )
                 _dataChannel.send(data)
@@ -209,7 +209,7 @@ class AttendanceRequestViewModel(
             assigneeId = state.value.assignee?.value?.toInt() ?: 0,
             clockInTime = state.value.clockInTime,
             clockOutTime = state.value.clockOutTime,
-            date = state.value.date?.displayValue ?: "",
+            date = state.value.date?.displayValueAD ?: "",
             remarks = state.value.reason.toString()
         ).onSuccess { data ->
             _state.update {
