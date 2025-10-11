@@ -1,11 +1,11 @@
 package com.gurkha.di
 
-import com.gurkha.hr.data.attendanceStatus.KtorAttendanceStatusRemoteRepository
+import com.gurkha.hr.data.attendance.KtorAttendanceRemoteRepository
 import com.gurkha.hr.data.leaveRequest.KtorLeaveRequestRemoteRepository
-import com.gurkha.hr.domain.attendance.attendanceStatus.repository.AttendanceStatusRemoteRepository
+import com.gurkha.hr.domain.attendance.attendanceReport.repository.AttendanceRemoteRepository
 import com.gurkha.hr.domain.attendance.attendanceStatus.useCase.AttendanceStatusUseCase
 import com.gurkha.hr.domain.form.RequiredValidationUseCase
-import com.gurkha.hr.domain.leave.leaveAssignee.usecase.LeaveAssigneeUseCase
+import com.gurkha.hr.domain.leave.leaveAssignee.usecase.AssigneeUseCase
 import com.gurkha.hr.domain.leave.leaveReport.useCase.LeaveReportUseCase
 import com.gurkha.hr.domain.leave.leaveRequest.repository.LeaveRemoteRepository
 import com.gurkha.hr.domain.leave.leaveRequest.usecase.LeaveRequestUseCase
@@ -20,9 +20,6 @@ import org.koin.core.annotation.Module
 
 @Module
 class LeaveScreenModule {
-    @Factory(binds = [AttendanceStatusRemoteRepository::class])
-    fun attendanceStatusRemoteRepository(httpClient: HttpClient) =
-        KtorAttendanceStatusRemoteRepository(httpClient)
 
     @Factory(binds = [LeaveRemoteRepository::class])
     fun leaveRemoteRepository(httpClient: HttpClient) =
@@ -46,13 +43,9 @@ class LeaveScreenModule {
     @Factory
     fun leaveAssigneeUseCase(
         leaveRemoteRepository: LeaveRemoteRepository
-    ): LeaveAssigneeUseCase = LeaveAssigneeUseCase(
+    ): AssigneeUseCase = AssigneeUseCase(
         leaveRemoteRepository = leaveRemoteRepository
     )
-
-    @Factory
-    fun attendanceStatusUseCase(attendanceStatusRemoteRepository: AttendanceStatusRemoteRepository): AttendanceStatusUseCase =
-        AttendanceStatusUseCase(attendanceStatusRemoteRepository)
 
     @Factory
     fun leaveRequestUseCase(leaveRemoteRepository: LeaveRemoteRepository): LeaveRequestUseCase =
@@ -60,24 +53,22 @@ class LeaveScreenModule {
 
     @KoinViewModel
     fun getLeaveScreenViewModel(
-        attendanceStatusUseCase: AttendanceStatusUseCase,
         leaveRequestUseCase: LeaveRequestUseCase,
-        leaveReportUseCase: LeaveReportUseCase
+        leaveReportUseCase: LeaveReportUseCase,
     ): LeaveScreenViewModel = LeaveScreenViewModel(
-        attendanceStatusUseCase = attendanceStatusUseCase,
         leaveRequestUseCase = leaveRequestUseCase,
-        leaveReportUseCase = leaveReportUseCase
+        leaveReportUseCase = leaveReportUseCase,
     )
 
     @KoinViewModel
     fun getLeaveRequestViewModel(
         requiredValidationUseCase: RequiredValidationUseCase,
-        leaveAssigneeUseCase: LeaveAssigneeUseCase,
+        leaveAssigneeUseCase: AssigneeUseCase,
         leaveTypeUseCase: LeaveTypeUseCase
     ): LeaveRequestScreenViewModel =
         LeaveRequestScreenViewModel(
             requiredValidationUseCase = requiredValidationUseCase,
             leaveTypeUseCase = leaveTypeUseCase,
-            leaveAssigneeUseCase = leaveAssigneeUseCase
+            assigneeUseCase = leaveAssigneeUseCase
         )
 }

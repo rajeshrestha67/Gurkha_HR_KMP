@@ -10,20 +10,30 @@ import gurkhahr.core.ui.res.generated.resources.address
 import gurkhahr.core.ui.res.generated.resources.all_leaves
 import gurkhahr.core.ui.res.generated.resources.allocated_leave
 import gurkhahr.core.ui.res.generated.resources.annual_leave
+import gurkhahr.core.ui.res.generated.resources.apply_days
 import gurkhahr.core.ui.res.generated.resources.approved
+import gurkhahr.core.ui.res.generated.resources.approver
 import gurkhahr.core.ui.res.generated.resources.are_you_sure
 import gurkhahr.core.ui.res.generated.resources.assignee
 import gurkhahr.core.ui.res.generated.resources.attendance
 import gurkhahr.core.ui.res.generated.resources.bs
 import gurkhahr.core.ui.res.generated.resources.cancel
 import gurkhahr.core.ui.res.generated.resources.cancelled
+import gurkhahr.core.ui.res.generated.resources.assignee
+import gurkhahr.core.ui.res.generated.resources.attendance_approved
+import gurkhahr.core.ui.res.generated.resources.attendance_cancelled
+import gurkhahr.core.ui.res.generated.resources.attendance_pending
+import gurkhahr.core.ui.res.generated.resources.attendance_request_form
 import gurkhahr.core.ui.res.generated.resources.change_password
 import gurkhahr.core.ui.res.generated.resources.chat
+import gurkhahr.core.ui.res.generated.resources.clock_in_time
+import gurkhahr.core.ui.res.generated.resources.clock_out_time
 import gurkhahr.core.ui.res.generated.resources.company_assets
 import gurkhahr.core.ui.res.generated.resources.confirm
 import gurkhahr.core.ui.res.generated.resources.confirm_password
 import gurkhahr.core.ui.res.generated.resources.contact_info
 import gurkhahr.core.ui.res.generated.resources.current_password
+import gurkhahr.core.ui.res.generated.resources.date
 import gurkhahr.core.ui.res.generated.resources.date_of_birth
 import gurkhahr.core.ui.res.generated.resources.do_you_really_want_to_logout
 import gurkhahr.core.ui.res.generated.resources.document
@@ -67,6 +77,8 @@ import gurkhahr.core.ui.res.generated.resources.login
 import gurkhahr.core.ui.res.generated.resources.marital_status
 import gurkhahr.core.ui.res.generated.resources.maternity_leave
 import gurkhahr.core.ui.res.generated.resources.months
+import gurkhahr.core.ui.res.generated.resources.missed_attendance
+import gurkhahr.core.ui.res.generated.resources.months
 import gurkhahr.core.ui.res.generated.resources.mourning_leave
 import gurkhahr.core.ui.res.generated.resources.my_attendance
 import gurkhahr.core.ui.res.generated.resources.nationality
@@ -74,6 +86,8 @@ import gurkhahr.core.ui.res.generated.resources.new_password
 import gurkhahr.core.ui.res.generated.resources.next
 import gurkhahr.core.ui.res.generated.resources.no
 import gurkhahr.core.ui.res.generated.resources.numbers
+import gurkhahr.core.ui.res.generated.resources.numbers
+import gurkhahr.core.ui.res.generated.resources.no_data_found
 import gurkhahr.core.ui.res.generated.resources.ok
 import gurkhahr.core.ui.res.generated.resources.outline_logout_24
 import gurkhahr.core.ui.res.generated.resources.password
@@ -89,6 +103,7 @@ import gurkhahr.core.ui.res.generated.resources.report
 import gurkhahr.core.ui.res.generated.resources.request
 import gurkhahr.core.ui.res.generated.resources.required
 import gurkhahr.core.ui.res.generated.resources.search_users
+import gurkhahr.core.ui.res.generated.resources.select_date
 import gurkhahr.core.ui.res.generated.resources.select_assignee
 import gurkhahr.core.ui.res.generated.resources.select_end_date
 import gurkhahr.core.ui.res.generated.resources.select_leave_duration
@@ -183,6 +198,24 @@ object SharedRes {
         val annualLeave = Res.string.annual_leave
         val maternityLeave = Res.string.maternity_leave
         val mourningLeave = Res.string.mourning_leave
+
+        val date = Res.string.date
+        val approver = Res.string.approver
+        val applyDays = Res.string.apply_days
+        val leave_type = Res.string.leave_type
+
+        val missed_attendance = Res.string.missed_attendance
+        val attendance_approved = Res.string.attendance_approved
+        val attendance_cancelled = Res.string.attendance_cancelled
+        val attendance_pending = Res.string.attendance_pending
+
+        val no_data_found = Res.string.no_data_found
+
+        val select_date = Res.string.select_date
+        val clock_in_time = Res.string.clock_in_time
+        val clock_out_time = Res.string.clock_out_time
+
+        val attendance_request_form = Res.string.attendance_request_form
 
         val invalidEmailAddress = Res.string.invalid_email_address
         val email = Res.string.email

@@ -8,7 +8,7 @@ import com.gurkha.hr.networkhelper.ERPResult
 import com.gurkha.hr.networkhelper.map
 import com.gurkha.model.network.DataError
 
-class LeaveAssigneeUseCase(
+class AssigneeUseCase(
     private val leaveRemoteRepository: LeaveRemoteRepository
 ) {
     suspend operator fun invoke(): ERPResult<List<LeaveAssigneeData>, DataError> {

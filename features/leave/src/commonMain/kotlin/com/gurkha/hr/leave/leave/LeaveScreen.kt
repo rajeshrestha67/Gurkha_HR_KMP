@@ -57,7 +57,6 @@ import com.gurkha.hr.leave.model.leave.LeaveItem
 import com.gurkha.hr.leave.model.leave.LeaveScreenAction
 import com.gurkha.hr.leave.model.leave.LeaveScreenState
 import com.gurkha.hr.leave.model.leave.LeaveStatusEnum
-import com.gurkha.hr.leave.model.leave.leaveItemsList
 import com.gurkha.hr.leave.model.leave.tabItemsList
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.darkPrimaryTextColor
@@ -211,7 +210,9 @@ fun LeaveScreenContent(
         ),
     ) {
 //        show the 4 leave options
-        leaveOptions()
+        leaveOptions(
+            state = state
+        )
 
 //        show the tabs for the attendance status
         leaveStatusTab(
@@ -225,8 +226,8 @@ fun LeaveScreenContent(
 }
 
 
-fun LazyListScope.leaveOptions(itemsPerRow: Int = 2) {
-    leaveItemsList.chunked(itemsPerRow).forEach { rowItems ->
+fun LazyListScope.leaveOptions(itemsPerRow: Int = 2, state: LeaveScreenState) {
+    state.leaveItemsList.chunked(itemsPerRow).forEach { rowItems ->
         item {
             Row(
                 modifier = Modifier
@@ -272,12 +273,12 @@ fun LeaveBox(
     ) {
         Text(
             text = stringResource(item.title),
-            style = MaterialTheme.typography.titleLarge.copy(
+            style = MaterialTheme.typography.titleMedium.copy(
                 color = MaterialTheme.colorScheme.darkPrimaryTextColor
             )
         )
         Text(
-            text = item.days, style = MaterialTheme.typography.titleLarge.copy(
+            text = item.days, style = MaterialTheme.typography.titleMedium.copy(
                 color = MaterialTheme.colorScheme.primaryTextColor
             )
         )
@@ -311,7 +312,6 @@ fun LazyListScope.leaveStatusTab(
                                 item
                             )
                         )
-
                     },
                     text = {
                         val color =
@@ -360,7 +360,7 @@ fun LazyListScope.leaveResults(
                 }
             } else {
                 item {
-                    Text(text = "No Data Found!")
+                    Text(text = stringResource(SharedRes.Strings.no_data_found))
                 }
             }
         }
@@ -396,7 +396,7 @@ fun LazyItemScope.ResultBox(
         )
         {
             Text(
-                text = "Date", style = MaterialTheme.typography.titleSmall.copy(
+                text = stringResource(SharedRes.Strings.date), style = MaterialTheme.typography.titleSmall.copy(
                     color = MaterialTheme.colorScheme.darkPrimaryTextColor
                 )
             )
@@ -420,7 +420,7 @@ fun LazyItemScope.ResultBox(
         {
             Column {
                 Text(
-                    text = "Apply Days",
+                    text = stringResource(SharedRes.Strings.applyDays),
                     style = MaterialTheme.typography.titleSmall.copy(
                         color = MaterialTheme.colorScheme.darkPrimaryTextColor
                     )
@@ -435,7 +435,7 @@ fun LazyItemScope.ResultBox(
 
             Column {
                 Text(
-                    text = "Approver",
+                    text = stringResource(SharedRes.Strings.approver),
                     style = MaterialTheme.typography.titleSmall.copy(
                         color = MaterialTheme.colorScheme.darkPrimaryTextColor
                     )
@@ -449,7 +449,7 @@ fun LazyItemScope.ResultBox(
 
             Column {
                 Text(
-                    text = "Leave Type",
+                    text = stringResource(SharedRes.Strings.leaveType),
                     style = MaterialTheme.typography.titleSmall.copy(
                         color = MaterialTheme.colorScheme.darkPrimaryTextColor
                     )
@@ -472,12 +472,13 @@ fun LazyItemScope.ResultBox(
         )
         {
             Text(
-                text = "Reason", style = MaterialTheme.typography.titleSmall.copy(
+                text = stringResource(SharedRes.Strings.reason), style = MaterialTheme.typography.titleSmall.copy(
                     color = MaterialTheme.colorScheme.darkPrimaryTextColor
                 )
             )
             Text(
                 text = item.reason,
+                maxLines = 3,
                 style = MaterialTheme.typography.titleSmall.copy(
                     color = MaterialTheme.colorScheme.primaryTextColor
                 )

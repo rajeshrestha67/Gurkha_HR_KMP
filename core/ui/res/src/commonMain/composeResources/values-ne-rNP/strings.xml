@@ -41,6 +41,22 @@
     <string name="leave_processing">प्रशोधन छोड्नुहोस्</string>">
     <string name="ok">ठीक छ</string>">
 
+    <string name="date">मिति</string>
+    <string name="apply_days">दिनहरू लागू गर्नुहोस्</string>
+    <string name="approver">अनुमोदनकर्ता</string>
+
+    <string name="missed_attendance">छुटेको\nउपस्थिति</string>
+    <string name="attendance_approved">उपस्थिति\nअनुमोदित</string>
+    <string name="attendance_cancelled">उपस्थिति\nरद्द गरियो</string>
+    <string name="attendance_pending">उपस्थिति\nविचाराधिन</string>
+
+    <string name="no_data_found">कुनै डेटा फेला परेन</string>
+
+    <string name="select_date">मिति चयन गर्नुहोस्</string>
+    <string name="clock_in_time">घडी भित्रको समय</string>
+    <string name="clock_out_time">घडी बाहिरको समय</string>
+
+    <string name="attendance_request_form">उपस्थिति अनुरोध फारम</string>
 
     <string name="view_all">सबै हेर्नुहोस्</string>
     <string name="profile">प्रोफाइल</string>

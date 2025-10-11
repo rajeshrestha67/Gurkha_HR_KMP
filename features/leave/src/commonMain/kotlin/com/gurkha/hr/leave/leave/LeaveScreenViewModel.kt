@@ -12,7 +12,7 @@ import com.gurkha.hr.leave.model.leave.LeaveStatusEnum
 import com.gurkha.hr.networkhelper.onError
 import com.gurkha.hr.networkhelper.onSuccess
 import com.gurkha.model.leave.leave_request.LeaveRequestData
-import com.gurkha.model.leave.ui.LeaveAssigneeUi
+import com.gurkha.model.leave.ui.AssigneeUi
 import com.gurkha.model.leave.ui.LeaveDurationUi
 import com.gurkha.model.leave.ui.LeaveTypeUi
 import com.gurkha.model.network.toErrorMessage
@@ -27,9 +27,8 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
 class LeaveScreenViewModel(
-    private val attendanceStatusUseCase: AttendanceStatusUseCase,
     private val leaveRequestUseCase: LeaveRequestUseCase,
-    private val leaveReportUseCase: LeaveReportUseCase
+    private val leaveReportUseCase: LeaveReportUseCase,
 ) : ViewModel() {
     private val _state = MutableStateFlow(LeaveScreenState())
     private val _errorChannel = Channel<String>()
@@ -82,7 +81,7 @@ class LeaveScreenViewModel(
                     val data: LeaveRequestData =
                         Json.decodeFromString<LeaveRequestData>(action.json)
                     val assigneeId =
-                        Json.decodeFromString<LeaveAssigneeUi>(data.assignee).value.toInt()
+                        Json.decodeFromString<AssigneeUi>(data.assignee).value.toInt()
                     val leaveTypeId =
                         Json.decodeFromString<LeaveTypeUi>(data.leaveType).value.toInt()
                     val leaveDuration =
@@ -204,7 +203,7 @@ class LeaveScreenViewModel(
                     leaveStatus = LeaveStatusEnum.PENDING.value,
                     reason = data.reason,
                     leaveDuration = data.leaveDuration,
-                    assigneeName = Json.decodeFromString<LeaveAssigneeUi>(data.assignee).value,
+                    assigneeName = Json.decodeFromString<AssigneeUi>(data.assignee).value,
                     totalDays = 0.0,
                     leaveType = Json.decodeFromString<LeaveTypeUi>(data.leaveType).value,
                     requestedDate = ""

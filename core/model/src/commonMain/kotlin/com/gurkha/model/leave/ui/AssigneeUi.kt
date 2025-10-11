@@ -3,7 +3,7 @@ package com.gurkha.model.leave.ui
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class LeaveAssigneeUi(
+data class AssigneeUi(
     val name: String,
     val value: String
 ){

@@ -3,7 +3,7 @@ package com.gurkha.model.attendance.attendanceReport
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class AttendanceRequestDto(
+data class AttendanceReportRequestDto(
     val fromDate: String,
     val toDate: String,
 )
