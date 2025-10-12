@@ -1,6 +1,5 @@
 package com.gurkha.hr.leave.leave
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -31,10 +30,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SecondaryTabRow
-import androidx.compose.material3.Snackbar
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
@@ -42,9 +37,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -63,12 +55,8 @@ import com.gurkha.hr.res.theme.darkPrimaryTextColor
 import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.highLightColor
 import com.gurkha.hr.res.theme.primaryTextColor
-import com.gurkha.hr.res.theme.secondaryTextColor
 import com.gurkha.hr.res.theme.veryLightGray
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -81,50 +69,7 @@ fun LeaveScreen(
     val viewModel: LeaveScreenViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    val snackBarHost = remember { SnackbarHostState() }
-    val isSnackBarVisible = remember { mutableStateOf(false) }
     val leaveListState = rememberLazyListState()
-
-    LaunchedEffect(snackBarHost) {
-        snapshotFlow { snackBarHost.currentSnackbarData }
-            .collect { data ->
-                isSnackBarVisible.value = data != null
-            }
-    }
-
-    LaunchedEffect(Unit) {
-        viewModel.successChannel.collect {
-            launch(context = Dispatchers.Main.immediate) {
-                snackBarHost.showSnackbar(message = it, duration = SnackbarDuration.Short)
-            }
-
-            launch(context = Dispatchers.Main.immediate) {
-                delay(500)
-                leaveListState.animateScrollToItem(state.currentTapItem.result.lastIndex + 1)
-            }
-        }
-    }
-
-    LaunchedEffect(Unit) {
-        val okText = getString(SharedRes.Strings.ok)
-        viewModel.errorChannel.collect {
-            snackBarHost.showSnackbar(
-                message = it,
-                duration = SnackbarDuration.Short,
-                actionLabel = okText
-            )
-        }
-    }
-
-    LaunchedEffect(state.isRequestingLeave) {
-        val message = getString(SharedRes.Strings.leave_processing)
-        if (state.isRequestingLeave) {
-            snackBarHost.showSnackbar(
-                message = message,
-                duration = SnackbarDuration.Indefinite,
-            )
-        }
-    }
 
     val result = navController.currentBackStackEntry
         ?.savedStateHandle
@@ -135,13 +80,11 @@ fun LeaveScreen(
         val json = result?.value
         if (!json.isNullOrBlank()) {
             viewModel.onAction(LeaveScreenAction.UpdateRequestData(json))
-//clear the data after sending once
-            navController.currentBackStackEntry?.savedStateHandle?.set("data", null)
+            delay(500)
+            leaveListState.animateScrollToItem(state.currentTapItem.result.lastIndex + 1)
         }
+
     }
-
-
-
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         contentWindowInsets = WindowInsets(0.dp),
@@ -160,25 +103,12 @@ fun LeaveScreen(
             )
         },
         floatingActionButton = {
-            AnimatedVisibility(visible = !isSnackBarVisible.value) {
-                FloatingActionButton(
-                    onClick = { onGoToLeaveRequestPage(state.leaveRequestDataJson) },
-                    content = {
-                        Icon(Icons.Filled.Add, contentDescription = "Go to Request page")
-                    }
-                )
-            }
-        },
-        snackbarHost = {
-            SnackbarHost(
-                hostState = snackBarHost
-            ) { data ->
-                Snackbar(
-                    snackbarData = data,
-                    actionColor = MaterialTheme.colorScheme.secondaryTextColor,
-                    containerColor = MaterialTheme.colorScheme.primary
-                )
-            }
+            FloatingActionButton(
+                onClick = { onGoToLeaveRequestPage(state.leaveRequestDataJson) },
+                content = {
+                    Icon(Icons.Filled.Add, contentDescription = "Go to Request page")
+                }
+            )
         },
     ) { contentPadding ->
         LeaveScreenContent(
@@ -235,7 +165,7 @@ fun LazyListScope.leaveOptions(itemsPerRow: Int = 2, state: LeaveScreenState) {
                     .padding(horizontal = MaterialTheme.dimens.small3),
                 horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
             ) {
-                if(state.isLeaveSummaryLoading){
+                if (state.isLeaveSummaryLoading) {
                     rowItems.forEach { leaveItem ->
                         ShimmerView(
                             modifier = Modifier
@@ -244,7 +174,7 @@ fun LazyListScope.leaveOptions(itemsPerRow: Int = 2, state: LeaveScreenState) {
                                 .height(MaterialTheme.dimens.heightForOptionBox)
                         )
                     }
-                }else{
+                } else {
                     rowItems.forEach { leaveItem ->
                         LeaveBox(
                             modifier = Modifier.weight(1f).fillMaxSize(),
@@ -407,7 +337,8 @@ fun LazyItemScope.ResultBox(
         )
         {
             Text(
-                text = stringResource(SharedRes.Strings.date), style = MaterialTheme.typography.titleSmall.copy(
+                text = stringResource(SharedRes.Strings.date),
+                style = MaterialTheme.typography.titleSmall.copy(
                     color = MaterialTheme.colorScheme.darkPrimaryTextColor
                 )
             )
@@ -483,7 +414,8 @@ fun LazyItemScope.ResultBox(
         )
         {
             Text(
-                text = stringResource(SharedRes.Strings.reason), style = MaterialTheme.typography.titleSmall.copy(
+                text = stringResource(SharedRes.Strings.reason),
+                style = MaterialTheme.typography.titleSmall.copy(
                     color = MaterialTheme.colorScheme.darkPrimaryTextColor
                 )
             )

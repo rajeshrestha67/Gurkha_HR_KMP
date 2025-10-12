@@ -56,7 +56,7 @@ class AttendanceViewModel(
                     val data: AttendanceRequestData =
                         Json.decodeFromString<AttendanceRequestData>(action.json)
 
-                    requestAttendance(data = data)
+                    updateAttendanceRequestData(data = data)
                 }
             }
 
@@ -191,7 +191,7 @@ class AttendanceViewModel(
         }
     }
 
-    private fun requestAttendance(
+    private fun updateAttendanceRequestData(
         data: AttendanceRequestData
     ) = viewModelScope.launch {
         _state.update { currentState ->

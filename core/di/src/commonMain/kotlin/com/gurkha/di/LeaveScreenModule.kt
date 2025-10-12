@@ -61,22 +61,23 @@ class LeaveScreenModule {
 
     @KoinViewModel
     fun getLeaveScreenViewModel(
-        leaveRequestUseCase: LeaveRequestUseCase,
+
         leaveReportUseCase: LeaveReportUseCase,
         leaveSummaryUseCase : LeaveSummaryUseCase
     ): LeaveScreenViewModel = LeaveScreenViewModel(
-        leaveRequestUseCase = leaveRequestUseCase,
         leaveReportUseCase = leaveReportUseCase,
         leaveSummaryUseCase = leaveSummaryUseCase
     )
 
     @KoinViewModel
     fun getLeaveRequestViewModel(
+        leaveRequestUseCase: LeaveRequestUseCase,
         requiredValidationUseCase: RequiredValidationUseCase,
         leaveAssigneeUseCase: AssigneeUseCase,
         leaveTypeUseCase: LeaveTypeUseCase
     ): LeaveRequestScreenViewModel =
         LeaveRequestScreenViewModel(
+            leaveRequestUseCase = leaveRequestUseCase,
             requiredValidationUseCase = requiredValidationUseCase,
             leaveTypeUseCase = leaveTypeUseCase,
             assigneeUseCase = leaveAssigneeUseCase
