@@ -4,6 +4,7 @@ import com.gurkha.hr.domain.attendance.attendanceReport.repository.AttendanceRem
 import com.gurkha.hr.networkhelper.BaseUrl
 import com.gurkha.hr.networkhelper.ERPResult
 import com.gurkha.hr.networkhelper.EndPoint
+import com.gurkha.hr.networkhelper.get
 import com.gurkha.hr.networkhelper.post
 import com.gurkha.hr.networkhelper.safeCall
 import com.gurkha.model.attendance.attendanceReport.AttendanceReportRequestDto
@@ -12,6 +13,7 @@ import com.gurkha.model.attendance.attendanceRequest.AttendanceRequestDto
 import com.gurkha.model.attendance.attendanceRequest.AttendanceRequestResponseDto
 import com.gurkha.model.attendance.attendanceStatus.AttendanceStatusRequestDTO
 import com.gurkha.model.attendance.attendanceStatus.AttendanceStatusResponseDTO
+import com.gurkha.model.attendance.attendanceSummary.AttendanceSummaryResponseDto
 import com.gurkha.model.network.DataError
 import io.ktor.client.HttpClient
 import io.ktor.client.request.setBody
@@ -68,6 +70,15 @@ class KtorAttendanceRemoteRepository(
                     remarks = remarks
                 ))
             }
+        }
+    }
+
+    override suspend fun fetchAttendanceSummary(): ERPResult<AttendanceSummaryResponseDto, DataError> {
+        return safeCall {
+            httpClient.get(
+                baseUrl = BaseUrl.Generic,
+                endPoint = EndPoint.ATTENDANCE_SUMMARY_END_POINT
+            )
         }
     }
 }
