@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gurkha.hr.domain.attendance.attendanceStatus.model.AttendanceStatusData
 import com.gurkha.hr.domain.attendance.attendanceStatus.useCase.AttendanceStatusUseCase
+import com.gurkha.hr.domain.attendance.attendanceSummary.useCase.AttendanceSummaryUseCase
 import com.gurkha.hr.model.attendanceScreen.AttendanceAction
 import com.gurkha.hr.model.attendanceScreen.AttendanceScreenState
 import com.gurkha.hr.model.attendanceScreen.TabItemsEnums
@@ -23,6 +24,7 @@ import kotlinx.serialization.json.Json
 
 class AttendanceViewModel(
     private val attendanceStatusUseCase: AttendanceStatusUseCase,
+    private val attendanceSummaryUseCase: AttendanceSummaryUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(AttendanceScreenState())
 
@@ -34,6 +36,7 @@ class AttendanceViewModel(
 
     val state = _state
         .onStart {
+            fetchAttendanceSummary()
             fetchAttendance(
                 attendanceStatus = TabItemsEnums.PENDING,
                 employeeName = "",
@@ -213,6 +216,49 @@ class AttendanceViewModel(
                 else currentState.currentTapItem,
                 isRequestingAttendance = false,
             )
+        }
+    }
+
+    private fun fetchAttendanceSummary() = viewModelScope.launch {
+        _state.update {
+            it.copy(
+                isFetchingAttendanceSummary = true
+            )
+        }
+
+        attendanceSummaryUseCase().onSuccess { data ->
+            _state.update {
+                it.copy(
+                    isFetchingAttendanceSummary = false,
+                    attendanceGridOptions = _state.value.attendanceGridOptions.mapIndexed { index, item ->
+                        when (index) {
+                            0 -> {
+                                item.copy(
+                                    days = data.forgottenAttendanceDaysCount.toString()
+                                )
+                            }
+                            1 -> {
+                                item.copy(
+                                    days = data.approvedAttendanceCount.toString()
+                                )
+                            }
+                            2 -> {
+                                item.copy(
+                                    days = data.pendingAttendanceCount.toString()
+                                )
+                            }
+                            3 -> {
+                                item.copy(
+                                    days = data.rejectedAttendanceCount.toString()
+                                )
+                            }
+                            else -> {
+                                item
+                            }
+                        }
+                    }
+                )
+            }
         }
     }
 }

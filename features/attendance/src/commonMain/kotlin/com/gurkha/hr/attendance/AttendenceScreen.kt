@@ -233,11 +233,21 @@ fun LazyListScope.showAttendanceOptions(
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
             ) {
-                rowItems.forEach { attendanceItem ->
-                    AttendanceBox(
-                        modifier = Modifier.weight(1f).fillMaxSize(),
-                        item = attendanceItem
-                    )
+                if(state.isFetchingAttendanceSummary){
+                    rowItems.forEach { attendanceItem ->
+                       ShimmerView(
+                           modifier = Modifier
+                               .clip(shape = MaterialTheme.shapes.small)
+                               .weight(1f).height(MaterialTheme.dimens.heightForOptionBox)
+                       )
+                    }
+                }else{
+                    rowItems.forEach { attendanceItem ->
+                        AttendanceBox(
+                            modifier = Modifier.weight(1f).fillMaxSize(),
+                            item = attendanceItem
+                        )
+                    }
                 }
                 // Fill remaining spaces in row if needed
                 repeat(itemsPerRow - rowItems.size) {

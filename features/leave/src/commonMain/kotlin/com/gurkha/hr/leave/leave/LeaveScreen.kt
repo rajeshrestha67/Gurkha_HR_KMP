@@ -235,11 +235,22 @@ fun LazyListScope.leaveOptions(itemsPerRow: Int = 2, state: LeaveScreenState) {
                     .padding(horizontal = MaterialTheme.dimens.small3),
                 horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
             ) {
-                rowItems.forEach { leaveItem ->
-                    LeaveBox(
-                        modifier = Modifier.weight(1f).fillMaxSize(),
-                        item = leaveItem
-                    )
+                if(state.isLeaveSummaryLoading){
+                    rowItems.forEach { leaveItem ->
+                        ShimmerView(
+                            modifier = Modifier
+                                .clip(shape = MaterialTheme.shapes.small)
+                                .weight(1f)
+                                .height(MaterialTheme.dimens.heightForOptionBox)
+                        )
+                    }
+                }else{
+                    rowItems.forEach { leaveItem ->
+                        LeaveBox(
+                            modifier = Modifier.weight(1f).fillMaxSize(),
+                            item = leaveItem
+                        )
+                    }
                 }
                 // Fill remaining spaces in row if needed
                 repeat(itemsPerRow - rowItems.size) {
@@ -278,7 +289,7 @@ fun LeaveBox(
             )
         )
         Text(
-            text = item.days, style = MaterialTheme.typography.titleMedium.copy(
+            text = item.days.toString(), style = MaterialTheme.typography.titleMedium.copy(
                 color = MaterialTheme.colorScheme.primaryTextColor
             )
         )

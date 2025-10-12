@@ -25,28 +25,30 @@ data class AttendanceScreenState(
 
     val isRequestingAttendance: Boolean = false,
 
+    val isFetchingAttendanceSummary : Boolean  = false,
+
     val attendanceGridOptions: List<AttendanceItem> = listOf(
         AttendanceItem(
             title = SharedRes.Strings.missed_attendance,
-            days = 13,
+            days = "-",
             color = Color(0xFF81D4FA),
             backGroundColor = Color(0xFFE1F5FE)
         ),
         AttendanceItem(
             title = SharedRes.Strings.attendance_approved,
-            days = 2,
+            days = "-",
             color = Color(0xFFA5D6A7),
             backGroundColor = Color(0xFFE8F5E9)
         ),
         AttendanceItem(
             title = SharedRes.Strings.attendance_pending,
-            days = 4,
+            days = "-",
             color = Color(0xFFC5E1A5),
             backGroundColor = Color(0xFFF1F8E9)
         ),
         AttendanceItem(
             title = SharedRes.Strings.attendance_cancelled,
-            days = 5,
+            days = "-",
             color = Color(0xFFEF9A9A),
             backGroundColor = Color(0xFFFFEBEE)
         ),
@@ -55,7 +57,7 @@ data class AttendanceScreenState(
 
 data class AttendanceItem(
     val title: StringResource,
-    val days: Int,
+    val days: String,
     val color: Color,
     val backGroundColor: Color
 )

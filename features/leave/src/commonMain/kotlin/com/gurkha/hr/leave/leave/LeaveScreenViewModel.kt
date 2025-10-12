@@ -2,7 +2,6 @@ package com.gurkha.hr.leave.leave
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gurkha.hr.domain.attendance.attendanceStatus.useCase.AttendanceStatusUseCase
 import com.gurkha.hr.domain.leave.leaveReport.model.LeaveReportData
 import com.gurkha.hr.domain.leave.leaveReport.useCase.LeaveReportUseCase
 import com.gurkha.hr.domain.leave.leaveRequest.usecase.LeaveRequestUseCase
@@ -30,7 +29,7 @@ import kotlinx.serialization.json.Json
 class LeaveScreenViewModel(
     private val leaveRequestUseCase: LeaveRequestUseCase,
     private val leaveReportUseCase: LeaveReportUseCase,
-    private val leaveSummaryUseCase : LeaveSummaryUseCase
+    private val leaveSummaryUseCase: LeaveSummaryUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(LeaveScreenState())
     private val _errorChannel = Channel<String>()
@@ -238,9 +237,51 @@ class LeaveScreenViewModel(
         }
     }
 
-    private fun fetchLeaveSummary()=viewModelScope.launch{
-        leaveSummaryUseCase().onSuccess {
-
+    private fun fetchLeaveSummary() = viewModelScope.launch {
+        _state.update {
+            it.copy(
+                isLeaveSummaryLoading = true
+            )
+        }
+        leaveSummaryUseCase().onSuccess { data ->
+            _state.update {
+                it.copy(
+                    isLeaveSummaryLoading = false,
+                    leaveItemsList = _state.value.leaveItemsList.mapIndexed { index, item ->
+                        when (index) {
+                            0 -> {
+                                item.copy(
+                                    days = data.remainingLeaveCount.toString()
+                                )
+                            }
+                            1 -> {
+                                item.copy(
+                                    days = data.approvedCount.toString()
+                                )
+                            }
+                            2 -> {
+                                item.copy(
+                                    days = data.pendingCount.toString()
+                                )
+                            }
+                            3 -> {
+                                item.copy(
+                                    days = data.rejectedCount.toString()
+                                )
+                            }
+                            else -> {
+                                item
+                            }
+                        }
+                    }
+                )
+            }
+        }.onError {
+            _state.update {
+                it.copy(
+                    isLeaveSummaryLoading = false
+                )
+            }
         }
     }
 }
