@@ -2,6 +2,10 @@ package com.gurkha.hr.home
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -12,10 +16,8 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
@@ -45,20 +47,24 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil3.compose.AsyncImage
+import com.gurkha.hr.components.ProfilePicture
+import com.gurkha.hr.components.date.horizontalCalendar.HorizontalCalendar
+import com.gurkha.hr.components.extractInitials
 import com.gurkha.hr.components.graphLine.SmoothLineGraph
 import com.gurkha.hr.components.shimmer.ShimmerView
+import com.gurkha.hr.components.swipeToDismiss.SwipeToDismissBox
 import com.gurkha.hr.home.model.AttendanceItem
 import com.gurkha.hr.home.model.CalendarItem
 import com.gurkha.hr.home.model.HomeScreenActions
@@ -66,6 +72,7 @@ import com.gurkha.hr.home.model.HomeScreenState
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.borderColor
 import com.gurkha.hr.res.theme.dimens
+import com.gurkha.hr.res.theme.imageBackgroundColor
 import com.gurkha.hr.res.theme.linkColor
 import com.gurkha.hr.res.theme.primaryTextColor
 import org.jetbrains.compose.resources.StringResource
@@ -82,8 +89,9 @@ fun HomeScreen(
     val viewModel: HomeScreenViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
+
     Scaffold(
-        contentWindowInsets = WindowInsets(0.dp),
+        contentWindowInsets = WindowInsets(),
         modifier = Modifier
             .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
             .fillMaxSize(),
@@ -91,20 +99,21 @@ fun HomeScreen(
         topBar = {
             TopAppBar(
                 modifier = Modifier.fillMaxWidth(),
-                windowInsets = WindowInsets(0.dp),
+                windowInsets = WindowInsets(),
                 title = {
                     Row(
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        AsyncImage(
-                            modifier = Modifier
-                                .clip(shape = CircleShape)
-                                .size(size = MaterialTheme.dimens.medium3)
-                                .aspectRatio(ratio = 1f)
-                                .background(Color.Black),
-                            model = SharedRes.getRes(path = "drawable/gurkha_hr.png"),
-                            contentDescription = "avatar",
-                            contentScale = ContentScale.Fit,
+                        ProfilePicture(
+                            imageUrl = state.userProfileUrl,
+                            employeeName = state.fullName,
+                            nameInitials = state.initials,
+                            size = MaterialTheme.dimens.medium3,
+                            shape = CircleShape,
+                            background = MaterialTheme.colorScheme.imageBackgroundColor,
+                            borderWidth = 0.5.dp,
+                            borderColor = MaterialTheme.colorScheme.borderColor,
+                            ratio = 1f
                         )
 
                         Column(
@@ -152,6 +161,7 @@ fun HomeScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreenContent(
     modifier: Modifier = Modifier,
@@ -159,11 +169,40 @@ fun HomeScreenContent(
     onFetchAttendance: () -> Unit
 ) {
     val pagerState = rememberPagerState(pageCount = { 2 })
-    val listState = rememberLazyListState()
+    val calendarListState = rememberLazyListState()
     val activeIndex = state.calendarItem.indexOfFirst { it.active }
     val (showNotification, onChangeNotification) = rememberSaveable {
         mutableStateOf(true)
     }
+    val mainListState = rememberLazyListState()
+
+
+    val isScrolling by remember {
+        derivedStateOf {
+            mainListState.isScrollInProgress
+        }
+    }
+
+    val isAtTop by remember {
+        derivedStateOf {
+            mainListState.firstVisibleItemIndex == 0 &&
+                    mainListState.firstVisibleItemScrollOffset == 0
+        }
+    }
+    val isAtEnd by remember {
+        derivedStateOf {
+            val lastVisibleItem = mainListState.layoutInfo.visibleItemsInfo.lastOrNull()
+            val totalItemsCount = mainListState.layoutInfo.totalItemsCount
+
+            // Check if the last visible item is the last item in the list
+            lastVisibleItem != null && lastVisibleItem.index == totalItemsCount - 1
+        }
+    }
+
+    val shouldShowSwipeToDismiss by remember {
+        derivedStateOf { !isScrolling || isAtTop || isAtEnd }
+    }
+
 
 //to show the active week date and day starting from the sunday
     LaunchedEffect(activeIndex) {
@@ -180,7 +219,7 @@ fun HomeScreenContent(
                 else -> 0
             }
             val sundayIndex = (activeIndex - dayOfWeekNumber + 1).coerceAtLeast(0)
-            listState.scrollToItem(sundayIndex)
+            calendarListState.scrollToItem(sundayIndex)
         }
     }
 
@@ -195,11 +234,12 @@ fun HomeScreenContent(
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
+            state = mainListState,
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3),
             horizontalAlignment = Alignment.CenterHorizontally,
             contentPadding = PaddingValues(
                 top = MaterialTheme.dimens.small2,
-                bottom = MaterialTheme.dimens.medium3
+                bottom = MaterialTheme.dimens.swipeToDismissHeight
             )
         ) {
             //    Notification part
@@ -210,7 +250,7 @@ fun HomeScreenContent(
 
             //            calender part
             calendarView(
-                listState = listState,
+                listState = calendarListState,
                 calendarItem = state.calendarItem
             )
 
@@ -231,9 +271,25 @@ fun HomeScreenContent(
             attendanceSection(
                 pagerState = pagerState
             )
+
+        }
+        AnimatedVisibility(
+            visible = shouldShowSwipeToDismiss,
+            enter = slideInVertically(initialOffsetY = { it }) + fadeIn(),
+            exit = slideOutVertically(targetOffsetY = { it }) + fadeOut(),
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+        ) {
+            SwipeToDismissBox(
+                text = "Swipe to Check In",
+                onDismissed = {
+
+                }
+            )
         }
     }
 }
+
 
 fun LazyListScope.anniversarySection(
     state: HomeScreenState
@@ -273,17 +329,16 @@ fun LazyListScope.anniversarySection(
             else -> {
                 LazyRow(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = MaterialTheme.dimens.small3),
+                        .fillMaxWidth(),
+                    contentPadding = PaddingValues(horizontal = MaterialTheme.dimens.small3),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = (state.upComingWorkAnniversary?.size
-                        ?: 0).let { size ->
+                    horizontalArrangement = state.upComingWorkAnniversary.size.let { size ->
                         if (size > 2) Arrangement.spacedBy(MaterialTheme.dimens.medium3)
                         else Arrangement.SpaceBetween
                     }
 
                 ) {
-                    items(state.upComingWorkAnniversary ?: emptyList()) { item ->
+                    items(state.upComingWorkAnniversary) { item ->
                         EventCard(
                             fullName = item.fullName,
                             imageUrl = item.imageUrl,
@@ -334,17 +389,16 @@ fun LazyListScope.birthDaySection(
             else -> {
                 LazyRow(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = MaterialTheme.dimens.small3),
+                        .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = (state.upComingBirthday?.size
-                        ?: 0).let { size ->
+                    contentPadding = PaddingValues(horizontal = MaterialTheme.dimens.small3),
+                    horizontalArrangement = state.upComingBirthday.size.let { size ->
                         if (size > 2) Arrangement.spacedBy(MaterialTheme.dimens.medium3)
                         else Arrangement.SpaceBetween
                     }
 
                 ) {
-                    items(state.upComingBirthday ?: emptyList()) { item ->
+                    items(state.upComingBirthday) { item ->
                         EventCard(
                             fullName = item.fullName,
                             imageUrl = item.imageUrl,
@@ -372,23 +426,18 @@ fun LazyListScope.attendanceSection(
     }
     //        attendance chart
     item(key = "Attendance Chart") {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = MaterialTheme.dimens.small3)
-                .height(MaterialTheme.dimens.chartHeight)
-
-        ) {
-            HorizontalPager(state = pagerState) { item ->
-                AnimatedContent(item) { page ->
-                    when (page) {
-                        0 -> SmoothLineGraph()
-                        1 -> Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(color = MaterialTheme.colorScheme.onPrimaryContainer)
-                        )
-                    }
+        HorizontalPager(
+            state = pagerState,
+            contentPadding = PaddingValues(horizontal = MaterialTheme.dimens.small3)
+        ) { item ->
+            AnimatedContent(item) { page ->
+                when (page) {
+                    0 -> SmoothLineGraph()
+                    1 -> Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(color = MaterialTheme.colorScheme.onPrimaryContainer)
+                    )
                 }
             }
         }
@@ -475,49 +524,11 @@ fun LazyListScope.calendarView(
     calendarItem: List<CalendarItem>
 ) {
     stickyHeader(key = "calender") {
-        LazyRow(
-            state = listState,
+        HorizontalCalendar(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.background)
-                .padding(vertical = MaterialTheme.dimens.small2),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(space = MaterialTheme.dimens.small3),
-            contentPadding = PaddingValues(horizontal = MaterialTheme.dimens.small3)
-        ) {
-            items(calendarItem) { item ->
-                val color = if (item.active)
-                    MaterialTheme.colorScheme.secondaryContainer
-                else
-                    MaterialTheme.colorScheme.background
-                Column(
-                    modifier = Modifier
-                        .clip(MaterialTheme.shapes.medium)
-                        .background(color = color)
-                        .border(
-                            1.dp,
-                            color = MaterialTheme.colorScheme.borderColor,
-                            MaterialTheme.shapes.medium
-                        )
-                        .size(MaterialTheme.dimens.medium3)
-                        .clickable(onClick = {
-//                                    send the date to find there activities for that date
-                        }),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = item.day, style = MaterialTheme.typography.titleMedium
-                    )
-                    Text(
-                        text = item.date, style = MaterialTheme.typography.titleSmall.copy(
-                            color = MaterialTheme.colorScheme.primaryTextColor
-
-                        )
-                    )
-                }
-            }
-        }
+                .background(color = MaterialTheme.colorScheme.background)
+        )
     }
 }
 
@@ -526,22 +537,45 @@ fun LazyListScope.notificationView(
     onChangeNotification: (Boolean) -> Unit
 ) {
     item(key = "notification") {
-        AnimatedVisibility(showNotification) {
+        AnimatedVisibility(
+            visible = showNotification,
+            enter = slideInVertically(
+                initialOffsetY = { -it }
+            ) + fadeIn(),
+            exit = slideOutVertically(
+                targetOffsetY = { -it / 2 }
+            ) + fadeOut()
+        ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(
-                        end = MaterialTheme.dimens.small1,
+                        end = MaterialTheme.dimens.small3,
                         start = MaterialTheme.dimens.small3
+                    ).background(
+                        color = MaterialTheme.colorScheme.error,
+                        shape = MaterialTheme.shapes.medium
                     ),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Notification view")
+                Text(
+                    modifier = Modifier.padding(
+                        all = MaterialTheme.dimens.small2
+                    ),
+                    text = "Notification view",
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        color = MaterialTheme.colorScheme.onError
+                    )
+                )
                 IconButton(onClick = {
                     onChangeNotification(!showNotification)
                 }) {
-                    Icon(Icons.Filled.Close, contentDescription = "close icon")
+                    Icon(
+                        imageVector = Icons.Filled.Close,
+                        contentDescription = "close icon",
+                        tint = MaterialTheme.colorScheme.onError
+                    )
                 }
             }
         }
@@ -629,16 +663,19 @@ fun EventCard(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small1)
         ) {
-            AsyncImage(
-                model = imageUrl,
-                contentDescription = fullName,
-                contentScale = ContentScale.Fit,
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .size(MaterialTheme.dimens.medium2)
-                    .aspectRatio(ratio = 1f)
-                    .background(Color.Black)
+
+            ProfilePicture(
+                imageUrl = imageUrl,
+                employeeName = fullName,
+                nameInitials = fullName.extractInitials(),
+                size = MaterialTheme.dimens.medium2,
+                shape = CircleShape,
+                background = MaterialTheme.colorScheme.imageBackgroundColor,
+                borderWidth = 0.dp,
+                borderColor = Color.Transparent,
+                ratio = 1f
             )
+
             Text(
                 text = "",
                 style = MaterialTheme.typography.titleSmall.copy(

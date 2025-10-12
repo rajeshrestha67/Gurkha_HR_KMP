@@ -41,15 +41,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil3.compose.AsyncImage
 import com.gurkha.hr.components.ERPButton
+import com.gurkha.hr.components.ProfilePicture
 import com.gurkha.hr.profile.model.profile_screen.AccountList
 import com.gurkha.hr.profile.model.profile_screen.GeneralList
 import com.gurkha.hr.res.SharedRes
@@ -83,44 +81,48 @@ fun ProfileScreen(
             TopAppBar(
                 modifier = Modifier.padding(start = MaterialTheme.dimens.small3),
                 windowInsets = WindowInsets(0.dp),
-                navigationIcon = {
-                    AsyncImage(
-                        modifier = Modifier
-                            .clip(shape = CircleShape)
-                            .size(MaterialTheme.dimens.extraLarge)
-                            .aspectRatio(1f)
-                            .background(MaterialTheme.colorScheme.imageBackgroundColor),
-                        model = state.userProfileUrl,
-                        contentDescription = "avatar",
-                        contentScale = ContentScale.Fit,
-                    )
-                },
                 title = {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = MaterialTheme.dimens.small2)
-                    ) {
-                        Text(
-                            style = MaterialTheme.typography.titleMedium,
-                            text = state.fullName,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
 
+                    Row(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        ProfilePicture(
+                            imageUrl = state.userProfileUrl,
+                            employeeName = state.fullName,
+                            nameInitials = state.initials,
+                            size = MaterialTheme.dimens.extraLarge,
+                            shape = CircleShape,
+                            background = MaterialTheme.colorScheme.imageBackgroundColor,
+                            borderWidth = 0.5.dp,
+                            borderColor = MaterialTheme.colorScheme.borderColor,
+                            ratio = 1f
                         )
-                        Text(
-                            style = MaterialTheme.typography.titleSmall.copy(
-                                color = MaterialTheme.colorScheme.secondaryTextColor
-                            ),
-                            maxLines = 1,
-                            text = state.levelName
-                        )
-                        Text(
-                            style = MaterialTheme.typography.titleSmall.copy(
-                                color = MaterialTheme.colorScheme.secondaryTextColor
-                            ),
-                            text = state.phoneNumber
-                        )
+                        Column(
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(horizontal = MaterialTheme.dimens.small1)
+                        ) {
+                            Text(
+                                style = MaterialTheme.typography.titleMedium,
+                                text = state.fullName,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+
+                            )
+                            Text(
+                                style = MaterialTheme.typography.titleSmall.copy(
+                                    color = MaterialTheme.colorScheme.secondaryTextColor
+                                ),
+                                maxLines = 1,
+                                text = state.levelName
+                            )
+                            Text(
+                                style = MaterialTheme.typography.titleSmall.copy(
+                                    color = MaterialTheme.colorScheme.secondaryTextColor
+                                ),
+                                text = state.phoneNumber
+                            )
+                        }
                     }
                 }
             )
@@ -171,7 +173,7 @@ fun ProfileScreenContainer(
             ProfileItemRow(
                 text = stringResource(item.title),
                 onClick = { onGeneralClick(item) },
-                showDivider = item != GeneralList.History
+                showDivider = item != GeneralList.Report
             )
 
         }

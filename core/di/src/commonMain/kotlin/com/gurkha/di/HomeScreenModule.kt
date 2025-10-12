@@ -14,7 +14,7 @@ import com.gurkha.hr.domain.upComingBirthday.usecase.UpComingBirthdayUseCase
 import com.gurkha.hr.domain.upComingWorkAnniversaries.repository.UpComingWorkAnniversaryRemoteRepository
 import com.gurkha.hr.domain.upComingWorkAnniversaries.useCase.UpComingWorkAnniversaryUseCase
 import com.gurkha.hr.domain.userDetail.repository.UserDetailRemoteRepository
-import com.gurkha.hr.domain.userDetail.usecase.FetchRemoteUserDetailUseCase
+import com.gurkha.hr.domain.userDetail.usecase.FetchUserDetailUseCase
 import com.gurkha.hr.home.HomeScreenViewModel
 import io.ktor.client.HttpClient
 import org.koin.android.annotation.KoinViewModel
@@ -34,7 +34,7 @@ class HomeScreenModule {
     fun upComingBirthdayRemoteRepository(httpClient: HttpClient) =
         KtorUpComingBirthdayRemoteRepository(httpClient)
 
-    @Factory(binds = [UpComingWorkAnniversaryRemoteRepository:: class])
+    @Factory(binds = [UpComingWorkAnniversaryRemoteRepository::class])
     fun upComingWorkAnniversaryRemoteRepository(httpClient: HttpClient) =
         KtorUpComingWorkAnniversaryRemoteRepository(httpClient)
 
@@ -52,12 +52,16 @@ class HomeScreenModule {
         AttendanceUseCase(attendanceRemoteRepository)
 
     @Factory
-    fun userDetailUseCase(userDetailRemoteRepository: UserDetailRemoteRepository, userDataRepository: UserDataRepository): FetchRemoteUserDetailUseCase =
-        FetchRemoteUserDetailUseCase(userDetailRemoteRepository
-            ,userDataRepository = userDataRepository)
+    fun userDetailUseCase(
+        userDetailRemoteRepository: UserDetailRemoteRepository,
+        userDataRepository: UserDataRepository
+    ): FetchUserDetailUseCase =
+        FetchUserDetailUseCase(
+            userDetailRemoteRepository, userDataRepository = userDataRepository
+        )
 
     @Factory
-    fun upComingBirthdayUseCase(upComingBirthdayRemoteRepository : UpComingBirthdayRemoteRepository): UpComingBirthdayUseCase =
+    fun upComingBirthdayUseCase(upComingBirthdayRemoteRepository: UpComingBirthdayRemoteRepository): UpComingBirthdayUseCase =
         UpComingBirthdayUseCase(upComingBirthdayRemoteRepository)
 
     @Factory
@@ -67,7 +71,7 @@ class HomeScreenModule {
     @KoinViewModel
     fun getHomeScreenViewModel(
         attendanceUseCase: AttendanceUseCase,
-        userDetailUseCase: FetchRemoteUserDetailUseCase,
+        userDetailUseCase: FetchUserDetailUseCase,
         upComingBirthdayUseCase: UpComingBirthdayUseCase,
         upComingWorkAnniversaryUseCase: UpComingWorkAnniversaryUseCase
     ): HomeScreenViewModel = HomeScreenViewModel(

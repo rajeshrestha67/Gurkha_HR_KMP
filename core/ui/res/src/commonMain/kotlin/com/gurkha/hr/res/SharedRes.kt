@@ -5,6 +5,7 @@ import gurkhahr.core.ui.res.generated.resources.Poppins_Italic
 import gurkhahr.core.ui.res.generated.resources.Poppins_Medium
 import gurkhahr.core.ui.res.generated.resources.Res
 import gurkhahr.core.ui.res.generated.resources.account
+import gurkhahr.core.ui.res.generated.resources.ad
 import gurkhahr.core.ui.res.generated.resources.address
 import gurkhahr.core.ui.res.generated.resources.all_leaves
 import gurkhahr.core.ui.res.generated.resources.allocated_leave
@@ -13,16 +14,25 @@ import gurkhahr.core.ui.res.generated.resources.apply_days
 import gurkhahr.core.ui.res.generated.resources.approved
 import gurkhahr.core.ui.res.generated.resources.approver
 import gurkhahr.core.ui.res.generated.resources.are_you_sure
-import gurkhahr.core.ui.res.generated.resources.attendance
-import gurkhahr.core.ui.res.generated.resources.cancel
-import gurkhahr.core.ui.res.generated.resources.cancelled
+import gurkhahr.core.ui.res.generated.resources.asset_name
+import gurkhahr.core.ui.res.generated.resources.assigned_assets
+import gurkhahr.core.ui.res.generated.resources.assigned_date
 import gurkhahr.core.ui.res.generated.resources.assignee
+import gurkhahr.core.ui.res.generated.resources.attendance
 import gurkhahr.core.ui.res.generated.resources.attendance_approved
 import gurkhahr.core.ui.res.generated.resources.attendance_cancelled
 import gurkhahr.core.ui.res.generated.resources.attendance_pending
 import gurkhahr.core.ui.res.generated.resources.attendance_request_form
+import gurkhahr.core.ui.res.generated.resources.bachelor
+import gurkhahr.core.ui.res.generated.resources.bs
+import gurkhahr.core.ui.res.generated.resources.cancel
+import gurkhahr.core.ui.res.generated.resources.cancelled
 import gurkhahr.core.ui.res.generated.resources.change_password
 import gurkhahr.core.ui.res.generated.resources.chat
+import gurkhahr.core.ui.res.generated.resources.citizenship_back
+import gurkhahr.core.ui.res.generated.resources.citizenship_front
+import gurkhahr.core.ui.res.generated.resources.clockIn
+import gurkhahr.core.ui.res.generated.resources.clockOut
 import gurkhahr.core.ui.res.generated.resources.clock_in_time
 import gurkhahr.core.ui.res.generated.resources.clock_out_time
 import gurkhahr.core.ui.res.generated.resources.company_assets
@@ -32,6 +42,7 @@ import gurkhahr.core.ui.res.generated.resources.contact_info
 import gurkhahr.core.ui.res.generated.resources.current_password
 import gurkhahr.core.ui.res.generated.resources.date
 import gurkhahr.core.ui.res.generated.resources.date_of_birth
+import gurkhahr.core.ui.res.generated.resources.description
 import gurkhahr.core.ui.res.generated.resources.do_you_really_want_to_logout
 import gurkhahr.core.ui.res.generated.resources.document
 import gurkhahr.core.ui.res.generated.resources.email
@@ -41,7 +52,9 @@ import gurkhahr.core.ui.res.generated.resources.enter_reason
 import gurkhahr.core.ui.res.generated.resources.enter_your_email
 import gurkhahr.core.ui.res.generated.resources.enter_your_password
 import gurkhahr.core.ui.res.generated.resources.enter_your_username
+import gurkhahr.core.ui.res.generated.resources.experience_document
 import gurkhahr.core.ui.res.generated.resources.faq
+import gurkhahr.core.ui.res.generated.resources.from_date
 import gurkhahr.core.ui.res.generated.resources.full_day
 import gurkhahr.core.ui.res.generated.resources.gender
 import gurkhahr.core.ui.res.generated.resources.general
@@ -68,19 +81,26 @@ import gurkhahr.core.ui.res.generated.resources.leave_duration
 import gurkhahr.core.ui.res.generated.resources.leave_pending
 import gurkhahr.core.ui.res.generated.resources.leave_processing
 import gurkhahr.core.ui.res.generated.resources.leave_request_form
+import gurkhahr.core.ui.res.generated.resources.leave_summary
+import gurkhahr.core.ui.res.generated.resources.leave_taken
 import gurkhahr.core.ui.res.generated.resources.leave_type
+import gurkhahr.core.ui.res.generated.resources.leave_type_name
 import gurkhahr.core.ui.res.generated.resources.log_out
 import gurkhahr.core.ui.res.generated.resources.login
 import gurkhahr.core.ui.res.generated.resources.marital_status
+import gurkhahr.core.ui.res.generated.resources.master
 import gurkhahr.core.ui.res.generated.resources.maternity_leave
 import gurkhahr.core.ui.res.generated.resources.missed_attendance
+import gurkhahr.core.ui.res.generated.resources.months
 import gurkhahr.core.ui.res.generated.resources.mourning_leave
 import gurkhahr.core.ui.res.generated.resources.my_attendance
+import gurkhahr.core.ui.res.generated.resources.national_id
 import gurkhahr.core.ui.res.generated.resources.nationality
 import gurkhahr.core.ui.res.generated.resources.new_password
 import gurkhahr.core.ui.res.generated.resources.next
 import gurkhahr.core.ui.res.generated.resources.no
 import gurkhahr.core.ui.res.generated.resources.no_data_found
+import gurkhahr.core.ui.res.generated.resources.numbers
 import gurkhahr.core.ui.res.generated.resources.ok
 import gurkhahr.core.ui.res.generated.resources.outline_logout_24
 import gurkhahr.core.ui.res.generated.resources.password
@@ -89,14 +109,17 @@ import gurkhahr.core.ui.res.generated.resources.pending
 import gurkhahr.core.ui.res.generated.resources.personal_details
 import gurkhahr.core.ui.res.generated.resources.personal_info
 import gurkhahr.core.ui.res.generated.resources.phone
+import gurkhahr.core.ui.res.generated.resources.plus_two_image
 import gurkhahr.core.ui.res.generated.resources.privacy_policy
 import gurkhahr.core.ui.res.generated.resources.profile
+import gurkhahr.core.ui.res.generated.resources.profile_image
 import gurkhahr.core.ui.res.generated.resources.reason
+import gurkhahr.core.ui.res.generated.resources.remaining_leave
 import gurkhahr.core.ui.res.generated.resources.report
 import gurkhahr.core.ui.res.generated.resources.request
 import gurkhahr.core.ui.res.generated.resources.required
-import gurkhahr.core.ui.res.generated.resources.select_assignee
 import gurkhahr.core.ui.res.generated.resources.search_users
+import gurkhahr.core.ui.res.generated.resources.select_assignee
 import gurkhahr.core.ui.res.generated.resources.select_date
 import gurkhahr.core.ui.res.generated.resources.select_end_date
 import gurkhahr.core.ui.res.generated.resources.select_leave_duration
@@ -105,19 +128,34 @@ import gurkhahr.core.ui.res.generated.resources.select_start_date
 import gurkhahr.core.ui.res.generated.resources.setting
 import gurkhahr.core.ui.res.generated.resources.sick_leave
 import gurkhahr.core.ui.res.generated.resources.skip
+import gurkhahr.core.ui.res.generated.resources.slc_marksheet
 import gurkhahr.core.ui.res.generated.resources.start_date
+import gurkhahr.core.ui.res.generated.resources.status
 import gurkhahr.core.ui.res.generated.resources.submit
 import gurkhahr.core.ui.res.generated.resources.support
 import gurkhahr.core.ui.res.generated.resources.system_default
 import gurkhahr.core.ui.res.generated.resources.terms_and_services
 import gurkhahr.core.ui.res.generated.resources.theme
 import gurkhahr.core.ui.res.generated.resources.time_and_attendance
+import gurkhahr.core.ui.res.generated.resources.to_date
+import gurkhahr.core.ui.res.generated.resources.today
+import gurkhahr.core.ui.res.generated.resources.total_days
 import gurkhahr.core.ui.res.generated.resources.type_here
 import gurkhahr.core.ui.res.generated.resources.typing
 import gurkhahr.core.ui.res.generated.resources.unknown_error_occurred
 import gurkhahr.core.ui.res.generated.resources.upcoming_birthday
+import gurkhahr.core.ui.res.generated.resources.upload_bachelor
+import gurkhahr.core.ui.res.generated.resources.upload_citizenship_back
+import gurkhahr.core.ui.res.generated.resources.upload_citizenship_front
+import gurkhahr.core.ui.res.generated.resources.upload_experience_document
+import gurkhahr.core.ui.res.generated.resources.upload_master
+import gurkhahr.core.ui.res.generated.resources.upload_national_id
+import gurkhahr.core.ui.res.generated.resources.upload_plus_two_image
+import gurkhahr.core.ui.res.generated.resources.upload_profile_image
+import gurkhahr.core.ui.res.generated.resources.upload_slc_marksheet
 import gurkhahr.core.ui.res.generated.resources.username
 import gurkhahr.core.ui.res.generated.resources.view_all
+import gurkhahr.core.ui.res.generated.resources.weeks_days
 import gurkhahr.core.ui.res.generated.resources.welcome
 import gurkhahr.core.ui.res.generated.resources.work_anniversaries
 import gurkhahr.core.ui.res.generated.resources.yes
@@ -137,6 +175,12 @@ object SharedRes {
 
     object Icons {
         val logout = Res.drawable.outline_logout_24
+    }
+
+    object Arrays {
+        val months = Res.array.months
+        val weeksDays = Res.array.weeks_days
+        val numbers = Res.array.numbers
     }
 
     object Strings {
@@ -184,6 +228,42 @@ object SharedRes {
         val maternityLeave = Res.string.maternity_leave
         val mourningLeave = Res.string.mourning_leave
 
+        val uploadProfileImage = Res.string.upload_profile_image
+        val uploadCitizenshipFront = Res.string.upload_citizenship_front
+        val uploadCitizenshipBack = Res.string.upload_citizenship_back
+        val uploadNationalId = Res.string.upload_national_id
+        val uploadSlcMarksheet = Res.string.upload_slc_marksheet
+        val uploadPlusTwoImage = Res.string.upload_plus_two_image
+        val uploadBachelor = Res.string.upload_bachelor
+        val uploadMaster = Res.string.upload_master
+        val uploadExperienceDocument = Res.string.upload_experience_document
+
+        val profileImage = Res.string.profile_image
+        val citizenshipFront = Res.string.citizenship_front
+        val citizenshipBack = Res.string.citizenship_back
+        val nationalId = Res.string.national_id
+        val slcMarksheet = Res.string.slc_marksheet
+        val plusTwoImage = Res.string.plus_two_image
+        val bachelor = Res.string.bachelor
+        val master = Res.string.master
+        val experienceDocument = Res.string.experience_document
+
+        val leaveSummary = Res.string.leave_summary
+        val leaveTypeName = Res.string.leave_type_name
+        val leaveTaken = Res.string.leave_taken
+        val remainingLeave = Res.string.remaining_leave
+        val totalDays = Res.string.total_days
+
+        val assignedAssets = Res.string.assigned_assets
+        val assetName = Res.string.asset_name
+        val description = Res.string.description
+        val assignedDate = Res.string.assigned_date
+
+        val clockIn = Res.string.clockIn
+        val clockOut = Res.string.clockOut
+        val status = Res.string.status
+
+
         val date = Res.string.date
         val approver = Res.string.approver
         val applyDays = Res.string.apply_days
@@ -221,6 +301,8 @@ object SharedRes {
         val confirm_password = Res.string.confirm_password
         val new_password = Res.string.new_password
         val current_password = Res.string.current_password
+        val fromDate = Res.string.from_date
+        val toDate = Res.string.to_date
 
         val setting = Res.string.setting
         val theme = Res.string.theme
@@ -271,5 +353,8 @@ object SharedRes {
         val searchUsers = Res.string.search_users
         val type_here = Res.string.type_here
         val typing = Res.string.typing
+        val ad = Res.string.ad
+        val bs = Res.string.bs
+        val today = Res.string.today
     }
 }

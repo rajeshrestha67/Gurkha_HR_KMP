@@ -1,5 +1,7 @@
 package com.gurkha.hr.networkhelper
 
+import com.gurkha.model.timeandAttendance.TimeAttendanceReportResponseDTO
+
 object EndPoint {
     const val LOGIN_END_POINT = "public/authenticate"
     const val CHANGE_PASSWORD_END_POINT = "/api/user/password-reset"
@@ -14,6 +16,8 @@ object EndPoint {
     const val LEAVE_REQUEST_END_POINT = "api/leave-request"
     const val EMPLOY_LIST_ENDPOINT = "api/chat/employee"
     const val CHAT_MESSAGE_ENDPOINT = "api/external-chat/messages"
+    const val ALLOCATED_LEAVE_ENDPOINT = "api/employee-leave/136"
+    const val TIME_AND_ATTENDANCE_ENDPOINT = "api/attendance/employee/report"
 
     const val ATTENDANCE_REQUEST_END_POINT = "api/attendance/request"
     const val LEAVE_SUMMARY_END_POINT = "api/leave-request/overall-leave-detail"

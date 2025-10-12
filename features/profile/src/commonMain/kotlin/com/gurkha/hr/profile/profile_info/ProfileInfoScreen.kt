@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -31,13 +30,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil3.compose.AsyncImage
+import com.gurkha.hr.components.ProfilePicture
 import com.gurkha.hr.profile.model.profileinfo_screen.InfoList
 import com.gurkha.hr.profile.model.profileinfo_screen.ProfileInfo
 import com.gurkha.hr.profile.model.profileinfo_screen.ProfileInfoScreenState
@@ -77,15 +75,16 @@ fun ProfileInfoScreenContainer(
     state: ProfileInfoScreenState,
     onAction: (ProfileInfoViewAction) -> Unit,
 ) {
-
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
-
+        contentWindowInsets = WindowInsets(),
 
         topBar = {
-            TopAppBar(
 
+            TopAppBar(
+                windowInsets = WindowInsets(0.dp),
+                modifier = Modifier.padding(top = MaterialTheme.dimens.small1),
                 title = { Text(stringResource(SharedRes.Strings.profile)) },
                 navigationIcon = {
                     IconButton(onClick = onBackPressed) {
@@ -204,16 +203,17 @@ fun ProfileCard(
         verticalAlignment = Alignment.CenterVertically
     ) {
         // Avatar image
-        AsyncImage(
-            modifier = Modifier
-                .size(MaterialTheme.dimens.profileScreenImageSize)
-                .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.imageBackgroundColor),
-            model = state.userProfileUrl,
-            contentDescription = "Profile picture",
-            contentScale = ContentScale.Fit
+        ProfilePicture(
+            imageUrl = state.userProfileUrl,
+            employeeName = state.fullName,
+            nameInitials = state.initials,
+            size = MaterialTheme.dimens.profileScreenImageSize,
+            shape = CircleShape,
+            background = MaterialTheme.colorScheme.imageBackgroundColor,
+            borderWidth = 0.dp,
+            borderColor = Color.Transparent,
+            ratio = 1f
         )
-
         // User info
         Column(
             modifier = Modifier

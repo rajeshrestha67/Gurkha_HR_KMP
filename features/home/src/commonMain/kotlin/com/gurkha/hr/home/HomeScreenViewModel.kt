@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.gurkha.hr.domain.attendance.attendanceReport.usecase.AttendanceUseCase
 import com.gurkha.hr.domain.upComingBirthday.usecase.UpComingBirthdayUseCase
 import com.gurkha.hr.domain.upComingWorkAnniversaries.useCase.UpComingWorkAnniversaryUseCase
-import com.gurkha.hr.domain.userDetail.usecase.FetchRemoteUserDetailUseCase
+import com.gurkha.hr.domain.userDetail.usecase.FetchUserDetailUseCase
 import com.gurkha.hr.home.model.HomeScreenActions
 import com.gurkha.hr.home.model.HomeScreenState
 import com.gurkha.hr.networkhelper.onError
@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 
 class HomeScreenViewModel(
     private val attendanceUseCase: AttendanceUseCase,
-    private val userDetailUseCase: FetchRemoteUserDetailUseCase,
+    private val userDetailUseCase: FetchUserDetailUseCase,
     private val upComingBirthdayUseCase: UpComingBirthdayUseCase,
     private val upComingWorkAnniversaryUseCase: UpComingWorkAnniversaryUseCase
 ) : ViewModel() {
@@ -108,11 +108,12 @@ class HomeScreenViewModel(
                 isProfileLoading = true
             )
         }
-        userDetailUseCase().onSuccess { data ->
+        userDetailUseCase(true).onSuccess { data ->
             _state.update {
                 it.copy(
                     isProfileLoading = false,
                     fullName = data.fullName,
+                    initials = data.initials,
                     levelName = data.levelName,
                     email = data.email,
                     userProfileUrl = data.userProfileUrl,

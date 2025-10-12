@@ -1,6 +1,6 @@
 package com.gurkha.hr.model.attendanceRequestScreen
 
-import com.gurkha.hr.components.textField.DateData
+import com.gurkha.hr.components.date.DateData
 import com.gurkha.model.attendance.attendanceRequest.AttendanceRequestData
 import com.gurkha.model.leave.ui.AssigneeUi
 import org.jetbrains.compose.resources.StringResource
@@ -24,7 +24,7 @@ data class AttendanceRequestState(
     val assigneeList: List<AssigneeUi>? = emptyList(),
     val assigneeError: StringResource? = null,
 
-    val isRequestingAttendance : Boolean = false,
+    val isRequestingAttendance: Boolean = false,
 
-    val attendanceRequestData: AttendanceRequestData ? = null
+    val attendanceRequestData: AttendanceRequestData? = null
 )

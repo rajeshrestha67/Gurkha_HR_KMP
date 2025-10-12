@@ -2,7 +2,7 @@ package com.gurkha.hr.profile.profile_screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gurkha.hr.domain.userDetail.usecase.FetchRemoteUserDetailUseCase
+import com.gurkha.hr.domain.userDetail.usecase.FetchUserDetailUseCase
 import com.gurkha.hr.networkhelper.onError
 import com.gurkha.hr.networkhelper.onSuccess
 import com.gurkha.hr.profile.model.profile_screen.ProfileScreenState
@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ProfileScreenViewModel(
-    private val userDetailUseCase: FetchRemoteUserDetailUseCase
+    private val userDetailUseCase: FetchUserDetailUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(ProfileScreenState())
     val state = _state
@@ -41,9 +41,9 @@ class ProfileScreenViewModel(
                     levelName = data.levelName,
                     userProfileUrl = data.userProfileUrl,
                     phoneNumber = data.phoneNumber,
+                    initials = data.initials
 
-
-                    )
+                )
             }
         }.onError {
             _state.update {

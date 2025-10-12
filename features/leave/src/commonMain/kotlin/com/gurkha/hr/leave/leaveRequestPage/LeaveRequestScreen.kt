@@ -31,12 +31,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.gurkha.hr.components.ERPButton
+import com.gurkha.hr.components.date.ERPDateTextField
+import com.gurkha.hr.components.date.FutureAndTodayDate
+import com.gurkha.hr.components.date.RangeSelectableDates
 import com.gurkha.hr.components.textField.DropDownText
-import com.gurkha.hr.components.textField.ERPDateTextField
 import com.gurkha.hr.components.textField.ERPTextField
 import com.gurkha.hr.components.textField.FormValidate
-import com.gurkha.hr.components.textField.FutureAndTodayDate
-import com.gurkha.hr.components.textField.RangeSelectableDates
 import com.gurkha.hr.leave.model.leave_request.LeaveRequestScreenAction
 import com.gurkha.hr.leave.model.leave_request.LeaveRequestScreenState
 import com.gurkha.hr.res.SharedRes
@@ -242,7 +242,7 @@ fun LeaveRequestScreenForm(
 
 //        leave reason
         ERPTextField(
-            text = state.reason ?: "",
+            text = state.reason,
             label = stringResource(SharedRes.Strings.reason),
             hint = stringResource(SharedRes.Strings.enterReason),
             onValueChange = {
@@ -254,9 +254,11 @@ fun LeaveRequestScreenForm(
             onErrorStateChange = {
                 onAction(LeaveRequestScreenAction.OnReasonError(it))
             },
-            onImeAction = {
-                onAction(LeaveRequestScreenAction.Submit)
-            },
+            keyboardActions = KeyboardActions(
+                onSend = {
+                    onAction(LeaveRequestScreenAction.Submit)
+                }
+            ),
             height = MaterialTheme.dimens.reasonTextField
         )
 

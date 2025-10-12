@@ -6,6 +6,7 @@ data class UserDetailData(
     val phoneNumber: String,
     val userProfileUrl: String,
     val fullName: String,
+    val initials: String,
     val levelName: String,
     val employeeId: Int,
     val branchName: String,

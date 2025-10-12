@@ -23,7 +23,8 @@ data class Dimens(
     val chartHeight: Dp = 0.dp,
     val leaveBoxHeight: Dp = 0.dp,
     val reasonTextField: Dp = 0.dp,
-    val promptDialogSize: Dp = 0.dp
+    val promptDialogSize: Dp = 0.dp,
+    val swipeToDismissHeight: Dp = 0.dp
 )
 
 
@@ -46,5 +47,6 @@ val CompactDimens = Dimens(
     chartHeight = 200.dp,
     leaveBoxHeight = 100.dp,
     reasonTextField = 80.dp,
-    promptDialogSize = 120.dp
+    promptDialogSize = 120.dp,
+    swipeToDismissHeight = 72.dp
 )
