@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.android.lint)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeMultiplatform)
+    alias(libs.plugins.jetbrains.kotlin.serialization)
 }
 
 kotlin {
@@ -12,7 +13,7 @@ kotlin {
     // which platforms this KMP module supports.
     // See: https://kotlinlang.org/docs/multiplatform-discover-project.html#targets
     androidLibrary {
-        namespace = "com.gurkha.hr.report"
+        namespace = "com.gurkha.hr.note"
         compileSdk = 36
         minSdk = 24
 
@@ -33,7 +34,7 @@ kotlin {
     // A step-by-step guide on how to include this library in an XCode
     // project can be found here:
     // https://developer.android.com/kotlin/multiplatform/migrate
-    val xcfName = "features:reportKit"
+    val xcfName = "features:noteKit"
 
     iosX64 {
         binaries.framework {

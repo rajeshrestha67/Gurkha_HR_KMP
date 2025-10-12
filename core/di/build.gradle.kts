@@ -90,6 +90,7 @@ kotlin {
                 implementation(projects.features.leave)
                 implementation(projects.features.chat)
                 implementation(projects.features.attendance)
+                implementation(projects.features.note)
 
 
                 implementation(projects.core.ui.components)

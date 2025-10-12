@@ -52,7 +52,7 @@ class HomeScreenModule {
         AttendanceUseCase(attendanceRemoteRepository)
 
     @Factory
-    fun userDetailUseCase(
+    fun fetchUserDetailUseCase(
         userDetailRemoteRepository: UserDetailRemoteRepository,
         userDataRepository: UserDataRepository
     ): FetchUserDetailUseCase =

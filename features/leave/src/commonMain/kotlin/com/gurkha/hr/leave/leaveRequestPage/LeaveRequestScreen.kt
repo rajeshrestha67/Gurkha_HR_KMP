@@ -66,7 +66,6 @@ import kotlin.time.ExperimentalTime
 @Composable
 fun LeaveRequestScreen(
     navController: NavHostController,
-    json: String?,
     onBackClicked: () -> Unit
 ) {
 
@@ -81,7 +80,6 @@ fun LeaveRequestScreen(
         if(sendData){
             val data = state.leaveRequestData
             data?.let {
-                println("data_tosend $data")
                 val stringData = Json.encodeToString(data)
                 navController.previousBackStackEntry
                     ?.savedStateHandle
@@ -94,7 +92,6 @@ fun LeaveRequestScreen(
     LaunchedEffect(Unit) {
         viewModel.dataChannel.collect { data ->
             data?.let {
-                println("data_toUpdate $data")
                 viewModel.onAction(LeaveRequestScreenAction.UpdateLeaveRequestData(data))
             }
         }

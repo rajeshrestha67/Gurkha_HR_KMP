@@ -6,6 +6,7 @@ import gurkhahr.core.ui.res.generated.resources.Poppins_Medium
 import gurkhahr.core.ui.res.generated.resources.Res
 import gurkhahr.core.ui.res.generated.resources.account
 import gurkhahr.core.ui.res.generated.resources.ad
+import gurkhahr.core.ui.res.generated.resources.add_notes
 import gurkhahr.core.ui.res.generated.resources.address
 import gurkhahr.core.ui.res.generated.resources.all_leaves
 import gurkhahr.core.ui.res.generated.resources.allocated_leave
@@ -45,13 +46,18 @@ import gurkhahr.core.ui.res.generated.resources.date_of_birth
 import gurkhahr.core.ui.res.generated.resources.description
 import gurkhahr.core.ui.res.generated.resources.do_you_really_want_to_logout
 import gurkhahr.core.ui.res.generated.resources.document
+import gurkhahr.core.ui.res.generated.resources.edit_notes
 import gurkhahr.core.ui.res.generated.resources.email
 import gurkhahr.core.ui.res.generated.resources.emergency_contact
 import gurkhahr.core.ui.res.generated.resources.end_date
+import gurkhahr.core.ui.res.generated.resources.end_time
+import gurkhahr.core.ui.res.generated.resources.enter_description
 import gurkhahr.core.ui.res.generated.resources.enter_reason
+import gurkhahr.core.ui.res.generated.resources.enter_title
 import gurkhahr.core.ui.res.generated.resources.enter_your_email
 import gurkhahr.core.ui.res.generated.resources.enter_your_password
 import gurkhahr.core.ui.res.generated.resources.enter_your_username
+import gurkhahr.core.ui.res.generated.resources.event
 import gurkhahr.core.ui.res.generated.resources.experience_document
 import gurkhahr.core.ui.res.generated.resources.faq
 import gurkhahr.core.ui.res.generated.resources.from_date
@@ -72,6 +78,7 @@ import gurkhahr.core.ui.res.generated.resources.invalid_password_length
 import gurkhahr.core.ui.res.generated.resources.invalid_password_lowercase
 import gurkhahr.core.ui.res.generated.resources.invalid_password_special_char
 import gurkhahr.core.ui.res.generated.resources.invalid_password_uppercase
+import gurkhahr.core.ui.res.generated.resources.is_event
 import gurkhahr.core.ui.res.generated.resources.language
 import gurkhahr.core.ui.res.generated.resources.leave
 import gurkhahr.core.ui.res.generated.resources.leave_approved
@@ -85,6 +92,7 @@ import gurkhahr.core.ui.res.generated.resources.leave_summary
 import gurkhahr.core.ui.res.generated.resources.leave_taken
 import gurkhahr.core.ui.res.generated.resources.leave_type
 import gurkhahr.core.ui.res.generated.resources.leave_type_name
+import gurkhahr.core.ui.res.generated.resources.location
 import gurkhahr.core.ui.res.generated.resources.log_out
 import gurkhahr.core.ui.res.generated.resources.login
 import gurkhahr.core.ui.res.generated.resources.marital_status
@@ -100,8 +108,11 @@ import gurkhahr.core.ui.res.generated.resources.new_password
 import gurkhahr.core.ui.res.generated.resources.next
 import gurkhahr.core.ui.res.generated.resources.no
 import gurkhahr.core.ui.res.generated.resources.no_data_found
+import gurkhahr.core.ui.res.generated.resources.note
+import gurkhahr.core.ui.res.generated.resources.notes
 import gurkhahr.core.ui.res.generated.resources.numbers
 import gurkhahr.core.ui.res.generated.resources.ok
+import gurkhahr.core.ui.res.generated.resources.one
 import gurkhahr.core.ui.res.generated.resources.outline_logout_24
 import gurkhahr.core.ui.res.generated.resources.password
 import gurkhahr.core.ui.res.generated.resources.password_does_not_match
@@ -130,6 +141,7 @@ import gurkhahr.core.ui.res.generated.resources.sick_leave
 import gurkhahr.core.ui.res.generated.resources.skip
 import gurkhahr.core.ui.res.generated.resources.slc_marksheet
 import gurkhahr.core.ui.res.generated.resources.start_date
+import gurkhahr.core.ui.res.generated.resources.start_time
 import gurkhahr.core.ui.res.generated.resources.status
 import gurkhahr.core.ui.res.generated.resources.submit
 import gurkhahr.core.ui.res.generated.resources.support
@@ -137,9 +149,11 @@ import gurkhahr.core.ui.res.generated.resources.system_default
 import gurkhahr.core.ui.res.generated.resources.terms_and_services
 import gurkhahr.core.ui.res.generated.resources.theme
 import gurkhahr.core.ui.res.generated.resources.time_and_attendance
+import gurkhahr.core.ui.res.generated.resources.title
 import gurkhahr.core.ui.res.generated.resources.to_date
 import gurkhahr.core.ui.res.generated.resources.today
 import gurkhahr.core.ui.res.generated.resources.total_days
+import gurkhahr.core.ui.res.generated.resources.two
 import gurkhahr.core.ui.res.generated.resources.type_here
 import gurkhahr.core.ui.res.generated.resources.typing
 import gurkhahr.core.ui.res.generated.resources.unknown_error_occurred
@@ -281,6 +295,26 @@ object SharedRes {
         val clock_out_time = Res.string.clock_out_time
 
         val attendance_request_form = Res.string.attendance_request_form
+
+        val notes = Res.string.notes
+        val add_notes = Res.string.add_notes
+        val edit_notes = Res.string.edit_notes
+
+        val is_event = Res.string.is_event
+        val title = Res.string.title
+        val enter_title = Res.string.enter_title
+        val enter_description = Res.string.enter_description
+
+        val note = Res.string.note
+        val event = Res.string.event
+        val one = Res.string.one
+        val two = Res.string.two
+
+        val start_time = Res.string.start_time
+        val end_time = Res.string.end_time
+        val location = Res.string.location
+
+
 
         val invalidEmailAddress = Res.string.invalid_email_address
         val email = Res.string.email
