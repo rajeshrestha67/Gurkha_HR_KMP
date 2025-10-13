@@ -385,7 +385,5 @@ fun EventFormField(
                 onAction(AddNotesAction.OnLocationChange(it))
             }
         )
-
-
     }
 }

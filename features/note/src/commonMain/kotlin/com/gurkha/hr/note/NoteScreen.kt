@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
@@ -28,21 +29,29 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.gurkha.hr.domain.note.model.NoteData
+import com.gurkha.hr.model.note.NoteState
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.borderColor
 import com.gurkha.hr.res.theme.darkPrimaryTextColor
 import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.primaryTextColor
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NoteScreen(
     onGoToAddNotesScreen: () -> Unit
 ) {
+    val viewModel: NoteViewModel = koinViewModel()
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
     Scaffold(
         contentWindowInsets = WindowInsets(0.dp),
         modifier = Modifier.fillMaxSize(),
@@ -64,13 +73,17 @@ fun NoteScreen(
             )
         }
     ) { contentPadding ->
-        NoteScreenContent(modifier = Modifier.padding(contentPadding))
+        NoteScreenContent(
+            modifier = Modifier.padding(contentPadding),
+            state = state
+        )
     }
 }
 
 @Composable
 fun NoteScreenContent(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    state: NoteState
 ) {
     LazyColumn(
         modifier = modifier.fillMaxSize(),
@@ -80,20 +93,28 @@ fun NoteScreenContent(
             end = MaterialTheme.dimens.small3
         ),
     ) {
-        diffResult()
+        diffResult(
+            state = state
+        )
     }
 }
 
 
-fun LazyListScope.diffResult() {
-    items(4) {
-        ResultBox()
+fun LazyListScope.diffResult(
+    state: NoteState
+) {
+    items(state.noteItem){item->
+        ResultBox(
+            item = item
+        )
     }
 }
 
 
 @Composable
-fun ResultBox() {
+fun ResultBox(
+    item: NoteData
+) {
     Surface(
         modifier = Modifier.padding(vertical = MaterialTheme.dimens.small2),
         shape = MaterialTheme.shapes.small,
@@ -110,33 +131,35 @@ fun ResultBox() {
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2)
         ) {
             Text(
-                "Project Meeting", style = MaterialTheme.typography.titleLarge.copy(
+                text = item.title, style = MaterialTheme.typography.titleLarge.copy(
                     color = MaterialTheme.colorScheme.darkPrimaryTextColor
                 )
             )
 
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(Icons.Filled.LocationOn, contentDescription = "Location")
-                Text(
-                    "RatoPool", style = MaterialTheme.typography.titleSmall.copy(
-                        color = MaterialTheme.colorScheme.primaryTextColor
+            if(item.location.isNotBlank()){
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(Icons.Filled.LocationOn, contentDescription = "Location")
+                    Text(
+                        text = item.location, style = MaterialTheme.typography.titleSmall.copy(
+                            color = MaterialTheme.colorScheme.primaryTextColor
+                        )
                     )
-                )
+                }
             }
 
             HorizontalDivider(modifier = Modifier.fillMaxWidth(), thickness = 1.dp)
 
             Column {
                 Text(
-                    "Description", style = MaterialTheme.typography.titleMedium.copy(
+                    text = stringResource(SharedRes.Strings.description), style = MaterialTheme.typography.titleMedium.copy(
                         color = MaterialTheme.colorScheme.darkPrimaryTextColor
                     )
                 )
                 Text(
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elitLorem ipsum dolor sit amet, consectetur adipiscing elit",
+                    text = item.description,
                     style = MaterialTheme.typography.labelMedium.copy(
                         color = MaterialTheme.colorScheme.primaryTextColor
                     )
@@ -152,24 +175,24 @@ fun ResultBox() {
             ) {
                 Column {
                     Text(
-                        "Start Date", style = MaterialTheme.typography.labelMedium.copy(
+                        text = stringResource(SharedRes.Strings.startDate), style = MaterialTheme.typography.labelMedium.copy(
                             color = MaterialTheme.colorScheme.darkPrimaryTextColor
                         )
                     )
                     Text(
-                        "12:20", style = MaterialTheme.typography.labelMedium.copy(
+                        text = item.startDateBS, style = MaterialTheme.typography.labelMedium.copy(
                             color = MaterialTheme.colorScheme.primaryTextColor
                         )
                     )
                 }
                 Column {
                     Text(
-                        "End Date", style = MaterialTheme.typography.labelMedium.copy(
+                        text = stringResource(SharedRes.Strings.endDate), style = MaterialTheme.typography.labelMedium.copy(
                             color = MaterialTheme.colorScheme.darkPrimaryTextColor
                         )
                     )
                     Text(
-                        "5:20", style = MaterialTheme.typography.labelMedium.copy(
+                        text = item.endDateBS, style = MaterialTheme.typography.labelMedium.copy(
                             color = MaterialTheme.colorScheme.primaryTextColor
                         )
                     )

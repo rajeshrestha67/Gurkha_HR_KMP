@@ -22,4 +22,5 @@ object EndPoint {
     const val ATTENDANCE_REQUEST_END_POINT = "api/attendance/request"
     const val LEAVE_SUMMARY_END_POINT = "api/leave-request/overall-leave-detail"
     const val ATTENDANCE_SUMMARY_END_POINT = "api/attendance/overall-count"
+    const val ALL_NOTES_END_POINT = "api/note/all"
 }

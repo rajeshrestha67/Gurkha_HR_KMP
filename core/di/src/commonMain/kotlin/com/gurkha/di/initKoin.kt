@@ -28,6 +28,7 @@ fun initKoin(config: KoinAppDeclaration? = null) {
             AllocatedLeaveModule().module,
             TimeAndAttendanceModule().module,
             NoteScreenModule().module,
+            NoteScreenModule().module
         )
     }
 }
