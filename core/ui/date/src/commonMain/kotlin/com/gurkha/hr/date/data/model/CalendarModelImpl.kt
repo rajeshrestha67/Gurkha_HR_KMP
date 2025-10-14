@@ -16,6 +16,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.daysUntil
 import kotlinx.datetime.format
 import kotlinx.datetime.format.MonthNames
+import kotlinx.datetime.format.Padding
 import kotlinx.datetime.isoDayNumber
 import kotlinx.datetime.number
 import kotlinx.datetime.plus
@@ -54,7 +55,6 @@ class CalendarModelImpl : CalendarModel() {
         val localDate = LocalDate(firstDayAD.year, firstDayAD.month, firstDayAD.day)
         var dayOfWeek = getDayNumberSundayFirst(localDate)
         return range.toList().map { day ->
-
             if (dayOfWeek == 8) {
                 dayOfWeek = 1
             }
@@ -135,7 +135,12 @@ fun LocalDate.daysInMonth(): Int {
 fun CalendarModel.todayFormattedBSDate(): String {
     val months = stringArrayResource(SharedRes.Arrays.months)
     val weeks = stringArrayResource(SharedRes.Arrays.weeksDays)
-    return "${today.dayOfMonth.mapNumbers} ${months[today.month - 1]}, ${today.year.mapNumbers} ${weeks[(today.dayOfMonth % 7) - 1]}"
+    val monthsCalendar = numberOfDaysInMonth().find { it.day == today.dayOfMonth }
+    return "${today.dayOfMonth.mapNumbers} ${months[today.month - 1]}, ${today.year.mapNumbers} ${
+        weeks[monthsCalendar?.let {
+            it.dayOfWeek - 1
+        } ?: 0]
+    }"
 }
 
 @OptIn(ExperimentalTime::class)
@@ -149,7 +154,7 @@ fun CalendarModel.todayFormattedADDate(): String {
             .replaceFirstChar { it.uppercase() }
         localDateTime.format(
             LocalDateTime.Format {
-                dayOfMonth() // Day (no padding)
+                day(padding = Padding.ZERO) // Day (no padding)
                 chars(" ")
                 monthName(MonthNames.ENGLISH_FULL) // Full month name (e.g., "June")
                 chars(", ")

@@ -225,7 +225,7 @@ fun HomeScreenContent(
 
 //    fetch the data
     LaunchedEffect(Unit) {
-        onFetchAttendance()
+        // onFetchAttendance()
     }
 
     Box(
