@@ -4,6 +4,5 @@ import com.gurkha.hr.domain.allocatedLeave.model.AllocatedLeaveData
 
 data class AllocatedLeaveState(
     val isLoading: Boolean = false,
-
     val leaveSummaryList: List<AllocatedLeaveData> = emptyList(),
 )

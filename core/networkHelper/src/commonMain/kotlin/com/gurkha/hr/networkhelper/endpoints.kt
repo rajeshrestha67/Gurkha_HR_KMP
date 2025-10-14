@@ -1,6 +1,5 @@
 package com.gurkha.hr.networkhelper
 
-import com.gurkha.model.timeandAttendance.TimeAttendanceReportResponseDTO
 
 object EndPoint {
     const val LOGIN_END_POINT = "public/authenticate"
@@ -17,7 +16,7 @@ object EndPoint {
     const val EMPLOY_LIST_ENDPOINT = "api/chat/employee"
     const val CHAT_MESSAGE_ENDPOINT = "api/external-chat/messages"
     const val ALLOCATED_LEAVE_ENDPOINT = "api/employee-leave/136"
-    const val TIME_AND_ATTENDANCE_ENDPOINT = "api/attendance/employee/report"
-
+    const val COMPANY_ASSETS_ENDPOINT = "api/employee-assets/get/76"
     const val ATTENDANCE_REQUEST_END_POINT = "api/attendance/request"
+    const val HISTORY_END_POINT = "api/attendance/employee/monthly"
 }

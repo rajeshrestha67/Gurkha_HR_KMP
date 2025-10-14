@@ -19,16 +19,24 @@ import io.ktor.client.request.setBody
 class KtorAttendanceRemoteRepository(
     val httpClient: HttpClient
 ) : AttendanceRemoteRepository {
+
     override suspend fun fetchAttendance(
-        dateFrom: String,
-        toDate: String
+        dateFrom: String?,
+        toDate: String?,
+        attendanceStatus: String?,
+        employeeId: Int?
     ): ERPResult<AttendanceResponseDto, DataError> {
         return safeCall {
             httpClient.post(
                 baseUrl = BaseUrl.Generic,
                 endPoint = EndPoint.FETCH_ATTENDANCE_END_POINT
-            ) {
-                setBody(AttendanceReportRequestDto(dateFrom, toDate))
+            ){
+                setBody(AttendanceReportRequestDto(
+                    fromDate = dateFrom,
+                    toDate = toDate,
+                    attendanceStatus = attendanceStatus,
+                    employeeId = employeeId
+                ))
             }
         }
     }
@@ -43,7 +51,10 @@ class KtorAttendanceRemoteRepository(
                 baseUrl = BaseUrl.Generic,
                 endPoint = EndPoint.ATTENDANCE_STATUS_REPORT_ENDPOINT,
             ) {
-                setBody(AttendanceStatusRequestDTO(attendanceStatus, employeeName, isSelf))
+                setBody(AttendanceStatusRequestDTO(
+                    attendanceStatus,
+                    employeeName,
+                    isSelf))
             }
         }
     }

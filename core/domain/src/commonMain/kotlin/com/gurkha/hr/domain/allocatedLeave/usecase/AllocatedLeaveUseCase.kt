@@ -12,7 +12,9 @@ class AllocatedLeaveUseCase(
     private val allocatedLeaveRemoteRepository: AllocatedLeaveRemoteRepository
 ) {
     suspend operator fun invoke(): ERPResult<List<AllocatedLeaveData>, DataError> {
-        return allocatedLeaveRemoteRepository.getAllocatedLeave().map {
+        return allocatedLeaveRemoteRepository.getAllocatedLeave(
+
+        ).map {
             it.toData()
         }
     }

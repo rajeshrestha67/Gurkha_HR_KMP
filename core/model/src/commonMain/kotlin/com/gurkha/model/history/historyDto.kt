@@ -1,5 +1,6 @@
 package com.gurkha.model.history
 
+import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -41,6 +42,10 @@ data class DailyAttendance(
 
 @Serializable
 data class HistoryRequestDTO(
-    val fromDate: String,
-    val toDate: String
+    val branchId: String? = null,
+    val bsMonth: Int?,
+    val bsYear: Int?,
+    val employeeId: Int?,
+    val isSelf: String? = null
+
 )

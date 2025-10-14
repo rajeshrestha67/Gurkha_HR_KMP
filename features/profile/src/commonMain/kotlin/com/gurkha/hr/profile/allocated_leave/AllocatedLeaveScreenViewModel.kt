@@ -39,7 +39,8 @@ class AllocatedLeaveScreenViewModel(
 
     private fun onFetchData() = viewModelScope.launch {
         _state.update { it.copy(isLoading = true) }
-        allocatedLeaveUseCase().onSuccess {data ->
+        allocatedLeaveUseCase(
+        ).onSuccess { data ->
             println("allocated_data $data")
             _state.update { it.copy(
                 isLoading = false,

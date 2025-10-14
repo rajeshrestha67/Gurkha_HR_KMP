@@ -7,5 +7,5 @@ sealed interface TimeAndAttendanceViewAction {
     data class fromDate(val date: DateData) : TimeAndAttendanceViewAction
     data class toDate(val date: DateData) : TimeAndAttendanceViewAction
 
-    data object Submit : TimeAndAttendanceViewAction
+    data class Submit(val employeeId: Int) : TimeAndAttendanceViewAction
 }

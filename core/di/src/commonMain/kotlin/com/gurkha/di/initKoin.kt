@@ -27,6 +27,9 @@ fun initKoin(config: KoinAppDeclaration? = null) {
             AttendanceScreenModule().module,
             AllocatedLeaveModule().module,
             TimeAndAttendanceModule().module,
+            CompanyAssetsModule().module,
+            HistoryModule().module
+
         )
     }
 }
