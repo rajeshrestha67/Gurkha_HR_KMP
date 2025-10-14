@@ -19,10 +19,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -40,14 +37,12 @@ import org.jetbrains.compose.resources.stringArrayResource
 @Composable
 fun HorizontalCalendar(
     modifier: Modifier = Modifier,
-    date: List<CalendarDay> = listOf(),
-    today: CalendarDate
+    days: List<CalendarDay> = listOf(),
+    today: CalendarDate,
+    selectedDay: Int,
+    onDaySelected: (Int) -> Unit
 ) {
     val listState: LazyListState = rememberLazyListState()
-
-    var selectedDay by remember(today) {
-        mutableStateOf(today.dayOfMonth)
-    }
 
     val months = stringArrayResource(SharedRes.Arrays.months)
 
@@ -82,7 +77,7 @@ fun HorizontalCalendar(
             val density = LocalDensity.current
 
             val itemSpacing = MaterialTheme.dimens.small3
-            LaunchedEffect(selectedDay, date) {
+            LaunchedEffect(selectedDay) {
                 val halfScreenPx = with(density) { (screenWidth / 2).toPx() }
                 val itemWidthPx = with(density) { dayItemWidthDp.toPx() }
                 val offset =
@@ -106,7 +101,7 @@ fun HorizontalCalendar(
                     alignment = Alignment.CenterHorizontally
                 )
             ) {
-                items(items = date, key = { it.day }) { item ->
+                items(items = days, key = { it.day }) { item ->
                     val color = if (selectedDay == item.day)
                         MaterialTheme.colorScheme.primary
                     else
@@ -129,10 +124,11 @@ fun HorizontalCalendar(
                             )
                             .size(size = dayItemWidthDp)
                             .aspectRatio(ratio = 1f)
-                            .clickable(onClick = {
-                                println("called")
-                                selectedDay = item.day
-                            }),
+                            .clickable(
+                                onClick = {
+                                    onDaySelected(item.day)
+                                }
+                            ),
                         verticalArrangement = Arrangement.spacedBy(
                             space = MaterialTheme.dimens.small1,
                             alignment = Alignment.CenterVertically

@@ -45,7 +45,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -67,6 +66,7 @@ import com.gurkha.hr.components.swipeToDismiss.SwipeToDismissBox
 import com.gurkha.hr.date.data.CalendarDate
 import com.gurkha.hr.date.data.CalendarDay
 import com.gurkha.hr.home.model.AttendanceItem
+import com.gurkha.hr.home.model.HomeScreenActions
 import com.gurkha.hr.home.model.HomeScreenState
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.borderColor
@@ -91,15 +91,12 @@ fun HomeScreen(
 
     Scaffold(
         contentWindowInsets = WindowInsets(),
-        modifier = Modifier
-            .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
+        modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
             .fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
-                modifier = Modifier.fillMaxWidth(),
-                windowInsets = WindowInsets(),
-                title = {
+                modifier = Modifier.fillMaxWidth(), windowInsets = WindowInsets(), title = {
                     Row(
                         modifier = Modifier.fillMaxWidth()
                     ) {
@@ -122,19 +119,16 @@ fun HomeScreen(
                             Text(
                                 style = MaterialTheme.typography.titleMedium.copy(
                                     color = MaterialTheme.colorScheme.primaryTextColor
-                                ),
-                                text = state.fullName
+                                ), text = state.fullName
                             )
                             Text(
                                 style = MaterialTheme.typography.titleSmall.copy(
                                     color = MaterialTheme.colorScheme.primaryTextColor
-                                ),
-                                text = state.levelName
+                                ), text = state.levelName
                             )
                         }
                     }
-                },
-                actions = {
+                }, actions = {
                     IconButton(onClick = onChatClick) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.Chat,
@@ -147,14 +141,13 @@ fun HomeScreen(
                             contentDescription = "notification icon"
                         )
                     }
-                },
-                scrollBehavior = topAppBarScrollBehavior
+                }, scrollBehavior = topAppBarScrollBehavior
             )
-        }
-    ) { paddingValues ->
+        }) { paddingValues ->
         HomeScreenContent(
             modifier = Modifier.fillMaxSize().padding(paddingValues),
-            state = state
+            state = state,
+            onAction = viewModel::onAction
         )
     }
 }
@@ -162,12 +155,10 @@ fun HomeScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreenContent(
-    modifier: Modifier = Modifier,
-    state: HomeScreenState
+    modifier: Modifier = Modifier, state: HomeScreenState, onAction: (HomeScreenActions) -> Unit
 ) {
     val pagerState = rememberPagerState(pageCount = { 2 })
-    //val calendarListState = rememberLazyListState()
-    //val activeIndex = state.calendarItem.indexOfFirst { it.active }
+
     val (showNotification, onChangeNotification) = rememberSaveable {
         mutableStateOf(true)
     }
@@ -182,8 +173,7 @@ fun HomeScreenContent(
 
     val isAtTop by remember {
         derivedStateOf {
-            mainListState.firstVisibleItemIndex == 0 &&
-                    mainListState.firstVisibleItemScrollOffset == 0
+            mainListState.firstVisibleItemIndex == 0 && mainListState.firstVisibleItemScrollOffset == 0
         }
     }
     val isAtEnd by remember {
@@ -191,38 +181,12 @@ fun HomeScreenContent(
             val lastVisibleItem = mainListState.layoutInfo.visibleItemsInfo.lastOrNull()
             val totalItemsCount = mainListState.layoutInfo.totalItemsCount
 
-            // Check if the last visible item is the last item in the list
             lastVisibleItem != null && lastVisibleItem.index == totalItemsCount - 1
         }
     }
 
     val shouldShowSwipeToDismiss by remember {
         derivedStateOf { !isScrolling || isAtTop || isAtEnd }
-    }
-
-
-//to show the active week date and day starting from the sunday
-//    LaunchedEffect(activeIndex) {
-//        if (activeIndex >= 0) {
-//            val activeItem = state.calendarItem[activeIndex]
-//            val dayOfWeekNumber = when (activeItem.day) {
-//                "SUN" -> 1
-//                "MON" -> 2
-//                "TUE" -> 3
-//                "WED" -> 4
-//                "THU" -> 5
-//                "FRI" -> 6
-//                "SAT" -> 7
-//                else -> 0
-//            }
-//            val sundayIndex = (activeIndex - dayOfWeekNumber + 1).coerceAtLeast(0)
-//            calendarListState.scrollToItem(sundayIndex)
-//        }
-//    }
-
-//    fetch the data
-    LaunchedEffect(Unit) {
-        // onFetchAttendance()
     }
 
     Box(
@@ -241,14 +205,15 @@ fun HomeScreenContent(
         ) {
             //    Notification part
             notificationView(
-                showNotification = showNotification,
-                onChangeNotification = onChangeNotification
+                showNotification = showNotification, onChangeNotification = onChangeNotification
             )
 
             //            calender part
             calendarView(
                 calendarItem = state.calendarData,
-                today = state.todayBS
+                today = state.todayBS,
+                selectedDay = state.selectedDay,
+                onAction = onAction
             )
 
             // request section
@@ -274,15 +239,12 @@ fun HomeScreenContent(
             visible = shouldShowSwipeToDismiss,
             enter = slideInVertically(initialOffsetY = { it }) + fadeIn(),
             exit = slideOutVertically(targetOffsetY = { it }) + fadeOut(),
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
+            modifier = Modifier.align(Alignment.BottomCenter)
         ) {
             SwipeToDismissBox(
-                text = "Swipe to Check In",
-                onDismissed = {
+                text = "Swipe to Check In", onDismissed = {
 
-                }
-            )
+                })
         }
     }
 }
@@ -308,14 +270,12 @@ fun LazyListScope.anniversarySection(
                     modifier = Modifier.fillMaxWidth()
                         .padding(horizontal = MaterialTheme.dimens.small3),
                     horizontalArrangement = Arrangement.spacedBy(
-                        MaterialTheme.dimens.small2,
-                        alignment = Alignment.Start
+                        MaterialTheme.dimens.small2, alignment = Alignment.Start
                     )
                 ) {
                     repeat(4) {
                         ShimmerView(
-                            modifier = Modifier
-                                .size(MaterialTheme.dimens.bottomBar)
+                            modifier = Modifier.size(MaterialTheme.dimens.bottomBar)
                                 .clip(MaterialTheme.shapes.small)
                         )
                     }
@@ -325,8 +285,7 @@ fun LazyListScope.anniversarySection(
 
             else -> {
                 LazyRow(
-                    modifier = Modifier
-                        .fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     contentPadding = PaddingValues(horizontal = MaterialTheme.dimens.small3),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = state.upComingWorkAnniversary.size.let { size ->
@@ -369,14 +328,12 @@ fun LazyListScope.birthDaySection(
                     modifier = Modifier.fillMaxWidth()
                         .padding(horizontal = MaterialTheme.dimens.small3),
                     horizontalArrangement = Arrangement.spacedBy(
-                        MaterialTheme.dimens.small2,
-                        alignment = Alignment.Start
+                        MaterialTheme.dimens.small2, alignment = Alignment.Start
                     )
                 ) {
                     repeat(4) {
                         ShimmerView(
-                            modifier = Modifier
-                                .size(MaterialTheme.dimens.bottomBar)
+                            modifier = Modifier.size(MaterialTheme.dimens.bottomBar)
                                 .clip(MaterialTheme.shapes.small)
                         )
                     }
@@ -385,8 +342,7 @@ fun LazyListScope.birthDaySection(
 
             else -> {
                 LazyRow(
-                    modifier = Modifier
-                        .fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                     contentPadding = PaddingValues(horizontal = MaterialTheme.dimens.small3),
                     horizontalArrangement = state.upComingBirthday.size.let { size ->
@@ -415,8 +371,7 @@ fun LazyListScope.attendanceSection(
 ) {
     item(key = "attendance_title") {
         TitleBar(
-            modifier = Modifier.fillMaxWidth()
-                .padding(horizontal = MaterialTheme.dimens.small3),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = MaterialTheme.dimens.small3),
             title = SharedRes.Strings.attendance,
             subTitle = SharedRes.Strings.view_all
         )
@@ -431,8 +386,7 @@ fun LazyListScope.attendanceSection(
                 when (page) {
                     0 -> SmoothLineGraph()
                     1 -> Box(
-                        modifier = Modifier
-                            .fillMaxSize()
+                        modifier = Modifier.fillMaxSize()
                             .background(color = MaterialTheme.colorScheme.onPrimaryContainer)
                     )
                 }
@@ -447,8 +401,7 @@ fun LazyListScope.requestSection(
     item("request_title") {
 
         TitleBar(
-            modifier = Modifier.fillMaxWidth()
-                .padding(horizontal = MaterialTheme.dimens.small3),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = MaterialTheme.dimens.small3),
             title = SharedRes.Strings.request
         )
     }
@@ -496,15 +449,13 @@ fun LazyListScope.requestSection(
     state.homeGridItemsToShow.chunked(2).forEach { rowItems ->
         item {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
+                modifier = Modifier.fillMaxWidth()
                     .padding(horizontal = MaterialTheme.dimens.small3),
                 horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
             ) {
                 rowItems.forEach { leaveItem ->
                     AttendanceItemContent(
-                        modifier = Modifier.weight(1f).fillMaxSize(),
-                        item = leaveItem
+                        modifier = Modifier.weight(1f).fillMaxSize(), item = leaveItem
                     )
                 }
                 // Fill remaining spaces in row if needed
@@ -518,52 +469,45 @@ fun LazyListScope.requestSection(
 
 fun LazyListScope.calendarView(
     calendarItem: List<CalendarDay>,
-    today: CalendarDate
+    today: CalendarDate,
+    selectedDay: Int,
+    onAction: (HomeScreenActions) -> Unit
 ) {
     stickyHeader(key = "calender") {
         HorizontalCalendar(
-            modifier = Modifier
-                .fillMaxWidth()
+            modifier = Modifier.fillMaxWidth()
                 .background(color = MaterialTheme.colorScheme.background),
-            date = calendarItem,
-            today = today
-        )
+            days = calendarItem,
+            today = today,
+            selectedDay = selectedDay,
+            onDaySelected = {
+                onAction(HomeScreenActions.OnDateSelected(it))
+            })
     }
 }
 
 fun LazyListScope.notificationView(
-    showNotification: Boolean,
-    onChangeNotification: (Boolean) -> Unit
+    showNotification: Boolean, onChangeNotification: (Boolean) -> Unit
 ) {
     item(key = "notification") {
         AnimatedVisibility(
-            visible = showNotification,
-            enter = slideInVertically(
-                initialOffsetY = { -it }
-            ) + fadeIn(),
-            exit = slideOutVertically(
-                targetOffsetY = { -it / 2 }
-            ) + fadeOut()
+            visible = showNotification, enter = slideInVertically(
+                initialOffsetY = { -it }) + fadeIn(), exit = slideOutVertically(
+                targetOffsetY = { -it / 2 }) + fadeOut()
         ) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        end = MaterialTheme.dimens.small3,
-                        start = MaterialTheme.dimens.small3
-                    ).background(
-                        color = MaterialTheme.colorScheme.error,
-                        shape = MaterialTheme.shapes.medium
-                    ),
+                modifier = Modifier.fillMaxWidth().padding(
+                    end = MaterialTheme.dimens.small3, start = MaterialTheme.dimens.small3
+                ).background(
+                    color = MaterialTheme.colorScheme.error, shape = MaterialTheme.shapes.medium
+                ),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
                     modifier = Modifier.padding(
                         all = MaterialTheme.dimens.small2
-                    ),
-                    text = "Notification view",
-                    style = MaterialTheme.typography.bodyMedium.copy(
+                    ), text = "Notification view", style = MaterialTheme.typography.bodyMedium.copy(
                         color = MaterialTheme.colorScheme.onError
                     )
                 )
@@ -584,30 +528,23 @@ fun LazyListScope.notificationView(
 //reusable request row
 @Composable
 fun AttendanceItemContent(
-    item: AttendanceItem,
-    modifier: Modifier = Modifier
+    item: AttendanceItem, modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier
-            .clip(RoundedCornerShape(MaterialTheme.dimens.small2))
-            .border(
-                width = 1.dp,
-                shape = MaterialTheme.shapes.medium,
-                color = MaterialTheme.colorScheme.borderColor
-            )
-            .clickable(onClick = {
+        modifier = modifier.clip(RoundedCornerShape(MaterialTheme.dimens.small2)).border(
+            width = 1.dp,
+            shape = MaterialTheme.shapes.medium,
+            color = MaterialTheme.colorScheme.borderColor
+        ).clickable(onClick = {
 
-            }),
+        }),
 //            .background(MaterialTheme.colorScheme.secondaryContainer),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.Start
+        verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.Start
     ) {
         Row(
-            modifier = Modifier
-                .padding(
-                    horizontal = MaterialTheme.dimens.small3,
-                    vertical = MaterialTheme.dimens.small2
-                ),
+            modifier = Modifier.padding(
+                horizontal = MaterialTheme.dimens.small3, vertical = MaterialTheme.dimens.small2
+            ),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2)
         ) {
@@ -616,11 +553,9 @@ fun AttendanceItemContent(
         }
 
         Column(
-            modifier = Modifier
-                .padding(
-                    horizontal = MaterialTheme.dimens.small3,
-                    vertical = MaterialTheme.dimens.small2
-                )
+            modifier = Modifier.padding(
+                horizontal = MaterialTheme.dimens.small3, vertical = MaterialTheme.dimens.small2
+            )
         ) {
             Text(
                 text = item.time, style = MaterialTheme.typography.titleLarge.copy(
@@ -647,8 +582,7 @@ fun EventCard(
     date: String,
 ) {
     Column(
-        modifier = Modifier
-            .widthIn(min = 150.dp)
+        modifier = Modifier.widthIn(min = 150.dp)
 //            .border(
 //                width = 1.dp,
 //                color = MaterialTheme.colorScheme.borderColor,
@@ -676,16 +610,14 @@ fun EventCard(
             )
 
             Text(
-                text = "",
-                style = MaterialTheme.typography.titleSmall.copy(
+                text = "", style = MaterialTheme.typography.titleSmall.copy(
                     color = MaterialTheme.colorScheme.primaryTextColor
                 )
             )
         }
         Text(text = fullName, style = MaterialTheme.typography.titleMedium)
         Text(
-            text = designationName,
-            style = MaterialTheme.typography.titleSmall.copy(
+            text = designationName, style = MaterialTheme.typography.titleSmall.copy(
                 color = MaterialTheme.colorScheme.primaryTextColor
             )
         )
@@ -706,21 +638,18 @@ fun TitleBar(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = stringResource(title),
-            style = MaterialTheme.typography.titleLarge
+            text = stringResource(title), style = MaterialTheme.typography.titleLarge
         )
         subTitle?.let {
             TextButton(
-                onClick = onViewAll,
-                content = {
+                onClick = onViewAll, content = {
                     Text(
                         text = stringResource(subTitle),
                         style = MaterialTheme.typography.titleSmall.copy(
                             color = MaterialTheme.colorScheme.linkColor
                         )
                     )
-                }
-            )
+                })
         }
     }
 }

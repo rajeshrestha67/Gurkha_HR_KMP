@@ -63,25 +63,17 @@ class HomeScreenViewModel(
                 TODO()
             }
 
-            is HomeScreenActions.AttendanceFetch -> {
-                fetchAttendance()
-            }
-
-            is HomeScreenActions.OnFetchCurrentUser -> {
-                fetchCurrentUser()
-            }
-
-            is HomeScreenActions.OnFetchUpComingBirthday -> {
-                fetchUpComingBirthday()
-            }
-
-            is HomeScreenActions.OnFetchUpComingWorkAnniversary -> {
-                fetchUpComingWorkAnniversary()
-            }
-
             is HomeScreenActions.OnCheckOutClicked -> TODO()
             is HomeScreenActions.OnNotificationClicked -> TODO()
             is HomeScreenActions.OnSearchedClicked -> TODO()
+            is HomeScreenActions.OnDateSelected -> {
+                println("selected day is ${action.day}")
+                _state.update {
+                    it.copy(
+                        selectedDay = action.day
+                    )
+                }
+            }
         }
     }
 
@@ -90,7 +82,8 @@ class HomeScreenViewModel(
         _state.update {
             it.copy(
                 calendarData = calendarModel.numberOfDaysInMonth(),
-                todayBS = calendarModel.today
+                todayBS = calendarModel.today,
+                selectedDay = calendarModel.today.dayOfMonth
             )
         }
     }
