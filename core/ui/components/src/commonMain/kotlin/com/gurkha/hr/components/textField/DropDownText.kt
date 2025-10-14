@@ -48,6 +48,14 @@ fun <T> DropDownText(
     itemClicked: (T) -> Unit,
     isFetching: Boolean = false,
     isFetchingError: Boolean = false,
+    dropdownIcon: @Composable () -> Unit = {
+        Icon(
+            imageVector = Icons.Filled.ArrowDropDown,
+            contentDescription = "drop down",
+            tint = if (enabled) MaterialTheme.colorScheme.primaryTextColor else MaterialTheme.colorScheme.disabledTextFieldBorderColor
+
+        )
+    },
     onRetry: (() -> Unit)? = null
 ) {
 
@@ -97,11 +105,14 @@ fun <T> DropDownText(
                         strokeWidth = MaterialTheme.dimens.extraSmall
                     )
                 } else {
-                    Icon(
-                        modifier = Modifier.rotate(rotationAngle),
-                        imageVector = Icons.Filled.ArrowDropDown,
-                        contentDescription = "drop down",
-                        tint = if (enabled) MaterialTheme.colorScheme.primaryTextColor else MaterialTheme.colorScheme.disabledTextFieldBorderColor
+//                    Icon(
+//                        modifier = Modifier.rotate(rotationAngle),
+//                        imageVector = Icons.Filled.ArrowDropDown,
+//                        contentDescription = "drop down",
+//                        tint = if (enabled) MaterialTheme.colorScheme.primaryTextColor else MaterialTheme.colorScheme.disabledTextFieldBorderColor
+//                    )
+                    dropdownIcon(
+
                     )
                 }
 

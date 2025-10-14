@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gurkha.hr.domain.history.useCase.HistoryUseCase
 import com.gurkha.hr.networkhelper.onSuccess
+import com.gurkha.hr.profile.model.history_screen.HistoryScreenViewAction
 import com.gurkha.hr.profile.model.history_screen.HistoryState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -44,5 +45,27 @@ class HistoryViewModel(
                 )
             }
         }
+    }
+
+    fun onAction(action: HistoryScreenViewAction){
+        when(action){
+            is HistoryScreenViewAction.fromYear -> {
+                _state.update {
+                    it.copy(
+                        bsYear = action.year,
+                        endYearError = null
+                    )
+                }
+            }
+            is HistoryScreenViewAction.fromMonth -> {
+                _state.update {
+                    it.copy(
+                        bsMonth = action.month,
+                        endMonthError = null
+                    )
+                }
+            }
+        }
+
     }
 }

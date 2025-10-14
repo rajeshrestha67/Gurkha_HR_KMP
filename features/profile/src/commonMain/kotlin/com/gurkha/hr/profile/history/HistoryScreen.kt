@@ -5,8 +5,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.FilterAlt
 import androidx.compose.material3.*
@@ -21,8 +23,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.date.ERPDateTextField
 import com.gurkha.hr.components.date.FutureAndTodayDate
+import com.gurkha.hr.components.textField.DropDownText
 import com.gurkha.hr.components.textField.FormValidate
+import com.gurkha.hr.date.BSPointer
 import com.gurkha.hr.domain.history.model.HistoryData
+import com.gurkha.hr.profile.model.history_screen.HistoryScreenViewAction
 import com.gurkha.hr.profile.model.history_screen.HistoryState
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.darkPrimaryTextColor
@@ -31,6 +36,7 @@ import com.gurkha.hr.res.theme.highLightColor
 import com.gurkha.hr.res.theme.lightGreenColor
 import com.gurkha.hr.res.theme.lightRedColor
 import com.gurkha.hr.res.theme.primaryTextColor
+import org.jetbrains.compose.resources.stringArrayResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -78,8 +84,7 @@ fun HistoryScreen(
             state = state,
             showFilter = showFilter,
             onCloseFilter = { showFilter = false },
-
-
+            onAction = viewModel::onAction
         )
     }
 }
@@ -90,8 +95,16 @@ fun HistoryScreenContainer(
     modifier: Modifier = Modifier,
     showFilter: Boolean,
     onCloseFilter: () -> Unit,
+    onAction: (HistoryScreenViewAction) -> Unit
 ) {
+    val listState = rememberLazyListState()
+    LaunchedEffect(showFilter) {
+        if (showFilter) {
+            listState.scrollToItem(0)
+        }
+    }
     LazyColumn(
+        state = listState,
         modifier = modifier,
         contentPadding = PaddingValues(
             horizontal = MaterialTheme.dimens.small3,
@@ -101,7 +114,8 @@ fun HistoryScreenContainer(
         if (showFilter) {
             item {
                 DateFilterHistory(
-                    onClose = onCloseFilter
+                    onClose = onCloseFilter,
+                    state = state
                 )
             }
         }
@@ -121,6 +135,7 @@ fun HistoryScreenContent(
     item : HistoryData,
     state: HistoryState
 ){
+
     Column (
         modifier = Modifier
             .fillMaxWidth()
@@ -164,12 +179,15 @@ fun HistoryScreenContent(
                 subTitleTextColor = MaterialTheme.colorScheme.primaryTextColor,
                 value = item.clockOutTime,
             )
-            RowInfoText(
-                name = "Late: ${item.lateInTime} min",
-                titleTextColor = MaterialTheme.colorScheme.lightRedColor,
-                subTitleTextColor = MaterialTheme.colorScheme.lightGreenColor,
-                value = "Early: ${item.earlyOutTime} min"
-            )
+            if (item.lateInTime.isNotBlank() && item.earlyOutTime.isNotBlank() ){
+                RowInfoText(
+                    name = "Late: ${item.lateInTime} min",
+                    titleTextColor = MaterialTheme.colorScheme.lightRedColor,
+                    subTitleTextColor = MaterialTheme.colorScheme.lightGreenColor,
+                    value = "Early: ${item.earlyOutTime} min"
+                )
+            }
+
         }
         HorizontalDivider(modifier = Modifier.height(MaterialTheme.dimens.extraSmall))
 
@@ -205,6 +223,7 @@ fun HistoryScreenContent(
                 value = item.leaveDuration
             )
 
+
         }
         HorizontalDivider(modifier = Modifier.height(MaterialTheme.dimens.extraSmall))
         Column(
@@ -218,22 +237,26 @@ fun HistoryScreenContent(
                     color = MaterialTheme.colorScheme.darkPrimaryTextColor
                 )
             )
-            RowInfoText(
-                name = "Assigned",
-                value = item.assigneeName
-            )
-            RowInfoText(
-                name = "Remarks",
-                value = item.remarks
-            )
-            RowInfoText(
-                name = "Response",
-                value = item.response
-            )
-            RowInfoText(
-                name = "Status",
-                value = item.assigneeStatus
-            )
+            if(item.assigneeName.isNotBlank()){
+                RowInfoText(
+                    name = "Assigned",
+                    value = item.assigneeName
+                )
+                RowInfoText(
+                    name = "Remarks",
+                    value = item.remarks
+                )
+                RowInfoText(
+                    name = "Response",
+                    value = item.response
+                )
+                RowInfoText(
+                    name = "Status",
+                    value = item.assigneeStatus
+                )
+            }
+
+
 
         }
     }
@@ -246,6 +269,7 @@ fun RowInfoText(
     titleTextColor: Color = MaterialTheme.colorScheme.primaryTextColor,
     subTitleTextColor: Color = MaterialTheme.colorScheme.darkPrimaryTextColor,
 ){
+
     Row (
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Start
@@ -273,8 +297,12 @@ fun RowInfoText(
 }
 @Composable
 fun DateFilterHistory(
+    state: HistoryState,
     onClose: () -> Unit,
 ) {
+
+
+    val yearInBS = remember { (2070..2085).map { it.toString() } }
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -302,28 +330,46 @@ fun DateFilterHistory(
                 .padding(top = MaterialTheme.dimens.small3),
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
         ) {
-            ERPDateTextField(
-                modifier = Modifier.fillMaxWidth(),
-                value = null,
-                label = stringResource(SharedRes.Strings.date),
-                hint = "From Date",
+            DropDownText(
+                dropdownIcon = {
+                    Icon(
+                        imageVector = Icons.Default.CalendarMonth,
+                        contentDescription = "Calender Image",
+
+                    )
+                },
+                label = SharedRes.Strings.month,
+                hint = SharedRes.Strings.month,
+                selectedValue = "",
+                error = state.endMonthError,
+                onError = {
+
+                },
+                listOfItems = stringArrayResource(SharedRes.Arrays.months),
                 rules = FormValidate.requiredValidationRules,
-                error = null,
-                selectableDates = FutureAndTodayDate,
-                onErrorStateChange = {},
-                onDateSelected = {}
+                itemClicked = {
+
+                },
             )
 
-            ERPDateTextField(
-                modifier = Modifier.fillMaxWidth(),
-                value = null,
-                label = stringResource(SharedRes.Strings.date),
-                hint = "To Date",
+            DropDownText(
+                dropdownIcon = {
+                    Icon(
+                        imageVector = Icons.Default.CalendarMonth,
+                        contentDescription = "Calender Image",
+
+                        )
+                },
+                label = SharedRes.Strings.month,
+                hint = SharedRes.Strings.month,
+                selectedValue = "",
+                error = state.endYearError,
+                onError = {
+
+                },
+                listOfItems = yearInBS,
                 rules = FormValidate.requiredValidationRules,
-                error = null,
-                selectableDates = FutureAndTodayDate,
-                onErrorStateChange = {},
-                onDateSelected = {}
+                itemClicked = {}
             )
 
             ERPButton(

@@ -155,6 +155,10 @@ class BSPointer(
             BS_DATES.last().last()
         )
 
+        fun getYearRange(): IntRange{
+            return IntRange(BSPointer.getFirstDay().first, BSPointer.getLastDay().first)
+        }
+
 
     }
 

@@ -13,11 +13,11 @@ import io.ktor.client.HttpClient
 class KtorCompanyAssetsRemoteRepository(
     private val httpClient: HttpClient):
     CompanyAssetsRemoteRepository {
-    override suspend fun getCompanyAssets(): ERPResult<CompanyAssetResponseDto, DataError> {
+    override suspend fun getCompanyAssets(id: Int): ERPResult<CompanyAssetResponseDto, DataError> {
         return safeCall {
             httpClient.get(
                 baseUrl = BaseUrl.Generic,
-                endPoint = EndPoint.COMPANY_ASSETS_ENDPOINT
+                endPoint = EndPoint.COMPANY_ASSETS_ENDPOINT+"/$id"
             )
         }
     }

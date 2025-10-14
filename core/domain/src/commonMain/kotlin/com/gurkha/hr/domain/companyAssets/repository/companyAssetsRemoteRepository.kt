@@ -5,6 +5,8 @@ import com.gurkha.model.companyAssets.CompanyAssetResponseDto
 import com.gurkha.model.network.DataError
 
 interface CompanyAssetsRemoteRepository{
-suspend fun getCompanyAssets(): ERPResult<CompanyAssetResponseDto, DataError>
+suspend fun getCompanyAssets(
+    id: Int
+): ERPResult<CompanyAssetResponseDto, DataError>
 
 }

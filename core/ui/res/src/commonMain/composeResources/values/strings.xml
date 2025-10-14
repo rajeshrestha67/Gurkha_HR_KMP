@@ -47,11 +47,12 @@
     <string name="master">Master</string>
     <string name="experience_document">Experience Document</string>
 
-    <string name="leave_summary"> Leave Summary</string>
-    <string name="leave_type_name"> Leave Type\nName</string>
-    <string name="total_days"> Total Days</string>">
-    <string name="leave_taken"> Leave Taken</string>">
-    <string name="remaining_leave"> Remaining Leave</string>">
+    <string name="leave_summary">Leave Summary</string>
+    <string name="leave_type_name">Leave Type\nName</string>
+    <string name="total_days">Total Days</string>">
+    <string name="leave_taken">Leave Taken</string>">
+    <string name="remaining_leave">Remaining Leave</string>">
+    <string name="month">Month</string>">
 
 
     <string name="start_date">Start Date</string>

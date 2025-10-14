@@ -93,6 +93,7 @@ import gurkhahr.core.ui.res.generated.resources.marital_status
 import gurkhahr.core.ui.res.generated.resources.master
 import gurkhahr.core.ui.res.generated.resources.maternity_leave
 import gurkhahr.core.ui.res.generated.resources.missed_attendance
+import gurkhahr.core.ui.res.generated.resources.month
 import gurkhahr.core.ui.res.generated.resources.months
 import gurkhahr.core.ui.res.generated.resources.mourning_leave
 import gurkhahr.core.ui.res.generated.resources.my_attendance
@@ -307,6 +308,7 @@ object SharedRes {
         val current_password = Res.string.current_password
         val fromDate = Res.string.from_date
         val toDate = Res.string.to_date
+        val month = Res.string.month
 
         val setting = Res.string.setting
         val theme = Res.string.theme

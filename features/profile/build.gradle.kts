@@ -89,6 +89,7 @@ kotlin {
                 implementation(libs.ui.backhandler)
 
                 implementation(libs.jetbrians.material3)
+                implementation(projects.core.ui.date)
             }
         }
 
