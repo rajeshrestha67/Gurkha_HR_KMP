@@ -2,6 +2,7 @@ package com.gurkha.hr.profile.history
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gurkha.hr.domain.form.RequiredValidationUseCase
 import com.gurkha.hr.domain.history.useCase.HistoryUseCase
 import com.gurkha.hr.networkhelper.onSuccess
 import com.gurkha.hr.profile.model.history_screen.HistoryScreenViewAction
@@ -14,7 +15,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class HistoryViewModel(
+    private val requiredValidationUseCase: RequiredValidationUseCase,
     private val historyUseCase: HistoryUseCase
+
 ) : ViewModel() {
     private val _state = MutableStateFlow(HistoryState())
     val state = _state
@@ -35,8 +38,8 @@ class HistoryViewModel(
         }
 
         historyUseCase(
-            bsMonth = _state.value.bsMonth,
-            bsYear = _state.value.bsYear
+            bsMonth = _state.value.monthValue,
+            bsYear = _state.value.year
         ).onSuccess { data ->
             _state.update {
                 it.copy(
@@ -49,23 +52,73 @@ class HistoryViewModel(
 
     fun onAction(action: HistoryScreenViewAction){
         when(action){
-            is HistoryScreenViewAction.fromYear -> {
+            is HistoryScreenViewAction.FromYear -> {
                 _state.update {
                     it.copy(
-                        bsYear = action.year,
+                        year = action.year,
                         endYearError = null
                     )
                 }
             }
-            is HistoryScreenViewAction.fromMonth -> {
+            is HistoryScreenViewAction.FromMonth -> {
                 _state.update {
                     it.copy(
-                        bsMonth = action.month,
+                        monthDisplay = action.showMonth,
+                        monthValue = action.month,
+                        endMonthError = null
+                    )
+                }
+            }
+
+            is HistoryScreenViewAction.YearPickerError ->{
+                _state.update {
+                    it.copy(
+                        endYearError = action.error
+                    )
+                }
+            } is HistoryScreenViewAction.MonthPickerError ->{
+                _state.update {
+                    it.copy(
+                        endMonthError = action.error
+                    )
+                }
+            }
+
+
+            is HistoryScreenViewAction.Submit ->{
+                _state.update {
+                    it.copy(
+                        employeeId = action.employeeId
+                    )
+                }
+                submit()
+            }
+        }
+    }
+
+    private fun submit(
+
+    ) = viewModelScope.launch {
+
+        val monthPickerError = requiredValidationUseCase(state.value.monthDisplay)
+
+        when{
+            monthPickerError !=null -> {
+                _state.update {
+                    it.copy(
+                        endMonthError = monthPickerError
+                    )
+                }
+            }
+            else ->{
+                _state.update {
+                    it.copy(
                         endMonthError = null
                     )
                 }
             }
         }
-
+        onFetchData(
+        )
     }
 }

@@ -46,6 +46,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.date.ERPDateTextField
 import com.gurkha.hr.components.date.FutureAndTodayDate
+import com.gurkha.hr.components.shimmer.ShimmerView
 
 import com.gurkha.hr.components.textField.FormValidate
 import com.gurkha.hr.domain.attendance.attendanceReport.model.AttendanceData
@@ -96,7 +97,7 @@ fun TimeAndAttendanceScreen(
                         }
                     ) {
                         Icon(
-                            imageVector = Icons.Default.FilterAlt,
+                            imageVector = if (!showFilter)Icons.Default.FilterAlt else Icons.Default.Close,
                             contentDescription = "Filter Option"
                         )
                     }
@@ -111,7 +112,6 @@ fun TimeAndAttendanceScreen(
                 .padding(paddingValues),
             state = state,
             showFilter = showFilter,
-            onCloseFilter = { showFilter = false },
             onAction = viewModel::onAction
 
         )
@@ -124,7 +124,7 @@ fun TimeAndAttendanceScreen(
 fun TimeAndAttendanceScreenContainer(
     state: TimeAndAttendanceState,
     showFilter: Boolean,
-    onCloseFilter: () -> Unit = {},
+
     modifier: Modifier = Modifier,
     onAction: (TimeAndAttendanceViewAction) -> Unit
 ) {
@@ -147,21 +147,33 @@ fun TimeAndAttendanceScreenContainer(
             item {
                 DateFilter(
                     state = state,
-                    onClose = onCloseFilter,
                     onAction = onAction,
 
                 )
             }
         }
-        items(items= state.timeAndAttendanceList, key = { it.toString() }, itemContent = { item ->
-            TimeAndAttendanceDetails(
-                onAction = onAction,
-                state = state,
-                item = item
-            )
+
+        if (state.isLoading){
+            items(count = 12){
+                ShimmerView(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(MaterialTheme.dimens.extraLarge)
+                )
+            }
+        }
+        else{
+            items(items= state.timeAndAttendanceList, key = { it.toString() }, itemContent = { item ->
+                TimeAndAttendanceDetails(
+                    onAction = onAction,
+                    state = state,
+                    item = item
+                )
 
 
-        })
+            })
+
+        }
 
     }
 
@@ -333,7 +345,6 @@ fun RowScope.RowText(
 @Composable
 fun DateFilter(
     state: TimeAndAttendanceState,
-    onClose: () -> Unit,
     onAction: (TimeAndAttendanceViewAction) -> Unit,
 ) {
     Box(
@@ -346,18 +357,7 @@ fun DateFilter(
             )
 
     ) {
-        IconButton(
-            onClick = onClose,
-            modifier = Modifier
-                .align(Alignment.TopEnd)
 
-        ) {
-            Icon(
-                imageVector = Icons.Default.Close,
-                contentDescription = "Close Filter",
-                tint = MaterialTheme.colorScheme.primaryTextColor
-            )
-        }
         Column(
             modifier = Modifier
                 .fillMaxWidth()

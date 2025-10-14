@@ -15,6 +15,7 @@ import gurkhahr.core.ui.res.generated.resources.approved
 import gurkhahr.core.ui.res.generated.resources.approver
 import gurkhahr.core.ui.res.generated.resources.are_you_sure
 import gurkhahr.core.ui.res.generated.resources.asset_name
+import gurkhahr.core.ui.res.generated.resources.assigned
 import gurkhahr.core.ui.res.generated.resources.assigned_assets
 import gurkhahr.core.ui.res.generated.resources.assigned_date
 import gurkhahr.core.ui.res.generated.resources.assignee
@@ -102,6 +103,7 @@ import gurkhahr.core.ui.res.generated.resources.nationality
 import gurkhahr.core.ui.res.generated.resources.new_password
 import gurkhahr.core.ui.res.generated.resources.next
 import gurkhahr.core.ui.res.generated.resources.no
+import gurkhahr.core.ui.res.generated.resources.no_assets_available
 import gurkhahr.core.ui.res.generated.resources.no_data_found
 import gurkhahr.core.ui.res.generated.resources.numbers
 import gurkhahr.core.ui.res.generated.resources.ok
@@ -118,9 +120,11 @@ import gurkhahr.core.ui.res.generated.resources.profile
 import gurkhahr.core.ui.res.generated.resources.profile_image
 import gurkhahr.core.ui.res.generated.resources.reason
 import gurkhahr.core.ui.res.generated.resources.remaining_leave
+import gurkhahr.core.ui.res.generated.resources.remarks
 import gurkhahr.core.ui.res.generated.resources.report
 import gurkhahr.core.ui.res.generated.resources.request
 import gurkhahr.core.ui.res.generated.resources.required
+import gurkhahr.core.ui.res.generated.resources.response
 import gurkhahr.core.ui.res.generated.resources.search_users
 import gurkhahr.core.ui.res.generated.resources.select_assignee
 import gurkhahr.core.ui.res.generated.resources.select_date
@@ -161,6 +165,7 @@ import gurkhahr.core.ui.res.generated.resources.view_all
 import gurkhahr.core.ui.res.generated.resources.weeks_days
 import gurkhahr.core.ui.res.generated.resources.welcome
 import gurkhahr.core.ui.res.generated.resources.work_anniversaries
+import gurkhahr.core.ui.res.generated.resources.year
 import gurkhahr.core.ui.res.generated.resources.yes
 
 
@@ -267,6 +272,12 @@ object SharedRes {
         val clockIn = Res.string.clockIn
         val clockOut = Res.string.clockOut
         val status = Res.string.status
+        val noAssetsAvailable = Res.string.no_assets_available
+
+        val year = Res.string.year
+        val remarks = Res.string.remarks
+        val assigned = Res.string.assigned
+        val response = Res.string.response
 
 
         val date = Res.string.date
