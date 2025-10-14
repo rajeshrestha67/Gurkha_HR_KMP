@@ -50,6 +50,7 @@ import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.borderColor
 import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.primaryTextColor
+import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -275,7 +276,6 @@ fun NoteFormField(
             onErrorStateChange = {},
             keyboardActions = KeyboardActions(
                 onSend = {
-//                    onAction(LeaveRequestScreenAction.Submit)
                 }
             ),
             height = MaterialTheme.dimens.chartHeight
@@ -324,7 +324,7 @@ fun EventFormField(
             label = stringResource(SharedRes.Strings.startDate),
             hint = stringResource(SharedRes.Strings.startDate),
             value = state.startDate,
-            error = state.startDateError,
+            error = null,
             rules = FormValidate.requiredValidationRules,
             onErrorStateChange = {},
             enabled = true,
@@ -337,7 +337,7 @@ fun EventFormField(
             label = stringResource(SharedRes.Strings.endDate),
             hint = stringResource(SharedRes.Strings.endDate),
             value = state.endDate,
-            error = state.endDateError,
+            error = null,
             rules = FormValidate.requiredValidationRules,
             onErrorStateChange = {},
             enabled = true,
@@ -350,7 +350,7 @@ fun EventFormField(
             label = stringResource(SharedRes.Strings.start_time),
             hint = stringResource(SharedRes.Strings.start_time),
             value = state.startTime,
-            error = state.startTimeError,
+            error = null,
             rules = FormValidate.requiredValidationRules,
             onErrorStateChange = {},
             enabled = true,
@@ -363,7 +363,7 @@ fun EventFormField(
             label = stringResource(SharedRes.Strings.end_time),
             hint = stringResource(SharedRes.Strings.end_time),
             value = state.endTime,
-            error = state.endTimeError,
+            error = null,
             rules = FormValidate.requiredValidationRules,
             onErrorStateChange = {},
             enabled = true,
@@ -376,7 +376,7 @@ fun EventFormField(
             label = stringResource(SharedRes.Strings.location),
             hint = stringResource(SharedRes.Strings.location),
             text = state.location,
-            error = state.locationError,
+            error = null,
             rules = FormValidate.requiredValidationRules,
             onErrorStateChange = {
             },

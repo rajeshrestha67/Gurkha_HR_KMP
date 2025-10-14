@@ -34,7 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.gurkha.hr.domain.note.model.NoteData
+import com.gurkha.hr.domain.note.allNotes.model.NoteData
 import com.gurkha.hr.model.note.NoteState
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.borderColor
@@ -175,24 +175,24 @@ fun ResultBox(
             ) {
                 Column {
                     Text(
-                        text = stringResource(SharedRes.Strings.startDate), style = MaterialTheme.typography.labelMedium.copy(
+                        text = stringResource(SharedRes.Strings.start_time), style = MaterialTheme.typography.labelMedium.copy(
                             color = MaterialTheme.colorScheme.darkPrimaryTextColor
                         )
                     )
                     Text(
-                        text = item.startDateBS, style = MaterialTheme.typography.labelMedium.copy(
+                        text = item.startTime, style = MaterialTheme.typography.labelMedium.copy(
                             color = MaterialTheme.colorScheme.primaryTextColor
                         )
                     )
                 }
                 Column {
                     Text(
-                        text = stringResource(SharedRes.Strings.endDate), style = MaterialTheme.typography.labelMedium.copy(
+                        text = stringResource(SharedRes.Strings.end_time), style = MaterialTheme.typography.labelMedium.copy(
                             color = MaterialTheme.colorScheme.darkPrimaryTextColor
                         )
                     )
                     Text(
-                        text = item.endDateBS, style = MaterialTheme.typography.labelMedium.copy(
+                        text = item.endTime, style = MaterialTheme.typography.labelMedium.copy(
                             color = MaterialTheme.colorScheme.primaryTextColor
                         )
                     )

@@ -43,6 +43,7 @@ import com.gurkha.hr.dashboard.route.AttendanceRoute
 import com.gurkha.hr.dashboard.route.DashboardRoute
 import com.gurkha.hr.dashboard.route.LeaveRoute
 import com.gurkha.hr.dashboard.route.NoteRoute
+import com.gurkha.hr.domain.note.addNote.model.AddNoteData
 import com.gurkha.hr.res.SharedRes
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -213,8 +214,7 @@ fun DashboardScreenContent(
                 navController = navController,
                 onGoToAddNotesScreen ={
                     navController.navigate(NoteRoute.AddNoteRoute)
-                }
-
+                },
             )
 
             settingsScreenBuilder(

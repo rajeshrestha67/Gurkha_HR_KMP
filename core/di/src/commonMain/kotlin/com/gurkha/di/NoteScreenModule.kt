@@ -3,8 +3,9 @@ package com.gurkha.di
 import com.gurkha.hr.addNoteScreen.AddNotesViewModel
 import com.gurkha.hr.data.note.KtorNoteRemoteRepository
 import com.gurkha.hr.domain.form.RequiredValidationUseCase
-import com.gurkha.hr.domain.note.repository.NoteRemoteRepository
-import com.gurkha.hr.domain.note.useCase.NoteUseCase
+import com.gurkha.hr.domain.note.addNote.useCase.AddNoteUseCase
+import com.gurkha.hr.domain.note.allNotes.repository.NoteRemoteRepository
+import com.gurkha.hr.domain.note.allNotes.useCase.NoteUseCase
 import com.gurkha.hr.note.NoteViewModel
 import io.ktor.client.HttpClient
 import org.koin.android.annotation.KoinViewModel
@@ -24,11 +25,20 @@ class NoteScreenModule {
         noteRemoteRepository = noteRemoteRepository
     )
 
+    @Factory
+    fun addNoteUseCase(
+        noteRemoteRepository: NoteRemoteRepository
+    ): AddNoteUseCase = AddNoteUseCase(
+        noteRemoteRepository = noteRemoteRepository
+    )
+
     @KoinViewModel
     fun getAddNotesViewModel(
         requiredValidationUseCase: RequiredValidationUseCase,
+        addNoteUseCase: AddNoteUseCase
     ): AddNotesViewModel = AddNotesViewModel(
         requiredValidationUseCase = requiredValidationUseCase,
+        addNoteUseCase = addNoteUseCase
     )
 
     @KoinViewModel

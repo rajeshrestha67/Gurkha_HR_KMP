@@ -1,4 +1,4 @@
-package com.gurkha.hr.domain.note.model
+package com.gurkha.hr.domain.note.allNotes.model
 
 data class NoteData(
     val id: Int ,

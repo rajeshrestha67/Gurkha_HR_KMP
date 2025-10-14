@@ -14,7 +14,7 @@ fun NavGraphBuilder.noteScreenBuilder(
 ){
     composable<DashboardRoute.NoteRoute>{
         NoteScreen(
-            onGoToAddNotesScreen = onGoToAddNotesScreen
+            onGoToAddNotesScreen = onGoToAddNotesScreen,
         )
     }
 

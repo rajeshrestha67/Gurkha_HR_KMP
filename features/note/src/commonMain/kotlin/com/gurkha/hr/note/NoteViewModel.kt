@@ -2,7 +2,7 @@ package com.gurkha.hr.note
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gurkha.hr.domain.note.useCase.NoteUseCase
+import com.gurkha.hr.domain.note.allNotes.useCase.NoteUseCase
 import com.gurkha.hr.model.note.NoteState
 import com.gurkha.hr.networkhelper.onSuccess
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,7 +18,9 @@ class NoteViewModel(
     private val _state = MutableStateFlow(NoteState())
     val state = _state
         .onStart {
-            fetchAllNotes()
+            if(_state.value.noteItem.isEmpty()){
+                fetchAllNotes()
+            }
         }
         .stateIn(
         scope = viewModelScope,

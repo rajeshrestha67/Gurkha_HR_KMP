@@ -7,6 +7,7 @@ data class AddNotesState(
     val isEvent: Boolean = false,
     val title: String = "",
     val description: String = "",
+    val isReminder : String = "N",
 
     val titleError: StringResource? = null,
     val descriptionError: StringResource? = null,
@@ -18,6 +19,10 @@ data class AddNotesState(
     val startTime: String = "",
     val endTime: String = "",
     val location: String = "",
+
+    val reminderTime : String = "",
+    val reminderDate : String = "",
+    val reminderMessage : String = "",
 
     val startDateError: StringResource? = null,
     val endDateError: StringResource? = null,
