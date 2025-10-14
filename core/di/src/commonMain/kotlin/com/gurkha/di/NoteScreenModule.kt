@@ -6,6 +6,8 @@ import com.gurkha.hr.domain.form.RequiredValidationUseCase
 import com.gurkha.hr.domain.note.addNote.useCase.AddNoteUseCase
 import com.gurkha.hr.domain.note.allNotes.repository.NoteRemoteRepository
 import com.gurkha.hr.domain.note.allNotes.useCase.NoteUseCase
+import com.gurkha.hr.domain.note.deleteNote.useCase.DeleteNoteUseCase
+import com.gurkha.hr.domain.note.updateNote.useCase.UpdateNoteUseCase
 import com.gurkha.hr.note.NoteViewModel
 import io.ktor.client.HttpClient
 import org.koin.android.annotation.KoinViewModel
@@ -32,19 +34,37 @@ class NoteScreenModule {
         noteRemoteRepository = noteRemoteRepository
     )
 
+    @Factory
+    fun updateNoteUseCase(
+        noteRemoteRepository: NoteRemoteRepository
+    ): UpdateNoteUseCase = UpdateNoteUseCase(
+        noteRemoteRepository = noteRemoteRepository
+    )
+
+    @Factory
+    fun deleteNoteUseCase(
+        noteRemoteRepository: NoteRemoteRepository
+    ): DeleteNoteUseCase = DeleteNoteUseCase(
+        noteRemoteRepository = noteRemoteRepository
+    )
+
     @KoinViewModel
     fun getAddNotesViewModel(
         requiredValidationUseCase: RequiredValidationUseCase,
+        updateNoteUseCase: UpdateNoteUseCase,
         addNoteUseCase: AddNoteUseCase
     ): AddNotesViewModel = AddNotesViewModel(
         requiredValidationUseCase = requiredValidationUseCase,
-        addNoteUseCase = addNoteUseCase
+        addNoteUseCase = addNoteUseCase,
+        updateNoteUseCase = updateNoteUseCase
     )
 
     @KoinViewModel
     fun getNoteViewModel(
+        deleteNoteUseCase: DeleteNoteUseCase,
         noteUseCase: NoteUseCase
     ): NoteViewModel = NoteViewModel(
+        deleteNoteUseCase = deleteNoteUseCase,
         noteUseCase = noteUseCase
     )
 }

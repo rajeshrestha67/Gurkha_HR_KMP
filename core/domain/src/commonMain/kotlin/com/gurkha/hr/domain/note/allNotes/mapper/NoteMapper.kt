@@ -2,6 +2,7 @@ package com.gurkha.hr.domain.note.allNotes.mapper
 
 import com.gurkha.hr.domain.note.allNotes.model.NoteData
 import com.gurkha.model.note.NotesResponseDto
+import com.gurkha.model.note.ui.NoteDataUi
 
 fun NotesResponseDto.toData(): List<NoteData> {
     return detail?.map {
@@ -21,4 +22,23 @@ fun NotesResponseDto.toData(): List<NoteData> {
             isReminder = it.isReminder ?:"N"
         )
     }?: emptyList()
+}
+
+fun NoteData.toUi(): NoteDataUi{
+    return NoteDataUi(
+        id = this.id ,
+        title = this.title,
+        description = this.description ,
+        isEvent = this.isEvent,
+        startDateAD = this.startDateAD,
+        endDateAD = this.endDateAD,
+        startDateBS = this.startDateBS,
+        endDateBS = this.endDateBS,
+        location = this.location,
+        active = this.active,
+        startTime = this.startTime,
+        endTime = this.endTime,
+        isReminder = this.isReminder
+
+    )
 }

@@ -212,8 +212,8 @@ fun DashboardScreenContent(
 
             noteScreenBuilder(
                 navController = navController,
-                onGoToAddNotesScreen ={
-                    navController.navigate(NoteRoute.AddNoteRoute)
+                onGoToAddNotesScreen ={noteJson->
+                    navController.navigate(NoteRoute.AddNoteRoute(json = noteJson))
                 },
             )
 

@@ -6,6 +6,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
@@ -20,18 +21,21 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Check
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,8 +43,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.date.ERPDateTextField
+import com.gurkha.hr.components.prompts.PromptModalBottomSheet
+import com.gurkha.hr.components.prompts.PromptType
 import com.gurkha.hr.components.textField.ERPTextField
 import com.gurkha.hr.components.textField.ERPTimeTestField
 import com.gurkha.hr.components.textField.FormValidate
@@ -49,7 +56,7 @@ import com.gurkha.hr.model.addNotes.AddNotesState
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.borderColor
 import com.gurkha.hr.res.theme.dimens
-import com.gurkha.hr.res.theme.primaryTextColor
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -57,50 +64,137 @@ import org.koin.compose.viewmodel.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddNoteScreen(
+    navController: NavHostController,
+    json: String?,
     onBackClicked: () -> Unit
 ) {
     val viewModel: AddNotesViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
+    var showSuccessDialogue by remember { mutableStateOf(false) }
+    var showErrorDialogue by remember { mutableStateOf(false) }
+    var messageToShow by remember { mutableStateOf("") }
+    var sendData by remember { mutableStateOf(false) }
 
-    Scaffold(
-        contentWindowInsets = WindowInsets(0.dp),
-        modifier = Modifier.fillMaxSize(),
-        containerColor = MaterialTheme.colorScheme.background,
-        topBar = {
-            TopAppBar(
-                modifier = Modifier.background(Color.Blue),
-                windowInsets = WindowInsets(0.dp),
-                title = {
-                    Text(text = stringResource(SharedRes.Strings.add_notes))
-                },
-                navigationIcon = {
-                    IconButton(
-                        onClick = onBackClicked,
-                        content = {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = ""
-                            )
+
+    LaunchedEffect(Json) {
+        if (!json.isNullOrEmpty()) {
+            launch {
+                viewModel.onAction(AddNotesAction.OnUpdateNoteData(json))
+            }
+            launch {
+                viewModel.onAction(AddNotesAction.OnIsEditChange)
+            }
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.successChannel.collect {
+            messageToShow = it
+            showSuccessDialogue = true
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.errorChannel.collect {
+            messageToShow = it
+            showErrorDialogue = true
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.dataChannel.collect {
+            val data = Json.encodeToString(it)
+            viewModel.onAction(AddNotesAction.OnUpdateDataForStore(data))
+        }
+    }
+
+    LaunchedEffect(sendData) {
+           if(sendData){
+               val data = state.storeNoteItem
+               data?.let {
+                   println("triggered $data")
+                   val stringData = Json.encodeToString(data)
+                   navController.previousBackStackEntry
+                       ?.savedStateHandle
+                       ?.set("data", stringData)
+                   navController.popBackStack()
+               }
+           }
+
+    }
+
+    BoxWithConstraints(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Scaffold(
+            contentWindowInsets = WindowInsets(0.dp),
+            modifier = Modifier.fillMaxSize(),
+            containerColor = MaterialTheme.colorScheme.background,
+            topBar = {
+                TopAppBar(
+                    modifier = Modifier.background(Color.Blue),
+                    windowInsets = WindowInsets(0.dp),
+                    title = {
+                        if (state.isEdit) {
+                            Text(text = stringResource(SharedRes.Strings.edit_notes))
+                        } else {
+                            Text(text = stringResource(SharedRes.Strings.add_notes))
                         }
-                    )
+                    },
+                    navigationIcon = {
+                        IconButton(
+                            onClick = onBackClicked,
+                            content = {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                    contentDescription = ""
+                                )
+                            }
+                        )
+                    }
+                )
+            }
+        ) { contentPadding ->
+            AddNoteScreenContent(
+                modifier = Modifier
+                    .padding(contentPadding),
+                state = state,
+                onAction = viewModel::onAction,
+                showErrorDialogue = showErrorDialogue,
+                messageToShow = messageToShow,
+                showSuccessDialogue = showSuccessDialogue,
+                onBackClicked = onBackClicked,
+                onSendData = {
+                    sendData = true
                 }
             )
         }
-    ) { contentPadding ->
-        AddNoteScreenContent(
-            modifier = Modifier
-                .padding(contentPadding),
-            state = state,
-            onAction = viewModel::onAction
-        )
+        if (state.isAdding || state.isUpdating) {
+            Box(
+                modifier = Modifier.fillMaxSize().background(color = Color(0x80000000)),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(MaterialTheme.dimens.medium3),
+                    color = MaterialTheme.colorScheme.secondaryContainer
+                )
+            }
+        }
     }
+
+
 }
 
 @Composable
 fun AddNoteScreenContent(
     modifier: Modifier = Modifier,
     state: AddNotesState,
-    onAction: (AddNotesAction) -> Unit
+    onAction: (AddNotesAction) -> Unit,
+    showErrorDialogue: Boolean,
+    messageToShow: String,
+    showSuccessDialogue: Boolean,
+    onBackClicked: () -> Unit,
+    onSendData:()-> Unit
 ) {
     Column(
         modifier = modifier
@@ -138,13 +232,38 @@ fun AddNoteScreenContent(
             }
         }
 
-        ERPButton(
-            modifier = Modifier
-                .fillMaxWidth().padding(top = MaterialTheme.dimens.medium1),
-            text = stringResource(SharedRes.Strings.add_notes),
-            onClick = {
-                onAction(AddNotesAction.OnSubmit)
-            }
+        if (state.isEdit) {
+            ERPButton(
+                modifier = Modifier
+                    .fillMaxWidth().padding(top = MaterialTheme.dimens.medium1),
+                text = stringResource(SharedRes.Strings.edit_notes),
+                onClick = {
+                    onAction(AddNotesAction.UpdateNote)
+                }
+            )
+        } else {
+            ERPButton(
+                modifier = Modifier
+                    .fillMaxWidth().padding(top = MaterialTheme.dimens.medium1),
+                text = stringResource(SharedRes.Strings.add_notes),
+                onClick = {
+                    onAction(AddNotesAction.OnSubmit)
+                }
+            )
+        }
+    }
+
+    if (showErrorDialogue) {
+        PromptModalBottomSheet(
+            promptType = PromptType.FAILED,
+            onBackClicked = onBackClicked,
+            text = messageToShow
+        )
+    }
+    if (showSuccessDialogue) {
+        PromptModalBottomSheet(
+            onBackClicked = onSendData,
+            text = messageToShow
         )
     }
 
@@ -281,32 +400,32 @@ fun NoteFormField(
             height = MaterialTheme.dimens.chartHeight
         )
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Switch(
-                checked = isEvent,
-                onCheckedChange = {
-                    onToggle()
-                },
-                thumbContent = {
-                    if (isEvent) {
-                        Icon(
-                            imageVector = Icons.Filled.Check,
-                            contentDescription = ""
-                        )
-                    }
-                }
-            )
-            Text(
-                text = stringResource(SharedRes.Strings.is_event),
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    color = MaterialTheme.colorScheme.primaryTextColor
-                )
-            )
-        }
+//        Row(
+//            modifier = Modifier.fillMaxWidth(),
+//            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3),
+//            verticalAlignment = Alignment.CenterVertically
+//        ) {
+//            Switch(
+//                checked = isEvent,
+//                onCheckedChange = {
+//                    onToggle()
+//                },
+//                thumbContent = {
+//                    if (isEvent) {
+//                        Icon(
+//                            imageVector = Icons.Filled.Check,
+//                            contentDescription = ""
+//                        )
+//                    }
+//                }
+//            )
+//            Text(
+//                text = stringResource(SharedRes.Strings.is_event),
+//                style = MaterialTheme.typography.bodyMedium.copy(
+//                    color = MaterialTheme.colorScheme.primaryTextColor
+//                )
+//            )
+//        }
     }
 }
 

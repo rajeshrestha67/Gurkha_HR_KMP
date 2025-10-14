@@ -1,7 +1,7 @@
 package com.gurkha.hr.note
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -11,46 +11,76 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.LockClock
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
+import com.gurkha.hr.domain.note.allNotes.mapper.toUi
 import com.gurkha.hr.domain.note.allNotes.model.NoteData
+import com.gurkha.hr.model.note.NoteAction
 import com.gurkha.hr.model.note.NoteState
 import com.gurkha.hr.res.SharedRes
-import com.gurkha.hr.res.theme.borderColor
 import com.gurkha.hr.res.theme.darkPrimaryTextColor
 import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.primaryTextColor
+import com.gurkha.model.note.ui.NoteDataUi
+import kotlinx.coroutines.delay
+import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NoteScreen(
-    onGoToAddNotesScreen: () -> Unit
+    navController: NavHostController,
+    onGoToAddNotesScreen: (String?) -> Unit,
 ) {
     val viewModel: NoteViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val noteListState = rememberLazyListState()
+
+
+    val result = navController.currentBackStackEntry
+        ?.savedStateHandle
+        ?.getStateFlow<String?>("data", null)
+        ?.collectAsStateWithLifecycle()
+
+    LaunchedEffect(result) {
+        val json = result?.value
+        if (!json.isNullOrBlank()) {
+            viewModel.onAction(NoteAction.OnUpdateNoteDataJson(json))
+            delay(500)
+            noteListState.animateScrollToItem(state.noteItem.lastIndex + 1)
+        }
+
+    }
 
     Scaffold(
         contentWindowInsets = WindowInsets(0.dp),
@@ -66,7 +96,7 @@ fun NoteScreen(
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = onGoToAddNotesScreen,
+                onClick = { onGoToAddNotesScreen(null) },
                 content = {
                     Icon(Icons.Filled.Add, contentDescription = "Add")
                 }
@@ -75,7 +105,10 @@ fun NoteScreen(
     ) { contentPadding ->
         NoteScreenContent(
             modifier = Modifier.padding(contentPadding),
-            state = state
+            state = state,
+            onAction = viewModel::onAction,
+            onGoToAddNotesScreen = onGoToAddNotesScreen,
+            noteListState = noteListState
         )
     }
 }
@@ -83,9 +116,13 @@ fun NoteScreen(
 @Composable
 fun NoteScreenContent(
     modifier: Modifier = Modifier,
-    state: NoteState
+    noteListState: LazyListState,
+    state: NoteState,
+    onGoToAddNotesScreen: (String?) -> Unit,
+    onAction: (NoteAction) -> Unit
 ) {
     LazyColumn(
+        state = noteListState,
         modifier = modifier.fillMaxSize(),
         contentPadding = PaddingValues(
             bottom = MaterialTheme.dimens.bottomBar,
@@ -94,70 +131,172 @@ fun NoteScreenContent(
         ),
     ) {
         diffResult(
-            state = state
+            onGoToAddNotesScreen = onGoToAddNotesScreen,
+            state = state,
+            onAction = onAction
         )
     }
 }
 
 
 fun LazyListScope.diffResult(
-    state: NoteState
+    onGoToAddNotesScreen: (String?) -> Unit,
+    state: NoteState,
+    onAction: (NoteAction) -> Unit
 ) {
-    items(state.noteItem){item->
-        ResultBox(
-            item = item
-        )
+    if (state.noteItem.isEmpty()) {
+        item {
+            Box(
+                modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = stringResource(SharedRes.Strings.no_data_found),
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        color = MaterialTheme.colorScheme.primaryTextColor
+                    )
+                )
+            }
+        }
+    } else {
+        items(state.noteItem) { item ->
+            ResultBox(
+                onGoToAddNotesScreen = onGoToAddNotesScreen,
+                item = item,
+                onAction = onAction
+            )
+        }
     }
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ResultBox(
-    item: NoteData
+    onGoToAddNotesScreen: (String?) -> Unit,
+    item: NoteData,
+    onAction: (NoteAction) -> Unit
 ) {
+    var showDialogue by remember { mutableStateOf(false) }
     Surface(
         modifier = Modifier.padding(vertical = MaterialTheme.dimens.small2),
         shape = MaterialTheme.shapes.small,
         tonalElevation = 1.dp
     ) {
+        var showMore by remember { mutableStateOf(false) }
         Column(
             modifier = Modifier.fillMaxWidth()
-                .border(
-                    width = 1.dp,
-                    color = MaterialTheme.colorScheme.borderColor,
-                    shape = MaterialTheme.shapes.small
-                )
                 .padding(MaterialTheme.dimens.small3),
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2)
         ) {
-            Text(
-                text = item.title, style = MaterialTheme.typography.titleLarge.copy(
-                    color = MaterialTheme.colorScheme.darkPrimaryTextColor
-                )
-            )
-
-            if(item.location.isNotBlank()){
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(Icons.Filled.LocationOn, contentDescription = "Location")
-                    Text(
-                        text = item.location, style = MaterialTheme.typography.titleSmall.copy(
-                            color = MaterialTheme.colorScheme.primaryTextColor
-                        )
-                    )
-                }
-            }
-
-            HorizontalDivider(modifier = Modifier.fillMaxWidth(), thickness = 1.dp)
-
-            Column {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Text(
-                    text = stringResource(SharedRes.Strings.description), style = MaterialTheme.typography.titleMedium.copy(
+                    text = item.title, style = MaterialTheme.typography.titleLarge.copy(
                         color = MaterialTheme.colorScheme.darkPrimaryTextColor
                     )
                 )
+
+                Box {
+                    if (showMore) {
+                        DropdownMenu(
+                            containerColor = MaterialTheme.colorScheme.background,
+                            expanded = showMore,
+                            onDismissRequest = {
+                                showMore = false
+                            }
+                        ) {
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        text = "Edit"
+                                    )
+                                },
+                                onClick = {
+                                    val data = Json.encodeToString<NoteDataUi>(item.toUi())
+                                    onGoToAddNotesScreen(data)
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        text = "Delete"
+                                    )
+                                },
+                                onClick = {
+                                    onAction(NoteAction.OnDeleteIdSelected(item.id))
+                                    showDialogue = true
+                                    showMore = false
+                                }
+                            )
+                        }
+                    }
+                    IconButton(
+                        onClick = {
+                            showMore = true
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.MoreVert,
+                            contentDescription = "More Option"
+                        )
+                    }
+                }
+            }
+
+            if (showDialogue) {
+                AlertDialog(
+                    onDismissRequest = { },
+                    confirmButton = {
+                        TextButton(
+                            onClick = {
+                                onAction(NoteAction.OnDeleteNote)
+                                showDialogue = false
+                            }
+                        ) {
+                            Text("OK")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(
+                            onClick = {
+                                showDialogue = false
+                            }
+                        ) {
+                            Text("Cancel")
+                        }
+                    },
+                    title = {
+                        Text("Confirmation")
+                    },
+                    text = {
+                        Text("Are you sure?")
+                    },
+                    properties = DialogProperties(
+                        dismissOnBackPress = true,
+                        dismissOnClickOutside = true
+                    )
+                )
+            }
+
+
+//            if (item.location.isNotBlank()) {
+//                Row(
+//                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2),
+//                    verticalAlignment = Alignment.CenterVertically
+//                ) {
+//                    Icon(Icons.Filled.LocationOn, contentDescription = "Location")
+//                    Text(
+//                        text = item.location, style = MaterialTheme.typography.titleSmall.copy(
+//                            color = MaterialTheme.colorScheme.primaryTextColor
+//                        )
+//                    )
+//                }
+//            }
+
+            Column {
                 Text(
                     text = item.description,
                     style = MaterialTheme.typography.labelMedium.copy(
@@ -166,60 +305,6 @@ fun ResultBox(
                 )
             }
 
-            HorizontalDivider(modifier = Modifier.fillMaxWidth(), thickness = 1.dp)
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Column {
-                    Text(
-                        text = stringResource(SharedRes.Strings.start_time), style = MaterialTheme.typography.labelMedium.copy(
-                            color = MaterialTheme.colorScheme.darkPrimaryTextColor
-                        )
-                    )
-                    Text(
-                        text = item.startTime, style = MaterialTheme.typography.labelMedium.copy(
-                            color = MaterialTheme.colorScheme.primaryTextColor
-                        )
-                    )
-                }
-                Column {
-                    Text(
-                        text = stringResource(SharedRes.Strings.end_time), style = MaterialTheme.typography.labelMedium.copy(
-                            color = MaterialTheme.colorScheme.darkPrimaryTextColor
-                        )
-                    )
-                    Text(
-                        text = item.endTime, style = MaterialTheme.typography.labelMedium.copy(
-                            color = MaterialTheme.colorScheme.primaryTextColor
-                        )
-                    )
-                }
-                IconButton(
-                    onClick = {}) {
-                    Icon(
-                        Icons.Filled.Edit,
-                        contentDescription = "edit",
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                }
-                IconButton(onClick = {}) {
-                    Icon(
-                        Icons.Filled.Delete,
-                        contentDescription = "edit",
-                        tint = MaterialTheme.colorScheme.error
-                    )
-                }
-                IconButton(onClick = {}) {
-                    Icon(
-                        Icons.Filled.LockClock,
-                        contentDescription = "edit",
-                        tint = MaterialTheme.colorScheme.borderColor
-                    )
-                }
-            }
         }
     }
 }

@@ -135,7 +135,12 @@ fun LocalDate.daysInMonth(): Int {
 fun CalendarModel.todayFormattedBSDate(): String {
     val months = stringArrayResource(SharedRes.Arrays.months)
     val weeks = stringArrayResource(SharedRes.Arrays.weeksDays)
-    return "${today.dayOfMonth.mapNumbers} ${months[today.month - 1]}, ${today.year.mapNumbers} ${weeks[(today.dayOfMonth % 7) - 1]}"
+    val monthsCalendar = numberOfDaysInMonth().find { it.day == today.dayOfMonth }
+    return "${today.dayOfMonth.mapNumbers} ${months[today.month - 1]}, ${today.year.mapNumbers} ${
+        weeks[monthsCalendar?.let {
+            it.dayOfWeek - 1
+        } ?: 0]
+    }"
 }
 
 @OptIn(ExperimentalTime::class)

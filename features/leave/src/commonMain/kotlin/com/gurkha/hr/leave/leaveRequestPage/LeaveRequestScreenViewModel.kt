@@ -25,7 +25,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
-class LeaveRequestScreenViewModel(
+class
+LeaveRequestScreenViewModel(
     private val requiredValidationUseCase: RequiredValidationUseCase,
     private val assigneeUseCase: AssigneeUseCase,
     private val leaveTypeUseCase: LeaveTypeUseCase,

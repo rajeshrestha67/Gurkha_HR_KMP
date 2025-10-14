@@ -115,6 +115,8 @@
     <string name="end_time">अन्त्य समय</string>
     <string name="location">स्थान</string>
 
+    <string name="edit_note">टिप्पणी सम्पादन गर्नुहोस्</string>
+
     <string name="view_all">सबै हेर्नुहोस्</string>
     <string name="profile">प्रोफाइल</string>
     <string name="time_and_attendance">समय र उपस्थिति</string>

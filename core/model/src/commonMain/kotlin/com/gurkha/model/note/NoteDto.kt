@@ -18,6 +18,20 @@ data class NotesRequestDto(
     val reminderTime: String? = null
 )
 @Serializable
+data class NotesUpdateRequestDto(
+    val id: Int,
+    val title: String,
+    val description: String,
+    val isEvent: String,
+    val isReminder: String,
+    val active: String,
+    val location: String,
+    val startTime: String,
+    val endTime: String,
+    val reminderMessage: String,
+    val reminderTime: String
+)
+@Serializable
 data class NotesResponseDto(
     val status: String? = null,
     val message: String? = null,
@@ -43,3 +57,4 @@ data class NoteDetailDto(
     val createdAtAd: String? = null,
     val createdAtBs: String? = null
 )
+

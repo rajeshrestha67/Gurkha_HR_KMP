@@ -24,4 +24,6 @@ object EndPoint {
     const val ATTENDANCE_SUMMARY_END_POINT = "api/attendance/overall-count"
     const val ALL_NOTES_END_POINT = "api/note/all"
     const val CREATE_NOTE_END_POINT = "api/note/create"
+    const val UPDATE_NOTE_END_POINT = "api/note/update"
+    const val DELETE_NOTE_END_POINT = "api/note/delete"
 }

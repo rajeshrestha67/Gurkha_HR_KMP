@@ -3,6 +3,7 @@ package com.gurkha.hr.domain.note.allNotes.repository
 import com.gurkha.hr.networkhelper.ERPResult
 import com.gurkha.model.network.DataError
 import com.gurkha.model.note.NotesResponseDto
+import com.gurkha.model.note.NotesUpdateRequestDto
 
 interface NoteRemoteRepository {
     suspend fun fetchAllNotes(): ERPResult<NotesResponseDto, DataError>
@@ -20,5 +21,23 @@ interface NoteRemoteRepository {
         title: String,
         startDate: String,
         endDate: String
+    ): ERPResult<NotesResponseDto, DataError>
+
+    suspend fun updateNote(
+        id: Int,
+        title: String,
+        description: String,
+        isEvent: String,
+        isReminder: String,
+        active: String,
+        location: String,
+        startTime: String,
+        endTime: String,
+        reminderMessage: String,
+        reminderTime: String
+    ): ERPResult<NotesResponseDto, DataError>
+
+    suspend fun deleteNote(
+        id: Int
     ): ERPResult<NotesResponseDto, DataError>
 }
