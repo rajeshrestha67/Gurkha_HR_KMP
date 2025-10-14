@@ -2,8 +2,10 @@ package com.gurkha.hr.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gurkha.hr.date.BSPointer
+import com.gurkha.hr.date.DateConverter
+import com.gurkha.hr.date.Year
 import com.gurkha.hr.date.data.model.CalendarModel
-import com.gurkha.hr.date.data.model.now
 import com.gurkha.hr.domain.attendance.attendanceReport.usecase.AttendanceUseCase
 import com.gurkha.hr.domain.upComingBirthday.usecase.UpComingBirthdayUseCase
 import com.gurkha.hr.domain.upComingWorkAnniversaries.useCase.UpComingWorkAnniversaryUseCase
@@ -18,9 +20,7 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.minus
 import kotlinx.datetime.number
 
 class HomeScreenViewModel(
@@ -67,7 +67,6 @@ class HomeScreenViewModel(
             is HomeScreenActions.OnNotificationClicked -> TODO()
             is HomeScreenActions.OnSearchedClicked -> TODO()
             is HomeScreenActions.OnDateSelected -> {
-                println("selected day is ${action.day}")
                 _state.update {
                     it.copy(
                         selectedDay = action.day
@@ -94,14 +93,31 @@ class HomeScreenViewModel(
             it.copy(isAttendanceLoading = true)
         }
 
-        val todayAD = LocalDate.now()
-        val eightDaysAgo = todayAD.minus(DatePeriod(days = 8))
+        val todayDays =
+            BSPointer.getNumOfDaysInMonth(
+                Year.ofValue(calendarModel.today.year),
+                calendarModel.today.month
+            )
+        val fromDate = DateConverter.bsToAd(
+            year = calendarModel.today.year,
+            month = calendarModel.today.month,
+            day = 1
+        ).run {
+            "$year-$month-$day"
+        }
+        val toDate = DateConverter.bsToAd(
+            year = calendarModel.today.year,
+            month = calendarModel.today.month,
+            day = todayDays
+        ).run {
+            "$year-$month-$day"
+        }
 
         attendanceUseCase(
 //            fromDate = state.value.fromDate,
 //            toDate = state.value.toDate,
-            fromDate = eightDaysAgo.formatDate(),
-            toDate = todayAD.formatDate()
+            fromDate = fromDate,
+            toDate = toDate
         ).onSuccess { data ->
             _state.update {
                 it.copy(
