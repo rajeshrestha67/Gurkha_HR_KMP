@@ -29,7 +29,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.gurkha.hr.components.date.model.rememberCalendarModel
+import com.gurkha.hr.date.data.CalendarDate
+import com.gurkha.hr.date.data.CalendarDay
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.borderColor
 import com.gurkha.hr.res.theme.dimens
@@ -38,24 +39,24 @@ import org.jetbrains.compose.resources.stringArrayResource
 
 @Composable
 fun HorizontalCalendar(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    date: List<CalendarDay> = listOf(),
+    today: CalendarDate
 ) {
-    val state: LazyListState = rememberLazyListState()
-    val calendarModel = rememberCalendarModel()
+    val listState: LazyListState = rememberLazyListState()
 
-    var selectedDay by remember {
-        mutableStateOf(calendarModel.today.dayOfMonth)
+    var selectedDay by remember(today) {
+        mutableStateOf(today.dayOfMonth)
     }
 
     val months = stringArrayResource(SharedRes.Arrays.months)
 
-    val month = remember {
-        months[calendarModel.today.month - 1]
+    val month = remember(today) {
+        months[today.month - 1]
     }
 
     val weekNames = stringArrayResource(SharedRes.Arrays.weeksDays)
 
-    val days = remember { calendarModel.numberOfDaysInMonth() }
     val dayItemWidthDp = MaterialTheme.dimens.extraLarge
 
 
@@ -81,20 +82,20 @@ fun HorizontalCalendar(
             val density = LocalDensity.current
 
             val itemSpacing = MaterialTheme.dimens.small3
-            LaunchedEffect(selectedDay) {
+            LaunchedEffect(selectedDay, date) {
                 val halfScreenPx = with(density) { (screenWidth / 2).toPx() }
                 val itemWidthPx = with(density) { dayItemWidthDp.toPx() }
                 val offset =
                     with(density) { (halfScreenPx - (itemWidthPx / 2) - itemSpacing.toPx()).toInt() }
 
-                state.animateScrollToItem(
+                listState.animateScrollToItem(
                     index = selectedDay - 1,
                     scrollOffset = -offset
                 )
             }
             LazyRow(
                 modifier = Modifier.fillMaxWidth(),
-                state = state,
+                state = listState,
                 contentPadding = PaddingValues(
                     horizontal = MaterialTheme.dimens.small3,
                     vertical = MaterialTheme.dimens.small2
@@ -105,7 +106,7 @@ fun HorizontalCalendar(
                     alignment = Alignment.CenterHorizontally
                 )
             ) {
-                items(items = days, key = { it.day }) { item ->
+                items(items = date, key = { it.day }) { item ->
                     val color = if (selectedDay == item.day)
                         MaterialTheme.colorScheme.primary
                     else

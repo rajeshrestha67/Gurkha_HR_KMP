@@ -7,6 +7,8 @@ import com.gurkha.hr.data.userDetail.KtorUserDetailRemoteRepository
 import com.gurkha.hr.datastore.user_data.local.UserDataDataStore
 import com.gurkha.hr.datastore.user_data.repository.LocalUserDataRepository
 import com.gurkha.hr.datastore.user_data.repository.UserDataRepository
+import com.gurkha.hr.date.data.model.CalendarModel
+import com.gurkha.hr.date.data.model.CalendarModelImpl
 import com.gurkha.hr.domain.attendance.attendanceReport.repository.AttendanceRemoteRepository
 import com.gurkha.hr.domain.attendance.attendanceReport.usecase.AttendanceUseCase
 import com.gurkha.hr.domain.upComingBirthday.repository.UpComingBirthdayRemoteRepository
@@ -25,6 +27,10 @@ import org.koin.core.annotation.Module
 class HomeScreenModule {
     @Factory(binds = [AttendanceRemoteRepository::class])
     fun attendanceRepository(httpClient: HttpClient) = KtorAttendanceRemoteRepository(httpClient)
+
+
+    @Factory(binds = [CalendarModel::class])
+    fun getCalendarModel() = CalendarModelImpl()
 
     @Factory(binds = [UserDetailRemoteRepository::class])
     fun userDetailRemoteRepository(httpClient: HttpClient) =
@@ -73,12 +79,14 @@ class HomeScreenModule {
         attendanceUseCase: AttendanceUseCase,
         userDetailUseCase: FetchUserDetailUseCase,
         upComingBirthdayUseCase: UpComingBirthdayUseCase,
-        upComingWorkAnniversaryUseCase: UpComingWorkAnniversaryUseCase
+        upComingWorkAnniversaryUseCase: UpComingWorkAnniversaryUseCase,
+        calendarModel: CalendarModel
     ): HomeScreenViewModel = HomeScreenViewModel(
         attendanceUseCase = attendanceUseCase,
         userDetailUseCase = userDetailUseCase,
         upComingBirthdayUseCase = upComingBirthdayUseCase,
-        upComingWorkAnniversaryUseCase = upComingWorkAnniversaryUseCase
+        upComingWorkAnniversaryUseCase = upComingWorkAnniversaryUseCase,
+        calendarModel = calendarModel
     )
 }
 

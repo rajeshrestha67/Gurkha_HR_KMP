@@ -2,6 +2,8 @@ package com.gurkha.hr.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gurkha.hr.date.data.model.CalendarModel
+import com.gurkha.hr.date.data.model.now
 import com.gurkha.hr.domain.attendance.attendanceReport.usecase.AttendanceUseCase
 import com.gurkha.hr.domain.upComingBirthday.usecase.UpComingBirthdayUseCase
 import com.gurkha.hr.domain.upComingWorkAnniversaries.useCase.UpComingWorkAnniversaryUseCase
@@ -16,24 +18,31 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.datetime.DatePeriod
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.minus
+import kotlinx.datetime.number
 
 class HomeScreenViewModel(
     private val attendanceUseCase: AttendanceUseCase,
     private val userDetailUseCase: FetchUserDetailUseCase,
     private val upComingBirthdayUseCase: UpComingBirthdayUseCase,
-    private val upComingWorkAnniversaryUseCase: UpComingWorkAnniversaryUseCase
+    private val upComingWorkAnniversaryUseCase: UpComingWorkAnniversaryUseCase,
+    private val calendarModel: CalendarModel
 ) : ViewModel() {
-    private val _state = MutableStateFlow(HomeScreenState())
+    private val _state = MutableStateFlow(HomeScreenState(todayBS = calendarModel.today))
     val state = _state
         .onStart {
             fetchCurrentUser()
             fetchUpComingBirthday()
             fetchUpComingWorkAnniversary()
+            fetchAttendance()
+            fetchCalendarValue()
         }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = HomeScreenState()
+            initialValue = HomeScreenState(todayBS = calendarModel.today)
         )
 
     fun onAction(action: HomeScreenActions) {
@@ -55,7 +64,7 @@ class HomeScreenViewModel(
             }
 
             is HomeScreenActions.AttendanceFetch -> {
-                fetch()
+                fetchAttendance()
             }
 
             is HomeScreenActions.OnFetchCurrentUser -> {
@@ -76,19 +85,30 @@ class HomeScreenViewModel(
         }
     }
 
+
+    private fun fetchCalendarValue() {
+        _state.update {
+            it.copy(
+                calendarData = calendarModel.numberOfDaysInMonth(),
+                todayBS = calendarModel.today
+            )
+        }
+    }
+
     //    fetch the attendance report
-    private fun fetch(
-    ) = viewModelScope.launch {
+    private fun fetchAttendance() = viewModelScope.launch {
         _state.update {
             it.copy(isAttendanceLoading = true)
         }
+
+        val todayAD = LocalDate.now()
+        val eightDaysAgo = todayAD.minus(DatePeriod(days = 8))
+
         attendanceUseCase(
 //            fromDate = state.value.fromDate,
 //            toDate = state.value.toDate,
-            fromDate = "2025-09-18",
-            toDate = "2025-09-18",
-            attendanceStatus = "",
-            employeeId = 136
+            fromDate = eightDaysAgo.formatDate(),
+            toDate = todayAD.formatDate()
         ).onSuccess { data ->
             _state.update {
                 it.copy(
@@ -102,6 +122,14 @@ class HomeScreenViewModel(
             }
         }
     }
+
+    private fun LocalDate.formatDate(): String {
+        val day = this.day.toString().padStart(2, '0')
+        val month = this.month.number.toString().padStart(2, '0')
+        val year = this.year
+        return "$year-$month-$day"
+    }
+
 
     //    fetch the current user details
     private fun fetchCurrentUser() = viewModelScope.launch {

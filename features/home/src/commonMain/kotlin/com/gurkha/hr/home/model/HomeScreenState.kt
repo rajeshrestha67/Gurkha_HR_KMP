@@ -1,12 +1,14 @@
 package com.gurkha.hr.home.model
 
+import com.gurkha.hr.date.data.CalendarDate
+import com.gurkha.hr.date.data.CalendarDay
 import com.gurkha.hr.domain.attendance.attendanceReport.model.AttendanceData
 import com.gurkha.hr.domain.upComingBirthday.model.UpComingBirthdayData
 import com.gurkha.hr.domain.upComingWorkAnniversaries.model.UpComingWorkAnniversaryData
 import com.gurkha.hr.domain.userDetail.model.UserDetailData
 
 data class HomeScreenState(
-    val calendarItem: List<CalendarItem> = generateCalendarDays(),
+
     val homeGridItemsToShow: List<AttendanceItem> = homeGridItems,
     val fullName: String = "",
     val initials: String = "",
@@ -31,4 +33,6 @@ data class HomeScreenState(
     val clockOutTime: String = "",
     val isLeaveEarly: String = "",
     val isLate: String = "",
+    val calendarData: List<CalendarDay> = listOf(),
+    val todayBS: CalendarDate
 )

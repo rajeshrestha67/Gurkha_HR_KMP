@@ -23,7 +23,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -65,8 +64,9 @@ import com.gurkha.hr.components.extractInitials
 import com.gurkha.hr.components.graphLine.SmoothLineGraph
 import com.gurkha.hr.components.shimmer.ShimmerView
 import com.gurkha.hr.components.swipeToDismiss.SwipeToDismissBox
+import com.gurkha.hr.date.data.CalendarDate
+import com.gurkha.hr.date.data.CalendarDay
 import com.gurkha.hr.home.model.AttendanceItem
-import com.gurkha.hr.home.model.CalendarItem
 import com.gurkha.hr.home.model.HomeScreenState
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.borderColor
@@ -166,8 +166,8 @@ fun HomeScreenContent(
     state: HomeScreenState
 ) {
     val pagerState = rememberPagerState(pageCount = { 2 })
-    val calendarListState = rememberLazyListState()
-    val activeIndex = state.calendarItem.indexOfFirst { it.active }
+    //val calendarListState = rememberLazyListState()
+    //val activeIndex = state.calendarItem.indexOfFirst { it.active }
     val (showNotification, onChangeNotification) = rememberSaveable {
         mutableStateOf(true)
     }
@@ -202,23 +202,23 @@ fun HomeScreenContent(
 
 
 //to show the active week date and day starting from the sunday
-    LaunchedEffect(activeIndex) {
-        if (activeIndex >= 0) {
-            val activeItem = state.calendarItem[activeIndex]
-            val dayOfWeekNumber = when (activeItem.day) {
-                "SUN" -> 1
-                "MON" -> 2
-                "TUE" -> 3
-                "WED" -> 4
-                "THU" -> 5
-                "FRI" -> 6
-                "SAT" -> 7
-                else -> 0
-            }
-            val sundayIndex = (activeIndex - dayOfWeekNumber + 1).coerceAtLeast(0)
-            calendarListState.scrollToItem(sundayIndex)
-        }
-    }
+//    LaunchedEffect(activeIndex) {
+//        if (activeIndex >= 0) {
+//            val activeItem = state.calendarItem[activeIndex]
+//            val dayOfWeekNumber = when (activeItem.day) {
+//                "SUN" -> 1
+//                "MON" -> 2
+//                "TUE" -> 3
+//                "WED" -> 4
+//                "THU" -> 5
+//                "FRI" -> 6
+//                "SAT" -> 7
+//                else -> 0
+//            }
+//            val sundayIndex = (activeIndex - dayOfWeekNumber + 1).coerceAtLeast(0)
+//            calendarListState.scrollToItem(sundayIndex)
+//        }
+//    }
 
 //    fetch the data
     LaunchedEffect(Unit) {
@@ -247,8 +247,8 @@ fun HomeScreenContent(
 
             //            calender part
             calendarView(
-                listState = calendarListState,
-                calendarItem = state.calendarItem
+                calendarItem = state.calendarData,
+                today = state.todayBS
             )
 
             // request section
@@ -517,14 +517,16 @@ fun LazyListScope.requestSection(
 }
 
 fun LazyListScope.calendarView(
-    listState: LazyListState,
-    calendarItem: List<CalendarItem>
+    calendarItem: List<CalendarDay>,
+    today: CalendarDate
 ) {
     stickyHeader(key = "calender") {
         HorizontalCalendar(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(color = MaterialTheme.colorScheme.background)
+                .background(color = MaterialTheme.colorScheme.background),
+            date = calendarItem,
+            today = today
         )
     }
 }
