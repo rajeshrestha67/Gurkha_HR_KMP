@@ -67,7 +67,6 @@ import com.gurkha.hr.components.shimmer.ShimmerView
 import com.gurkha.hr.components.swipeToDismiss.SwipeToDismissBox
 import com.gurkha.hr.home.model.AttendanceItem
 import com.gurkha.hr.home.model.CalendarItem
-import com.gurkha.hr.home.model.HomeScreenActions
 import com.gurkha.hr.home.model.HomeScreenState
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.borderColor
@@ -155,8 +154,7 @@ fun HomeScreen(
     ) { paddingValues ->
         HomeScreenContent(
             modifier = Modifier.fillMaxSize().padding(paddingValues),
-            state = state,
-            onFetchAttendance = { viewModel.onAction(HomeScreenActions.AttendanceFetch) }
+            state = state
         )
     }
 }
@@ -165,8 +163,7 @@ fun HomeScreen(
 @Composable
 fun HomeScreenContent(
     modifier: Modifier = Modifier,
-    state: HomeScreenState,
-    onFetchAttendance: () -> Unit
+    state: HomeScreenState
 ) {
     val pagerState = rememberPagerState(pageCount = { 2 })
     val calendarListState = rememberLazyListState()
