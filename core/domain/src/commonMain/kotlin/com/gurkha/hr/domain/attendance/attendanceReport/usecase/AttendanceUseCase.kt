@@ -11,12 +11,16 @@ class AttendanceUseCase(
     private val attendanceRemoteRepository: AttendanceRemoteRepository,
 ) {
     suspend operator fun invoke(
-        fromDate: String,
-        toDate: String,
+        fromDate: String? = null,
+        toDate: String? = null,
+        attendanceStatus: String? = null ,
+        employeeId: Int? = null
     ): ERPResult<List<AttendanceData>, DataError> {
         return attendanceRemoteRepository.fetchAttendance(
-            dateFrom = fromDate,
-            toDate = toDate
+            dateFrom = fromDate ,
+            toDate = toDate,
+            attendanceStatus = attendanceStatus,
+            employeeId= employeeId
         ).map {
             it.toData()
         }

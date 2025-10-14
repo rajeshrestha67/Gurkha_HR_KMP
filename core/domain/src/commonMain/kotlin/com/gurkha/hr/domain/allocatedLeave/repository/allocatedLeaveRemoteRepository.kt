@@ -6,6 +6,8 @@ import com.gurkha.model.allocatedLeave.AllocatedLeaveResponseDto
 import com.gurkha.model.network.DataError
 
 interface AllocatedLeaveRemoteRepository {
-    suspend fun getAllocatedLeave(): ERPResult<AllocatedLeaveResponseDto, DataError>
+    suspend fun getAllocatedLeave(
+        id: Int
+    ): ERPResult<AllocatedLeaveResponseDto, DataError>
 
 }

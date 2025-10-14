@@ -17,6 +17,12 @@ val ColorScheme.imageBackgroundColor: Color
             light = Color.Black,
             dark = Color(0xFF212121)
         )
+val ColorScheme.lightGreenColor: Color
+    @Composable get() =
+        extendedColor(
+            light = Color(0xFF4CAF50),
+            dark = Color(0xFF90EE90)
+        )
 val ColorScheme.primaryTextColor: Color
     @Composable get() =
         extendedColor(

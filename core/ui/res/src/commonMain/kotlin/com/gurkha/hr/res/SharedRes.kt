@@ -22,6 +22,7 @@ import gurkhahr.core.ui.res.generated.resources.attendance
 import gurkhahr.core.ui.res.generated.resources.attendance_approved
 import gurkhahr.core.ui.res.generated.resources.attendance_cancelled
 import gurkhahr.core.ui.res.generated.resources.attendance_pending
+import gurkhahr.core.ui.res.generated.resources.attendance_request
 import gurkhahr.core.ui.res.generated.resources.attendance_request_form
 import gurkhahr.core.ui.res.generated.resources.bachelor
 import gurkhahr.core.ui.res.generated.resources.bs
@@ -80,6 +81,7 @@ import gurkhahr.core.ui.res.generated.resources.leave_cancelled
 import gurkhahr.core.ui.res.generated.resources.leave_duration
 import gurkhahr.core.ui.res.generated.resources.leave_pending
 import gurkhahr.core.ui.res.generated.resources.leave_processing
+import gurkhahr.core.ui.res.generated.resources.leave_request
 import gurkhahr.core.ui.res.generated.resources.leave_request_form
 import gurkhahr.core.ui.res.generated.resources.leave_summary
 import gurkhahr.core.ui.res.generated.resources.leave_taken
@@ -91,6 +93,7 @@ import gurkhahr.core.ui.res.generated.resources.marital_status
 import gurkhahr.core.ui.res.generated.resources.master
 import gurkhahr.core.ui.res.generated.resources.maternity_leave
 import gurkhahr.core.ui.res.generated.resources.missed_attendance
+import gurkhahr.core.ui.res.generated.resources.month
 import gurkhahr.core.ui.res.generated.resources.months
 import gurkhahr.core.ui.res.generated.resources.mourning_leave
 import gurkhahr.core.ui.res.generated.resources.my_attendance
@@ -247,6 +250,8 @@ object SharedRes {
         val bachelor = Res.string.bachelor
         val master = Res.string.master
         val experienceDocument = Res.string.experience_document
+        val attendanceRequest = Res.string.attendance_request
+        val leaveRequest = Res.string.leave_request
 
         val leaveSummary = Res.string.leave_summary
         val leaveTypeName = Res.string.leave_type_name
@@ -303,6 +308,7 @@ object SharedRes {
         val current_password = Res.string.current_password
         val fromDate = Res.string.from_date
         val toDate = Res.string.to_date
+        val month = Res.string.month
 
         val setting = Res.string.setting
         val theme = Res.string.theme

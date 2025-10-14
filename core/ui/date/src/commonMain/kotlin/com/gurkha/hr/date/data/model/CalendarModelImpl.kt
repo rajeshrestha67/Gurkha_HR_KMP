@@ -78,7 +78,7 @@ class CalendarModelImpl : CalendarModel() {
 
 
     override fun getYearRange(): IntRange {
-        return IntRange(BSPointer.getFirstDay().first, BSPointer.getLastDay().first)
+        return BSPointer.getYearRange()
     }
 
     override fun getMonth(calendarDate: CalendarDate): CalendarMonth {

@@ -1,6 +1,7 @@
 package com.gurkha.di
 
 import com.gurkha.hr.data.allocatedLeave.KtorAllocatedLeaveRemoteRepository
+import com.gurkha.hr.datastore.user_data.repository.UserDataRepository
 import com.gurkha.hr.domain.allocatedLeave.repository.AllocatedLeaveRemoteRepository
 import com.gurkha.hr.domain.allocatedLeave.usecase.AllocatedLeaveUseCase
 import com.gurkha.hr.profile.allocated_leave.AllocatedLeaveScreenViewModel
@@ -15,8 +16,8 @@ class AllocatedLeaveModule {
         KtorAllocatedLeaveRemoteRepository(httpClient)
 
     @Factory
-    fun allocatedLeaveUseCase(allocatedLeaveRemoteRepository: AllocatedLeaveRemoteRepository): AllocatedLeaveUseCase =
-        AllocatedLeaveUseCase(allocatedLeaveRemoteRepository = allocatedLeaveRemoteRepository)
+    fun allocatedLeaveUseCase(allocatedLeaveRemoteRepository: AllocatedLeaveRemoteRepository, userDataRepository: UserDataRepository): AllocatedLeaveUseCase =
+        AllocatedLeaveUseCase(allocatedLeaveRemoteRepository = allocatedLeaveRemoteRepository, userDataRepository= userDataRepository)
 
     @Factory
     fun getAllocatedLeaveScreenViewModel(

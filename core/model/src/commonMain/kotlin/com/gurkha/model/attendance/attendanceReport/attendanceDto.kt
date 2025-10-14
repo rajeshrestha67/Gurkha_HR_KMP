@@ -1,11 +1,17 @@
 package com.gurkha.model.attendance.attendanceReport
 
+import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class AttendanceReportRequestDto(
-    val fromDate: String,
-    val toDate: String,
+    val fromDate: String? = null,
+    @EncodeDefault(EncodeDefault.Mode.NEVER)
+    val toDate: String? = null,
+    @EncodeDefault(EncodeDefault.Mode.NEVER)
+    val attendanceStatus: String? = null,
+    @EncodeDefault(EncodeDefault.Mode.NEVER)
+    val employeeId: Int? = null
 )
 
 @Serializable

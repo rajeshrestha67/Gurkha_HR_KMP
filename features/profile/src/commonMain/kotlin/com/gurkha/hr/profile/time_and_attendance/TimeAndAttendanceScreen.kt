@@ -48,8 +48,8 @@ import com.gurkha.hr.components.date.ERPDateTextField
 import com.gurkha.hr.components.date.FutureAndTodayDate
 
 import com.gurkha.hr.components.textField.FormValidate
+import com.gurkha.hr.domain.attendance.attendanceReport.model.AttendanceData
 
-import com.gurkha.hr.domain.timeAndAttendance.model.TimeAndAttendanceData
 import com.gurkha.hr.profile.model.time_and_attendance_screen.TimeAndAttendanceState
 import com.gurkha.hr.profile.model.time_and_attendance_screen.TimeAndAttendanceViewAction
 import com.gurkha.hr.res.SharedRes
@@ -148,11 +148,12 @@ fun TimeAndAttendanceScreenContainer(
                 DateFilter(
                     state = state,
                     onClose = onCloseFilter,
-                    onAction = onAction
+                    onAction = onAction,
+
                 )
             }
         }
-        items(state.timeAndAttendanceList, key = { it.toString() }, itemContent = { item ->
+        items(items= state.timeAndAttendanceList, key = { it.toString() }, itemContent = { item ->
             TimeAndAttendanceDetails(
                 onAction = onAction,
                 state = state,
@@ -168,7 +169,7 @@ fun TimeAndAttendanceScreenContainer(
 
 @Composable
 fun TimeAndAttendanceDetails(
-    item: TimeAndAttendanceData,
+    item: AttendanceData,
     onAction: (TimeAndAttendanceViewAction) -> Unit,
     state: TimeAndAttendanceState,
 
@@ -179,7 +180,7 @@ fun TimeAndAttendanceDetails(
         modifier = Modifier
             .fillMaxWidth()
             .padding(
-                start = MaterialTheme.dimens.small2,
+                start = MaterialTheme.dimens.small1,
                 end = 0.dp,
                 top = MaterialTheme.dimens.small1,
                 bottom = MaterialTheme.dimens.small1,
@@ -187,7 +188,7 @@ fun TimeAndAttendanceDetails(
             .clip(MaterialTheme.shapes.medium)
             .background(MaterialTheme.colorScheme.highLightColor)
             .padding(
-                start = MaterialTheme.dimens.small2,
+                start = MaterialTheme.dimens.small1,
                 top = MaterialTheme.dimens.small2,
                 bottom = MaterialTheme.dimens.small2,
                 end = 0.dp,
@@ -333,7 +334,7 @@ fun RowScope.RowText(
 fun DateFilter(
     state: TimeAndAttendanceState,
     onClose: () -> Unit,
-    onAction: (TimeAndAttendanceViewAction) -> Unit
+    onAction: (TimeAndAttendanceViewAction) -> Unit,
 ) {
     Box(
         modifier = Modifier
@@ -369,7 +370,7 @@ fun DateFilter(
                 label = stringResource(SharedRes.Strings.fromDate),
                 hint = "From Date",
                 rules = FormValidate.requiredValidationRules,
-                error = state.fromDateError,
+                error = null,
                 selectableDates = FutureAndTodayDate,
                 onErrorStateChange = {},
                 onDateSelected = {
@@ -381,8 +382,8 @@ fun DateFilter(
                 value = state.toDate,
                 label = stringResource(SharedRes.Strings.toDate),
                 hint = "To Date",
-                rules = FormValidate.requiredValidationRules,
-                error = state.toDateError,
+                rules = FormValidate.requiredValidationRules ,
+                error = null,
                 selectableDates = FutureAndTodayDate,
                 onErrorStateChange = {},
                 onDateSelected = {
@@ -390,16 +391,11 @@ fun DateFilter(
                 }
             )
 
+
             ERPButton(
                 onClick = {
-                    onAction(TimeAndAttendanceViewAction.Submit)
-//                    if (state.fromDateError == null &&
-//                        state.toDateError == null &&
-//                        state.fromDate?.displayValue?.isNotEmpty() == true &&
-//                        state.toDate?.displayValue?.isNotEmpty() == true
-//                    ) {
-//                        onClose()
-//                    }
+                    onAction(TimeAndAttendanceViewAction.Submit(employeeId = state.timeAndAttendanceList[0].employeeId))
+
 
                 },
                 modifier = Modifier.fillMaxWidth(),

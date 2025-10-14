@@ -79,7 +79,7 @@ fun ProfileScreen(
         contentWindowInsets = WindowInsets(0.dp),
         topBar = {
             TopAppBar(
-                modifier = Modifier.padding(start = MaterialTheme.dimens.small3),
+                modifier = Modifier.padding(start = MaterialTheme.dimens.small2),
                 windowInsets = WindowInsets(0.dp),
                 title = {
 
@@ -100,7 +100,7 @@ fun ProfileScreen(
                         Column(
                             modifier = Modifier
                                 .weight(1f)
-                                .padding(horizontal = MaterialTheme.dimens.small1)
+                                .padding(horizontal = MaterialTheme.dimens.small2)
                         ) {
                             Text(
                                 style = MaterialTheme.typography.titleMedium,
@@ -201,7 +201,7 @@ fun ProfileScreenContainer(
                 onClick = { showDialog = true },
                 modifier = Modifier
                     .padding(
-                        horizontal = MaterialTheme.dimens.small2,
+                        horizontal = MaterialTheme.dimens.small1,
                         vertical = MaterialTheme.dimens.small2
                     )
                     .fillMaxWidth(),
@@ -266,10 +266,10 @@ fun SectionHeader(text: StringResource) {
 
     Text(
         modifier = Modifier
-            .padding(top = MaterialTheme.dimens.small2)
+            .padding(top = MaterialTheme.dimens.small1)
             .padding(
                 horizontal = MaterialTheme.dimens.small3,
-                vertical = MaterialTheme.dimens.small2,
+                vertical = MaterialTheme.dimens.small1,
             ),
         text = stringResource(text),
         style = MaterialTheme.typography.titleLarge
@@ -308,7 +308,7 @@ fun ProfileItemRow(
         HorizontalDivider(
             Modifier
                 .fillMaxWidth()
-                .padding(horizontal = MaterialTheme.dimens.small2),
+                .padding(horizontal = MaterialTheme.dimens.small3),
             thickness = 0.5.dp,
             color = MaterialTheme.colorScheme.borderColor
         )
@@ -351,7 +351,7 @@ fun LogoutBottomSheet(
                         color = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
                         shape = CircleShape
                     )
-                    .padding(MaterialTheme.dimens.medium1)
+                    .padding(MaterialTheme.dimens.small3)
                     .background(
                         color = MaterialTheme.colorScheme.primary,
                         shape = CircleShape

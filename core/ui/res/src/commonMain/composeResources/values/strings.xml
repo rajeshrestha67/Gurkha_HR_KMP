@@ -25,6 +25,7 @@
     <string name="report">Report</string>
     <string name="request">Request</string>
     <string name="all_leaves">Leaves</string>
+    <string name="leave_request">Leave Request</string>
     <string name="leave_request_form">Leave Request Form</string>
     <string name="upload_profile_image">Upload Profile Image</string>
     <string name="upload_citizenship_front">Upload Citizenship Front</string>
@@ -46,11 +47,12 @@
     <string name="master">Master</string>
     <string name="experience_document">Experience Document</string>
 
-    <string name="leave_summary"> Leave Summary</string>
-    <string name="leave_type_name"> Leave Type\nName</string>
-    <string name="total_days"> Total Days</string>">
-    <string name="leave_taken"> Leave Taken</string>">
-    <string name="remaining_leave"> Remaining Leave</string>">
+    <string name="leave_summary">Leave Summary</string>
+    <string name="leave_type_name">Leave Type\nName</string>
+    <string name="total_days">Total Days</string>">
+    <string name="leave_taken">Leave Taken</string>">
+    <string name="remaining_leave">Remaining Leave</string>">
+    <string name="month">Month</string>">
 
 
     <string name="start_date">Start Date</string>
@@ -111,6 +113,7 @@
     <string name="clock_in_time">Clock In Time</string>
     <string name="clock_out_time">Clock Out Time</string>
 
+    <string name="attendance_request">Attendance Request</string>
     <string name="attendance_request_form">Attendance Request Form</string>
 
     <string name="attendance">Attendance</string>

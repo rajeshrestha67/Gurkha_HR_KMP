@@ -87,6 +87,8 @@ class HomeScreenViewModel(
 //            toDate = state.value.toDate,
             fromDate = "2025-09-18",
             toDate = "2025-09-18",
+            attendanceStatus = "",
+            employeeId = 136
         ).onSuccess { data ->
             _state.update {
                 it.copy(

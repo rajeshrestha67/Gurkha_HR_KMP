@@ -8,8 +8,10 @@ import com.gurkha.model.network.DataError
 
 interface AttendanceRemoteRepository {
     suspend fun fetchAttendance(
-        dateFrom: String,
-        toDate: String,
+        dateFrom: String? = null,
+        toDate: String? = null,
+        attendanceStatus: String? = null,
+        employeeId: Int? = null
     ): ERPResult<AttendanceResponseDto, DataError>
 
     suspend fun fetchAttendanceStatus(

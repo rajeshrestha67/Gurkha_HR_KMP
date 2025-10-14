@@ -13,11 +13,11 @@ import io.ktor.client.HttpClient
 
 class KtorAllocatedLeaveRemoteRepository(private val httpClient: HttpClient) :
     AllocatedLeaveRemoteRepository {
-    override suspend fun getAllocatedLeave(): ERPResult<AllocatedLeaveResponseDto, DataError> {
+    override suspend fun getAllocatedLeave(id: Int): ERPResult<AllocatedLeaveResponseDto, DataError> {
         return safeCall {
             httpClient.get(
                 baseUrl = BaseUrl.Generic,
-                endPoint = EndPoint.ALLOCATED_LEAVE_ENDPOINT
+                endPoint = EndPoint.ALLOCATED_LEAVE_ENDPOINT+"/$id"
             )
         }
     }

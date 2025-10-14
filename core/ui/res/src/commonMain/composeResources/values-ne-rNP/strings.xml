@@ -12,6 +12,7 @@
     <string name="my_attendance">मेरो उपस्थिति</string>
     <string name="request">अनुरोध</string>
     <string name="attendance">उपस्थिति</string>
+    <string name="leave_request">अनुरोध छोड्नुहोस्</string>
     <string name="leave_request_form">अनुरोध फारम छोड्नुहोस्</string>
     <string name="upload_profile_image">प्रोफाइल छवि अपलोड गर्नुहोस्</string>
     <string name="upload_citizenship_front">नागरिकता मोर्चा अपलोड गर्नुहोस्</string>
@@ -22,6 +23,7 @@
     <string name="upload_bachelor">स्नातक अपलोड गर्नुहोस्</string>
     <string name="upload_master">मास्टर अपलोड गर्नुहोस्</string>
     <string name="upload_experience_document">अनुभव कागजात अपलोड गर्नुहोस्</string>
+    <string name="month">महिना</string>">
 
     <string name="profile_image">प्रोफाइल छवि</string>
     <string name="citizenship_front">नागरिकता मोर्चा</string>
@@ -94,6 +96,7 @@
     <string name="clock_in_time">घडी भित्रको समय</string>
     <string name="clock_out_time">घडी बाहिरको समय</string>
 
+    <string name="attendance_request">उपस्थिति अनुरोध</string>
     <string name="attendance_request_form">उपस्थिति अनुरोध फारम</string>
 
     <string name="view_all">सबै हेर्नुहोस्</string>
