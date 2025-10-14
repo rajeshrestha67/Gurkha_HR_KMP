@@ -21,7 +21,7 @@ data class LeaveReportDetailDto(
     val levelName: String? = null,
     val employeeLeaveHistory: List<EmployeeLeaveHistoryDto>? = null,
     val leaveRequests: List<LeaveRequestDetailDto>? = null,
-    val attendanceResponses: String? = null // can replace with proper type if known
+    val attendanceResponses: String? = null
 )
 @Serializable
 data class EmployeeLeaveHistoryDto(

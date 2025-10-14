@@ -9,6 +9,7 @@ import com.gurkha.hr.domain.leave.leaveAssignee.usecase.AssigneeUseCase
 import com.gurkha.hr.domain.leave.leaveReport.useCase.LeaveReportUseCase
 import com.gurkha.hr.domain.leave.leaveRequest.repository.LeaveRemoteRepository
 import com.gurkha.hr.domain.leave.leaveRequest.usecase.LeaveRequestUseCase
+import com.gurkha.hr.domain.leave.leaveSummary.useCase.LeaveSummaryUseCase
 import com.gurkha.hr.domain.leave.leaveType.usecase.LeaveTypeUseCase
 import com.gurkha.hr.leave.leave.LeaveScreenViewModel
 import com.gurkha.hr.leave.leaveRequestPage.LeaveRequestScreenViewModel
@@ -51,13 +52,22 @@ class LeaveScreenModule {
     fun leaveRequestUseCase(leaveRemoteRepository: LeaveRemoteRepository): LeaveRequestUseCase =
         LeaveRequestUseCase(leaveRemoteRepository)
 
+    @Factory
+    fun leaveSummaryUseCase (
+        leaveRemoteRepository: LeaveRemoteRepository
+    ): LeaveSummaryUseCase = LeaveSummaryUseCase(
+        leaveRemoteRepository = leaveRemoteRepository
+    )
+
     @KoinViewModel
     fun getLeaveScreenViewModel(
         leaveRequestUseCase: LeaveRequestUseCase,
         leaveReportUseCase: LeaveReportUseCase,
+        leaveSummaryUseCase : LeaveSummaryUseCase
     ): LeaveScreenViewModel = LeaveScreenViewModel(
         leaveRequestUseCase = leaveRequestUseCase,
         leaveReportUseCase = leaveReportUseCase,
+        leaveSummaryUseCase = leaveSummaryUseCase
     )
 
     @KoinViewModel
