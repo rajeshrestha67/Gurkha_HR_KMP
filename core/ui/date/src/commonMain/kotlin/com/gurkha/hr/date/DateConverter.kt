@@ -3,6 +3,7 @@ package com.gurkha.hr.date
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.daysUntil
+import kotlinx.datetime.number
 import kotlinx.datetime.plus
 
 
@@ -84,8 +85,8 @@ object DateConverter {
 
         return DateHolder(
             year = requiredData.year,
-            month = requiredData.monthNumber,
-            day = requiredData.dayOfMonth
+            month = requiredData.month.number,
+            day = requiredData.day
         )
 
     }
