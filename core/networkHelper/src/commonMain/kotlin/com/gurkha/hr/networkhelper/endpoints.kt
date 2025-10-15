@@ -19,4 +19,6 @@ object EndPoint {
     const val COMPANY_ASSETS_ENDPOINT = "api/employee-assets/get"
     const val ATTENDANCE_REQUEST_END_POINT = "api/attendance/request"
     const val HISTORY_END_POINT = "api/attendance/employee/monthly"
+    const val REPORT_END_POINT = "api/attendance/employee/summary"
+
 }

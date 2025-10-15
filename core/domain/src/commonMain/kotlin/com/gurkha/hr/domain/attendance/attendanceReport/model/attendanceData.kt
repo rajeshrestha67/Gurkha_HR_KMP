@@ -7,7 +7,7 @@ data class AttendanceData(
     val date: String,
     val day: String,
     val status: String,
-    val isPresent: Boolean,
+    val onLeave: Boolean,
     val isHoliday: Boolean,
     val isLate: Boolean,
     val isEarlyOut: Boolean,

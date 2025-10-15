@@ -13,7 +13,7 @@ fun AttendanceResponseDto.toData(): List<AttendanceData> {
             clockInTime = it.clockInTime ?: "--|--",
             clockOutTime = it.clockOutTime ?: "--|--",
             status = it.attendanceStatus ?: "",
-            isPresent = it.onLeave ?: false,
+            onLeave = it.onLeave ?: false,
             isHoliday = it.holiday ?: false,
             isLate = it.isLate ?: false,
             isEarlyOut = it.isLeaveEarly ?: false,

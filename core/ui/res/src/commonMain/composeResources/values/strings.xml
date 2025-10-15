@@ -86,7 +86,10 @@
 
     <string name="remarks">Remarks</string>">
     <string name="assigned">Assigned</string>">
-    <string name="response">Response </string>">
+    <string name="response">Response</string>">
+    <string name="monthly_attendance">Monthly Attendance</string>">
+    <string name="monthly_attendance_report">Monthly Attendance Report</string>">
+    <string name="attendance_summary">Attendance Summary</string>">
 
 
     <string name="assignee">Assignee</string>">

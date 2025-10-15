@@ -25,6 +25,7 @@ import gurkhahr.core.ui.res.generated.resources.attendance_cancelled
 import gurkhahr.core.ui.res.generated.resources.attendance_pending
 import gurkhahr.core.ui.res.generated.resources.attendance_request
 import gurkhahr.core.ui.res.generated.resources.attendance_request_form
+import gurkhahr.core.ui.res.generated.resources.attendance_summary
 import gurkhahr.core.ui.res.generated.resources.bachelor
 import gurkhahr.core.ui.res.generated.resources.bs
 import gurkhahr.core.ui.res.generated.resources.cancel
@@ -95,6 +96,8 @@ import gurkhahr.core.ui.res.generated.resources.master
 import gurkhahr.core.ui.res.generated.resources.maternity_leave
 import gurkhahr.core.ui.res.generated.resources.missed_attendance
 import gurkhahr.core.ui.res.generated.resources.month
+import gurkhahr.core.ui.res.generated.resources.monthly_attendance
+import gurkhahr.core.ui.res.generated.resources.monthly_attendance_report
 import gurkhahr.core.ui.res.generated.resources.months
 import gurkhahr.core.ui.res.generated.resources.mourning_leave
 import gurkhahr.core.ui.res.generated.resources.my_attendance
@@ -273,6 +276,9 @@ object SharedRes {
         val clockOut = Res.string.clockOut
         val status = Res.string.status
         val noAssetsAvailable = Res.string.no_assets_available
+        val monthlyAttendance = Res.string.monthly_attendance
+        val monthlyAttendanceReport = Res.string.monthly_attendance_report
+        val attendanceSummary = Res.string.attendance_summary
 
         val year = Res.string.year
         val remarks = Res.string.remarks

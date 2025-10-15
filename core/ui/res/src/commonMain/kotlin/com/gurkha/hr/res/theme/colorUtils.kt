@@ -141,7 +141,12 @@ val ColorScheme.outGoingBubbleColor: Color
         light = Color(0xFFDDDDDD),
         dark = Color(0xFF3A3A3A)
     )
+val ColorScheme.holidayBlueColor: Color
+    @Composable get() = extendedColor(
+        light = Color(0xFF03A9F4),
+        dark = Color(0xFF2196F3)
 
+    )
 val ColorScheme.inComingTextColor: Color
     @Composable get() = extendedColor(
         light = Color(0xFF111111),

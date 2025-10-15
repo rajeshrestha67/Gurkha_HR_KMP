@@ -39,6 +39,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -54,8 +55,12 @@ import com.gurkha.hr.domain.attendance.attendanceReport.model.AttendanceData
 import com.gurkha.hr.profile.model.time_and_attendance_screen.TimeAndAttendanceState
 import com.gurkha.hr.profile.model.time_and_attendance_screen.TimeAndAttendanceViewAction
 import com.gurkha.hr.res.SharedRes
+import com.gurkha.hr.res.theme.darkPrimaryTextColor
 import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.highLightColor
+import com.gurkha.hr.res.theme.holidayBlueColor
+import com.gurkha.hr.res.theme.lightGreenColor
+import com.gurkha.hr.res.theme.lightRedColor
 import com.gurkha.hr.res.theme.primaryTextColor
 import com.gurkha.hr.res.theme.secondaryTextColor
 import org.jetbrains.compose.resources.StringResource
@@ -141,7 +146,9 @@ fun TimeAndAttendanceScreenContainer(
         contentPadding = PaddingValues(
             horizontal = MaterialTheme.dimens.small3,
             vertical = MaterialTheme.dimens.small2
-        )
+        ),
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2, alignment = Alignment.Top)
+
     ) {
         if (showFilter) {
             item {
@@ -154,12 +161,15 @@ fun TimeAndAttendanceScreenContainer(
         }
 
         if (state.isLoading){
-            items(count = 12){
-                ShimmerView(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(MaterialTheme.dimens.extraLarge)
-                )
+            items(count = 4){
+                    ShimmerView(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(MaterialTheme.dimens.medium3)
+                            .clip(MaterialTheme.shapes.small)
+                    )
+
+
             }
         }
         else{
@@ -186,7 +196,11 @@ fun TimeAndAttendanceDetails(
     state: TimeAndAttendanceState,
 
     ) {
-
+    val textColor = when (item.status){
+        "HOLIDAY" -> MaterialTheme.colorScheme.holidayBlueColor
+        "ABSENT" -> MaterialTheme.colorScheme.lightRedColor
+        else -> MaterialTheme.colorScheme.lightGreenColor
+    }
     var showMore by remember { mutableStateOf(false) }
     Column(
         modifier = Modifier
@@ -304,7 +318,9 @@ fun TimeAndAttendanceDetails(
             )
             RowText(
                 name = SharedRes.Strings.status,
-                value = item.status
+                value = item.status,
+                textColor =textColor
+
             )
         }
     }
@@ -315,7 +331,8 @@ fun TimeAndAttendanceDetails(
 @Composable
 fun RowScope.RowText(
     name: StringResource,
-    value: String
+    value: String,
+    textColor: Color = MaterialTheme.colorScheme.darkPrimaryTextColor
 
 ) {
     Column(
@@ -335,7 +352,7 @@ fun RowScope.RowText(
             text = value,
             modifier = Modifier.fillMaxWidth(),
             style = MaterialTheme.typography.bodySmall.copy(
-                color = MaterialTheme.colorScheme.secondaryTextColor
+                color = textColor
             ), textAlign = TextAlign.Start
 
         )

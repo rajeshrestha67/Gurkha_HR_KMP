@@ -3,6 +3,7 @@ package com.gurkha.hr.profile.history
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -21,6 +22,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gurkha.hr.components.ERPButton
+import com.gurkha.hr.components.dateFilterDropDown.DateFilterDropdown
 import com.gurkha.hr.components.shimmer.ShimmerView
 import com.gurkha.hr.components.textField.DropDownText
 import com.gurkha.hr.components.textField.FormValidate
@@ -123,14 +125,18 @@ fun HistoryScreenContainer(
         }
         if(state.isLoading){
             items(4){
-                ShimmerView(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(MaterialTheme.dimens.chartHeight)
-                )
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2, alignment = Alignment.CenterVertically),
+                ) {
+                    ShimmerView(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(MaterialTheme.dimens.medium1)
+                            .clip(MaterialTheme.shapes.small)
+                    )
+                }
             }
-        }
-        else{
+        }else{
 
             items( items = state.historySummaryList, key = {it.toString()}, itemContent = { item ->
                 HistoryScreenContent(
@@ -206,6 +212,7 @@ fun HistoryScreenContent(
         HorizontalDivider(modifier = Modifier.height(MaterialTheme.dimens.extraSmall))
 
         Text(
+            modifier = Modifier.padding(top = MaterialTheme.dimens.small2),
             text = stringResource(SharedRes.Strings.leaveRequest),
             style = MaterialTheme.typography.titleSmall.copy(
                 color = MaterialTheme.colorScheme.darkPrimaryTextColor
@@ -214,7 +221,7 @@ fun HistoryScreenContent(
         if (item.assigneeName.isBlank()){
             RowInfoText(
                 name = "- ",
-                value = "- "
+                value = ""
             )
         }else{
 
@@ -254,6 +261,7 @@ fun HistoryScreenContent(
         HorizontalDivider(modifier = Modifier.height(MaterialTheme.dimens.extraSmall))
 
         Text(
+            modifier = Modifier.padding(top = MaterialTheme.dimens.small2),
             text = stringResource(SharedRes.Strings.attendanceRequest),
             style = MaterialTheme.typography.titleSmall.copy(
                 color = MaterialTheme.colorScheme.darkPrimaryTextColor
@@ -263,7 +271,7 @@ fun HistoryScreenContent(
         if (item.assigneeName.isBlank()){
             RowInfoText(
                 name = "- ",
-                value = "- "
+                value = ""
             )
         }else{
             Column(
@@ -332,88 +340,122 @@ fun RowInfoText(
         )
     }
 }
+
 @Composable
 fun DateFilterHistory(
     state: HistoryState,
     onAction: (HistoryScreenViewAction) -> Unit
-) {
-
-
-    val yearInBS = remember { (2070..BSPointer.getLastDay().first).map { it.toString() } }
-    val months = stringArrayResource(SharedRes.Arrays.months)
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
+){
+    DateFilterDropdown(
+        modifier = Modifier.fillMaxWidth()
             .padding(
                 bottom = MaterialTheme.dimens.small3,
                 start = MaterialTheme.dimens.small1,
                 end = MaterialTheme.dimens.small1
-            )
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
-        ) {
-
-
-            DropDownText(
-                dropdownIcon = {
-                    Icon(
-                        imageVector = Icons.Default.CalendarMonth,
-                        contentDescription = "Calender Image",
-
-                    )
-                },
-                label = SharedRes.Strings.month,
-                hint = SharedRes.Strings.month,
-                selectedValue = state.monthDisplay,
-                error = state.endMonthError,
-                onError = {
-                    onAction(HistoryScreenViewAction.MonthPickerError(it))
-                },
-                listOfItems = months ,
-                rules = FormValidate.requiredValidationRules,
-                itemClicked = { month->
-                    onAction(HistoryScreenViewAction.FromMonth(
-                        showMonth = month,
-                        month = months.indexOf(month) + 1
-                        )
-                    )
-
-
-                },
-            )
-
-            DropDownText(
-                dropdownIcon = {
-                    Icon(
-                        imageVector = Icons.Default.CalendarMonth,
-                        contentDescription = "Calender Image",
-
-                        )
-                },
-                label = SharedRes.Strings.year,
-                hint = SharedRes.Strings.year,
-                selectedValue = state.year.toString(),
-                error = state.endYearError,
-                onError = {
-                    onAction(HistoryScreenViewAction.YearPickerError(it))
-                },
-                listOfItems = yearInBS,
-                rules = FormValidate.requiredValidationRules,
-                itemClicked = {year->
-                    onAction(HistoryScreenViewAction.FromYear(year.toInt()))
-                }
-            )
-
-            ERPButton(
-                onClick = {
-                    onAction(HistoryScreenViewAction.Submit(employeeId = state.employeeId))
-                },
-                modifier = Modifier.fillMaxWidth(),
-                text = stringResource(SharedRes.Strings.submit),
-            )
+            ),
+        selectedMonth = state.monthDisplay,
+        selectedYear = state.year.toString(),
+        monthError = state.endMonthError,
+        yearError = state.endYearError,
+        onMonthSelected = { monthName, monthIndex ->
+            onAction(HistoryScreenViewAction.FromMonth(showMonth = monthName, month = monthIndex))
+        },
+        onYearSelected = { year ->
+            onAction(HistoryScreenViewAction.FromYear(year))
+        },
+        onMonthError = { message ->
+            onAction(HistoryScreenViewAction.MonthPickerError(message))
+        },
+        onYearError = { message ->
+            onAction(HistoryScreenViewAction.YearPickerError(message))
+        },
+        onSubmit = {
+            onAction(HistoryScreenViewAction.Submit(employeeId = state.employeeId))
         }
-    }
+    )
 }
+//@Composable
+//fun DateFilterHistory(
+//    state: HistoryState,
+//    onAction: (HistoryScreenViewAction) -> Unit
+//) {
+//
+//
+//    val yearInBS = remember { (2070..BSPointer.getLastDay().first).map { it.toString() } }
+//    val months = stringArrayResource(SharedRes.Arrays.months)
+//    Box(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .padding(
+//                bottom = MaterialTheme.dimens.small3,
+//                start = MaterialTheme.dimens.small1,
+//                end = MaterialTheme.dimens.small1
+//            )
+//    ) {
+//        Column(
+//            modifier = Modifier
+//                .fillMaxWidth(),
+//            verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
+//        ) {
+//
+//
+//            DropDownText(
+//                dropdownIcon = {
+//                    Icon(
+//                        imageVector = Icons.Default.CalendarMonth,
+//                        contentDescription = "Calender Image",
+//
+//                    )
+//                },
+//                label = SharedRes.Strings.month,
+//                hint = SharedRes.Strings.month,
+//                selectedValue = state.monthDisplay,
+//                error = state.endMonthError,
+//                onError = {
+//                    onAction(HistoryScreenViewAction.MonthPickerError(it))
+//                },
+//                listOfItems = months ,
+//                rules = FormValidate.requiredValidationRules,
+//                itemClicked = { month->
+//                    onAction(HistoryScreenViewAction.FromMonth(
+//                        showMonth = month,
+//                        month = months.indexOf(month) + 1
+//                        )
+//                    )
+//
+//
+//                },
+//            )
+//
+//            DropDownText(
+//                dropdownIcon = {
+//                    Icon(
+//                        imageVector = Icons.Default.CalendarMonth,
+//                        contentDescription = "Calender Image",
+//
+//                        )
+//                },
+//                label = SharedRes.Strings.year,
+//                hint = SharedRes.Strings.year,
+//                selectedValue = state.year.toString(),
+//                error = state.endYearError,
+//                onError = {
+//                    onAction(HistoryScreenViewAction.YearPickerError(it))
+//                },
+//                listOfItems = yearInBS,
+//                rules = FormValidate.requiredValidationRules,
+//                itemClicked = {year->
+//                    onAction(HistoryScreenViewAction.FromYear(year.toInt()))
+//                }
+//            )
+//
+//            ERPButton(
+//                onClick = {
+//                    onAction(HistoryScreenViewAction.Submit(employeeId = state.employeeId))
+//                },
+//                modifier = Modifier.fillMaxWidth(),
+//                text = stringResource(SharedRes.Strings.submit),
+//            )
+//        }
+//    }
+//}

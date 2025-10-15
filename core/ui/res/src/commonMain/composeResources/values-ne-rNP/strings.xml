@@ -80,6 +80,10 @@
     <string name="annual_leave">वार्षिक बिदा</string>">
     <string name="mourning_leave">शोक छोड्नुहोस्</string>">
 
+    <string name="monthly_attendance">मासिक उपस्थिति</string>">
+    <string name="monthly_attendance_report">मासिक उपस्थिति रिपोर्ट</string>">
+    <string name="attendance_summary">उपस्थिति सारांश</string>">
+
     <string name="cancel">रद्द गर्नुहोस्</string>">
     <string name="submit">पेश गर्नुहोस्</string>">
 
