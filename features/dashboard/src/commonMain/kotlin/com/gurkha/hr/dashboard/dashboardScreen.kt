@@ -215,6 +215,11 @@ fun DashboardScreenContent(
                 onGoToAddNotesScreen ={noteJson->
                     navController.navigate(NoteRoute.AddNoteRoute(json = noteJson))
                 },
+                onGoToDetailNotesScreen ={noteJson->
+                    noteJson?.let {
+                        navController.navigate(NoteRoute.DetailNoteRoute(json = noteJson))
+                    }
+                },
             )
 
             settingsScreenBuilder(

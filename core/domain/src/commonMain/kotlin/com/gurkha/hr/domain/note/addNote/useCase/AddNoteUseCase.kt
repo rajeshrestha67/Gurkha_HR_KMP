@@ -1,8 +1,8 @@
 package com.gurkha.hr.domain.note.addNote.useCase
 
+import com.gurkha.hr.domain.note.addNote.mapper.toData
+import com.gurkha.hr.domain.note.addNote.model.AddNoteData
 import com.gurkha.hr.domain.note.allNotes.repository.NoteRemoteRepository
-import com.gurkha.hr.domain.note.updateNote.mapper.toData
-import com.gurkha.hr.domain.note.updateNote.model.UpdateNoteData
 import com.gurkha.hr.networkhelper.ERPResult
 import com.gurkha.hr.networkhelper.map
 import com.gurkha.model.network.DataError
@@ -23,7 +23,7 @@ class AddNoteUseCase(
         title: String,
         startDate: String,
         endDate: String,
-    ): ERPResult<UpdateNoteData, DataError>{
+    ): ERPResult<AddNoteData, DataError> {
         return noteRemoteRepository.addNote(
             active = active,
             description = description,
@@ -36,7 +36,7 @@ class AddNoteUseCase(
             startTime = startTime,
             title = title,
             startDate = startDate,
-            endDate = endDate ,
+            endDate = endDate,
         ).map {
             it.toData()
         }

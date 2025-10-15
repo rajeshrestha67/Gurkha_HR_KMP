@@ -1,7 +1,7 @@
 package com.gurkha.hr.model.addNotes
 
 import com.gurkha.hr.components.date.DateData
-import com.gurkha.hr.domain.note.allNotes.model.NoteData
+import com.gurkha.model.note.ui.AddedNoteDataUi
 
 sealed interface AddNotesAction {
     data class OnTitleChange(val title: String) : AddNotesAction
@@ -23,5 +23,6 @@ sealed interface AddNotesAction {
 
     data object UpdateNote : AddNotesAction
 
-    data class OnUpdateDataForStore(val data : String): AddNotesAction
+    data class OnUpdateDataForStore(val data: String) : AddNotesAction
+
 }

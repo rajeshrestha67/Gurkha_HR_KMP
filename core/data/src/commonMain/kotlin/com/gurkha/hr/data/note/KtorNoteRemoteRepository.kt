@@ -12,6 +12,7 @@ import com.gurkha.model.network.DataError
 import com.gurkha.model.note.NotesRequestDto
 import com.gurkha.model.note.NotesResponseDto
 import com.gurkha.model.note.NotesUpdateRequestDto
+import com.gurkha.model.note.addNote.AddNoteResponseDto
 import io.ktor.client.HttpClient
 import io.ktor.client.request.setBody
 
@@ -40,7 +41,7 @@ class KtorNoteRemoteRepository(
         title: String,
         startDate: String,
         endDate: String
-    ): ERPResult<NotesResponseDto, DataError> {
+    ): ERPResult<AddNoteResponseDto, DataError> {
         return safeCall {
             httpClient.post(
                 baseUrl = BaseUrl.Generic,

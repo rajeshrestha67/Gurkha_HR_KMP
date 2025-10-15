@@ -2,6 +2,7 @@ package com.gurkha.hr.model.addNotes
 
 import com.gurkha.hr.components.date.DateData
 import com.gurkha.hr.domain.note.allNotes.model.NoteData
+import com.gurkha.model.note.ui.AddedNoteDataUi
 import com.gurkha.model.note.ui.NoteDataUi
 import org.jetbrains.compose.resources.StringResource
 
@@ -32,8 +33,8 @@ data class AddNotesState(
     val endTimeError: StringResource? = null,
     val locationError: StringResource? = null,
 
-    val noteItemData : NoteDataUi? =null,
-    val storeNoteItem : NoteDataUi? =null,
+    val noteItemData : AddedNoteDataUi? =null,
+    val storeNoteItem : AddedNoteDataUi? =null,
 
     val isEdit : Boolean = false,
 

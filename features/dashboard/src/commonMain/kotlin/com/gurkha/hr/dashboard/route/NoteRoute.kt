@@ -6,4 +6,6 @@ import kotlinx.serialization.Serializable
 sealed interface NoteRoute {
     @Serializable
     data class AddNoteRoute (val json: String?) : NoteRoute
+    @Serializable
+    data class DetailNoteRoute (val json: String) : NoteRoute
 }

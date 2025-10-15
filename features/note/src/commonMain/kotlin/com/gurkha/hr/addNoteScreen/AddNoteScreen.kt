@@ -89,6 +89,7 @@ fun AddNoteScreen(
 
     LaunchedEffect(Unit) {
         viewModel.successChannel.collect {
+            println("successChannel $it")
             messageToShow = it
             showSuccessDialogue = true
         }
@@ -96,6 +97,8 @@ fun AddNoteScreen(
 
     LaunchedEffect(Unit) {
         viewModel.errorChannel.collect {
+            println("errorChannel $it")
+
             messageToShow = it
             showErrorDialogue = true
         }
@@ -103,26 +106,27 @@ fun AddNoteScreen(
 
     LaunchedEffect(Unit) {
         viewModel.dataChannel.collect {
-            val data = Json.encodeToString(it)
-            viewModel.onAction(AddNotesAction.OnUpdateDataForStore(data))
+            val json = Json.encodeToString(it)
+            viewModel.onAction(AddNotesAction.OnUpdateDataForStore(json))
         }
     }
 
     LaunchedEffect(sendData) {
         val isUpdate = Json.encodeToString(state.isEdit)
-           if(sendData){
-               val data = state.storeNoteItem
-               data?.let {
-                   val stringData = Json.encodeToString(data)
-                   navController.previousBackStackEntry
-                       ?.savedStateHandle?.apply {
-                           set("data", stringData)
-                           set("isUpdate",isUpdate)
-                       }
-                   navController.popBackStack()
-               }
-           }
-
+        if (sendData) {
+            val data = state.storeNoteItem
+            data?.let {
+                val stringData = Json.encodeToString(data)
+                navController.previousBackStackEntry
+                    ?.savedStateHandle?.apply {
+                        set("data", stringData)
+                        set("isUpdate", isUpdate)
+                    }
+                sendData = false
+                onBackClicked()
+                println("triggered")
+            }
+        }
     }
 
     BoxWithConstraints(
@@ -196,7 +200,7 @@ fun AddNoteScreenContent(
     messageToShow: String,
     showSuccessDialogue: Boolean,
     onBackClicked: () -> Unit,
-    onSendData:()-> Unit
+    onSendData: () -> Unit
 ) {
     Column(
         modifier = modifier
@@ -264,7 +268,7 @@ fun AddNoteScreenContent(
     }
     if (showSuccessDialogue) {
         PromptModalBottomSheet(
-            onBackClicked = onSendData,
+            onBackClicked = { onSendData() },
             text = messageToShow
         )
     }

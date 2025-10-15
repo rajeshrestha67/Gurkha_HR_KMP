@@ -1,6 +1,9 @@
-package com.gurkha.hr.domain.note.addNote.model
+package com.gurkha.model.note.ui
 
-data class AddNoteData(
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class AddedNoteDataUi(
     val id: Int,
     val title: String,
     val description: String,
@@ -19,4 +22,3 @@ data class AddNoteData(
     val location: String ,
     val message: String
 )
-

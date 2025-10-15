@@ -8,6 +8,7 @@ import com.gurkha.hr.domain.note.deleteNote.useCase.DeleteNoteUseCase
 import com.gurkha.hr.model.note.NoteAction
 import com.gurkha.hr.model.note.NoteState
 import com.gurkha.hr.networkhelper.onSuccess
+import com.gurkha.model.note.ui.AddedNoteDataUi
 import com.gurkha.model.note.ui.NoteDataUi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -37,7 +38,7 @@ class NoteViewModel(
     fun onAction(action: NoteAction) {
         when (action) {
             is NoteAction.OnUpdateNoteDataJson -> {
-                val data = Json.decodeFromString<NoteDataUi>(action.data)
+                val data = Json.decodeFromString<AddedNoteDataUi>(action.data)
                 val isUpdate = Json.decodeFromString<Boolean>(action.isUpdate)
 
                 if (isUpdate) {
@@ -49,15 +50,11 @@ class NoteViewModel(
                                     title = data.title,
                                     description = data.description,
                                     isEvent = data.isEvent,
-                                    startDateAD = data.startDateAD,
-                                    endDateAD = data.endDateAD,
-                                    startDateBS = data.startDateBS,
-                                    endDateBS = data.endDateBS,
                                     location = data.location,
                                     active = data.active,
                                     startTime = data.startTime,
                                     endTime = data.endTime,
-                                    isReminder = data.isReminder
+                                    isReminder = data.isReminder,
                                 )
                             } else note
                         }
@@ -74,15 +71,17 @@ class NoteViewModel(
                             title = data.title,
                             description = data.description,
                             isEvent = data.isEvent,
-                            startDateAD = data.startDateAD,
-                            endDateAD = data.endDateAD,
-                            startDateBS = data.startDateBS,
-                            endDateBS = data.endDateBS,
-                            location = data.location,
+                            location = data.location ,
                             active = data.active,
-                            startTime = data.startTime,
-                            endTime = data.endTime,
-                            isReminder = data.isReminder
+                            startTime = data.startTime ,
+                            endTime = data.endTime ,
+                            isReminder = data.isReminder,
+                            createdAtAd = data.createdAt ,
+                            createdAtBs = data.createdAt,
+                            startDateAD = data.startDate ,
+                            endDateAD = data.endDate ,
+                            startDateBS = data.startDate,
+                            endDateBS = data.endDate
                         )
 
                         currentState.copy(
