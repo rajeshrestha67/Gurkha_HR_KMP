@@ -28,6 +28,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.gurkha.hr.components.shimmer.ShimmerView
 import com.gurkha.hr.date.data.CalendarDate
 import com.gurkha.hr.date.data.CalendarDay
 import com.gurkha.hr.res.SharedRes
@@ -45,6 +46,7 @@ fun HorizontalCalendar(
     days: List<CalendarDay> = listOf(),
     today: CalendarDate,
     selectedDay: Int,
+    isLoading: Boolean,
     onDaySelected: (Int) -> Unit
 ) {
     val listState: LazyListState = rememberLazyListState()
@@ -105,7 +107,10 @@ fun HorizontalCalendar(
             val density = LocalDensity.current
 
             val itemSpacing = MaterialTheme.dimens.small3
-            LaunchedEffect(selectedDay) {
+            LaunchedEffect(selectedDay, isLoading) {
+                if (isLoading) {
+                    return@LaunchedEffect
+                }
                 val halfScreenPx = with(density) { (screenWidth / 2).toPx() }
                 val itemWidthPx = with(density) { dayItemWidthDp.toPx() }
                 val offset =
@@ -129,64 +134,76 @@ fun HorizontalCalendar(
                     alignment = Alignment.CenterHorizontally
                 )
             ) {
-                items(items = days, key = { it.day }) { item ->
 
-                    val color = if (selectedDay == item.day)
-                        MaterialTheme.colorScheme.primary
-                    else
-                        MaterialTheme.colorScheme.highLightColor
-
-                    val textColor = if (selectedDay == item.day) {
-                        MaterialTheme.colorScheme.onPrimary
-                    } else if (item.isHoliday && selectedDay == item.day) {
-                        MaterialTheme.colorScheme.onPrimary
-                    } else if (item.isHoliday) {
-                        MaterialTheme.colorScheme.error
-                    } else {
-                        MaterialTheme.colorScheme.primaryTextColor
+                if (isLoading) {
+                    items(10) {
+                        ShimmerView(
+                            modifier = Modifier.clip(MaterialTheme.shapes.medium)
+                                .size(size = dayItemWidthDp)
+                                .aspectRatio(ratio = 1f)
+                        )
                     }
+                } else {
+                    items(items = days, key = { it.day }) { item ->
 
-                    val borderModifier = if (item.day == today.dayOfMonth) Modifier.border(
-                        width = 0.5.dp,
-                        color = MaterialTheme.colorScheme.borderColor.copy(
-                            alpha = 0.5f
-                        ),
-                        shape = MaterialTheme.shapes.medium
-                    ) else Modifier
+                        val color = if (selectedDay == item.day)
+                            MaterialTheme.colorScheme.primary
+                        else
+                            MaterialTheme.colorScheme.highLightColor
 
-                    Column(
-                        modifier = Modifier
-                            .clip(MaterialTheme.shapes.medium)
-                            .background(color = color)
-                            .then(borderModifier)
-                            .size(size = dayItemWidthDp)
-                            .aspectRatio(ratio = 1f)
-                            .clickable(
-                                onClick = {
-                                    onDaySelected(item.day)
-                                }
+                        val textColor = if (selectedDay == item.day) {
+                            MaterialTheme.colorScheme.onPrimary
+                        } else if (item.isHoliday && selectedDay == item.day) {
+                            MaterialTheme.colorScheme.onPrimary
+                        } else if (item.isHoliday) {
+                            MaterialTheme.colorScheme.error
+                        } else {
+                            MaterialTheme.colorScheme.primaryTextColor
+                        }
+
+                        val borderModifier = if (item.day == today.dayOfMonth) Modifier.border(
+                            width = 0.5.dp,
+                            color = MaterialTheme.colorScheme.borderColor.copy(
+                                alpha = 0.5f
                             ),
-                        verticalArrangement = Arrangement.spacedBy(
-                            space = MaterialTheme.dimens.small1,
-                            alignment = Alignment.CenterVertically
-                        ),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = item.day.toString(),
-                            style = MaterialTheme.typography.titleMedium.copy(
-                                color = textColor
+                            shape = MaterialTheme.shapes.medium
+                        ) else Modifier
+
+                        Column(
+                            modifier = Modifier
+                                .clip(MaterialTheme.shapes.medium)
+                                .background(color = color)
+                                .then(borderModifier)
+                                .size(size = dayItemWidthDp)
+                                .aspectRatio(ratio = 1f)
+                                .clickable(
+                                    onClick = {
+                                        onDaySelected(item.day)
+                                    }
+                                ),
+                            verticalArrangement = Arrangement.spacedBy(
+                                space = MaterialTheme.dimens.small1,
+                                alignment = Alignment.CenterVertically
+                            ),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = item.day.toString(),
+                                style = MaterialTheme.typography.titleMedium.copy(
+                                    color = textColor
+                                )
                             )
-                        )
-                        Text(
-                            text = weekNames[item.dayOfWeek - 1],
-                            style = MaterialTheme.typography.titleSmall.copy(
-                                color = textColor,
-                                fontWeight = FontWeight.Bold
+                            Text(
+                                text = weekNames[item.dayOfWeek - 1],
+                                style = MaterialTheme.typography.titleSmall.copy(
+                                    color = textColor,
+                                    fontWeight = FontWeight.Bold
+                                )
                             )
-                        )
+                        }
                     }
                 }
+
             }
         }
     }

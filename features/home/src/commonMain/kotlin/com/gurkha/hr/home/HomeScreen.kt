@@ -99,7 +99,9 @@ fun HomeScreen(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
-                modifier = Modifier.fillMaxWidth(), windowInsets = WindowInsets(), title = {
+                modifier = Modifier.fillMaxWidth(),
+                windowInsets = WindowInsets(),
+                title = {
                     Row(
                         modifier = Modifier.fillMaxWidth()
                     ) {
@@ -207,7 +209,8 @@ fun HomeScreenContent(
         ) {
             //    Notification part
             notificationView(
-                showNotification = showNotification, onChangeNotification = onChangeNotification
+                showNotification = showNotification,
+                onChangeNotification = onChangeNotification
             )
 
             //            calender part
@@ -215,7 +218,8 @@ fun HomeScreenContent(
                 calendarItem = state.calendarData,
                 today = state.todayBS,
                 selectedDay = state.selectedDay,
-                onAction = onAction
+                onAction = onAction,
+                isLoading = state.isAttendanceLoading
             )
 
             // request section
@@ -382,33 +386,26 @@ fun LazyListScope.attendanceSection(
         )
     }
 
-    items(state.attendanceReportHistory, key = { it.date }) {
-//        Text(
-//            text = it.statusClips.joinToString(",") + it.date,
-//            style = MaterialTheme.typography.titleMedium
-//        )
+    if (state.isAttendanceLoading) {
+        items(7) {
+            ShimmerView(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(MaterialTheme.dimens.leaveBoxHeight)
+                    .padding(
+                        horizontal = MaterialTheme.dimens.small3
+                    )
+                    .clip(shape = MaterialTheme.shapes.medium)
 
-        AttendanceHistoryItem(
-            item = it
-        )
+            )
+        }
+    } else {
+        items(items = state.attendanceReportHistory, key = { it.date }) {
+            AttendanceHistoryItem(
+                item = it
+            )
+        }
     }
-//    //        attendance chart
-//    item(key = "Attendance Chart") {
-//        HorizontalPager(
-//            state = pagerState,
-//            contentPadding = PaddingValues(horizontal = MaterialTheme.dimens.small3)
-//        ) { item ->
-//            AnimatedContent(item) { page ->
-//                when (page) {
-//                    0 -> SmoothLineGraph()
-//                    1 -> Box(
-//                        modifier = Modifier.fillMaxSize()
-//                            .background(color = MaterialTheme.colorScheme.onPrimaryContainer)
-//                    )
-//                }
-//            }
-//        }
-//    }
 }
 
 @Composable
@@ -649,14 +646,34 @@ fun LazyListScope.requestSection(
             Row(
                 modifier = Modifier.fillMaxWidth()
                     .padding(horizontal = MaterialTheme.dimens.small3),
-                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
+                horizontalArrangement = Arrangement.spacedBy(
+                    MaterialTheme.dimens.small3
+                )
             ) {
                 rowItems.forEach { leaveItem ->
-                    AttendanceItemContent(
-                        modifier = Modifier.weight(1f).fillMaxSize(),
-                        item = leaveItem,
-                        onClick = {}
-                    )
+                    if (state.isAttendanceLoading) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(
+                                MaterialTheme.dimens.small3
+                            )
+                        ) {
+                            repeat(2) {
+                                ShimmerView(
+                                    modifier = Modifier.weight(1f)
+                                        .height(MaterialTheme.dimens.leaveBoxHeight)
+                                        .clip(MaterialTheme.shapes.medium)
+                                )
+                            }
+
+                        }
+                    } else {
+                        AttendanceItemContent(
+                            modifier = Modifier.weight(1f).fillMaxSize(),
+                            item = leaveItem,
+                            onClick = {}
+                        )
+                    }
                 }
                 // Fill remaining spaces in row if needed
                 repeat(2 - rowItems.size) {
@@ -671,6 +688,7 @@ fun LazyListScope.calendarView(
     calendarItem: List<CalendarDay>,
     today: CalendarDate,
     selectedDay: Int,
+    isLoading: Boolean,
     onAction: (HomeScreenActions) -> Unit
 ) {
     stickyHeader(key = "calender") {
@@ -680,6 +698,7 @@ fun LazyListScope.calendarView(
             days = calendarItem,
             today = today,
             selectedDay = selectedDay,
+            isLoading = isLoading,
             onDaySelected = {
                 onAction(HomeScreenActions.OnDateSelected(it))
             }

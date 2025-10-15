@@ -122,7 +122,7 @@ class HomeScreenViewModel(
         ).onSuccess { data ->
             _state.update {
                 it.copy(
-                    isAttendanceLoading = false,
+                    isAttendanceLoading = true,
                     attendanceReport = data,
                     attendanceReportHistory = data.filter { mData ->
                         try {
