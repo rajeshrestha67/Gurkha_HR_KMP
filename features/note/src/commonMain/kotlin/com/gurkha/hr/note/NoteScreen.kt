@@ -55,12 +55,15 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.gurkha.hr.domain.note.allNotes.model.NoteData
+import com.gurkha.hr.domain.note.allNotes.model.toUi
 import com.gurkha.hr.model.note.NoteAction
 import com.gurkha.hr.model.note.NoteState
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.darkPrimaryTextColor
 import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.primaryTextColor
+import com.gurkha.model.note.ui.NoteDataUi
+import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -90,13 +93,22 @@ fun NoteScreen(
         val json = result?.value
         val isUpdate = isUpdate?.value
         if (!json.isNullOrBlank() && !isUpdate.isNullOrBlank()) {
-            println("noteScreenTriggered")
             viewModel.onAction(NoteAction.OnUpdateNoteDataJson(json, isUpdate))
             navController.currentBackStackEntry
                 ?.savedStateHandle?.apply {
                     set("data", null)
                     set("isUpdate", null)
                 }
+        }else{
+//            execute for the added data
+           json?.let {
+               viewModel.onAction(NoteAction.OnUpdateNoteDataJson(json, isUpdate))
+               navController.currentBackStackEntry
+                   ?.savedStateHandle?.apply {
+                       set("data", null)
+                       set("isUpdate", null)
+                   }
+           }
         }
     }
 
@@ -258,8 +270,8 @@ fun ResultBox(
                         DropdownMenuItem(
                             text = { Text(text = stringResource(SharedRes.Strings.edit)) },
                             onClick = {
-//                                val data = Json.encodeToString<NoteDataUi>(item.toUi())
-//                                onGoToAddNotesScreen(data)
+                                val data = Json.encodeToString<NoteDataUi>(item.toUi())
+                                onGoToAddNotesScreen(data)
                                 showMore = false
                             }
                         )

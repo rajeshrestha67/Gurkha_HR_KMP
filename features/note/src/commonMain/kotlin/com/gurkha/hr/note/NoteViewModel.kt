@@ -38,10 +38,10 @@ class NoteViewModel(
     fun onAction(action: NoteAction) {
         when (action) {
             is NoteAction.OnUpdateNoteDataJson -> {
-                val data = Json.decodeFromString<AddedNoteDataUi>(action.data)
-                val isUpdate = Json.decodeFromString<Boolean>(action.isUpdate)
+                val isUpdateValue = action.isUpdate
 
-                if (isUpdate) {
+                if (isUpdateValue == "true") {
+                    val data = Json.decodeFromString<NoteDataUi>(action.data)
                     _state.update { currentState ->
                         val updatedList = currentState.noteItem.map { note ->
                             if (note.id == data.id) {
@@ -55,38 +55,39 @@ class NoteViewModel(
                                     startTime = data.startTime,
                                     endTime = data.endTime,
                                     isReminder = data.isReminder,
+                                    startDateAD = data.startDateAD,
+                                    endDateAD = data.endDateAD,
+                                    startDateBS = data.startDateBS,
+                                    endDateBS = data.endDateBS
                                 )
                             } else note
                         }
-
                         currentState.copy(
                             hasUpdatedData = true,
                             noteItem = updatedList
                         )
                     }
                 } else {
+                    val data = Json.decodeFromString<AddedNoteDataUi>(action.data)
                     _state.update { currentState ->
-                        val updatedList = currentState.noteItem + NoteData(
+                        val newNote = NoteData(
                             id = data.id,
                             title = data.title,
                             description = data.description,
                             isEvent = data.isEvent,
-                            location = data.location ,
+                            location = data.location,
                             active = data.active,
-                            startTime = data.startTime ,
-                            endTime = data.endTime ,
+                            startTime = data.startTime,
+                            endTime = data.endTime,
                             isReminder = data.isReminder,
-                            createdAtAd = data.createdAt ,
-                            createdAtBs = data.createdAt,
                             startDateAD = data.startDate ,
                             endDateAD = data.endDate ,
-                            startDateBS = data.startDate,
-                            endDateBS = data.endDate
+                            startDateBS = data.startDate ,
+                            endDateBS = data.endDate ,
                         )
-
                         currentState.copy(
                             hasUpdatedData = true,
-                            noteItem = updatedList,
+                            noteItem = currentState.noteItem + newNote
                         )
                     }
                 }

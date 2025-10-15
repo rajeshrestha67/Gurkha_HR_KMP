@@ -89,7 +89,6 @@ fun AddNoteScreen(
 
     LaunchedEffect(Unit) {
         viewModel.successChannel.collect {
-            println("successChannel $it")
             messageToShow = it
             showSuccessDialogue = true
         }
@@ -97,8 +96,6 @@ fun AddNoteScreen(
 
     LaunchedEffect(Unit) {
         viewModel.errorChannel.collect {
-            println("errorChannel $it")
-
             messageToShow = it
             showErrorDialogue = true
         }
@@ -110,21 +107,42 @@ fun AddNoteScreen(
             viewModel.onAction(AddNotesAction.OnUpdateDataForStore(json))
         }
     }
+    LaunchedEffect(Unit) {
+        viewModel.updateDateChannel.collect {
+            val json = Json.encodeToString(it)
+            viewModel.onAction(AddNotesAction.OnUpdateData(json))
+        }
+    }
 
     LaunchedEffect(sendData) {
         val isUpdate = Json.encodeToString(state.isEdit)
-        if (sendData) {
-            val data = state.storeNoteItem
-            data?.let {
-                val stringData = Json.encodeToString(data)
-                navController.previousBackStackEntry
-                    ?.savedStateHandle?.apply {
-                        set("data", stringData)
-                        set("isUpdate", isUpdate)
-                    }
-                sendData = false
-                onBackClicked()
-                println("triggered")
+        if(state.isEdit){
+            if (sendData) {
+                val data = state.noteItemData
+                data?.let {
+                    val stringData = Json.encodeToString(data)
+                    navController.previousBackStackEntry
+                        ?.savedStateHandle?.apply {
+                            set("data", stringData)
+                            set("isUpdate", isUpdate)
+                        }
+                    sendData = false
+                    onBackClicked()
+                }
+            }
+        }else{
+            if (sendData) {
+                val data = state.storeNoteItem
+                data?.let {
+                    val stringData = Json.encodeToString(data)
+                    navController.previousBackStackEntry
+                        ?.savedStateHandle?.apply {
+                            set("data", stringData)
+                            set("isUpdate", null)
+                        }
+                    sendData = false
+                    onBackClicked()
+                }
             }
         }
     }

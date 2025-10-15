@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.gurkha.hr.domain.form.RequiredValidationUseCase
 import com.gurkha.hr.domain.note.addNote.useCase.AddNoteUseCase
 import com.gurkha.hr.domain.note.updateNote.useCase.UpdateNoteUseCase
-//import com.gurkha.hr.logger.AppLogger
 import com.gurkha.hr.model.addNotes.AddNotesAction
 import com.gurkha.hr.model.addNotes.AddNotesState
 import com.gurkha.hr.networkhelper.onError
@@ -39,6 +38,9 @@ class AddNotesViewModel(
     val successChannel = _successChannel.receiveAsFlow()
     private val _dataChannel = Channel<AddedNoteDataUi?>()
     val dataChannel = _dataChannel.receiveAsFlow()
+
+    private val _updateDateChannel = Channel<NoteDataUi?>()
+    val updateDateChannel = _updateDateChannel.receiveAsFlow()
 
     private val _errorChannel = Channel<String>()
     val errorChannel = _errorChannel.receiveAsFlow()
@@ -178,7 +180,7 @@ class AddNotesViewModel(
             }
 
             is AddNotesAction.OnUpdateNoteData -> {
-                val data = Json.decodeFromString<AddedNoteDataUi>(action.item)
+                val data = Json.decodeFromString<NoteDataUi>(action.item)
                 _state.update {
                     it.copy(
                         noteItemData = data,
@@ -195,41 +197,53 @@ class AddNotesViewModel(
             }
 
             is AddNotesAction.UpdateNote -> {
-//                val updateData = AddedNoteDataUi(
-//                    title = state.value.title,
-//                    description = state.value.description,
-//                    startTime = state.value.startTime,
-//                    endTime = state.value.endTime,
-//                    location = state.value.location,
-//                    isEvent = state.value.isEvent.toString(),
-//                    isReminder = state.value.isReminder,
-//                    id = state.value.noteItemData?.id ?: 0,
-//                    startDate = state.value.startDate.toString(),
-//                    endDate = state.value.endDate,
-//                )
-//                updateNotes(
-//                    active = updateData.active,
-//                    description = updateData.description,
-//                    endTime = "",
-//                    isEvent = "N",
-//                    isReminder = "N",
-//                    location = "",
-//                    reminderMessage = "",
-//                    reminderTime = "",
-//                    startTime = "",
-//                    title = updateData.title,
-//                    id = updateData.id,
-//                )
+                val updateData = NoteDataUi(
+                    title = state.value.title,
+                    description = state.value.description,
+                    startTime = state.value.startTime,
+                    endTime = state.value.endTime,
+                    location = state.value.location,
+                    isEvent = state.value.isEvent.toString(),
+                    isReminder = state.value.isReminder,
+                    id = state.value.noteItemData?.id ?: 0,
+                    startDateAD = state.value.startDate.toString(),
+                    endDateAD = state.value.endDate.toString(),
+                    startDateBS = state.value.startDate.toString(),
+                    endDateBS = state.value.endDate.toString(),
+                    active = state.value.noteItemData?.active.toString(),
+                )
+                updateNotes(
+                    active = updateData.active,
+                    description = updateData.description,
+                    endTime = "",
+                    isEvent = "N",
+                    isReminder = "N",
+                    location = "",
+                    reminderMessage = "",
+                    reminderTime = "",
+                    startTime = "",
+                    title = updateData.title,
+                    id = updateData.id,
+                )
             }
 
             is AddNotesAction.OnUpdateDataForStore -> {
-                    val data = Json.decodeFromString<AddedNoteDataUi>(action.data)
-                println("data_value $data")
-                    _state.update {
-                        it.copy(
-                            storeNoteItem = data
-                        )
-                    }
+                val data = Json.decodeFromString<AddedNoteDataUi>(action.data)
+                _state.update {
+                    it.copy(
+                        storeNoteItem = data
+                    )
+                }
+
+            }
+
+            is AddNotesAction.OnUpdateData -> {
+                val data = Json.decodeFromString<NoteDataUi>(action.data)
+                _state.update {
+                    it.copy(
+                        noteItemData = data
+                    )
+                }
 
             }
 
@@ -275,19 +289,19 @@ class AddNotesViewModel(
                 id = data.id,
                 title = data.title,
                 description = data.description,
-                location = data.location ,
-                startTime = data.startTime ,
-                endTime = data.endTime ,
+                location = data.location,
+                startTime = data.startTime,
+                endTime = data.endTime,
                 isReminder = data.isReminder,
                 isEvent = data.isEvent,
-                startDate = data.startDate ,
-                endDate = data.endDate ,
+                startDate = data.startDate,
+                endDate = data.endDate,
                 active = data.active,
-                reminderTime = data.reminderTime ,
-                reminderDate = data.reminderDate ,
-                reminderMessage = data.reminderMessage ,
-                createdAt = data.createdAt ,
-                updatedAt = data.updatedAt ,
+                reminderTime = data.reminderTime,
+                reminderDate = data.reminderDate,
+                reminderMessage = data.reminderMessage,
+                createdAt = data.createdAt,
+                updatedAt = data.updatedAt,
                 message = data.message
             )
 //            AppLogger.d("AddNoteViewModel", dataUi.toString())
@@ -319,24 +333,24 @@ class AddNotesViewModel(
         title: String,
         id: Int
     ) = viewModelScope.launch {
-//        val data = NoteDataUi(
-//            id = id,
-//            title = title,
-//            description = description,
-//            isEvent = isEvent,
-//            startDateAD = state.value.storeNoteItem?.startDateAD ?: "",
-//            endDateAD = state.value.storeNoteItem?.endDateAD ?: "",
-//            startDateBS = state.value.storeNoteItem?.startDateBS ?: "",
-//            endDateBS =  state.value.storeNoteItem?.endDateBS ?: "",
-//            location = location,
-//            active = "N",
-//            startTime = startTime,
-//            endTime = endTime,
-//            isReminder = isReminder
-//        )
-//        _dataChannel.send(
-//            data
-//        )
+        val data = NoteDataUi(
+            id = id,
+            title = title,
+            description = description,
+            isEvent = isEvent,
+            startDateAD = "",
+            endDateAD = "",
+            startDateBS = "",
+            endDateBS = "",
+            location = location,
+            active = "N",
+            startTime = startTime,
+            endTime = endTime,
+            isReminder = isReminder
+        )
+        _updateDateChannel.send(
+            data
+        )
         updateNoteUseCase(
             active = active,
             description = description,

@@ -24,5 +24,6 @@ sealed interface AddNotesAction {
     data object UpdateNote : AddNotesAction
 
     data class OnUpdateDataForStore(val data: String) : AddNotesAction
+    data class OnUpdateData(val data: String) : AddNotesAction
 
 }

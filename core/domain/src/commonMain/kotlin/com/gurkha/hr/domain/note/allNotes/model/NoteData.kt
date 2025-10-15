@@ -1,5 +1,7 @@
 package com.gurkha.hr.domain.note.allNotes.model
 
+import com.gurkha.model.note.ui.NoteDataUi
+
 
 data class NoteData(
     val id: Int ,
@@ -15,7 +17,24 @@ data class NoteData(
     val startTime: String ,
     val endTime: String ,
     val isReminder: String ,
-    val createdAtAd: String ,
-    val createdAtBs: String
 )
+
+fun NoteData.toUi(): NoteDataUi {
+    return NoteDataUi(
+        id = id,
+        title = title,
+        description = description,
+        isEvent = isEvent,
+        isReminder = isReminder,
+        active = active,
+        startDateAD = startDateAD,
+        endDateAD = endDateAD,
+        startDateBS = startDateBS,
+        endDateBS = endDateBS,
+        location = location,
+        startTime = startTime,
+        endTime = endTime,
+    )
+}
+
 

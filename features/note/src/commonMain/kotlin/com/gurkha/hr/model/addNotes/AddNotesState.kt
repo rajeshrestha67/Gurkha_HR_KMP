@@ -33,7 +33,7 @@ data class AddNotesState(
     val endTimeError: StringResource? = null,
     val locationError: StringResource? = null,
 
-    val noteItemData : AddedNoteDataUi? =null,
+    val noteItemData : NoteDataUi? =null,
     val storeNoteItem : AddedNoteDataUi? =null,
 
     val isEdit : Boolean = false,

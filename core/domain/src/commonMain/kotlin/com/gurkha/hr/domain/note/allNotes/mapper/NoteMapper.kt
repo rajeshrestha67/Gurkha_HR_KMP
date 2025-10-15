@@ -19,8 +19,6 @@ fun NotesResponseDto.toData(): List<NoteData> {
             startTime = it.startTime ?: "",
             endTime = it.endTime ?: "",
             isReminder = it.isReminder ?: "N",
-            createdAtAd = it.createdAtAd ?: "",
-            createdAtBs = it.createdAtBs ?: ""
         )
     } ?: emptyList()
 }
