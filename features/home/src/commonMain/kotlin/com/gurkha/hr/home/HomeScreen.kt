@@ -258,7 +258,7 @@ fun LazyListScope.anniversarySection(
     item(key = "anniversary title") {
         TitleBar(
             modifier = Modifier.fillMaxWidth()
-                .padding(start = MaterialTheme.dimens.small3, end = MaterialTheme.dimens.small2),
+                .padding(start = MaterialTheme.dimens.small3, end = MaterialTheme.dimens.small1),
             onViewAll = {},
             title = SharedRes.Strings.work_anniversaries,
             subTitle = SharedRes.Strings.view_all
@@ -317,7 +317,8 @@ fun LazyListScope.birthDaySection(
 ) {
     item(key = "birthday") {
         TitleBar(
-            modifier = Modifier.fillMaxWidth().padding(start = MaterialTheme.dimens.small3),
+            modifier = Modifier.fillMaxWidth()
+                .padding(start = MaterialTheme.dimens.small3, end = MaterialTheme.dimens.small1),
             onViewAll = {},
             title = SharedRes.Strings.upcoming_birthday,
             subTitle = SharedRes.Strings.view_all
@@ -374,7 +375,8 @@ fun LazyListScope.attendanceSection(
 ) {
     item(key = "attendance_title") {
         TitleBar(
-            modifier = Modifier.fillMaxWidth().padding(start = MaterialTheme.dimens.small3),
+            modifier = Modifier.fillMaxWidth()
+                .padding(start = MaterialTheme.dimens.small3, end = MaterialTheme.dimens.small1),
             title = SharedRes.Strings.attendance,
             subTitle = SharedRes.Strings.view_all
         )
@@ -596,7 +598,8 @@ fun LazyListScope.requestSection(
     item("request_title") {
 
         TitleBar(
-            modifier = Modifier.fillMaxWidth().padding(start = MaterialTheme.dimens.small3),
+            modifier = Modifier.fillMaxWidth()
+                .padding(start = MaterialTheme.dimens.small3, end = MaterialTheme.dimens.small1),
             title = SharedRes.Strings.request
         )
     }
