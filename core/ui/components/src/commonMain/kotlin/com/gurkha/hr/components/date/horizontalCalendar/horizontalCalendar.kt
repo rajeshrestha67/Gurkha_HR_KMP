@@ -1,5 +1,6 @@
 package com.gurkha.hr.components.date.horizontalCalendar
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyListState
@@ -71,7 +73,7 @@ fun HorizontalCalendar(
     ) {
 
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().height(MaterialTheme.dimens.medium3),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -83,18 +85,20 @@ fun HorizontalCalendar(
                 style = MaterialTheme.typography.titleLarge
             )
 
-            TextButton(
-                modifier = Modifier,
-                onClick = {
-                    onDaySelected(today.dayOfMonth)
-                }
-            ) {
-                Text(
-                    text = stringResource(SharedRes.Strings.today),
-                    style = MaterialTheme.typography.titleSmall.copy(
-                        color = MaterialTheme.colorScheme.linkColor
+            AnimatedVisibility(selectedDay != today.dayOfMonth) {
+                TextButton(
+                    modifier = Modifier,
+                    onClick = {
+                        onDaySelected(today.dayOfMonth)
+                    }
+                ) {
+                    Text(
+                        text = stringResource(SharedRes.Strings.today),
+                        style = MaterialTheme.typography.titleSmall.copy(
+                            color = MaterialTheme.colorScheme.linkColor
+                        )
                     )
-                )
+                }
             }
 
         }
