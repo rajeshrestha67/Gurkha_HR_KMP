@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
 class NoteViewModel(
@@ -25,44 +24,77 @@ class NoteViewModel(
     private val _state = MutableStateFlow(NoteState())
     val state = _state
         .onStart {
-            if(_state.value.noteItem.isEmpty()){
+            if (_state.value.noteItem.isEmpty()) {
                 fetchAllNotes()
             }
         }
         .stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = NoteState()
-    )
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = NoteState()
+        )
 
-    fun onAction(action: NoteAction){
-        when(action){
+    fun onAction(action: NoteAction) {
+        when (action) {
             is NoteAction.OnUpdateNoteDataJson -> {
                 val data = Json.decodeFromString<NoteDataUi>(action.data)
-                _state.update { currentState ->
-                    val updatedList = currentState.noteItem + NoteData(
-                        id = data.id,
-                        title = data.title,
-                        description = data.description,
-                        isEvent = data.isEvent,
-                        startDateAD = data.startDateAD,
-                        endDateAD = data.endDateAD,
-                        startDateBS = data.startDateBS,
-                        endDateBS = data.endDateBS,
-                        location = data.location,
-                        active = data.active,
-                        startTime = data.startTime,
-                        endTime = data.endTime,
-                        isReminder = data.isReminder
-                    )
+                val isUpdate = Json.decodeFromString<Boolean>(action.isUpdate)
 
-                    currentState.copy(
-                        hasUpdatedData = true,
-                        noteItem = updatedList,
-                    )
+                if (isUpdate) {
+                    _state.update { currentState ->
+                        val updatedList = currentState.noteItem.map { note ->
+                            if (note.id == data.id) {
+                                note.copy(
+                                    id = data.id,
+                                    title = data.title,
+                                    description = data.description,
+                                    isEvent = data.isEvent,
+                                    startDateAD = data.startDateAD,
+                                    endDateAD = data.endDateAD,
+                                    startDateBS = data.startDateBS,
+                                    endDateBS = data.endDateBS,
+                                    location = data.location,
+                                    active = data.active,
+                                    startTime = data.startTime,
+                                    endTime = data.endTime,
+                                    isReminder = data.isReminder
+                                )
+                            } else note
+                        }
+
+                        currentState.copy(
+                            hasUpdatedData = true,
+                            noteItem = updatedList
+                        )
+                    }
+                } else {
+                    _state.update { currentState ->
+                        val updatedList = currentState.noteItem + NoteData(
+                            id = data.id,
+                            title = data.title,
+                            description = data.description,
+                            isEvent = data.isEvent,
+                            startDateAD = data.startDateAD,
+                            endDateAD = data.endDateAD,
+                            startDateBS = data.startDateBS,
+                            endDateBS = data.endDateBS,
+                            location = data.location,
+                            active = data.active,
+                            startTime = data.startTime,
+                            endTime = data.endTime,
+                            isReminder = data.isReminder
+                        )
+
+                        currentState.copy(
+                            hasUpdatedData = true,
+                            noteItem = updatedList,
+                        )
+                    }
                 }
+
             }
-            is NoteAction.OnDeleteIdSelected-> {
+
+            is NoteAction.OnDeleteIdSelected -> {
                 _state.update {
                     it.copy(
                         selectedId = action.id
@@ -86,7 +118,7 @@ class NoteViewModel(
                 isFetchingNotes = true,
             )
         }
-        noteUseCase().onSuccess {data ->
+        noteUseCase().onSuccess { data ->
             _state.update {
                 it.copy(
                     isFetchingNotes = true,
@@ -97,7 +129,7 @@ class NoteViewModel(
 
     }
 
-    private fun deleteNote(id: Int)=viewModelScope.launch{
+    private fun deleteNote(id: Int) = viewModelScope.launch {
         _state.update {
             it.copy(
 

@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gurkha.hr.domain.form.RequiredValidationUseCase
 import com.gurkha.hr.domain.note.addNote.useCase.AddNoteUseCase
-import com.gurkha.hr.domain.note.allNotes.model.NoteData
 import com.gurkha.hr.domain.note.updateNote.useCase.UpdateNoteUseCase
 import com.gurkha.hr.model.addNotes.AddNotesAction
 import com.gurkha.hr.model.addNotes.AddNotesState
@@ -234,6 +233,7 @@ class AddNotesViewModel(
                     )
                 }
             }
+
         }
     }
 
@@ -314,6 +314,24 @@ class AddNotesViewModel(
         title: String,
         id: Int
     ) = viewModelScope.launch {
+        val data = NoteDataUi(
+            id = id,
+            title = title,
+            description = description,
+            isEvent = isEvent,
+            startDateAD = state.value.storeNoteItem?.startDateAD ?: "",
+            endDateAD = state.value.storeNoteItem?.endDateAD ?: "",
+            startDateBS = state.value.storeNoteItem?.startDateBS ?: "",
+            endDateBS =  state.value.storeNoteItem?.endDateBS ?: "",
+            location = location,
+            active = "N",
+            startTime = startTime,
+            endTime = endTime,
+            isReminder = isReminder
+        )
+        _dataChannel.send(
+            data
+        )
         updateNoteUseCase(
             active = active,
             description = description,

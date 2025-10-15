@@ -72,10 +72,16 @@ fun NoteScreen(
         ?.getStateFlow<String?>("data", null)
         ?.collectAsStateWithLifecycle()
 
+    val isUpdate = navController.currentBackStackEntry
+        ?.savedStateHandle
+        ?.getStateFlow<String?>("isUpdate", null)
+        ?.collectAsStateWithLifecycle()
+
     LaunchedEffect(result) {
         val json = result?.value
-        if (!json.isNullOrBlank()) {
-            viewModel.onAction(NoteAction.OnUpdateNoteDataJson(json))
+        val isUpdate = isUpdate?.value
+        if (!json.isNullOrBlank() && !isUpdate.isNullOrBlank()) {
+            viewModel.onAction(NoteAction.OnUpdateNoteDataJson(json, isUpdate))
             delay(500)
             noteListState.animateScrollToItem(state.noteItem.lastIndex + 1)
         }
@@ -211,18 +217,19 @@ fun ResultBox(
                             DropdownMenuItem(
                                 text = {
                                     Text(
-                                        text = "Edit"
+                                        text = stringResource(SharedRes.Strings.edit)
                                     )
                                 },
                                 onClick = {
                                     val data = Json.encodeToString<NoteDataUi>(item.toUi())
                                     onGoToAddNotesScreen(data)
+                                    showMore = false
                                 }
                             )
                             DropdownMenuItem(
                                 text = {
                                     Text(
-                                        text = "Delete"
+                                        text = stringResource(SharedRes.Strings.delete)
                                     )
                                 },
                                 onClick = {
@@ -256,7 +263,7 @@ fun ResultBox(
                                 showDialogue = false
                             }
                         ) {
-                            Text("OK")
+                            Text(text = stringResource(SharedRes.Strings.yes))
                         }
                     },
                     dismissButton = {
@@ -265,14 +272,14 @@ fun ResultBox(
                                 showDialogue = false
                             }
                         ) {
-                            Text("Cancel")
+                            Text(text = stringResource(SharedRes.Strings.cancel))
                         }
                     },
                     title = {
                         Text("Confirmation")
                     },
                     text = {
-                        Text("Are you sure?")
+                        Text("Are you sure you wanna delete?")
                     },
                     properties = DialogProperties(
                         dismissOnBackPress = true,

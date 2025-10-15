@@ -43,9 +43,11 @@ import gurkhahr.core.ui.res.generated.resources.contact_info
 import gurkhahr.core.ui.res.generated.resources.current_password
 import gurkhahr.core.ui.res.generated.resources.date
 import gurkhahr.core.ui.res.generated.resources.date_of_birth
+import gurkhahr.core.ui.res.generated.resources.delete
 import gurkhahr.core.ui.res.generated.resources.description
 import gurkhahr.core.ui.res.generated.resources.do_you_really_want_to_logout
 import gurkhahr.core.ui.res.generated.resources.document
+import gurkhahr.core.ui.res.generated.resources.edit
 import gurkhahr.core.ui.res.generated.resources.edit_notes
 import gurkhahr.core.ui.res.generated.resources.email
 import gurkhahr.core.ui.res.generated.resources.emergency_contact
@@ -314,6 +316,8 @@ object SharedRes {
         val end_time = Res.string.end_time
         val location = Res.string.location
 
+        val edit = Res.string.edit
+        val delete = Res.string.delete
 
 
 

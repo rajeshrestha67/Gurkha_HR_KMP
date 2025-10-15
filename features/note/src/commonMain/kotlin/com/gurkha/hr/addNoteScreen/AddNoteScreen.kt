@@ -109,14 +109,16 @@ fun AddNoteScreen(
     }
 
     LaunchedEffect(sendData) {
+        val isUpdate = Json.encodeToString(state.isEdit)
            if(sendData){
                val data = state.storeNoteItem
                data?.let {
-                   println("triggered $data")
                    val stringData = Json.encodeToString(data)
                    navController.previousBackStackEntry
-                       ?.savedStateHandle
-                       ?.set("data", stringData)
+                       ?.savedStateHandle?.apply {
+                           set("data", stringData)
+                           set("isUpdate",isUpdate)
+                       }
                    navController.popBackStack()
                }
            }

@@ -117,6 +117,9 @@
 
     <string name="edit_note">टिप्पणी सम्पादन गर्नुहोस्</string>
 
+    <string name="edit">सम्पादन गर्नुहोस्</string>
+    <string name="delete">मेटाउनुहोस्</string>
+
     <string name="view_all">सबै हेर्नुहोस्</string>
     <string name="profile">प्रोफाइल</string>
     <string name="time_and_attendance">समय र उपस्थिति</string>
