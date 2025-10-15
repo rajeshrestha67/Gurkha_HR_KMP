@@ -13,16 +13,12 @@ import com.gurkha.hr.domain.attendance.attendanceReport.model.AttendanceStatus
 import com.gurkha.hr.domain.upComingBirthday.model.UpComingBirthdayData
 import com.gurkha.hr.domain.upComingWorkAnniversaries.model.UpComingWorkAnniversaryData
 import com.gurkha.hr.res.SharedRes
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
 
 data class HomeScreenState(
 
-    val homeGridItemsToShow: List<AttendanceItem> = listOf(
-        AttendanceItem(Icons.Filled.SyncLock, "Check In", "10.20 AM", "On Time"),
-        AttendanceItem(Icons.Filled.LockClock, "Check Out", "5.30 AM", "Go Home"),
-        AttendanceItem(Icons.Filled.TimeToLeave, "Leave", "3", "Total Leave"),
-        AttendanceItem(Icons.Filled.EditCalendar, "Attendance", "22", "Working Days"),
-    ),
+    val requests: List<RequestItem> = RequestType.list.map { RequestItem(it) },
     val fullName: String = "",
     val initials: String = "",
     val levelName: String = "",
@@ -43,13 +39,51 @@ data class HomeScreenState(
     val selectedDay: Int = 1
 )
 
-
-data class AttendanceItem(
-    val icon: ImageVector,
-    val title: String,
-    val time: String,
-    val status: String
+data class RequestItem(
+    val type: RequestType,
+    val duration: String = "--:--"
 )
+
+enum class RequestType(
+    val icon: ImageVector,
+    val title: StringResource,
+    val status: StringResource
+) {
+
+    CheckIn(
+        icon = Icons.Filled.SyncLock,
+        title = SharedRes.Strings.checkIn,
+        status = SharedRes.Strings.onTime
+    ),
+    CheckOut(
+        icon = Icons.Filled.LockClock,
+        title = SharedRes.Strings.checkOut,
+        status = SharedRes.Strings.goHome
+    ),
+    Leave(
+        icon = Icons.Filled.TimeToLeave,
+        title = SharedRes.Strings.leave,
+        status = SharedRes.Strings.totalLeave
+    ),
+    Attendance(
+        icon = Icons.Filled.EditCalendar,
+        title = SharedRes.Strings.attendance,
+        status = SharedRes.Strings.workingDays
+    );
+
+    companion object Companion {
+        private val typeMap =
+            enumValues<RequestType>().associateBy { it.title.key }
+
+        fun get(typeName: StringResource): RequestType =
+            RequestType.typeMap[typeName.key] ?: CheckIn
+
+        val list: List<RequestType>
+            get() = RequestType.entries.toList().map { it }
+    }
+
+}
+
 
 data class AttendanceHistoryItemUI(
     val clockInTime: String,

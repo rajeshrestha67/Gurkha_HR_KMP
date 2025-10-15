@@ -66,9 +66,9 @@ import com.gurkha.hr.components.swipeToDismiss.SwipeToDismissBox
 import com.gurkha.hr.date.data.CalendarDate
 import com.gurkha.hr.date.data.CalendarDay
 import com.gurkha.hr.home.model.AttendanceHistoryItemUI
-import com.gurkha.hr.home.model.AttendanceItem
 import com.gurkha.hr.home.model.HomeScreenActions
 import com.gurkha.hr.home.model.HomeScreenState
+import com.gurkha.hr.home.model.RequestItem
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.borderColor
 import com.gurkha.hr.res.theme.darkPrimaryTextColor
@@ -641,7 +641,7 @@ fun LazyListScope.requestSection(
 //    }
 
 //    new approach
-    state.homeGridItemsToShow.chunked(2).forEach { rowItems ->
+    state.requests.chunked(2).forEach { rowItems ->
         item {
             Row(
                 modifier = Modifier.fillMaxWidth()
@@ -748,7 +748,7 @@ fun LazyListScope.notificationView(
 //reusable request row
 @Composable
 fun AttendanceItemContent(
-    item: AttendanceItem, modifier: Modifier = Modifier, onClick: () -> Unit
+    item: RequestItem, modifier: Modifier = Modifier, onClick: () -> Unit
 ) {
     Column(
         modifier = modifier.border(
@@ -766,8 +766,11 @@ fun AttendanceItemContent(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2)
         ) {
-            Icon(imageVector = item.icon, contentDescription = "arrow right")
-            Text(text = item.title, style = MaterialTheme.typography.titleMedium)
+            Icon(imageVector = item.type.icon, contentDescription = "arrow right")
+            Text(
+                text = stringResource(item.type.title),
+                style = MaterialTheme.typography.titleMedium
+            )
         }
 
         Column(
@@ -776,12 +779,13 @@ fun AttendanceItemContent(
             )
         ) {
             Text(
-                text = item.time, style = MaterialTheme.typography.titleLarge.copy(
+                text = item.duration, style = MaterialTheme.typography.titleLarge.copy(
                     color = MaterialTheme.colorScheme.primaryTextColor
                 )
             )
             Text(
-                text = item.status, style = MaterialTheme.typography.titleSmall.copy(
+                text = stringResource(item.type.status),
+                style = MaterialTheme.typography.titleSmall.copy(
                     color = MaterialTheme.colorScheme.primaryTextColor
 
                 )

@@ -181,6 +181,14 @@
     <string name="present">वर्तमान</string>
     <string name="appresent">अनुपस्थित</string>
 
+    <string name="check_in">चेक इन</string>
+    <string name="check_out">चेक आउट</string>
+
+    <string name="on_time">समयमै</string>
+    <string name="go_home">घर जानुहोस्</string>
+    <string name="total_leave">कुल बिदा</string>
+    <string name="working_days">काम गर्ने दिनहरू</string>
+
     <string-array name="months">
         <item>बैशाख</item>
         <item>जेठ</item>

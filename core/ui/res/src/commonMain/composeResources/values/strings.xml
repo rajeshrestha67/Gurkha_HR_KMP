@@ -182,6 +182,13 @@
     <string name="present">Present</string>
     <string name="absent">Absent</string>
 
+    <string name="check_in">Check In</string>
+    <string name="check_out">Check Out</string>
+    <string name="on_time">On Time</string>
+    <string name="go_home">Go Home</string>
+    <string name="total_leave">Total Leave</string>
+    <string name="working_days">Working Days</string>
+
 
     <string-array name="months">
         <item>Baisakh</item>

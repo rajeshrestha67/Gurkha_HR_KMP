@@ -31,6 +31,8 @@ import gurkhahr.core.ui.res.generated.resources.cancel
 import gurkhahr.core.ui.res.generated.resources.cancelled
 import gurkhahr.core.ui.res.generated.resources.change_password
 import gurkhahr.core.ui.res.generated.resources.chat
+import gurkhahr.core.ui.res.generated.resources.check_in
+import gurkhahr.core.ui.res.generated.resources.check_out
 import gurkhahr.core.ui.res.generated.resources.citizenship_back
 import gurkhahr.core.ui.res.generated.resources.citizenship_front
 import gurkhahr.core.ui.res.generated.resources.clockIn
@@ -62,6 +64,7 @@ import gurkhahr.core.ui.res.generated.resources.full_day
 import gurkhahr.core.ui.res.generated.resources.gender
 import gurkhahr.core.ui.res.generated.resources.general
 import gurkhahr.core.ui.res.generated.resources.getStarted
+import gurkhahr.core.ui.res.generated.resources.go_home
 import gurkhahr.core.ui.res.generated.resources.guardian_information
 import gurkhahr.core.ui.res.generated.resources.guardian_name
 import gurkhahr.core.ui.res.generated.resources.guardian_phone
@@ -109,6 +112,7 @@ import gurkhahr.core.ui.res.generated.resources.no
 import gurkhahr.core.ui.res.generated.resources.no_data_found
 import gurkhahr.core.ui.res.generated.resources.numbers
 import gurkhahr.core.ui.res.generated.resources.ok
+import gurkhahr.core.ui.res.generated.resources.on_time
 import gurkhahr.core.ui.res.generated.resources.outline_logout_24
 import gurkhahr.core.ui.res.generated.resources.password
 import gurkhahr.core.ui.res.generated.resources.password_does_not_match
@@ -148,6 +152,7 @@ import gurkhahr.core.ui.res.generated.resources.time_and_attendance
 import gurkhahr.core.ui.res.generated.resources.to_date
 import gurkhahr.core.ui.res.generated.resources.today
 import gurkhahr.core.ui.res.generated.resources.total_days
+import gurkhahr.core.ui.res.generated.resources.total_leave
 import gurkhahr.core.ui.res.generated.resources.type_here
 import gurkhahr.core.ui.res.generated.resources.typing
 import gurkhahr.core.ui.res.generated.resources.unknown_error_occurred
@@ -166,6 +171,7 @@ import gurkhahr.core.ui.res.generated.resources.view_all
 import gurkhahr.core.ui.res.generated.resources.weeks_days
 import gurkhahr.core.ui.res.generated.resources.welcome
 import gurkhahr.core.ui.res.generated.resources.work_anniversaries
+import gurkhahr.core.ui.res.generated.resources.working_days
 import gurkhahr.core.ui.res.generated.resources.yes
 
 
@@ -373,5 +379,13 @@ object SharedRes {
         val early_out = Res.string.early_out
         val present = Res.string.present
         val absent = Res.string.absent
+
+        val checkIn = Res.string.check_in
+        val checkOut = Res.string.check_out
+        val onTime = Res.string.on_time
+        val goHome = Res.string.go_home
+        val totalLeave = Res.string.total_leave
+        val workingDays = Res.string.working_days
+
     }
 }

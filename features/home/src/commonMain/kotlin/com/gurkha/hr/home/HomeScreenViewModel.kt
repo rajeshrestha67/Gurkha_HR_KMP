@@ -6,12 +6,15 @@ import com.gurkha.hr.date.BSPointer
 import com.gurkha.hr.date.DateConverter
 import com.gurkha.hr.date.Year
 import com.gurkha.hr.date.data.model.CalendarModel
+import com.gurkha.hr.domain.attendance.attendanceReport.model.AttendanceData
 import com.gurkha.hr.domain.attendance.attendanceReport.usecase.AttendanceUseCase
 import com.gurkha.hr.domain.upComingBirthday.usecase.UpComingBirthdayUseCase
 import com.gurkha.hr.domain.upComingWorkAnniversaries.useCase.UpComingWorkAnniversaryUseCase
 import com.gurkha.hr.domain.userDetail.usecase.FetchUserDetailUseCase
 import com.gurkha.hr.home.model.HomeScreenActions
 import com.gurkha.hr.home.model.HomeScreenState
+import com.gurkha.hr.home.model.RequestItem
+import com.gurkha.hr.home.model.RequestType
 import com.gurkha.hr.home.model.toUI
 import com.gurkha.hr.logger.AppLogger
 import com.gurkha.hr.networkhelper.onError
@@ -70,12 +73,31 @@ class HomeScreenViewModel(
             is HomeScreenActions.OnNotificationClicked -> TODO()
             is HomeScreenActions.OnSearchedClicked -> TODO()
             is HomeScreenActions.OnDateSelected -> {
+                val attendanceData = state.value.attendanceReport.find { data ->
+                    val day = getDayFromDate(date = data.date)?.toInt()
+                    day == action.day
+                }
                 _state.update {
                     it.copy(
-                        selectedDay = action.day
+                        selectedDay = action.day,
+                        requests = state.value.requests.updateDuration(
+                            attendanceData = attendanceData
+                        )
                     )
                 }
             }
+        }
+    }
+
+    private fun List<RequestItem>.updateDuration(attendanceData: AttendanceData?): List<RequestItem> {
+        return map { item ->
+            attendanceData?.let {
+                when (item.type) {
+                    RequestType.CheckIn -> item.copy(duration = attendanceData.clockInTime)
+                    RequestType.CheckOut -> item.copy(duration = attendanceData.clockOutTime)
+                    else -> item
+                }
+            } ?: item
         }
     }
 
@@ -120,18 +142,22 @@ class HomeScreenViewModel(
             fromDate = fromDate,
             toDate = toDate
         ).onSuccess { data ->
+
+            val attendanceData = data.find { data ->
+                val day = getDayFromDate(date = data.date)?.toInt()
+                day == calendarModel.today.dayOfMonth
+            }
             _state.update {
                 it.copy(
                     isAttendanceLoading = false,
                     attendanceReport = data,
                     attendanceReportHistory = data.filter { mData ->
                         try {
-                            if (mData.date.isEmpty()) return@filter false
-                            val split = mData.date.split("-")
-                            if (split.size < 3) return@filter false
-                            val day = split[2].toInt()
-                            val today = calendarModel.today.dayOfMonth
-                            day in (today - 7..today)
+                            val day = getDayFromDate(date = mData.date)?.toInt()
+                            day?.let {
+                                val today = calendarModel.today.dayOfMonth
+                                it in (today - 7..today)
+                            } ?: false
                         } catch (_: Exception) {
                             AppLogger.e(
                                 "HomeScreenViewModel",
@@ -141,7 +167,10 @@ class HomeScreenViewModel(
                         }
                     }.map { data ->
                         data.toUI()
-                    }
+                    },
+                    requests = _state.value.requests.updateDuration(
+                        attendanceData = attendanceData
+                    )
                 )
             }
         }.onError { error ->
@@ -153,6 +182,13 @@ class HomeScreenViewModel(
                 it.copy(isAttendanceLoading = false)
             }
         }
+    }
+
+    private fun getDayFromDate(date: String): String? {
+        if (date.isEmpty()) return null
+        val split = date.split("-")
+        if (split.size < 3) return null
+        return split[2]
     }
 
     private fun LocalDate.formatDate(): String {
