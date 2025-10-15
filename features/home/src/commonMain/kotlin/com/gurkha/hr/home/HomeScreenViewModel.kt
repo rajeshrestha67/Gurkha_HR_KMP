@@ -12,8 +12,11 @@ import com.gurkha.hr.domain.upComingWorkAnniversaries.useCase.UpComingWorkAnnive
 import com.gurkha.hr.domain.userDetail.usecase.FetchUserDetailUseCase
 import com.gurkha.hr.home.model.HomeScreenActions
 import com.gurkha.hr.home.model.HomeScreenState
+import com.gurkha.hr.home.model.toUI
+import com.gurkha.hr.logger.AppLogger
 import com.gurkha.hr.networkhelper.onError
 import com.gurkha.hr.networkhelper.onSuccess
+import com.gurkha.model.network.toErrorMessage
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
@@ -114,18 +117,38 @@ class HomeScreenViewModel(
         }
 
         attendanceUseCase(
-//            fromDate = state.value.fromDate,
-//            toDate = state.value.toDate,
             fromDate = fromDate,
             toDate = toDate
         ).onSuccess { data ->
             _state.update {
                 it.copy(
                     isAttendanceLoading = false,
-                    attendanceReport = data
+                    attendanceReport = data,
+                    attendanceReportHistory = data.filter { mData ->
+                        try {
+                            if (mData.date.isEmpty()) return@filter false
+                            val split = mData.date.split("-")
+                            if (split.size < 3) return@filter false
+                            val day = split[2].toInt()
+                            val today = calendarModel.today.dayOfMonth
+                            day in (today - 7..today)
+                        } catch (_: Exception) {
+                            AppLogger.e(
+                                "HomeScreenViewModel",
+                                "fetchAttendance date filter: ${mData.date}"
+                            )
+                            false
+                        }
+                    }.map { data ->
+                        data.toUI()
+                    }
                 )
             }
-        }.onError {
+        }.onError { error ->
+            AppLogger.e(
+                "HomeScreenViewModel",
+                "fetchAttendance date filter: ${error.toErrorMessage()}"
+            )
             _state.update {
                 it.copy(isAttendanceLoading = false)
             }

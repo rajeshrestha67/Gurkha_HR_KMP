@@ -175,6 +175,12 @@
     <string name="today">आज</string>
 
 
+    <string name="holiday">बिदा</string>
+    <string name="late_in">लेट इन</string>
+    <string name="early_out">अर्ली आउट</string>
+    <string name="present">वर्तमान</string>
+    <string name="appresent">अनुपस्थित</string>
+
     <string-array name="months">
         <item>बैशाख</item>
         <item>जेठ</item>

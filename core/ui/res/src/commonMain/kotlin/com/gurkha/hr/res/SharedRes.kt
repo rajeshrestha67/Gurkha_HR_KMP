@@ -4,6 +4,7 @@ import gurkhahr.core.ui.res.generated.resources.Poppins_Bold
 import gurkhahr.core.ui.res.generated.resources.Poppins_Italic
 import gurkhahr.core.ui.res.generated.resources.Poppins_Medium
 import gurkhahr.core.ui.res.generated.resources.Res
+import gurkhahr.core.ui.res.generated.resources.absent
 import gurkhahr.core.ui.res.generated.resources.account
 import gurkhahr.core.ui.res.generated.resources.ad
 import gurkhahr.core.ui.res.generated.resources.address
@@ -46,6 +47,7 @@ import gurkhahr.core.ui.res.generated.resources.date_of_birth
 import gurkhahr.core.ui.res.generated.resources.description
 import gurkhahr.core.ui.res.generated.resources.do_you_really_want_to_logout
 import gurkhahr.core.ui.res.generated.resources.document
+import gurkhahr.core.ui.res.generated.resources.early_out
 import gurkhahr.core.ui.res.generated.resources.email
 import gurkhahr.core.ui.res.generated.resources.emergency_contact
 import gurkhahr.core.ui.res.generated.resources.end_date
@@ -66,6 +68,7 @@ import gurkhahr.core.ui.res.generated.resources.guardian_phone
 import gurkhahr.core.ui.res.generated.resources.half_afternoon
 import gurkhahr.core.ui.res.generated.resources.half_morning
 import gurkhahr.core.ui.res.generated.resources.history
+import gurkhahr.core.ui.res.generated.resources.holiday
 import gurkhahr.core.ui.res.generated.resources.home
 import gurkhahr.core.ui.res.generated.resources.invalid_email_address
 import gurkhahr.core.ui.res.generated.resources.invalid_password_digit
@@ -74,6 +77,7 @@ import gurkhahr.core.ui.res.generated.resources.invalid_password_lowercase
 import gurkhahr.core.ui.res.generated.resources.invalid_password_special_char
 import gurkhahr.core.ui.res.generated.resources.invalid_password_uppercase
 import gurkhahr.core.ui.res.generated.resources.language
+import gurkhahr.core.ui.res.generated.resources.late_in
 import gurkhahr.core.ui.res.generated.resources.leave
 import gurkhahr.core.ui.res.generated.resources.leave_approved
 import gurkhahr.core.ui.res.generated.resources.leave_balance
@@ -113,6 +117,7 @@ import gurkhahr.core.ui.res.generated.resources.personal_details
 import gurkhahr.core.ui.res.generated.resources.personal_info
 import gurkhahr.core.ui.res.generated.resources.phone
 import gurkhahr.core.ui.res.generated.resources.plus_two_image
+import gurkhahr.core.ui.res.generated.resources.present
 import gurkhahr.core.ui.res.generated.resources.privacy_policy
 import gurkhahr.core.ui.res.generated.resources.profile
 import gurkhahr.core.ui.res.generated.resources.profile_image
@@ -362,5 +367,11 @@ object SharedRes {
         val ad = Res.string.ad
         val bs = Res.string.bs
         val today = Res.string.today
+
+        val holiday = Res.string.holiday
+        val late_in = Res.string.late_in
+        val early_out = Res.string.early_out
+        val present = Res.string.present
+        val absent = Res.string.absent
     }
 }

@@ -20,6 +20,7 @@ fun NavGraphBuilder.homeScreenBuilder(
             topAppBarScrollBehavior = topAppBarScrollBehavior,
             onChatClick = {
                 navController.navigate(ChatRoute.ChatList)
+                
             },
             onNotificationClick = {
 

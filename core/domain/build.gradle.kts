@@ -74,6 +74,7 @@ kotlin {
                 implementation(projects.core.networkHelper)
                 implementation(projects.core.persistance.datastore)
                 implementation(projects.core.ui.components)
+                implementation(projects.core.ui.res)
                 implementation(projects.core.logger)
 
                 implementation(libs.kotlinx.datetime)

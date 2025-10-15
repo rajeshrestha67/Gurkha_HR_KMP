@@ -9,8 +9,11 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import com.gurkha.hr.date.data.CalendarDate
 import com.gurkha.hr.date.data.CalendarDay
 import com.gurkha.hr.domain.attendance.attendanceReport.model.AttendanceData
+import com.gurkha.hr.domain.attendance.attendanceReport.model.AttendanceStatus
 import com.gurkha.hr.domain.upComingBirthday.model.UpComingBirthdayData
 import com.gurkha.hr.domain.upComingWorkAnniversaries.model.UpComingWorkAnniversaryData
+import com.gurkha.hr.res.SharedRes
+import org.jetbrains.compose.resources.getString
 
 data class HomeScreenState(
 
@@ -30,10 +33,11 @@ data class HomeScreenState(
     val isBirthDayLoading: Boolean = false,
     val isAnniversaryLoading: Boolean = false,
 
-    val attendanceReport: List<AttendanceData>? = null,
+    val attendanceReport: List<AttendanceData> = listOf(),
+    val attendanceReportHistory: List<AttendanceHistoryItemUI> = listOf(),
     val upComingBirthday: List<UpComingBirthdayData> = emptyList(),
     val upComingWorkAnniversary: List<UpComingWorkAnniversaryData> = emptyList(),
-    
+
     val calendarData: List<CalendarDay> = listOf(),
     val todayBS: CalendarDate,
     val selectedDay: Int = 1
@@ -46,3 +50,46 @@ data class AttendanceItem(
     val time: String,
     val status: String
 )
+
+data class AttendanceHistoryItemUI(
+    val clockInTime: String,
+    val clockOutTime: String,
+    val date: String,
+    val isHoliday: Boolean,
+    val status: AttendanceStatus,
+    val statusClips: List<String>
+)
+
+
+suspend fun AttendanceData.toUI(): AttendanceHistoryItemUI {
+    val chips = mutableListOf<String>().apply {
+        if (isHoliday) {
+            add(getString(SharedRes.Strings.holiday))
+        } else if (!onLeave) {
+            var showPresent = true
+            if (isLate) {
+                showPresent = false
+                add(getString(SharedRes.Strings.late_in))
+            }
+            if (isEarlyOut) {
+                showPresent = false
+                add(getString(SharedRes.Strings.early_out))
+            }
+
+            if (showPresent) {
+                add(getString(SharedRes.Strings.present))
+            }
+        } else {
+            add(getString(SharedRes.Strings.absent))
+        }
+    }
+    return AttendanceHistoryItemUI(
+        clockInTime = clockInTime,
+        clockOutTime = clockOutTime,
+        date = "$date ($day)",
+        status = status,
+        statusClips = chips,
+        isHoliday = isHoliday
+    )
+}
+

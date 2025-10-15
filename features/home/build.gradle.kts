@@ -81,6 +81,7 @@ kotlin {
                 implementation(projects.core.ui.res)
                 implementation(projects.core.ui.components)
                 implementation(projects.core.ui.date)
+                implementation(projects.core.logger)
 
                 implementation(libs.coil.compose)
                 implementation(libs.coil.compose.core)

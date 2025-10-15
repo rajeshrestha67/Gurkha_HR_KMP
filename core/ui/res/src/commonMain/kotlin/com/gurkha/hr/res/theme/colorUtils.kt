@@ -155,6 +155,12 @@ val ColorScheme.chatSecondaryTextColor: Color
         dark = Color(0xFFAAAAAA)
     )
 
+val ColorScheme.attendanceHoliday: Color
+    @Composable get() = extendedColor(
+        light = Color(0xFFFFA000),
+        dark = Color(0xFFBF6F00)
+    )
+
 @Composable
 fun ColorScheme.getOnBoardingIndicatorColor(isSelected: Boolean): Color {
     return if (isSelected) onBoardingIndicatorSelectedColor else onBoardingIndicatorUnSelectedColor

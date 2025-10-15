@@ -150,10 +150,10 @@ fun TimeAndAttendanceScreenContainer(
                     onClose = onCloseFilter,
                     onAction = onAction,
 
-                )
+                    )
             }
         }
-        items(items= state.timeAndAttendanceList, key = { it.toString() }, itemContent = { item ->
+        items(items = state.timeAndAttendanceList, key = { it.toString() }, itemContent = { item ->
             TimeAndAttendanceDetails(
                 onAction = onAction,
                 state = state,
@@ -221,49 +221,49 @@ fun TimeAndAttendanceDetails(
             }
 
             Box {
-                if (showMore) {
-                    DropdownMenu(
-                        containerColor = MaterialTheme.colorScheme.background,
-                        expanded = showMore,
-                        onDismissRequest = {
-                            showMore = false
-                        }
-                    ) {
-                        DropdownMenuItem(
-                            text = {
-                                Text(
-                                    text = stringResource(SharedRes.Strings.clockIn),
-                                    style = MaterialTheme.typography.bodyMedium.copy(
-                                        color = MaterialTheme.colorScheme.primaryTextColor
-                                    )
-                                )
-                            },
-                            onClick = {
-
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = {
-                                Text(
-                                    text = stringResource(SharedRes.Strings.clockOut),
-                                    style = MaterialTheme.typography.bodyMedium.copy(
-                                        color = MaterialTheme.colorScheme.primaryTextColor
-                                    )
-                                )
-                            },
-                            onClick = {
-
-                            }
-                        )
+                //if (showMore) {
+                DropdownMenu(
+                    containerColor = MaterialTheme.colorScheme.background,
+                    expanded = showMore,
+                    onDismissRequest = {
+                        showMore = false
                     }
+                ) {
+                    DropdownMenuItem(
+                        text = {
+                            Text(
+                                text = stringResource(SharedRes.Strings.clockIn),
+                                style = MaterialTheme.typography.bodyMedium.copy(
+                                    color = MaterialTheme.colorScheme.primaryTextColor
+                                )
+                            )
+                        },
+                        onClick = {
+
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = {
+                            Text(
+                                text = stringResource(SharedRes.Strings.clockOut),
+                                style = MaterialTheme.typography.bodyMedium.copy(
+                                    color = MaterialTheme.colorScheme.primaryTextColor
+                                )
+                            )
+                        },
+                        onClick = {
+
+                        }
+                    )
                 }
+                //}
                 IconButton(
                     onClick = {
                         showMore = true
                     }
                 ) {
                     Icon(
-                        imageVector = Icons.Default.MoreVert,
+                        imageVector = Icons.Filled.MoreVert,
                         contentDescription = "More Option"
                     )
                 }
@@ -292,7 +292,7 @@ fun TimeAndAttendanceDetails(
             )
             RowText(
                 name = SharedRes.Strings.status,
-                value = item.status
+                value = item.status.value
             )
         }
     }
@@ -382,7 +382,7 @@ fun DateFilter(
                 value = state.toDate,
                 label = stringResource(SharedRes.Strings.toDate),
                 hint = "To Date",
-                rules = FormValidate.requiredValidationRules ,
+                rules = FormValidate.requiredValidationRules,
                 error = null,
                 selectableDates = FutureAndTodayDate,
                 onErrorStateChange = {},

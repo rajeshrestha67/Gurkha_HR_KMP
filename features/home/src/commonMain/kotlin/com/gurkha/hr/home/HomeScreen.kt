@@ -1,6 +1,5 @@
 package com.gurkha.hr.home
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -18,6 +17,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
@@ -26,16 +26,17 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.PagerState
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -50,6 +51,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -60,17 +62,19 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gurkha.hr.components.ProfilePicture
 import com.gurkha.hr.components.date.horizontalCalendar.HorizontalCalendar
 import com.gurkha.hr.components.extractInitials
-import com.gurkha.hr.components.graphLine.SmoothLineGraph
 import com.gurkha.hr.components.shimmer.ShimmerView
 import com.gurkha.hr.components.swipeToDismiss.SwipeToDismissBox
 import com.gurkha.hr.date.data.CalendarDate
 import com.gurkha.hr.date.data.CalendarDay
+import com.gurkha.hr.home.model.AttendanceHistoryItemUI
 import com.gurkha.hr.home.model.AttendanceItem
 import com.gurkha.hr.home.model.HomeScreenActions
 import com.gurkha.hr.home.model.HomeScreenState
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.borderColor
+import com.gurkha.hr.res.theme.darkPrimaryTextColor
 import com.gurkha.hr.res.theme.dimens
+import com.gurkha.hr.res.theme.highLightColor
 import com.gurkha.hr.res.theme.imageBackgroundColor
 import com.gurkha.hr.res.theme.linkColor
 import com.gurkha.hr.res.theme.primaryTextColor
@@ -157,7 +161,6 @@ fun HomeScreen(
 fun HomeScreenContent(
     modifier: Modifier = Modifier, state: HomeScreenState, onAction: (HomeScreenActions) -> Unit
 ) {
-    val pagerState = rememberPagerState(pageCount = { 2 })
 
     val (showNotification, onChangeNotification) = rememberSaveable {
         mutableStateOf(true)
@@ -231,7 +234,7 @@ fun HomeScreenContent(
 
             // attendance title
             attendanceSection(
-                pagerState = pagerState
+                state = state
             )
 
         }
@@ -367,7 +370,7 @@ fun LazyListScope.birthDaySection(
 
 
 fun LazyListScope.attendanceSection(
-    pagerState: PagerState
+    state: HomeScreenState
 ) {
     item(key = "attendance_title") {
         TitleBar(
@@ -376,23 +379,215 @@ fun LazyListScope.attendanceSection(
             subTitle = SharedRes.Strings.view_all
         )
     }
-    //        attendance chart
-    item(key = "Attendance Chart") {
-        HorizontalPager(
-            state = pagerState,
-            contentPadding = PaddingValues(horizontal = MaterialTheme.dimens.small3)
-        ) { item ->
-            AnimatedContent(item) { page ->
-                when (page) {
-                    0 -> SmoothLineGraph()
-                    1 -> Box(
-                        modifier = Modifier.fillMaxSize()
-                            .background(color = MaterialTheme.colorScheme.onPrimaryContainer)
+
+    items(state.attendanceReportHistory, key = { it.date }) {
+//        Text(
+//            text = it.statusClips.joinToString(",") + it.date,
+//            style = MaterialTheme.typography.titleMedium
+//        )
+
+        AttendanceHistoryItem(
+            item = it
+        )
+    }
+//    //        attendance chart
+//    item(key = "Attendance Chart") {
+//        HorizontalPager(
+//            state = pagerState,
+//            contentPadding = PaddingValues(horizontal = MaterialTheme.dimens.small3)
+//        ) { item ->
+//            AnimatedContent(item) { page ->
+//                when (page) {
+//                    0 -> SmoothLineGraph()
+//                    1 -> Box(
+//                        modifier = Modifier.fillMaxSize()
+//                            .background(color = MaterialTheme.colorScheme.onPrimaryContainer)
+//                    )
+//                }
+//            }
+//        }
+//    }
+}
+
+@Composable
+private fun AttendanceHistoryItem(
+    item: AttendanceHistoryItemUI
+) {
+    var showMore by rememberSaveable { mutableStateOf(false) }
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                horizontal = MaterialTheme.dimens.small3
+            )
+            .background(
+                MaterialTheme.colorScheme.highLightColor,
+                shape = MaterialTheme.shapes.medium
+            )
+    ) {
+
+        if (!item.isHoliday) {
+            Box(
+                modifier = Modifier.align(Alignment.TopEnd)
+            ) {
+                IconButton(
+                    onClick = {
+                        showMore = true
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.MoreVert,
+                        contentDescription = "More Option"
+                    )
+                }
+                DropdownMenu(
+                    containerColor = MaterialTheme.colorScheme.background,
+                    expanded = showMore,
+                    onDismissRequest = {
+                        showMore = false
+                    }
+                ) {
+                    DropdownMenuItem(
+                        text = {
+                            Text(
+                                text = stringResource(SharedRes.Strings.attendanceRequest),
+                                style = MaterialTheme.typography.bodyMedium.copy(
+                                    color = MaterialTheme.colorScheme.primaryTextColor
+                                )
+                            )
+                        },
+                        onClick = {
+
+                        }
                     )
                 }
             }
+
         }
+
+
+        Column(
+            modifier = Modifier.fillMaxSize().padding(
+                all = MaterialTheme.dimens.small2
+            )
+        ) {
+
+            Row {
+
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(
+                        text = stringResource(SharedRes.Strings.date),
+                        style = MaterialTheme.typography.titleSmall.copy(
+                            color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                        )
+                    )
+                    Text(
+                        text = item.date,
+                        style = MaterialTheme.typography.bodySmall.copy(
+                            color = MaterialTheme.colorScheme.primaryTextColor
+                        )
+                    )
+                }
+
+                Text(
+                    modifier = Modifier.padding(horizontal = MaterialTheme.dimens.small2).align(
+                        Alignment.CenterVertically
+                    ).padding(end = MaterialTheme.dimens.medium1),
+                    text = item.status.value, style = MaterialTheme.typography.bodyLarge.copy(
+                        color = item.status.color
+                    )
+                )
+            }
+
+
+            HorizontalDivider(
+                modifier = Modifier.padding(vertical = MaterialTheme.dimens.small2)
+                    .height(MaterialTheme.dimens.extraSmall)
+            )
+
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2),
+            ) {
+
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(
+                        text = stringResource(SharedRes.Strings.clockIn),
+                        style = MaterialTheme.typography.titleSmall.copy(
+                            color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                        )
+                    )
+                    Text(
+                        text = item.clockInTime, style = MaterialTheme.typography.bodySmall.copy(
+                            color = MaterialTheme.colorScheme.primaryTextColor
+                        )
+                    )
+                }
+
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(
+                        text = stringResource(SharedRes.Strings.clockOut),
+                        style = MaterialTheme.typography.titleSmall.copy(
+                            color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                        )
+                    )
+                    Text(
+                        text = item.clockOutTime, style = MaterialTheme.typography.bodySmall.copy(
+                            color = MaterialTheme.colorScheme.primaryTextColor
+                        )
+                    )
+                }
+
+                Column(
+                    modifier = Modifier.weight(2f)
+                ) {
+                    Text(
+                        text = stringResource(SharedRes.Strings.status),
+                        style = MaterialTheme.typography.titleSmall.copy(
+                            color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                        )
+                    )
+                    Row(
+                        modifier = Modifier
+                            .fillMaxSize().padding(vertical = MaterialTheme.dimens.small1),
+                        verticalAlignment = Alignment.Top,
+                        horizontalArrangement = Arrangement.spacedBy(
+                            space = MaterialTheme.dimens.small1,
+                            alignment = Alignment.Start
+                        )
+                    ) {
+
+                        repeat(item.statusClips.size) {
+                            Text(
+                                modifier = Modifier
+                                    .border(
+                                        width = 1.dp,
+                                        color = MaterialTheme.colorScheme.borderColor,
+                                        shape = MaterialTheme.shapes.small
+                                    ).padding(MaterialTheme.dimens.small1),
+                                text = item.statusClips[it],
+                                style = MaterialTheme.typography.bodySmall.copy(
+                                    color = MaterialTheme.colorScheme.primaryTextColor
+                                )
+                            )
+
+                        }
+
+                    }
+                }
+
+            }
+        }
+
     }
+
 }
 
 fun LazyListScope.requestSection(

@@ -176,6 +176,12 @@
     <string name="invalid_password_digit">Must contain at least one digit</string>
     <string name="invalid_password_special_char">Must contain at least one special character</string>
 
+    <string name="holiday">Holiday</string>
+    <string name="late_in">Late In</string>
+    <string name="early_out">Early Out</string>
+    <string name="present">Present</string>
+    <string name="absent">Absent</string>
+
 
     <string-array name="months">
         <item>Baisakh</item>
