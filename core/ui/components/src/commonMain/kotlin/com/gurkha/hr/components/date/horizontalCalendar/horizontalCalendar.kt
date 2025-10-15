@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -17,6 +18,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -31,8 +33,11 @@ import com.gurkha.hr.date.data.CalendarDay
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.borderColor
 import com.gurkha.hr.res.theme.dimens
+import com.gurkha.hr.res.theme.highLightColor
+import com.gurkha.hr.res.theme.linkColor
 import com.gurkha.hr.res.theme.primaryTextColor
 import org.jetbrains.compose.resources.stringArrayResource
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun HorizontalCalendar(
@@ -62,13 +67,36 @@ fun HorizontalCalendar(
         ),
         modifier = modifier.fillMaxWidth()
     ) {
-        Text(
-            modifier = Modifier.fillMaxWidth().padding(
-                horizontal = MaterialTheme.dimens.small3
-            ),
-            text = month,
-            style = MaterialTheme.typography.titleLarge
-        )
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                modifier = Modifier.weight(1f).padding(
+                    horizontal = MaterialTheme.dimens.small3
+                ),
+                text = month,
+                style = MaterialTheme.typography.titleLarge
+            )
+
+            TextButton(
+                modifier = Modifier,
+                onClick = {
+                    onDaySelected(today.dayOfMonth)
+                }
+            ) {
+                Text(
+                    text = stringResource(SharedRes.Strings.today),
+                    style = MaterialTheme.typography.titleSmall.copy(
+                        color = MaterialTheme.colorScheme.linkColor
+                    )
+                )
+            }
+
+        }
+
 
         BoxWithConstraints(
             modifier = Modifier.fillMaxWidth()
@@ -102,26 +130,35 @@ fun HorizontalCalendar(
                 )
             ) {
                 items(items = days, key = { it.day }) { item ->
+
                     val color = if (selectedDay == item.day)
                         MaterialTheme.colorScheme.primary
                     else
-                        MaterialTheme.colorScheme.background
+                        MaterialTheme.colorScheme.highLightColor
+
                     val textColor = if (selectedDay == item.day) {
                         MaterialTheme.colorScheme.onPrimary
+                    } else if (item.isHoliday && selectedDay == item.day) {
+                        MaterialTheme.colorScheme.onPrimary
+                    } else if (item.isHoliday) {
+                        MaterialTheme.colorScheme.error
                     } else {
                         MaterialTheme.colorScheme.primaryTextColor
                     }
+
+                    val borderModifier = if (item.day == today.dayOfMonth) Modifier.border(
+                        width = 0.5.dp,
+                        color = MaterialTheme.colorScheme.borderColor.copy(
+                            alpha = 0.5f
+                        ),
+                        shape = MaterialTheme.shapes.medium
+                    ) else Modifier
+
                     Column(
                         modifier = Modifier
                             .clip(MaterialTheme.shapes.medium)
                             .background(color = color)
-                            .border(
-                                width = 0.5.dp,
-                                color = MaterialTheme.colorScheme.borderColor.copy(
-                                    alpha = 0.5f
-                                ),
-                                shape = MaterialTheme.shapes.medium
-                            )
+                            .then(borderModifier)
                             .size(size = dayItemWidthDp)
                             .aspectRatio(ratio = 1f)
                             .clickable(
@@ -138,13 +175,13 @@ fun HorizontalCalendar(
                         Text(
                             text = item.day.toString(),
                             style = MaterialTheme.typography.titleMedium.copy(
-                                color = if (item.isHoliday) MaterialTheme.colorScheme.error else textColor
+                                color = textColor
                             )
                         )
                         Text(
                             text = weekNames[item.dayOfWeek - 1],
                             style = MaterialTheme.typography.titleSmall.copy(
-                                color = if (item.isHoliday) MaterialTheme.colorScheme.error else textColor,
+                                color = textColor,
                                 fontWeight = FontWeight.Bold
                             )
                         )

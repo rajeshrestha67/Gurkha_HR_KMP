@@ -27,7 +27,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.filled.Close
@@ -258,7 +257,8 @@ fun LazyListScope.anniversarySection(
 ) {
     item(key = "anniversary title") {
         TitleBar(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = MaterialTheme.dimens.small3),
+            modifier = Modifier.fillMaxWidth()
+                .padding(start = MaterialTheme.dimens.small3, end = MaterialTheme.dimens.small2),
             onViewAll = {},
             title = SharedRes.Strings.work_anniversaries,
             subTitle = SharedRes.Strings.view_all
@@ -317,7 +317,7 @@ fun LazyListScope.birthDaySection(
 ) {
     item(key = "birthday") {
         TitleBar(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = MaterialTheme.dimens.small3),
+            modifier = Modifier.fillMaxWidth().padding(start = MaterialTheme.dimens.small3),
             onViewAll = {},
             title = SharedRes.Strings.upcoming_birthday,
             subTitle = SharedRes.Strings.view_all
@@ -374,7 +374,7 @@ fun LazyListScope.attendanceSection(
 ) {
     item(key = "attendance_title") {
         TitleBar(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = MaterialTheme.dimens.small3),
+            modifier = Modifier.fillMaxWidth().padding(start = MaterialTheme.dimens.small3),
             title = SharedRes.Strings.attendance,
             subTitle = SharedRes.Strings.view_all
         )
@@ -596,7 +596,7 @@ fun LazyListScope.requestSection(
     item("request_title") {
 
         TitleBar(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = MaterialTheme.dimens.small3),
+            modifier = Modifier.fillMaxWidth().padding(start = MaterialTheme.dimens.small3),
             title = SharedRes.Strings.request
         )
     }
@@ -650,7 +650,9 @@ fun LazyListScope.requestSection(
             ) {
                 rowItems.forEach { leaveItem ->
                     AttendanceItemContent(
-                        modifier = Modifier.weight(1f).fillMaxSize(), item = leaveItem
+                        modifier = Modifier.weight(1f).fillMaxSize(),
+                        item = leaveItem,
+                        onClick = {}
                     )
                 }
                 // Fill remaining spaces in row if needed
@@ -677,7 +679,8 @@ fun LazyListScope.calendarView(
             selectedDay = selectedDay,
             onDaySelected = {
                 onAction(HomeScreenActions.OnDateSelected(it))
-            })
+            }
+        )
     }
 }
 
@@ -723,17 +726,15 @@ fun LazyListScope.notificationView(
 //reusable request row
 @Composable
 fun AttendanceItemContent(
-    item: AttendanceItem, modifier: Modifier = Modifier
+    item: AttendanceItem, modifier: Modifier = Modifier, onClick: () -> Unit
 ) {
     Column(
-        modifier = modifier.clip(RoundedCornerShape(MaterialTheme.dimens.small2)).border(
+        modifier = modifier.border(
             width = 1.dp,
             shape = MaterialTheme.shapes.medium,
-            color = MaterialTheme.colorScheme.borderColor
-        ).clickable(onClick = {
-
-        }),
-//            .background(MaterialTheme.colorScheme.secondaryContainer),
+            color = MaterialTheme.colorScheme.highLightColor
+        ).clickable(onClick = onClick)
+            .background(MaterialTheme.colorScheme.highLightColor, MaterialTheme.shapes.medium),
         verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.Start
     ) {
         Row(
