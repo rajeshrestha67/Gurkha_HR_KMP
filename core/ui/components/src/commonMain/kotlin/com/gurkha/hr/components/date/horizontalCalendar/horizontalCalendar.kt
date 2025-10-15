@@ -74,8 +74,7 @@ fun HorizontalCalendar(
 
         Row(
             modifier = Modifier.fillMaxWidth().height(MaterialTheme.dimens.medium3),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 modifier = Modifier.weight(1f).padding(
