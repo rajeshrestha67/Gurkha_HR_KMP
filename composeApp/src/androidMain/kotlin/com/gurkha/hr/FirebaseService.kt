@@ -14,6 +14,7 @@ import android.os.Build
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.graphics.toColorInt
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import kotlinx.coroutines.CoroutineScope
@@ -74,7 +75,7 @@ class FirebaseService : FirebaseMessagingService() {
         notifyId: Int,
         pendingIntent: PendingIntent
     ) {
-        
+
         // Download image in background
         val bitmap = imageUrl?.let { loadBitmapFromUrl(it) }
 
@@ -86,6 +87,7 @@ class FirebaseService : FirebaseMessagingService() {
             .setDefaults(NotificationCompat.DEFAULT_SOUND or NotificationCompat.DEFAULT_VIBRATE)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setContentIntent(pendingIntent)
+            .setColor("#FF4B662C".toColorInt())
             .setAutoCancel(true)
 
         // 👇 Apply BigPictureStyle if bitmap is available
