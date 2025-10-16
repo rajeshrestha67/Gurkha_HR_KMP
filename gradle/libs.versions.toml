@@ -42,6 +42,10 @@ datetime = "0.7.1"
 
 kotlinx-coroutine = "1.10.2"
 
+firebaseBom = "34.4.0"
+firebase-messaging-ktx = "25.0.1"
+googleServices = "4.4.4"
+
 [libraries]
 androidx-activity = { module = "androidx.activity:activity", version.ref = "androidx-activity" }
 kmp-socketio = { module = "com.piasy:kmp-socketio", version.ref = "kmpSocketio" }
@@ -116,6 +120,12 @@ jetbrians-material3 = { module = "org.jetbrains.compose.material3:material3", ve
 #back handler
 ui-backhandler = { module = "org.jetbrains.compose.ui:ui-backhandler", version.ref = "composeMultiplatform" }
 
+
+# firebase
+firebase-messaging-ktx = { group = "com.google.firebase", name = "firebase-messaging", version.ref = "firebase-messaging-ktx" }
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
+firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics-ktx" }
+
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
@@ -127,5 +137,6 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 jetbrains-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
 android-lint = { id = "com.android.lint", version.ref = "agp" }
+google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
 io-kotest = { id = "io.kotest", version.ref = "kotest-version" }
 

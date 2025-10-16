@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.jetbrains.kotlin.serialization)
+    alias(libs.plugins.google.services)
 }
 
 kotlin {
@@ -35,6 +36,10 @@ kotlin {
             implementation(libs.androidx.core.splashscreen)
             implementation(projects.core.di)
             implementation(libs.androidx.activity)
+
+            //firebase
+            implementation(libs.firebase.messaging.ktx)
+            implementation(project.dependencies.platform(libs.firebase.bom))
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -63,6 +68,7 @@ kotlin {
 
             implementation(libs.koin.compose.viewmodel)
             implementation(compose.components.resources)
+
 
         }
         commonTest.dependencies {

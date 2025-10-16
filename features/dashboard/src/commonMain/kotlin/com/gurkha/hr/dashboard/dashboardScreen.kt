@@ -27,6 +27,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.gurkha.hr.components.AnimatedNavHost
+import com.gurkha.hr.components.NotificationPermissionRequest
 import com.gurkha.hr.components.PlatformMessage
 import com.gurkha.hr.components.navigationBar.ERPNavigationBar
 import com.gurkha.hr.dashboard.graph.attendanceScreenBuilder
@@ -95,7 +96,7 @@ fun DashboardScreen(
             }
         }
     }
-
+    NotificationPermissionRequest()
     DashboardScreenContent(
         bottomBarState = bottomBarState,
         state = state,
@@ -215,3 +216,5 @@ fun DashboardScreenContent(
         }
     }
 }
+
+
