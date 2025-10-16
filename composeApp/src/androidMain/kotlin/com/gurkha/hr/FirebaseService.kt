@@ -74,13 +74,12 @@ class FirebaseService : FirebaseMessagingService() {
         notifyId: Int,
         pendingIntent: PendingIntent
     ) {
-        val CHANNEL_ID = context.getString(R.string.app_name)
-
+        
         // Download image in background
         val bitmap = imageUrl?.let { loadBitmapFromUrl(it) }
 
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSmallIcon(R.drawable.splash_icon)
             .setContentTitle(title)
             .setContentText(body)
             .setNumber(3)
@@ -136,6 +135,10 @@ class FirebaseService : FirebaseMessagingService() {
                 }
             }
         }
+    }
+
+    companion object {
+        private const val CHANNEL_ID = "Normal Notification"
     }
 
 }
