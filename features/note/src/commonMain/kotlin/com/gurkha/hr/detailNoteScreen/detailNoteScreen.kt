@@ -34,10 +34,6 @@ import androidx.navigation.NavHostController
 import com.gurkha.hr.components.prompts.PromptModalBottomSheet
 import com.gurkha.hr.components.prompts.PromptType
 import com.gurkha.hr.model.detail.DetailNoteScreenAction
-import com.gurkha.hr.model.note.NoteAction
-import com.gurkha.hr.components.prompts.PromptModalBottomSheet
-import com.gurkha.hr.components.prompts.PromptType
-import com.gurkha.hr.model.detail.DetailNoteScreenAction
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.darkPrimaryTextColor
 import com.gurkha.hr.res.theme.dimens
@@ -86,11 +82,7 @@ fun DetailNoteScreen(
         }
     }
 
-    var showSuccessDialogue by remember {mutableStateOf(false)}
-    var showErrorDialogue by remember {mutableStateOf(false)}
-    var messageToShow by remember {mutableStateOf("")}
 
-    var sendData by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit){
         viewModel.successChannel.collect {
