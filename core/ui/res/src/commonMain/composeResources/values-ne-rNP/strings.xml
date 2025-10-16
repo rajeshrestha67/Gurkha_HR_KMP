@@ -99,6 +99,32 @@
     <string name="attendance_request">उपस्थिति अनुरोध</string>
     <string name="attendance_request_form">उपस्थिति अनुरोध फारम</string>
 
+    <string name="notes">नोटहरू</string>
+    <string name="add_notes">नोटहरू थप्नुहोस्</string>
+    <string name="edit_notes">नोटहरू सम्पादन गर्नुहोस्</string>
+
+    <string name="note">नोट</string>
+    <string name="event">घटना</string>
+
+    <string name="title">शीर्षक</string>
+    <string name="enter_title">शीर्षक प्रविष्ट गर्नुहोस्</string>
+    <string name="is_event">के घटना हो?</string>
+    <string name="enter_description">विवरण प्रविष्ट गर्नुहोस्</string>
+
+    <string name="one">१</string>
+    <string name="two">२</string>
+
+    <string name="start_time">सुरुवात समय</string>
+    <string name="end_time">अन्त्य समय</string>
+    <string name="location">स्थान</string>
+
+    <string name="edit_note">टिप्पणी सम्पादन गर्नुहोस्</string>
+
+    <string name="edit">सम्पादन गर्नुहोस्</string>
+    <string name="delete">मेटाउनुहोस्</string>
+
+    <string name="delete_confirmation">के तपाईं मेटाउन निश्चित हुनुहुन्छ?</string>
+
     <string name="view_all">सबै हेर्नुहोस्</string>
     <string name="profile">प्रोफाइल</string>
     <string name="time_and_attendance">समय र उपस्थिति</string>

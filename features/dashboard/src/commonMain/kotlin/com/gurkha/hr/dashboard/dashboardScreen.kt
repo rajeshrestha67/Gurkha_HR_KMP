@@ -34,6 +34,7 @@ import com.gurkha.hr.dashboard.graph.attendanceScreenBuilder
 import com.gurkha.hr.dashboard.graph.chatScreenBuilder
 import com.gurkha.hr.dashboard.graph.homeScreenBuilder
 import com.gurkha.hr.dashboard.graph.leaveScreenBuilder
+import com.gurkha.hr.dashboard.graph.noteScreenBuilder
 import com.gurkha.hr.dashboard.graph.profileScreenBuilder
 import com.gurkha.hr.dashboard.graph.reportScreenBuilder
 import com.gurkha.hr.dashboard.graph.settingsScreenBuilder
@@ -42,6 +43,8 @@ import com.gurkha.hr.dashboard.model.DashboardScreenState
 import com.gurkha.hr.dashboard.route.AttendanceRoute
 import com.gurkha.hr.dashboard.route.DashboardRoute
 import com.gurkha.hr.dashboard.route.LeaveRoute
+import com.gurkha.hr.dashboard.route.NoteRoute
+import com.gurkha.hr.domain.note.addNote.model.AddNoteData
 import com.gurkha.hr.res.SharedRes
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -78,7 +81,7 @@ fun DashboardScreen(
                 DashboardRoute.ProfileRoute::class.qualifiedName,
                 DashboardRoute.AttendanceRoute::class.qualifiedName,
                 DashboardRoute.LeaveRoute::class.qualifiedName,
-                DashboardRoute.ReportRoute::class.qualifiedName -> true // show bottom bar
+                DashboardRoute.NoteRoute::class.qualifiedName -> true // show bottom bar
                 else -> false // hide bottom bar
             }
         }
@@ -126,7 +129,7 @@ fun DashboardScreenContent(
                 DashboardRoute.ProfileRoute::class.qualifiedName -> DashboardRoute.ProfileRoute
                 DashboardRoute.AttendanceRoute::class.qualifiedName -> DashboardRoute.AttendanceRoute
                 DashboardRoute.LeaveRoute::class.qualifiedName -> DashboardRoute.LeaveRoute
-                DashboardRoute.ReportRoute::class.qualifiedName -> DashboardRoute.ReportRoute
+                DashboardRoute.NoteRoute::class.qualifiedName -> DashboardRoute.NoteRoute
                 else -> DashboardRoute.HomeRoute
             }
             onAction(DashboardScreenAction.OnChangeScreen(destination))
@@ -202,11 +205,24 @@ fun DashboardScreenContent(
             )
             leaveScreenBuilder(
                 navController = navController,
-                onGoToLeaveRequestPage = { leaveRequestJson ->
-                    navController.navigate(LeaveRoute.LeaveRequestPageRoute(json = leaveRequestJson))
+                onGoToLeaveRequestPage = {
+                    navController.navigate(LeaveRoute.LeaveRequestPageRoute)
                 }
             )
             reportScreenBuilder(navController = navController)
+
+            noteScreenBuilder(
+                navController = navController,
+                onGoToAddNotesScreen ={noteJson->
+                    navController.navigate(NoteRoute.AddNoteRoute(json = noteJson))
+                },
+                onGoToDetailNotesScreen ={noteJson->
+                    noteJson?.let {
+                        navController.navigate(NoteRoute.DetailNoteRoute(json = noteJson))
+                    }
+                },
+            )
+
             settingsScreenBuilder(
                 navController = navController
             )

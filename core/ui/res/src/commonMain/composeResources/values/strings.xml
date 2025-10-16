@@ -116,6 +116,32 @@
     <string name="attendance_request">Attendance Request</string>
     <string name="attendance_request_form">Attendance Request Form</string>
 
+    <string name="notes">Notes</string>
+    <string name="add_notes">Add Note</string>
+    <string name="edit_notes">Edit Note</string>
+
+    <string name="title">Title</string>
+    <string name="enter_title">Enter Title</string>
+    <string name="is_event">Is Event?</string>
+    <string name="enter_description">Enter Description</string>
+
+    <string name="note">Note</string>
+    <string name="event">Event</string>
+
+    <string name="one">1</string>
+    <string name="two">2</string>
+
+    <string name="start_time">Start Time</string>
+    <string name="end_time">End Time</string>
+    <string name="location">Location</string>
+
+    <string name="edit_note">Edit Note</string>
+
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+
+    <string name="delete_confirmation">Are you sure you want to delete?</string>
+
     <string name="attendance">Attendance</string>
     <string name="view_all">View all</string>
     <string name="pending">Pending</string>

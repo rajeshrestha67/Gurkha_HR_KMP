@@ -93,6 +93,7 @@ kotlin {
                 implementation(projects.features.report)
                 implementation(projects.features.settings)
                 implementation(projects.features.chat)
+                implementation(projects.features.note)
 
                 implementation(libs.koin.compose.viewmodel)
                 implementation(compose.components.resources)

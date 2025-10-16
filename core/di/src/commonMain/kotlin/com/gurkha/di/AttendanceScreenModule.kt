@@ -7,6 +7,7 @@ import com.gurkha.hr.data.leaveRequest.KtorLeaveRequestRemoteRepository
 import com.gurkha.hr.domain.attendance.attendanceReport.repository.AttendanceRemoteRepository
 import com.gurkha.hr.domain.attendance.attendanceRequest.useCase.AttendanceRequestUseCase
 import com.gurkha.hr.domain.attendance.attendanceStatus.useCase.AttendanceStatusUseCase
+import com.gurkha.hr.domain.attendance.attendanceSummary.useCase.AttendanceSummaryUseCase
 import com.gurkha.hr.domain.form.RequiredValidationUseCase
 import com.gurkha.hr.domain.leave.leaveAssignee.usecase.AssigneeUseCase
 import com.gurkha.hr.domain.leave.leaveRequest.repository.LeaveRemoteRepository
@@ -38,6 +39,14 @@ class AttendanceScreenModule {
     )
 
     @Factory
+    fun attendanceSummaryUseCase(
+        attendanceRemoteRepository: AttendanceRemoteRepository
+    ): AttendanceSummaryUseCase = AttendanceSummaryUseCase(
+        attendanceRemoteRepository = attendanceRemoteRepository
+    )
+
+
+    @Factory
     fun attendanceRequestUseCase(
         attendanceRemoteRepository : AttendanceRemoteRepository
     ): AttendanceRequestUseCase = AttendanceRequestUseCase(
@@ -47,8 +56,10 @@ class AttendanceScreenModule {
     @KoinViewModel
     fun getAttendanceViewModel(
         attendanceStatusUseCase: AttendanceStatusUseCase,
+        attendanceSummaryUseCase: AttendanceSummaryUseCase
     ): AttendanceViewModel = AttendanceViewModel(
         attendanceStatusUseCase = attendanceStatusUseCase,
+        attendanceSummaryUseCase = attendanceSummaryUseCase
     )
 
     @KoinViewModel

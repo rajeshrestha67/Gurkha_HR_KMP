@@ -91,6 +91,7 @@ kotlin {
                 implementation(projects.features.chat)
                 implementation(projects.features.attendance)
                 implementation(projects.core.ui.date)
+                implementation(projects.features.note)
 
 
                 implementation(projects.core.ui.components)

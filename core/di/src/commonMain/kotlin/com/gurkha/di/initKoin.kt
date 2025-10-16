@@ -30,6 +30,7 @@ fun initKoin(config: KoinAppDeclaration? = null) {
             CompanyAssetsModule().module,
             HistoryModule().module
 
+            NoteScreenModule().module
         )
     }
 }

@@ -2,7 +2,7 @@ package com.gurkha.hr.leave.leave
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gurkha.hr.domain.attendance.attendanceStatus.useCase.AttendanceStatusUseCase
+import com.gurkha.hr.domain.attendance.attendanceStatus.model.AttendanceStatusData
 import com.gurkha.hr.domain.leave.leaveReport.model.LeaveReportData
 import com.gurkha.hr.domain.leave.leaveReport.useCase.LeaveReportUseCase
 import com.gurkha.hr.domain.leave.leaveRequest.usecase.LeaveRequestUseCase
@@ -12,6 +12,7 @@ import com.gurkha.hr.leave.model.leave.LeaveScreenState
 import com.gurkha.hr.leave.model.leave.LeaveStatusEnum
 import com.gurkha.hr.networkhelper.onError
 import com.gurkha.hr.networkhelper.onSuccess
+import com.gurkha.model.attendance.attendanceRequest.AttendanceRequestData
 import com.gurkha.model.leave.leave_request.LeaveRequestData
 import com.gurkha.model.leave.ui.AssigneeUi
 import com.gurkha.model.leave.ui.LeaveDurationUi
@@ -28,9 +29,8 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
 class LeaveScreenViewModel(
-    private val leaveRequestUseCase: LeaveRequestUseCase,
     private val leaveReportUseCase: LeaveReportUseCase,
-    private val leaveSummaryUseCase : LeaveSummaryUseCase
+    private val leaveSummaryUseCase: LeaveSummaryUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(LeaveScreenState())
     private val _errorChannel = Channel<String>()
@@ -81,21 +81,9 @@ class LeaveScreenViewModel(
                 }
 
                 action.json?.let {
-                    val data: LeaveRequestData =
-                        Json.decodeFromString<LeaveRequestData>(action.json)
-                    val assigneeId =
-                        Json.decodeFromString<AssigneeUi>(data.assignee).value.toInt()
-                    val leaveTypeId =
-                        Json.decodeFromString<LeaveTypeUi>(data.leaveType).value.toInt()
-                    val leaveDuration =
-                        Json.decodeFromString<LeaveDurationUi>(data.leaveDuration).value
-
-//                  call the request leave function if json is not empty
-                    requestLeave(
-                        data = data,
-                        assigneeId = assigneeId,
-                        leaveTypeId = leaveTypeId,
-                        leaveDuration = leaveDuration
+                    val data: LeaveRequestData =Json.decodeFromString<LeaveRequestData>(action.json)
+                    updateLeaveRequestData(
+                        data = data
                     )
                 }
             }
@@ -179,69 +167,84 @@ class LeaveScreenViewModel(
         }
     }
 
-    private fun requestLeave(
-        data: LeaveRequestData,
-        assigneeId: Int,
-        leaveTypeId: Int,
-        leaveDuration: String
-    ) = viewModelScope.launch {
+    private fun fetchLeaveSummary() = viewModelScope.launch {
         _state.update {
             it.copy(
-                isRequestingLeave = true
+                isLeaveSummaryLoading = true
             )
         }
-        leaveRequestUseCase(
-            startDate = data.startDate,
-            endDate = data.endDate,
-            leaveDuration = leaveDuration,
-            leaveTypeId = leaveTypeId,
-            reason = data.reason,
-            assigneeId = assigneeId
-        ).onSuccess { response ->
-            _state.update { currentState ->
-                val updatedPendingList = currentState.pendingTapItem.result + LeaveReportData(
-                    employeeId = 0,
-                    startDate = data.startDate,
-                    endDate = data.endDate,
-                    leaveStatus = LeaveStatusEnum.PENDING.value,
-                    reason = data.reason,
-                    leaveDuration = data.leaveDuration,
-                    assigneeName = Json.decodeFromString<AssigneeUi>(data.assignee).value,
-                    totalDays = 0.0,
-                    leaveType = Json.decodeFromString<LeaveTypeUi>(data.leaveType).value,
-                    requestedDate = ""
-                )
-
-                val updatedPendingTab =
-                    currentState.pendingTapItem.copy(result = updatedPendingList)
-
-                currentState.copy(
-                    pendingTapItem = updatedPendingTab,
-                    currentTapItem = if (currentState.leaveStatus == LeaveStatusEnum.PENDING) updatedPendingTab
-                    else currentState.currentTapItem,
-                    isRequestingLeave = false,
-                    leaveRequestDataJson = null
-                )
-            }
-//            send the success message
-            _successChannel.send(response.message)
-
-
-        }.onError { error ->
+        leaveSummaryUseCase().onSuccess { data ->
             _state.update {
                 it.copy(
-                    isRequestingLeave = false,
-                    leaveRequestDataJson = null
+                    isLeaveSummaryLoading = false,
+                    leaveItemsList = _state.value.leaveItemsList.mapIndexed { index, item ->
+                        when (index) {
+                            0 -> {
+                                item.copy(
+                                    days = data.remainingLeaveCount.toString()
+                                )
+                            }
+                            1 -> {
+                                item.copy(
+                                    days = data.approvedCount.toString()
+                                )
+                            }
+                            2 -> {
+                                item.copy(
+                                    days = data.pendingCount.toString()
+                                )
+                            }
+                            3 -> {
+                                item.copy(
+                                    days = data.rejectedCount.toString()
+                                )
+                            }
+                            else -> {
+                                item
+                            }
+                        }
+                    }
                 )
             }
-            _errorChannel.send(error.toErrorMessage())
+        }.onError {
+            _state.update {
+                it.copy(
+                    isLeaveSummaryLoading = false
+                )
+            }
         }
     }
 
-    private fun fetchLeaveSummary()=viewModelScope.launch{
-        leaveSummaryUseCase().onSuccess {
+    private fun updateLeaveRequestData(
+        data: LeaveRequestData
+    ) = viewModelScope.launch {
+        _state.update { currentState ->
+            val updatedPendingList = currentState.pendingTapItem.result + LeaveReportData(
+                employeeId = 0,
+                startDate = data.startDate,
+                endDate = data.endDate,
+                leaveStatus = LeaveStatusEnum.PENDING.value,
+                reason = data.reason,
+                leaveDuration = data.leaveDuration,
+                assigneeName = data.assignee,
+                totalDays = 0.0,
+                leaveType = data.leaveType,
+                requestedDate = ""
+            )
 
+            val updatedPendingTab =
+                currentState.pendingTapItem.copy(result = updatedPendingList)
+
+            currentState.copy(
+                pendingTapItem = updatedPendingTab,
+                currentTapItem = if (currentState.leaveStatus == LeaveStatusEnum.PENDING) updatedPendingTab
+                else currentState.currentTapItem,
+                isRequestingLeave = false,
+                leaveRequestDataJson = null
+            )
         }
+
     }
+
 }
 

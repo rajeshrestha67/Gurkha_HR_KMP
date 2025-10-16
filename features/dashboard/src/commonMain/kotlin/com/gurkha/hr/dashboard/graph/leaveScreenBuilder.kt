@@ -22,10 +22,8 @@ fun NavGraphBuilder.leaveScreenBuilder(
         )
     }
     composable<LeaveRoute.LeaveRequestPageRoute> {
-        val json: String? = it.toRoute<LeaveRoute.LeaveRequestPageRoute>().json
         LeaveRequestScreen(
             navController = navController,
-            json = json,
             onBackClicked = {
                 navController.popBackStack()
             }

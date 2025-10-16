@@ -91,7 +91,6 @@ fun AttendanceRequestScreen(
                 navController.previousBackStackEntry
                     ?.savedStateHandle
                     ?.set("data", stringData)
-//                navController.popBackStack()
             }
         }
     }

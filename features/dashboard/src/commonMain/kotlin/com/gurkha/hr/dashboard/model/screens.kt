@@ -35,8 +35,8 @@ object DashboardScreens {
             Icons.Filled.EditCalendar
         ),
         DashboardScreen(
-            SharedRes.Strings.report,
-            DashboardRoute.ReportRoute,
+            SharedRes.Strings.notes,
+            DashboardRoute.NoteRoute,
             Icons.Filled.Checklist
         ),
         DashboardScreen(

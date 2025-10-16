@@ -18,33 +18,37 @@ data class LeaveScreenState(
     val isRequestingLeave: Boolean = false,
     val leaveRequestError: Boolean = false,
 
+
+    val isLeaveSummaryLoading: Boolean = false,
+
     val leaveItemsList: List<LeaveItem> = listOf(
         LeaveItem(
             title = SharedRes.Strings.leave_balance,
-            days = "20",
+            days = "-",
             color = Color(0xFF81D4FA),
             backGroundColor = Color(0xFFE1F5FE)
         ),
         LeaveItem(
             title = SharedRes.Strings.leave_approved,
-            days = "2",
+            days = "-",
             color = Color(0xFFA5D6A7),
             backGroundColor = Color(0xFFE8F5E9)
         ),
         LeaveItem(
             title = SharedRes.Strings.leave_pending,
-            days = "5",
+            days = "-",
             color = Color(0xFFC5E1A5),
             backGroundColor = Color(0xFFF1F8E9)
         ),
         LeaveItem(
             title = SharedRes.Strings.leave_cancelled,
-            days = "7",
+            days = "-",
             color = Color(0xFFEF9A9A),
             backGroundColor = Color(0xFFFFEBEE)
         ),
-    )
+    ),
 )
+
 data class LeaveTapItem(
     val isLoading: Boolean = false,
     val result: List<LeaveReportData> = emptyList(),
@@ -52,7 +56,7 @@ data class LeaveTapItem(
 
 data class LeaveItem(
     val title: StringResource,
-    val days: String,
+    val days: String?,
     val color: Color,
     val backGroundColor: Color
 )
