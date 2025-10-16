@@ -70,7 +70,6 @@ kotlin {
                 implementation(libs.androidx.lifecycle.viewmodelCompose)
                 implementation(libs.androidx.lifecycle.runtimeCompose)
 
-
                 implementation(libs.koin.compose.viewmodel)
                 implementation(compose.components.resources)
                 implementation(compose.materialIconsExtended)
@@ -81,6 +80,7 @@ kotlin {
                 implementation(projects.core.networkHelper)
                 implementation(projects.core.ui.res)
                 implementation(projects.core.ui.components)
+                implementation(projects.core.logger)
 
                 implementation(libs.coil.compose)
                 implementation(libs.coil.compose.core)

@@ -9,7 +9,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.FilterAlt
 import androidx.compose.material3.*
@@ -21,14 +20,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.dateFilterDropDown.DateFilterDropdown
 import com.gurkha.hr.components.shimmer.ShimmerView
-import com.gurkha.hr.components.textField.DropDownText
-import com.gurkha.hr.components.textField.FormValidate
-import com.gurkha.hr.date.BSPointer
-import com.gurkha.hr.domain.history.mapper.mapAttendanceStatusToColor
-import com.gurkha.hr.domain.history.model.HistoryData
+import com.gurkha.hr.profile.model.history_screen.HistoryDataUI
 import com.gurkha.hr.profile.model.history_screen.HistoryScreenViewAction
 import com.gurkha.hr.profile.model.history_screen.HistoryState
 import com.gurkha.hr.res.SharedRes
@@ -38,7 +32,6 @@ import com.gurkha.hr.res.theme.highLightColor
 import com.gurkha.hr.res.theme.lightGreenColor
 import com.gurkha.hr.res.theme.lightRedColor
 import com.gurkha.hr.res.theme.primaryTextColor
-import org.jetbrains.compose.resources.stringArrayResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -153,7 +146,7 @@ fun HistoryScreenContainer(
 
 @Composable
 fun HistoryScreenContent(
-    item : HistoryData,
+    item: HistoryDataUI,
     state: HistoryState
 ){
 
@@ -195,11 +188,11 @@ fun HistoryScreenContent(
             Text(
                 text = item.attendanceStatus,
                 style = MaterialTheme.typography.titleMedium.copy(
-                    color = item.colorUi.textColor
+                    color = item.attendanceTextColor.textColor
                 )
             )
         }
-        if (item.attendanceStatus == "P"){
+        if (item.isPresent){
             HorizontalDivider(modifier = Modifier.height(MaterialTheme.dimens.extraSmall))
             LowTextContent(item = item)
         }
@@ -208,7 +201,7 @@ fun HistoryScreenContent(
 }
 @Composable
 fun LowTextContent(
-    item: HistoryData
+    item: HistoryDataUI
 ){
 
     Column(

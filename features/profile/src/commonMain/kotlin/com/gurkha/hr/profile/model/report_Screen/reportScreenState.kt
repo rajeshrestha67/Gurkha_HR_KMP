@@ -4,6 +4,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.graphics.Color
 import com.gurkha.hr.domain.history.model.HistoryData
 import com.gurkha.hr.domain.reportScreen.model.ReportData
+import com.gurkha.hr.profile.model.history_screen.HistoryDataUI
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.holidayBlueColor
 import com.gurkha.hr.res.theme.lightGreenColor
@@ -18,7 +19,7 @@ data class ReportScreenState(
     val year: Int = 2082,
     val monthDisplay: String = "Asoj",
     val employeeId: Int? = null,
-    val historySummaryList: List<HistoryData> = emptyList(),
+    val historySummaryList: List<HistoryDataUI> = emptyList(),
 
     val endYearError: StringResource? = null,
     val endMonthError: StringResource? = null,
@@ -54,8 +55,3 @@ data class ReportItems(
     val days: String,
 )
 
-
-data class ColorUI(
-    val colorUI: AttendanceStatusColorUi
-)
-//UI Class and one for enum

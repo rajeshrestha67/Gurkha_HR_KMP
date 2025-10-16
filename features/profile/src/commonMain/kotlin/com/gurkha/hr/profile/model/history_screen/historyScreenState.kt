@@ -1,7 +1,15 @@
 package com.gurkha.hr.profile.model.history_screen
 
 
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import com.gurkha.hr.domain.history.model.HistoryData
+import com.gurkha.hr.profile.model.profile_screen.AccountList
+import com.gurkha.hr.profile.model.profile_screen.AccountList.TermsAndServices
+import com.gurkha.hr.res.theme.holidayBlueColor
+import com.gurkha.hr.res.theme.lightGreenColor
+import com.gurkha.hr.res.theme.lightRedColor
 import org.jetbrains.compose.resources.StringResource
 
 data class HistoryState(
@@ -9,9 +17,75 @@ data class HistoryState(
     val monthValue: Int = 6,
     val year: Int = 2082,
     val monthDisplay: String = "Asoj",
-    val historySummaryList: List<HistoryData> = emptyList(),
+    val historySummaryList: List<HistoryDataUI> = emptyList(),
     val employeeId: Int? = null,
 
     val endYearError: StringResource? = null,
     val endMonthError: StringResource? = null
 )
+
+data class HistoryDataUI(
+    val date: String,
+    val day: String,
+    val clockInTime: String,
+    val clockOutTime: String,
+    val lateInTime: String,
+    val earlyOutTime: String,
+    val assigneeName: String,
+    val remarks: String,
+    val response: String,
+    val assigneeStatus: String,
+    val leaveRequestStatus: String,
+    val leaveApproverRemarks: String,
+    val leaveDuration: String,
+    val attendanceStatus: String,
+    val isPresent: Boolean,
+    val attendanceTextColor: AttendanceTextColor
+)
+
+fun HistoryData.toUI():HistoryDataUI{
+    return HistoryDataUI(
+        date = date,
+        day = day,
+        clockInTime = clockInTime,
+        clockOutTime = clockOutTime,
+        lateInTime = lateInTime,
+        earlyOutTime = earlyOutTime,
+        assigneeName = assigneeName,
+        remarks = remarks,
+        response = response,
+        assigneeStatus = assigneeStatus,
+        leaveRequestStatus = leaveRequestStatus,
+        leaveApproverRemarks = leaveApproverRemarks,
+        leaveDuration = leaveDuration,
+        attendanceStatus = attendanceStatus,
+        isPresent = attendanceStatus.equals("P", ignoreCase = true),
+        attendanceTextColor = AttendanceTextColor.get(attendanceStatus)
+    )
+}
+enum class AttendanceTextColor(val value: String){
+
+    Present("P"),
+    Absent("A"),
+    Holiday("H");
+
+    companion object{
+        private val typeMap =
+            enumValues<AttendanceTextColor>().associateBy { it.value }
+
+        fun get(typeName: String): AttendanceTextColor = AttendanceTextColor.typeMap[typeName] ?: Present
+
+        val list: List<AttendanceTextColor>
+            get() = AttendanceTextColor.entries.toList().map { it }
+    }
+
+    val textColor: Color
+        @Composable get() =
+             when(this){
+                Present -> MaterialTheme.colorScheme.lightGreenColor
+                Absent -> MaterialTheme.colorScheme.lightRedColor
+                Holiday -> MaterialTheme.colorScheme.holidayBlueColor
+            }
+
+
+}

@@ -50,6 +50,7 @@ import com.gurkha.hr.components.dateFilterDropDown.DateFilterDropdown
 import com.gurkha.hr.components.shimmer.ShimmerView
 import com.gurkha.hr.domain.history.model.HistoryData
 import com.gurkha.hr.domain.reportScreen.model.ReportData
+import com.gurkha.hr.profile.model.history_screen.HistoryDataUI
 import com.gurkha.hr.profile.model.report_Screen.Heading
 import com.gurkha.hr.profile.model.report_Screen.ReportItems
 import com.gurkha.hr.profile.model.report_Screen.ReportScreenState
@@ -57,10 +58,6 @@ import com.gurkha.hr.profile.model.report_Screen.ReportScreenViewAction
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.darkPrimaryTextColor
 import com.gurkha.hr.res.theme.dimens
-import com.gurkha.hr.res.theme.holidayBlueColor
-import com.gurkha.hr.res.theme.lightGreenColor
-import com.gurkha.hr.res.theme.lightRedColor
-import com.gurkha.hr.res.theme.outGoingBubbleColor
 import com.gurkha.hr.res.theme.primaryTextColor
 import com.gurkha.hr.res.theme.veryLightGray
 import org.jetbrains.compose.resources.StringResource
@@ -224,7 +221,7 @@ fun ReportScreenContent(
 }
 @Composable
 fun MonthlyAttendanceItemsBox(
-    item : HistoryData
+    item : HistoryDataUI
 ){
     Surface(
         tonalElevation = 4.dp,
@@ -258,11 +255,11 @@ fun MonthlyAttendanceItemsBox(
                 Text(
                     text = item.attendanceStatus,
                     style = MaterialTheme.typography.titleLarge.copy(
-                        color = item.colorUi.textColor
+                        color = item.attendanceTextColor.textColor
 
                     )
                 )
-                if (item.attendanceStatus == "P"){
+                if (item.isPresent){
                     InOutText(
                         inOrOut = "In: ",
                         inOut = item.clockInTime

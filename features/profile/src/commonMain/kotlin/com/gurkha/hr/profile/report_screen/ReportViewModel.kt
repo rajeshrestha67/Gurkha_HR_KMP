@@ -6,6 +6,7 @@ import com.gurkha.hr.domain.form.RequiredValidationUseCase
 import com.gurkha.hr.domain.history.useCase.HistoryUseCase
 import com.gurkha.hr.domain.reportScreen.useCase.ReportUseCase
 import com.gurkha.hr.networkhelper.onSuccess
+import com.gurkha.hr.profile.model.history_screen.toUI
 import com.gurkha.hr.profile.model.report_Screen.ReportScreenState
 import com.gurkha.hr.profile.model.report_Screen.ReportScreenViewAction
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -86,7 +87,7 @@ class ReportViewModel(
             println("history_data $data")
             _state.update {
                 it.copy(
-                    historySummaryList = data
+                    historySummaryList = data.map {mdata-> mdata.toUI() }
             ) }
 
         }

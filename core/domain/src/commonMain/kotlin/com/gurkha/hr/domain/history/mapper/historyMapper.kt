@@ -6,10 +6,10 @@ import com.gurkha.model.history.HistoryResponseDTO
 import com.gurkha.model.history.ui.AttendanceStatusColorUi
 
 fun HistoryResponseDTO.toData(): List<HistoryData> {
-    return detail?.flatMap { attendanceDetail ->
+    return detail.flatMap { attendanceDetail ->
         attendanceDetail.dailyAttendance.map { daily ->
             HistoryData(
-                date = daily.dateBs ?: "",
+                date = daily.dateBs ,
                 day = daily.day,
                 clockInTime = daily.clockInTime?: "-",
                 clockOutTime = daily.clockOutTime ?: " - ",
@@ -26,18 +26,9 @@ fun HistoryResponseDTO.toData(): List<HistoryData> {
                 leaveRequestStatus = daily.leaveRequestStatus?:" - ",
                 leaveApproverRemarks = daily.leaveApproverRemarks?:" - ",
                 leaveDuration = daily.leaveDuration?:"",
-                attendanceStatus = daily.attendanceStatus,
-                colorUi = mapAttendanceStatusToColor(daily.attendanceStatus)
+                attendanceStatus = daily.attendanceStatus
             )
         }
-    } ?: emptyList()
+    }
 }
 
-fun mapAttendanceStatusToColor(status: String): AttendanceStatusColorUi {
-    val color = when (status.uppercase()) {
-        "H" -> Color(0xFF42A5F5) // holidayBlueColor
-        "A" -> Color(0xFFE57373) // lightRedColor
-        else -> Color(0xFF81C784) // lightGreenColor
-    }
-    return AttendanceStatusColorUi(textColor = color)
-}
