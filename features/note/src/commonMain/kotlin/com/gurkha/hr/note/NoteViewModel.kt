@@ -7,6 +7,7 @@ import com.gurkha.hr.domain.note.allNotes.useCase.NoteUseCase
 import com.gurkha.hr.domain.note.deleteNote.useCase.DeleteNoteUseCase
 import com.gurkha.hr.model.note.NoteAction
 import com.gurkha.hr.model.note.NoteState
+import com.gurkha.hr.networkhelper.onError
 import com.gurkha.hr.networkhelper.onSuccess
 import com.gurkha.model.note.ui.AddedNoteDataUi
 import com.gurkha.model.note.ui.NoteDataUi
@@ -109,6 +110,15 @@ class NoteViewModel(
                 }
             }
 
+            is NoteAction.OnDeleteNoteFromState->{
+                _state.update { currentState ->
+                    val updatedList = currentState.noteItem.filter { it.id != action.id }
+                    currentState.copy(
+                        noteItem = updatedList,
+                    )
+                }
+            }
+
         }
     }
 
@@ -121,8 +131,14 @@ class NoteViewModel(
         noteUseCase().onSuccess { data ->
             _state.update {
                 it.copy(
-                    isFetchingNotes = true,
+                    isFetchingNotes = false,
                     noteItem = data
+                )
+            }
+        }.onError {
+            _state.update {
+                it.copy(
+                    isFetchingNotes = false,
                 )
             }
         }
@@ -132,14 +148,21 @@ class NoteViewModel(
     private fun deleteNote(id: Int) = viewModelScope.launch {
         _state.update {
             it.copy(
-
+                isDeletingData = true
             )
         }
         deleteNoteUseCase(id = id).onSuccess {
             _state.update { currentState ->
                 val updatedList = currentState.noteItem.filter { it.id != id }
                 currentState.copy(
+                    isDeletingData = false,
                     noteItem = updatedList,
+                )
+            }
+        }.onError {
+            _state.update {
+                it.copy(
+                    isDeletingData = false,
                 )
             }
         }

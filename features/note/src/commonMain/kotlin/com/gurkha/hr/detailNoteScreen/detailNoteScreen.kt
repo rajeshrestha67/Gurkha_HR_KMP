@@ -29,13 +29,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import com.gurkha.hr.components.prompts.PromptModalBottomSheet
+import com.gurkha.hr.components.prompts.PromptType
+import com.gurkha.hr.model.detail.DetailNoteScreenAction
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.darkPrimaryTextColor
 import com.gurkha.hr.res.theme.dimens
 import com.gurkha.model.note.ui.NoteDataUi
 import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -44,137 +49,178 @@ fun DetailNoteScreen(
     navController: NavHostController,
     onBackClicked: () -> Unit,
     onGoToAddNotesScreen: (String?) -> Unit,
-
     ) {
+    val viewModel: DetailNoteScreenViewModel = koinViewModel()
+    val state by viewModel.state.collectAsStateWithLifecycle()
     var note by remember { mutableStateOf<NoteDataUi?>(null) }
     var showMore by remember { mutableStateOf(false) }
     var showDialogue by remember { mutableStateOf(false) }
 
+    var showSuccessDialogue by remember {mutableStateOf(false)}
+    var showErrorDialogue by remember {mutableStateOf(false)}
+    var messageToShow by remember {mutableStateOf("")}
+
+    var sendData by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit){
+        viewModel.successChannel.collect {
+            messageToShow = it
+            showSuccessDialogue = true
+        }
+    }
+    LaunchedEffect(Unit){
+        viewModel.successChannel.collect {
+            messageToShow = it
+            showErrorDialogue = true
+        }
+    }
+
+    LaunchedEffect(sendData){
+        if (sendData){
+            println("triggerdIdSent ${note?.id}")
+            navController.previousBackStackEntry?.savedStateHandle?.set("id",note?.id)
+            onBackClicked()
+        }
+    }
+
 
     LaunchedEffect(json) {
-
         val data = Json.decodeFromString<NoteDataUi>(json)
         note = data
-
     }
-    Scaffold(
-        contentWindowInsets = WindowInsets(0.dp),
-        containerColor = MaterialTheme.colorScheme.background,
-        topBar = {
-            TopAppBar(
-                windowInsets = WindowInsets(0.dp),
-                title = {
-                    Text(
-                        note?.title ?: "", style = MaterialTheme.typography.titleLarge.copy(
-                            color = MaterialTheme.colorScheme.darkPrimaryTextColor
-                        )
-                    )
-                },
-                navigationIcon = {
-                    IconButton(
-                        onClick = onBackClicked,
-                        content = {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = ""
+        Scaffold(
+            contentWindowInsets = WindowInsets(0.dp),
+            containerColor = MaterialTheme.colorScheme.background,
+            topBar = {
+                TopAppBar(
+                    windowInsets = WindowInsets(0.dp),
+                    title = {
+                        Text(
+                            note?.title ?: "", style = MaterialTheme.typography.titleLarge.copy(
+                                color = MaterialTheme.colorScheme.darkPrimaryTextColor
                             )
-                        }
-                    )
-                },
-                actions = {
-                    Box(
-                        modifier = Modifier.padding(MaterialTheme.dimens.small3)
-                    ) {
-                        if (showMore) {
-                            DropdownMenu(
-                                containerColor = MaterialTheme.colorScheme.background,
-                                expanded = showMore,
-                                onDismissRequest = { showMore = false }
-                            ) {
-                                DropdownMenuItem(
-                                    text = { Text(text = stringResource(SharedRes.Strings.edit)) },
-                                    onClick = {
-                                        val note = Json.encodeToString(note)
-                                        onGoToAddNotesScreen(note)
-                                        showMore = false
-                                    }
-                                )
-                                DropdownMenuItem(
-                                    text = { Text(text = stringResource(SharedRes.Strings.delete)) },
-                                    onClick = {
-//                                        onAction(NoteAction.OnDeleteIdSelected(item.id))
-                                        showDialogue = true
-                                        showMore = false
-                                    }
+                        )
+                    },
+                    navigationIcon = {
+                        IconButton(
+                            onClick = onBackClicked,
+                            content = {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                    contentDescription = ""
                                 )
                             }
-                        }
-
-                        IconButton(
-                            modifier = Modifier
-                                .padding(0.dp)
-                                .size(MaterialTheme.dimens.medium1),
-                            onClick = { showMore = true }
+                        )
+                    },
+                    actions = {
+                        Box(
+                            modifier = Modifier.padding(MaterialTheme.dimens.small3)
                         ) {
-                            Icon(
+                            if (showMore) {
+                                DropdownMenu(
+                                    containerColor = MaterialTheme.colorScheme.background,
+                                    expanded = showMore,
+                                    onDismissRequest = { showMore = false }
+                                ) {
+//                                    DropdownMenuItem(
+//                                        text = { Text(text = stringResource(SharedRes.Strings.edit)) },
+//                                        onClick = {
+//                                            val note = Json.encodeToString(note)
+//                                            onGoToAddNotesScreen(note)
+//                                            showMore = false
+//                                        }
+//                                    )
+                                    DropdownMenuItem(
+                                        text = { Text(text = stringResource(SharedRes.Strings.delete)) },
+                                        onClick = {
+                                            showDialogue = true
+                                            showMore = false
+                                        }
+                                    )
+                                }
+                            }
+
+                            IconButton(
                                 modifier = Modifier
                                     .padding(0.dp)
                                     .size(MaterialTheme.dimens.medium1),
-                                imageVector = Icons.Default.MoreVert,
-                                contentDescription = "More Option"
+                                onClick = { showMore = true }
+                            ) {
+                                Icon(
+                                    modifier = Modifier
+                                        .padding(0.dp)
+                                        .size(MaterialTheme.dimens.medium1),
+                                    imageVector = Icons.Default.MoreVert,
+                                    contentDescription = "More Option"
+                                )
+                            }
+                        }
+                        if (showDialogue) {
+                            AlertDialog(
+                                onDismissRequest = { },
+                                confirmButton = {
+                                    TextButton(
+                                        onClick = {
+                                            viewModel.onAction(DetailNoteScreenAction.OnDeleteNote(note?.id))
+                                            showDialogue = false
+                                        }
+                                    ) {
+                                        Text(text = stringResource(SharedRes.Strings.yes))
+                                    }
+                                },
+                                dismissButton = {
+                                    TextButton(
+                                        onClick = {
+                                            showDialogue = false
+                                        }
+                                    ) {
+                                        Text(text = stringResource(SharedRes.Strings.cancel))
+                                    }
+                                },
+                                title = {
+                                    Text("Confirmation")
+                                },
+                                text = {
+                                    Text("Are you sure you wanna delete?")
+                                },
+                                properties = DialogProperties(
+                                    dismissOnBackPress = true,
+                                    dismissOnClickOutside = true
+                                )
                             )
                         }
                     }
-                    if (showDialogue) {
-                        AlertDialog(
-                            onDismissRequest = { },
-                            confirmButton = {
-                                TextButton(
-                                    onClick = {
-//                                        onAction(NoteAction.OnDeleteNote)
-                                        showDialogue = false
-                                    }
-                                ) {
-                                    Text(text = stringResource(SharedRes.Strings.yes))
-                                }
-                            },
-                            dismissButton = {
-                                TextButton(
-                                    onClick = {
-                                        showDialogue = false
-                                    }
-                                ) {
-                                    Text(text = stringResource(SharedRes.Strings.cancel))
-                                }
-                            },
-                            title = {
-                                Text("Confirmation")
-                            },
-                            text = {
-                                Text("Are you sure you wanna delete?")
-                            },
-                            properties = DialogProperties(
-                                dismissOnBackPress = true,
-                                dismissOnClickOutside = true
-                            )
-                        )
-                    }
-                }
-            )
-        },
-    ) { contentPadding ->
-        Column(
-            modifier = Modifier
-                .padding(contentPadding)
-                .fillMaxSize()
-                .padding(MaterialTheme.dimens.small3)
-        ) {
-            Text(
-                note?.description ?: "", style = MaterialTheme.typography.labelLarge.copy(
-                    color = MaterialTheme.colorScheme.darkPrimaryTextColor
                 )
-            )
+            },
+        ) { contentPadding ->
+            Column(
+                modifier = Modifier
+                    .padding(contentPadding)
+                    .fillMaxSize()
+                    .padding(MaterialTheme.dimens.small3)
+            ) {
+                Text(
+                    note?.description ?: "", style = MaterialTheme.typography.labelLarge.copy(
+                        color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                    )
+                )
+            }
+
+            if(showSuccessDialogue){
+                PromptModalBottomSheet(
+                    onBackClicked = {
+                        sendData=true
+                    },
+                    text = messageToShow
+                )
+            }
+            if(showErrorDialogue){
+                PromptModalBottomSheet(
+                    promptType = PromptType.FAILED,
+                    onBackClicked = onBackClicked,
+                    text = messageToShow
+                )
+            }
         }
-    }
 }
 

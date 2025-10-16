@@ -2,6 +2,7 @@ package com.gurkha.di
 
 import com.gurkha.hr.addNoteScreen.AddNotesViewModel
 import com.gurkha.hr.data.note.KtorNoteRemoteRepository
+import com.gurkha.hr.detailNoteScreen.DetailNoteScreenViewModel
 import com.gurkha.hr.domain.form.RequiredValidationUseCase
 import com.gurkha.hr.domain.note.addNote.useCase.AddNoteUseCase
 import com.gurkha.hr.domain.note.allNotes.repository.NoteRemoteRepository
@@ -66,5 +67,12 @@ class NoteScreenModule {
     ): NoteViewModel = NoteViewModel(
         deleteNoteUseCase = deleteNoteUseCase,
         noteUseCase = noteUseCase
+    )
+
+    @KoinViewModel
+    fun getDetailNoteScreenViewModel(
+        deleteNoteUseCase: DeleteNoteUseCase,
+    ): DetailNoteScreenViewModel = DetailNoteScreenViewModel(
+        deleteNoteUseCase = deleteNoteUseCase
     )
 }

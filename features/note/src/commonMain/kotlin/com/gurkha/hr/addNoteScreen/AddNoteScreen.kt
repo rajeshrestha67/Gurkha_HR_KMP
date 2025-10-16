@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -116,7 +117,7 @@ fun AddNoteScreen(
 
     LaunchedEffect(sendData) {
         val isUpdate = Json.encodeToString(state.isEdit)
-        if(state.isEdit){
+        if (state.isEdit) {
             if (sendData) {
                 val data = state.noteItemData
                 data?.let {
@@ -130,7 +131,7 @@ fun AddNoteScreen(
                     onBackClicked()
                 }
             }
-        }else{
+        } else {
             if (sendData) {
                 val data = state.storeNoteItem
                 data?.let {
@@ -152,7 +153,8 @@ fun AddNoteScreen(
     ) {
         Scaffold(
             contentWindowInsets = WindowInsets(0.dp),
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize(),
             containerColor = MaterialTheme.colorScheme.background,
             topBar = {
                 TopAppBar(
@@ -223,6 +225,7 @@ fun AddNoteScreenContent(
     Column(
         modifier = modifier
             .verticalScroll(state = rememberScrollState())
+            .imePadding()
             .fillMaxSize()
             .padding(
                 start = MaterialTheme.dimens.small3,
