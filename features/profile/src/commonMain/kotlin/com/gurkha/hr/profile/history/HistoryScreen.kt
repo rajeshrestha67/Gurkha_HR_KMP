@@ -236,7 +236,7 @@ fun LowTextContent(
         }
 
     }
-    if (item.assigneeName.isNotBlank()){
+    if (item.leaveDuration.isNotBlank()){
         HorizontalDivider(modifier = Modifier.height(MaterialTheme.dimens.extraSmall))
 
         Text(
@@ -384,88 +384,3 @@ fun DateFilterHistory(
         }
     )
 }
-//@Composable
-//fun DateFilterHistory(
-//    state: HistoryState,
-//    onAction: (HistoryScreenViewAction) -> Unit
-//) {
-//
-//
-//    val yearInBS = remember { (2070..BSPointer.getLastDay().first).map { it.toString() } }
-//    val months = stringArrayResource(SharedRes.Arrays.months)
-//    Box(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .padding(
-//                bottom = MaterialTheme.dimens.small3,
-//                start = MaterialTheme.dimens.small1,
-//                end = MaterialTheme.dimens.small1
-//            )
-//    ) {
-//        Column(
-//            modifier = Modifier
-//                .fillMaxWidth(),
-//            verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
-//        ) {
-//
-//
-//            DropDownText(
-//                dropdownIcon = {
-//                    Icon(
-//                        imageVector = Icons.Default.CalendarMonth,
-//                        contentDescription = "Calender Image",
-//
-//                    )
-//                },
-//                label = SharedRes.Strings.month,
-//                hint = SharedRes.Strings.month,
-//                selectedValue = state.monthDisplay,
-//                error = state.endMonthError,
-//                onError = {
-//                    onAction(HistoryScreenViewAction.MonthPickerError(it))
-//                },
-//                listOfItems = months ,
-//                rules = FormValidate.requiredValidationRules,
-//                itemClicked = { month->
-//                    onAction(HistoryScreenViewAction.FromMonth(
-//                        showMonth = month,
-//                        month = months.indexOf(month) + 1
-//                        )
-//                    )
-//
-//
-//                },
-//            )
-//
-//            DropDownText(
-//                dropdownIcon = {
-//                    Icon(
-//                        imageVector = Icons.Default.CalendarMonth,
-//                        contentDescription = "Calender Image",
-//
-//                        )
-//                },
-//                label = SharedRes.Strings.year,
-//                hint = SharedRes.Strings.year,
-//                selectedValue = state.year.toString(),
-//                error = state.endYearError,
-//                onError = {
-//                    onAction(HistoryScreenViewAction.YearPickerError(it))
-//                },
-//                listOfItems = yearInBS,
-//                rules = FormValidate.requiredValidationRules,
-//                itemClicked = {year->
-//                    onAction(HistoryScreenViewAction.FromYear(year.toInt()))
-//                }
-//            )
-//
-//            ERPButton(
-//                onClick = {
-//                    onAction(HistoryScreenViewAction.Submit(employeeId = state.employeeId))
-//                },
-//                modifier = Modifier.fillMaxWidth(),
-//                text = stringResource(SharedRes.Strings.submit),
-//            )
-//        }
-//    }
-//}
