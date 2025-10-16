@@ -24,7 +24,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
@@ -32,8 +31,6 @@ import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridS
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -62,7 +59,6 @@ import androidx.navigation.NavHostController
 import com.gurkha.hr.components.prompts.PromptModalBottomSheet
 import com.gurkha.hr.components.prompts.PromptType
 import com.gurkha.hr.components.shimmer.ShimmerView
-import com.gurkha.hr.components.shimmer.ShimmerView
 import com.gurkha.hr.domain.note.allNotes.model.NoteData
 import com.gurkha.hr.domain.note.allNotes.model.toUi
 import com.gurkha.hr.model.note.NoteAction
@@ -85,17 +81,17 @@ fun NoteScreen(
 ) {
     val viewModel: NoteViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
-    var showSuccessDialogue by remember {mutableStateOf(false)}
-    var showErrorDialogue by remember {mutableStateOf(false)}
-    var messageToShow by remember {mutableStateOf("")}
+    var showSuccessDialogue by remember { mutableStateOf(false) }
+    var showErrorDialogue by remember { mutableStateOf(false) }
+    var messageToShow by remember { mutableStateOf("") }
 
-    LaunchedEffect(Unit){
+    LaunchedEffect(Unit) {
         viewModel.successChannel.collect {
             messageToShow = it
             showSuccessDialogue = true
         }
     }
-    LaunchedEffect(Unit){
+    LaunchedEffect(Unit) {
         viewModel.successChannel.collect {
             messageToShow = it
             showErrorDialogue = true
@@ -168,12 +164,12 @@ fun NoteScreen(
                 onGoToAddNotesScreen = onGoToAddNotesScreen,
                 onGoToDetailNotesScreen = onGoToDetailNotesScreen,
                 showSuccessDialogue = showSuccessDialogue,
-                showErrorDialogue=showErrorDialogue,
-                messageToShow=messageToShow,
-                onCloseSuccessDialogue ={
+                showErrorDialogue = showErrorDialogue,
+                messageToShow = messageToShow,
+                onCloseSuccessDialogue = {
                     showSuccessDialogue = false
                 },
-                onCloseErrorDialogue ={
+                onCloseErrorDialogue = {
                     showSuccessDialogue = false
                 }
             )
@@ -201,17 +197,17 @@ fun NoteScreenContent(
     onGoToAddNotesScreen: (String?) -> Unit,
     onGoToDetailNotesScreen: (String?) -> Unit,
     onAction: (NoteAction) -> Unit,
-    showSuccessDialogue:Boolean,
-    showErrorDialogue:Boolean,
-    messageToShow:String,
-    onCloseSuccessDialogue:()->Unit,
-    onCloseErrorDialogue:()->Unit
+    showSuccessDialogue: Boolean,
+    showErrorDialogue: Boolean,
+    messageToShow: String,
+    onCloseSuccessDialogue: () -> Unit,
+    onCloseErrorDialogue: () -> Unit
 ) {
     AnimatedContent(
         modifier = modifier,
-        targetState = state.noteItem.isNotEmpty()
-    ){ isVisible->
-        if(isVisible){
+        targetState = state.noteItem.isNotEmpty() || state.isFetchingNotes,
+    ) { isVisible ->
+        if (isVisible) {
             LazyVerticalStaggeredGrid(
                 columns = StaggeredGridCells.Fixed(2),
                 modifier = Modifier.animateContentSize().fillMaxSize(),
@@ -228,7 +224,8 @@ fun NoteScreenContent(
                         items(8) {
                             val randomHeight = remember { (30..200).random() }
                             ShimmerView(
-                                modifier = Modifier.fillMaxWidth().clip(shape = MaterialTheme.shapes.small)
+                                modifier = Modifier.fillMaxWidth()
+                                    .clip(shape = MaterialTheme.shapes.small)
                                     .height(randomHeight.dp)
                             )
                         }
@@ -250,7 +247,7 @@ fun NoteScreenContent(
                     }
                 }
             )
-        }else{
+        } else {
             Box(
                 modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
             ) {
@@ -267,13 +264,13 @@ fun NoteScreenContent(
 
 
 
-    if(showSuccessDialogue){
+    if (showSuccessDialogue) {
         PromptModalBottomSheet(
             onBackClicked = onCloseSuccessDialogue,
             text = messageToShow
         )
     }
-    if(showErrorDialogue){
+    if (showErrorDialogue) {
         PromptModalBottomSheet(
             promptType = PromptType.FAILED,
             onBackClicked = onCloseErrorDialogue,
