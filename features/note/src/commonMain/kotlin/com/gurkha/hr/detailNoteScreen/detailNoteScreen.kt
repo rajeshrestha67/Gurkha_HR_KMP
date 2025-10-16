@@ -34,6 +34,10 @@ import androidx.navigation.NavHostController
 import com.gurkha.hr.components.prompts.PromptModalBottomSheet
 import com.gurkha.hr.components.prompts.PromptType
 import com.gurkha.hr.model.detail.DetailNoteScreenAction
+import com.gurkha.hr.model.note.NoteAction
+import com.gurkha.hr.components.prompts.PromptModalBottomSheet
+import com.gurkha.hr.components.prompts.PromptType
+import com.gurkha.hr.model.detail.DetailNoteScreenAction
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.darkPrimaryTextColor
 import com.gurkha.hr.res.theme.dimens
@@ -55,6 +59,32 @@ fun DetailNoteScreen(
     var note by remember { mutableStateOf<NoteDataUi?>(null) }
     var showMore by remember { mutableStateOf(false) }
     var showDialogue by remember { mutableStateOf(false) }
+
+    var showSuccessDialogue by remember {mutableStateOf(false)}
+    var showErrorDialogue by remember {mutableStateOf(false)}
+    var messageToShow by remember {mutableStateOf("")}
+
+    var sendData by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit){
+        viewModel.successChannel.collect {
+            messageToShow = it
+            showSuccessDialogue = true
+        }
+    }
+    LaunchedEffect(Unit){
+        viewModel.successChannel.collect {
+            messageToShow = it
+            showErrorDialogue = true
+        }
+    }
+
+    LaunchedEffect(sendData){
+        if (sendData){
+            navController.previousBackStackEntry?.savedStateHandle?.set("id",note?.id)
+            onBackClicked()
+        }
+    }
 
     var showSuccessDialogue by remember {mutableStateOf(false)}
     var showErrorDialogue by remember {mutableStateOf(false)}
@@ -156,38 +186,21 @@ fun DetailNoteScreen(
                             }
                         }
                         if (showDialogue) {
-                            AlertDialog(
-                                onDismissRequest = { },
-                                confirmButton = {
-                                    TextButton(
-                                        onClick = {
-                                            viewModel.onAction(DetailNoteScreenAction.OnDeleteNote(note?.id))
-                                            showDialogue = false
-                                        }
-                                    ) {
-                                        Text(text = stringResource(SharedRes.Strings.yes))
-                                    }
-                                },
-                                dismissButton = {
-                                    TextButton(
-                                        onClick = {
-                                            showDialogue = false
-                                        }
-                                    ) {
-                                        Text(text = stringResource(SharedRes.Strings.cancel))
-                                    }
-                                },
-                                title = {
-                                    Text("Confirmation")
-                                },
-                                text = {
-                                    Text("Are you sure you wanna delete?")
-                                },
-                                properties = DialogProperties(
-                                    dismissOnBackPress = true,
-                                    dismissOnClickOutside = true
+                            if (showDialogue) {
+                                PromptModalBottomSheet(
+                                    text = stringResource(SharedRes.Strings.delete_confirmation),
+                                    cancelButton = true,
+                                    onBackClicked = {
+                                        viewModel.onAction(DetailNoteScreenAction.OnDeleteNote(note?.id))
+                                        showDialogue = false
+                                    },
+                                    promptType = PromptType.FAILED,
+                                    buttonText = SharedRes.Strings.delete,
+                                    closePopUp = {
+                                        showDialogue = false
+                                    },
                                 )
-                            )
+                            }
                         }
                     }
                 )

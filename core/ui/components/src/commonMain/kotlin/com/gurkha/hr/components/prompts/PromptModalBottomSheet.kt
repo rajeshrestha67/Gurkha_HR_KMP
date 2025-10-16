@@ -13,6 +13,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -38,7 +39,9 @@ fun PromptModalBottomSheet(
     text : String,
     promptType: PromptType = PromptType.SUCCESS,
     buttonText: StringResource = SharedRes.Strings.ok,
-    onBackClicked: () -> Unit
+    onBackClicked: () -> Unit,
+    cancelButton: Boolean? = false,
+    closePopUp: (() -> Unit)? = null,
 ){
     val sheet = rememberModalBottomSheetState(
         skipPartiallyExpanded = true,
@@ -53,6 +56,7 @@ fun PromptModalBottomSheet(
             .fillMaxWidth()
             .statusBarsPadding(),
         onDismissRequest = {
+            closePopUp
         },
         containerColor = MaterialTheme.colorScheme.background,
     ){
@@ -100,12 +104,21 @@ fun PromptModalBottomSheet(
                    }
 
                    PromptType.FAILED -> {
-                       Icon(
-                           imageVector =  Icons.Filled.Close,
-                           contentDescription = "Error",
-                           tint = MaterialTheme.colorScheme.onError,
-                           modifier = Modifier.size(MaterialTheme.dimens.medium3)
-                       )
+                       if(cancelButton == true){
+                           Icon(
+                               imageVector =  Icons.Filled.Delete,
+                               contentDescription = "Error",
+                               tint = MaterialTheme.colorScheme.onError,
+                               modifier = Modifier.size(MaterialTheme.dimens.medium3)
+                           )
+                       }else{
+                           Icon(
+                               imageVector =  Icons.Filled.Close,
+                               contentDescription = "Error",
+                               tint = MaterialTheme.colorScheme.onError,
+                               modifier = Modifier.size(MaterialTheme.dimens.medium3)
+                           )
+                       }
                    }
                }
             }
@@ -123,6 +136,18 @@ fun PromptModalBottomSheet(
                 text = stringResource(buttonText),
                 onClick = onBackClicked
             )
+            if(cancelButton == true){
+                closePopUp?.let {
+                    ERPButton(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                        ,
+                        backgroundColor = MaterialTheme.colorScheme.error,
+                        text = stringResource(SharedRes.Strings.cancel),
+                        onClick = closePopUp
+                    )
+                }
+            }
 
         }
     }

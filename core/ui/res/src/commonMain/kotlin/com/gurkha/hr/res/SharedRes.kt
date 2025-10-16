@@ -44,6 +44,7 @@ import gurkhahr.core.ui.res.generated.resources.current_password
 import gurkhahr.core.ui.res.generated.resources.date
 import gurkhahr.core.ui.res.generated.resources.date_of_birth
 import gurkhahr.core.ui.res.generated.resources.delete
+import gurkhahr.core.ui.res.generated.resources.delete_confirmation
 import gurkhahr.core.ui.res.generated.resources.description
 import gurkhahr.core.ui.res.generated.resources.do_you_really_want_to_logout
 import gurkhahr.core.ui.res.generated.resources.document
@@ -318,6 +319,8 @@ object SharedRes {
 
         val edit = Res.string.edit
         val delete = Res.string.delete
+
+        val delete_confirmation = Res.string.delete_confirmation
 
 
 

@@ -9,11 +9,14 @@ import com.gurkha.hr.model.note.NoteAction
 import com.gurkha.hr.model.note.NoteState
 import com.gurkha.hr.networkhelper.onError
 import com.gurkha.hr.networkhelper.onSuccess
+import com.gurkha.model.network.toErrorMessage
 import com.gurkha.model.note.ui.AddedNoteDataUi
 import com.gurkha.model.note.ui.NoteDataUi
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -35,6 +38,13 @@ class NoteViewModel(
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = NoteState()
         )
+
+    private val _successChannel = Channel<String>()
+    val successChannel = _successChannel.receiveAsFlow()
+
+    private val _errorChannel = Channel<String>()
+    val errorChannel = _errorChannel.receiveAsFlow()
+
 
     fun onAction(action: NoteAction) {
         when (action) {
@@ -151,7 +161,7 @@ class NoteViewModel(
                 isDeletingData = true
             )
         }
-        deleteNoteUseCase(id = id).onSuccess {
+        deleteNoteUseCase(id = id).onSuccess {data ->
             _state.update { currentState ->
                 val updatedList = currentState.noteItem.filter { it.id != id }
                 currentState.copy(
@@ -159,12 +169,14 @@ class NoteViewModel(
                     noteItem = updatedList,
                 )
             }
-        }.onError {
+            _successChannel.send(data.message)
+        }.onError {error ->
             _state.update {
                 it.copy(
                     isDeletingData = false,
                 )
             }
+            _errorChannel.send(error.toErrorMessage())
         }
     }
 }

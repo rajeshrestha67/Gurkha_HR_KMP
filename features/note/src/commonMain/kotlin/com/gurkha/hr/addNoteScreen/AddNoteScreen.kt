@@ -158,7 +158,7 @@ fun AddNoteScreen(
             containerColor = MaterialTheme.colorScheme.background,
             topBar = {
                 TopAppBar(
-                    modifier = Modifier.background(Color.Blue),
+                    modifier = Modifier,
                     windowInsets = WindowInsets(0.dp),
                     title = {
                         if (state.isEdit) {

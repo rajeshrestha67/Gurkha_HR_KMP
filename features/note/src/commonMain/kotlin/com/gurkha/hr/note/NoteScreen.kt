@@ -24,7 +24,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
@@ -33,6 +32,7 @@ import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridS
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
@@ -45,7 +45,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -58,9 +57,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import com.gurkha.hr.components.prompts.PromptModalBottomSheet
+import com.gurkha.hr.components.prompts.PromptType
+import com.gurkha.hr.components.shimmer.ShimmerView
 import com.gurkha.hr.components.shimmer.ShimmerView
 import com.gurkha.hr.domain.note.allNotes.model.NoteData
 import com.gurkha.hr.domain.note.allNotes.model.toUi
@@ -84,7 +85,22 @@ fun NoteScreen(
 ) {
     val viewModel: NoteViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
-    val noteListState = rememberLazyListState()
+    var showSuccessDialogue by remember {mutableStateOf(false)}
+    var showErrorDialogue by remember {mutableStateOf(false)}
+    var messageToShow by remember {mutableStateOf("")}
+
+    LaunchedEffect(Unit){
+        viewModel.successChannel.collect {
+            messageToShow = it
+            showSuccessDialogue = true
+        }
+    }
+    LaunchedEffect(Unit){
+        viewModel.successChannel.collect {
+            messageToShow = it
+            showErrorDialogue = true
+        }
+    }
 
 
     val result =
@@ -150,8 +166,16 @@ fun NoteScreen(
                 state = state,
                 onAction = viewModel::onAction,
                 onGoToAddNotesScreen = onGoToAddNotesScreen,
-                noteListState = noteListState,
-                onGoToDetailNotesScreen = onGoToDetailNotesScreen
+                onGoToDetailNotesScreen = onGoToDetailNotesScreen,
+                showSuccessDialogue = showSuccessDialogue,
+                showErrorDialogue=showErrorDialogue,
+                messageToShow=messageToShow,
+                onCloseSuccessDialogue ={
+                    showSuccessDialogue = false
+                },
+                onCloseErrorDialogue ={
+                    showSuccessDialogue = false
+                }
             )
         }
 
@@ -173,63 +197,89 @@ fun NoteScreen(
 @Composable
 fun NoteScreenContent(
     modifier: Modifier = Modifier,
-    noteListState: LazyListState,
     state: NoteState,
     onGoToAddNotesScreen: (String?) -> Unit,
     onGoToDetailNotesScreen: (String?) -> Unit,
-    onAction: (NoteAction) -> Unit
+    onAction: (NoteAction) -> Unit,
+    showSuccessDialogue:Boolean,
+    showErrorDialogue:Boolean,
+    messageToShow:String,
+    onCloseSuccessDialogue:()->Unit,
+    onCloseErrorDialogue:()->Unit
 ) {
-    LazyVerticalStaggeredGrid(
-        columns = StaggeredGridCells.Fixed(2),
-        modifier = modifier.animateContentSize().fillMaxSize(),
-        state = rememberLazyStaggeredGridState(),
-        contentPadding = PaddingValues(
-            horizontal = MaterialTheme.dimens.small3, vertical = MaterialTheme.dimens.small2
-        ),
-        verticalItemSpacing = MaterialTheme.dimens.small3,
-        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3),
-        flingBehavior = ScrollableDefaults.flingBehavior(),
-        userScrollEnabled = true,
-        content = {
-            if (state.isFetchingNotes) {
-                items(8) {
-                    val randomHeight = remember { (30..200).random() }
-                    ShimmerView(
-                        modifier = Modifier.fillMaxWidth().clip(shape = MaterialTheme.shapes.small)
-                            .height(randomHeight.dp)
-                    )
-                }
-            } else {
-                if (state.noteItem.isEmpty()) {
-                    item {
-                        Box(
-                            modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = stringResource(SharedRes.Strings.no_data_found),
-                                style = MaterialTheme.typography.titleLarge.copy(
-                                    color = MaterialTheme.colorScheme.primaryTextColor
+    AnimatedContent(
+        modifier = modifier,
+        targetState = state.noteItem.isNotEmpty()
+    ){ isVisible->
+        if(isVisible){
+            LazyVerticalStaggeredGrid(
+                columns = StaggeredGridCells.Fixed(2),
+                modifier = Modifier.animateContentSize().fillMaxSize(),
+                state = rememberLazyStaggeredGridState(),
+                contentPadding = PaddingValues(
+                    horizontal = MaterialTheme.dimens.small3, vertical = MaterialTheme.dimens.small2
+                ),
+                verticalItemSpacing = MaterialTheme.dimens.small3,
+                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3),
+                flingBehavior = ScrollableDefaults.flingBehavior(),
+                userScrollEnabled = true,
+                content = {
+                    if (state.isFetchingNotes) {
+                        items(8) {
+                            val randomHeight = remember { (30..200).random() }
+                            ShimmerView(
+                                modifier = Modifier.fillMaxWidth().clip(shape = MaterialTheme.shapes.small)
+                                    .height(randomHeight.dp)
+                            )
+                        }
+                    } else {
+                        items(state.noteItem) { item ->
+                            AnimatedContent(
+                                targetState = item, transitionSpec = {
+                                    slideInVertically { height -> height } + fadeIn() with slideOutVertically { height -> -height } + fadeOut()
+                                }) {
+                                ResultBox(
+                                    onGoToAddNotesScreen = onGoToAddNotesScreen,
+                                    item = item,
+                                    onAction = onAction,
+                                    onGoToDetailNotesScreen = onGoToDetailNotesScreen
                                 )
-                            )
+                            }
                         }
-                    }
-                } else {
-                    items(state.noteItem) { item ->
-                        AnimatedContent(
-                            targetState = item, transitionSpec = {
-                                slideInVertically { height -> height } + fadeIn() with slideOutVertically { height -> -height } + fadeOut()
-                            }) {
-                            ResultBox(
-                                onGoToAddNotesScreen = onGoToAddNotesScreen,
-                                item = item,
-                                onAction = onAction,
-                                onGoToDetailNotesScreen = onGoToDetailNotesScreen
-                            )
-                        }
+
                     }
                 }
+            )
+        }else{
+            Box(
+                modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = stringResource(SharedRes.Strings.no_data_found),
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        color = MaterialTheme.colorScheme.primaryTextColor
+                    )
+                )
             }
-        })
+        }
+
+    }
+
+
+
+    if(showSuccessDialogue){
+        PromptModalBottomSheet(
+            onBackClicked = onCloseSuccessDialogue,
+            text = messageToShow
+        )
+    }
+    if(showErrorDialogue){
+        PromptModalBottomSheet(
+            promptType = PromptType.FAILED,
+            onBackClicked = onCloseErrorDialogue,
+            text = messageToShow
+        )
+    }
 
 }
 
@@ -320,31 +370,21 @@ fun ResultBox(
                 }
             }
             if (showDialogue) {
-                AlertDialog(
-                    onDismissRequest = { }, confirmButton = {
-                        TextButton(
-                            onClick = {
-                                onAction(NoteAction.OnDeleteNote)
-                                showDialogue = false
-                            }) {
-                            Text(text = stringResource(SharedRes.Strings.yes))
-                        }
-                    }, dismissButton = {
-                        TextButton(
-                            onClick = {
-                                showDialogue = false
-                            }) {
-                            Text(text = stringResource(SharedRes.Strings.cancel))
-                        }
-                    }, title = {
-                        Text("Confirmation")
-                    }, text = {
-                        Text("Are you sure you wanna delete?")
-                    }, properties = DialogProperties(
-                        dismissOnBackPress = true, dismissOnClickOutside = true
-                    )
+                PromptModalBottomSheet(
+                    text = stringResource(SharedRes.Strings.delete_confirmation),
+                    cancelButton = true,
+                    onBackClicked = {
+                        onAction(NoteAction.OnDeleteNote)
+                        showDialogue = false
+                    },
+                    promptType = PromptType.FAILED,
+                    buttonText = SharedRes.Strings.delete,
+                    closePopUp = {
+                        showDialogue = false
+                    },
                 )
             }
+
         }
     }
 }
