@@ -48,19 +48,14 @@ import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.date.ERPDateTextField
 import com.gurkha.hr.components.date.FutureAndTodayDate
 import com.gurkha.hr.components.shimmer.ShimmerView
-
 import com.gurkha.hr.components.textField.FormValidate
 import com.gurkha.hr.domain.attendance.attendanceReport.model.AttendanceData
-
 import com.gurkha.hr.profile.model.time_and_attendance_screen.TimeAndAttendanceState
 import com.gurkha.hr.profile.model.time_and_attendance_screen.TimeAndAttendanceViewAction
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.darkPrimaryTextColor
 import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.highLightColor
-import com.gurkha.hr.res.theme.holidayBlueColor
-import com.gurkha.hr.res.theme.lightGreenColor
-import com.gurkha.hr.res.theme.lightRedColor
 import com.gurkha.hr.res.theme.primaryTextColor
 import com.gurkha.hr.res.theme.secondaryTextColor
 import org.jetbrains.compose.resources.StringResource
@@ -102,7 +97,7 @@ fun TimeAndAttendanceScreen(
                         }
                     ) {
                         Icon(
-                            imageVector = if (!showFilter)Icons.Default.FilterAlt else Icons.Default.Close,
+                            imageVector = if (!showFilter) Icons.Default.FilterAlt else Icons.Default.Close,
                             contentDescription = "Filter Option"
                         )
                     }
@@ -147,7 +142,10 @@ fun TimeAndAttendanceScreenContainer(
             horizontal = MaterialTheme.dimens.small3,
             vertical = MaterialTheme.dimens.small2
         ),
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2, alignment = Alignment.Top)
+        verticalArrangement = Arrangement.spacedBy(
+            MaterialTheme.dimens.small2,
+            alignment = Alignment.Top
+        )
 
     ) {
         if (showFilter) {
@@ -160,28 +158,30 @@ fun TimeAndAttendanceScreenContainer(
             }
         }
 
-        if (state.isLoading){
-            items(count = 4){
-                    ShimmerView(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(MaterialTheme.dimens.medium3)
-                            .clip(MaterialTheme.shapes.small)
-                    )
-
-
-            }
-        }
-        else{
-            items(items = state.timeAndAttendanceList, key = { it.toString() }, itemContent = { item ->
-                TimeAndAttendanceDetails(
-                    onAction = onAction,
-                    state = state,
-                    item = item
+        if (state.isLoading) {
+            items(count = 4) {
+                ShimmerView(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(MaterialTheme.dimens.medium3)
+                        .clip(MaterialTheme.shapes.small)
                 )
 
 
-            })
+            }
+        } else {
+            items(
+                items = state.timeAndAttendanceList,
+                key = { it.toString() },
+                itemContent = { item ->
+                    TimeAndAttendanceDetails(
+                        onAction = onAction,
+                        state = state,
+                        item = item
+                    )
+
+
+                })
 
         }
 
@@ -196,11 +196,7 @@ fun TimeAndAttendanceDetails(
     state: TimeAndAttendanceState,
 
     ) {
-    val textColor = when (item.status){
-        "HOLIDAY" -> MaterialTheme.colorScheme.holidayBlueColor
-        "ABSENT" -> MaterialTheme.colorScheme.lightRedColor
-        else -> MaterialTheme.colorScheme.lightGreenColor
-    }
+
     var showMore by remember { mutableStateOf(false) }
     Column(
         modifier = Modifier
@@ -319,8 +315,7 @@ fun TimeAndAttendanceDetails(
             RowText(
                 name = SharedRes.Strings.status,
                 value = item.status.value,
-                textColor =textColor
-
+                textColor = item.status.color
             )
         }
     }
