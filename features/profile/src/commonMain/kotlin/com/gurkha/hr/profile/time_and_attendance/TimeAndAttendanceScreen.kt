@@ -39,6 +39,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -46,6 +47,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.date.ERPDateTextField
 import com.gurkha.hr.components.date.FutureAndTodayDate
+import com.gurkha.hr.components.shimmer.ShimmerView
 
 import com.gurkha.hr.components.textField.FormValidate
 import com.gurkha.hr.domain.attendance.attendanceReport.model.AttendanceData
@@ -53,8 +55,12 @@ import com.gurkha.hr.domain.attendance.attendanceReport.model.AttendanceData
 import com.gurkha.hr.profile.model.time_and_attendance_screen.TimeAndAttendanceState
 import com.gurkha.hr.profile.model.time_and_attendance_screen.TimeAndAttendanceViewAction
 import com.gurkha.hr.res.SharedRes
+import com.gurkha.hr.res.theme.darkPrimaryTextColor
 import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.highLightColor
+import com.gurkha.hr.res.theme.holidayBlueColor
+import com.gurkha.hr.res.theme.lightGreenColor
+import com.gurkha.hr.res.theme.lightRedColor
 import com.gurkha.hr.res.theme.primaryTextColor
 import com.gurkha.hr.res.theme.secondaryTextColor
 import org.jetbrains.compose.resources.StringResource
@@ -96,7 +102,7 @@ fun TimeAndAttendanceScreen(
                         }
                     ) {
                         Icon(
-                            imageVector = Icons.Default.FilterAlt,
+                            imageVector = if (!showFilter)Icons.Default.FilterAlt else Icons.Default.Close,
                             contentDescription = "Filter Option"
                         )
                     }
@@ -111,7 +117,6 @@ fun TimeAndAttendanceScreen(
                 .padding(paddingValues),
             state = state,
             showFilter = showFilter,
-            onCloseFilter = { showFilter = false },
             onAction = viewModel::onAction
 
         )
@@ -124,7 +129,7 @@ fun TimeAndAttendanceScreen(
 fun TimeAndAttendanceScreenContainer(
     state: TimeAndAttendanceState,
     showFilter: Boolean,
-    onCloseFilter: () -> Unit = {},
+
     modifier: Modifier = Modifier,
     onAction: (TimeAndAttendanceViewAction) -> Unit
 ) {
@@ -141,27 +146,44 @@ fun TimeAndAttendanceScreenContainer(
         contentPadding = PaddingValues(
             horizontal = MaterialTheme.dimens.small3,
             vertical = MaterialTheme.dimens.small2
-        )
+        ),
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2, alignment = Alignment.Top)
+
     ) {
         if (showFilter) {
             item {
                 DateFilter(
                     state = state,
-                    onClose = onCloseFilter,
                     onAction = onAction,
 
                     )
             }
         }
-        items(items = state.timeAndAttendanceList, key = { it.toString() }, itemContent = { item ->
-            TimeAndAttendanceDetails(
-                onAction = onAction,
-                state = state,
-                item = item
-            )
+
+        if (state.isLoading){
+            items(count = 4){
+                    ShimmerView(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(MaterialTheme.dimens.medium3)
+                            .clip(MaterialTheme.shapes.small)
+                    )
 
 
-        })
+            }
+        }
+        else{
+            items(items = state.timeAndAttendanceList, key = { it.toString() }, itemContent = { item ->
+                TimeAndAttendanceDetails(
+                    onAction = onAction,
+                    state = state,
+                    item = item
+                )
+
+
+            })
+
+        }
 
     }
 
@@ -174,7 +196,11 @@ fun TimeAndAttendanceDetails(
     state: TimeAndAttendanceState,
 
     ) {
-
+    val textColor = when (item.status){
+        "HOLIDAY" -> MaterialTheme.colorScheme.holidayBlueColor
+        "ABSENT" -> MaterialTheme.colorScheme.lightRedColor
+        else -> MaterialTheme.colorScheme.lightGreenColor
+    }
     var showMore by remember { mutableStateOf(false) }
     Column(
         modifier = Modifier
@@ -292,7 +318,9 @@ fun TimeAndAttendanceDetails(
             )
             RowText(
                 name = SharedRes.Strings.status,
-                value = item.status.value
+                value = item.status.value,
+                textColor =textColor
+
             )
         }
     }
@@ -303,7 +331,8 @@ fun TimeAndAttendanceDetails(
 @Composable
 fun RowScope.RowText(
     name: StringResource,
-    value: String
+    value: String,
+    textColor: Color = MaterialTheme.colorScheme.darkPrimaryTextColor
 
 ) {
     Column(
@@ -323,7 +352,7 @@ fun RowScope.RowText(
             text = value,
             modifier = Modifier.fillMaxWidth(),
             style = MaterialTheme.typography.bodySmall.copy(
-                color = MaterialTheme.colorScheme.secondaryTextColor
+                color = textColor
             ), textAlign = TextAlign.Start
 
         )
@@ -333,7 +362,6 @@ fun RowScope.RowText(
 @Composable
 fun DateFilter(
     state: TimeAndAttendanceState,
-    onClose: () -> Unit,
     onAction: (TimeAndAttendanceViewAction) -> Unit,
 ) {
     Box(
@@ -346,18 +374,7 @@ fun DateFilter(
             )
 
     ) {
-        IconButton(
-            onClick = onClose,
-            modifier = Modifier
-                .align(Alignment.TopEnd)
 
-        ) {
-            Icon(
-                imageVector = Icons.Default.Close,
-                contentDescription = "Close Filter",
-                tint = MaterialTheme.colorScheme.primaryTextColor
-            )
-        }
         Column(
             modifier = Modifier
                 .fillMaxWidth()

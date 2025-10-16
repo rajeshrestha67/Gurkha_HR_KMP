@@ -88,7 +88,7 @@ fun DocumentScreenContainer(
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2),
         horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2),
         contentPadding = PaddingValues(
-            MaterialTheme.dimens.small1
+            MaterialTheme.dimens.small2
         )
     ) {
         items(
@@ -138,7 +138,7 @@ fun DocumentItemRow(
         Icon(
             imageVector = Icons.Filled.CloudUpload,
             contentDescription = "upload",
-            modifier = Modifier.size(28.dp),
+            modifier = Modifier.size(MaterialTheme.dimens.medium1),
             tint = MaterialTheme.colorScheme.secondaryTextColor
         )
         Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))

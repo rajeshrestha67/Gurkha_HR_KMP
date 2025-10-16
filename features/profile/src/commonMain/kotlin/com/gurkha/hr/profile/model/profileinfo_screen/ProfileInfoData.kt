@@ -1,7 +1,6 @@
 package com.gurkha.hr.profile.model.profileinfo_screen
 
 
-import com.gurkha.hr.profile.profile_info.ProfileInfoRow
 import com.gurkha.hr.res.SharedRes
 import org.jetbrains.compose.resources.StringResource
 

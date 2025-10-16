@@ -49,7 +49,6 @@
 
     <string name="leave_summary">Leave Summary</string>
     <string name="leave_type_name">Leave Type\nName</string>
-    <string name="total_days">Total Days</string>">
     <string name="leave_taken">Leave Taken</string>">
     <string name="remaining_leave">Remaining Leave</string>">
     <string name="month">Month</string>">
@@ -82,12 +81,30 @@
     <string name="from_date">From Date</string>
     <string name="to_date">To Date</string>
 
+    <string name="total_days">Total Days</string>
+    <string name="holidays">Holidays</string>
+    <string name="total_working_days">Total Working Days</string>
+    <string name="total_worked_days">Total Worked Days</string>
+    <string name="total_leave_taken">Total Leave Taken</string>
+    <string name="total_present_days">Total Present Days</string>
+    <string name="total_absent_days">Total Absent Days</string>
+    <string name="no_assets_available">No assets available</string>
+
+    <string name="remarks">Remarks</string>">
+    <string name="assigned">Assigned</string>">
+    <string name="response">Response</string>">
+    <string name="monthly_attendance">Monthly Attendance</string>">
+    <string name="monthly_attendance_report">Monthly Attendance Report</string>">
+    <string name="attendance_summary">Attendance Summary</string>">
+
 
     <string name="assignee">Assignee</string>">
     <string name="select_assignee">Select Assignee</string>">
 
+
     <string name="leave_processing">Leave Processing</string>">
     <string name="ok">OK</string>">
+    <string name="year">Year</string>">
 
 
     <string name="leave_duration">Leave Duration</string>

@@ -33,6 +33,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gurkha.hr.domain.companyAssets.model.CompanyAssetsData
 import com.gurkha.hr.profile.model.companyAssets.CompanyAssetsState
 import com.gurkha.hr.res.SharedRes
+import com.gurkha.hr.res.theme.darkPrimaryTextColor
 import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.highLightColor
 import com.gurkha.hr.res.theme.primaryTextColor
@@ -100,18 +101,43 @@ fun CompanyAssetsScreenContainer(
                 text = SharedRes.Strings.assignedAssets
             )
         }
-        items(
-            state.companyAssetsList, key = { it.toString() },
-            itemContent = { item ->
-                CompanyAssetsDetails(
-                    item = item,
+        if (state.companyAssetsList.isEmpty()){
+            item {
+                EmptyMessage()
+            }
 
-                    )
-            },
-        )
+        }else{
+            items(
+                state.companyAssetsList, key = { it.toString() },
+                itemContent = { item ->
+                    CompanyAssetsDetails(
+                        item = item,
+
+                        )
+                },
+            )
+        }
+
     }
 }
 
+
+@Composable
+fun EmptyMessage(){
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = stringResource(SharedRes.Strings.noAssetsAvailable),
+            style = MaterialTheme.typography.titleMedium.copy(
+                color = MaterialTheme.colorScheme.darkPrimaryTextColor
+            ),
+
+        )
+    }
+}
 @Composable
 fun HeaderSection(text: StringResource) {
 

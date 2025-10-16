@@ -24,6 +24,9 @@
     <string name="upload_master">मास्टर अपलोड गर्नुहोस्</string>
     <string name="upload_experience_document">अनुभव कागजात अपलोड गर्नुहोस्</string>
     <string name="month">महिना</string>">
+    <string name="year">वर्ष</string>">
+
+    <string name="no_assets_available">कुनै सम्पत्ति उपलब्ध छैन</string>
 
     <string name="profile_image">प्रोफाइल छवि</string>
     <string name="citizenship_front">नागरिकता मोर्चा</string>
@@ -34,6 +37,11 @@
     <string name="bachelor">स्नातक</string>
     <string name="master">मास्टर</string>
     <string name="experience_document">अनुभव कागजात</string>
+
+    <string name="remarks">टिप्पणीहरू</string>">
+    <string name="assigned">तोकिएको</string>">
+    <string name="leave_duration">छोड्ने अवधि</string>">
+    <string name="response">प्रतिक्रिया </string>">
 
     <string name="assigned_assets">तोकिएका सम्पत्तिहरू</string>
     <string name="asset_name">सम्पत्तिको नाम</string>
@@ -47,11 +55,9 @@
 
     <string name="leave_summary">सारांश छोड्नुहोस्</string>
     <string name="leave_type_name">बिदाको प्रकारको नाम</string>
-    <string name="total_days">कुल दिनहरू</string>">
     <string name="leave_taken">बिदा लिइयो</string>">
     <string name="remaining_leave">बाँकी बिदा</string>">
 
-    <string name="leave_duration">बिदा अवधि</string>
     <string name="start_date">सुरुवात मिति</string>
     <string name="select_start_date">सुरुवात मिति चयन गर्नुहोस्</string>
     <string name="end_date">अन्त्य मिति</string>
@@ -72,6 +78,18 @@
     <string name="sick_leave">बिरामी बिदा</string>
     <string name="annual_leave">वार्षिक बिदा</string>">
     <string name="mourning_leave">शोक छोड्नुहोस्</string>">
+
+    <string name="monthly_attendance">मासिक उपस्थिति</string>">
+    <string name="monthly_attendance_report">मासिक उपस्थिति रिपोर्ट</string>">
+    <string name="attendance_summary">उपस्थिति सारांश</string>">
+
+    <string name="total_days">जम्मा दिनहरू</string>
+    <string name="holidays">बिदा</string>
+    <string name="total_working_days">जम्मा कार्य दिनहरू</string>
+    <string name="total_worked_days">काम गरेको दिनहरू</string>
+    <string name="total_leave_taken">लिएको बिदा</string>
+    <string name="total_present_days">उपस्थित दिनहरू</string>
+    <string name="total_absent_days">अनुपस्थित दिनहरू</string>
 
     <string name="cancel">रद्द गर्नुहोस्</string>">
     <string name="submit">पेश गर्नुहोस्</string>">

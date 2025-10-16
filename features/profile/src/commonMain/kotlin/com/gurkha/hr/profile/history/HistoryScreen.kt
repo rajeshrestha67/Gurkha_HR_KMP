@@ -3,12 +3,12 @@ package com.gurkha.hr.profile.history
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.FilterAlt
 import androidx.compose.material3.*
@@ -20,13 +20,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.gurkha.hr.components.ERPButton
-import com.gurkha.hr.components.date.ERPDateTextField
-import com.gurkha.hr.components.date.FutureAndTodayDate
-import com.gurkha.hr.components.textField.DropDownText
-import com.gurkha.hr.components.textField.FormValidate
-import com.gurkha.hr.date.BSPointer
-import com.gurkha.hr.domain.history.model.HistoryData
+import com.gurkha.hr.components.dateFilterDropDown.DateFilterDropdown
+import com.gurkha.hr.components.shimmer.ShimmerView
+import com.gurkha.hr.profile.model.history_screen.HistoryDataUI
 import com.gurkha.hr.profile.model.history_screen.HistoryScreenViewAction
 import com.gurkha.hr.profile.model.history_screen.HistoryState
 import com.gurkha.hr.res.SharedRes
@@ -36,7 +32,6 @@ import com.gurkha.hr.res.theme.highLightColor
 import com.gurkha.hr.res.theme.lightGreenColor
 import com.gurkha.hr.res.theme.lightRedColor
 import com.gurkha.hr.res.theme.primaryTextColor
-import org.jetbrains.compose.resources.stringArrayResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -59,6 +54,7 @@ fun HistoryScreen(
                 windowInsets = WindowInsets(0.dp),
                 title = { Text(stringResource(SharedRes.Strings.history)) },
                 navigationIcon = {
+
                     IconButton(onClick = onBackPressed) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -67,11 +63,15 @@ fun HistoryScreen(
                     }
                 },
                 actions = {
+
                     IconButton(onClick = { showFilter = !showFilter }) {
+
                         Icon(
-                            imageVector = Icons.Default.FilterAlt,
+                            imageVector = if (!showFilter)Icons.Default.FilterAlt else Icons.Default.Close,
                             contentDescription = "Filter Option"
                         )
+
+
                     }
                 }
             )
@@ -83,7 +83,6 @@ fun HistoryScreen(
                 .padding(paddingValues),
             state = state,
             showFilter = showFilter,
-            onCloseFilter = { showFilter = false },
             onAction = viewModel::onAction
         )
     }
@@ -94,7 +93,6 @@ fun HistoryScreenContainer(
     state : HistoryState ,
     modifier: Modifier = Modifier,
     showFilter: Boolean,
-    onCloseFilter: () -> Unit,
     onAction: (HistoryScreenViewAction) -> Unit
 ) {
     val listState = rememberLazyListState()
@@ -114,25 +112,41 @@ fun HistoryScreenContainer(
         if (showFilter) {
             item {
                 DateFilterHistory(
-                    onClose = onCloseFilter,
-                    state = state
+                    state = state,
+                    onAction = onAction
                 )
             }
         }
-        items( items = state.historySummaryList, key = {it.toString()}, itemContent = { item ->
-            HistoryScreenContent(
-                item = item,
-                state = state
-            )
+        if(state.isLoading){
+            items(4){
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2, alignment = Alignment.CenterVertically),
+                ) {
+                    ShimmerView(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(MaterialTheme.dimens.medium1)
+                            .clip(MaterialTheme.shapes.small)
+                    )
+                }
+            }
+        }else{
 
-        })
+            items( items = state.historySummaryList, key = {it.toString()}, itemContent = { item ->
+                HistoryScreenContent(
+                    item = item,
+                    state = state
+                )
+
+            })
+        }
 
     }
 }
 
 @Composable
 fun HistoryScreenContent(
-    item : HistoryData,
+    item: HistoryDataUI,
     state: HistoryState
 ){
 
@@ -143,100 +157,134 @@ fun HistoryScreenContent(
         .background(MaterialTheme.colorScheme.highLightColor)
         .padding(MaterialTheme.dimens.small2)
     ){
-
-        Column(
+        Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = MaterialTheme.dimens.small2)
-        ) {
-            Text(
-                stringResource(SharedRes.Strings.date),
-                style = MaterialTheme.typography.titleSmall.copy(
-                    color = MaterialTheme.colorScheme.darkPrimaryTextColor)
-            )
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
 
+        )
+        {
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(vertical = MaterialTheme.dimens.small2)
+
+            ) {
+                Text(
+                    stringResource(SharedRes.Strings.date),
+                    style = MaterialTheme.typography.titleSmall.copy(
+                        color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                    )
+                )
+
+                Text(
+                    text = "${item.date} (${item.day})",
+                    style = MaterialTheme.typography.titleSmall.copy(
+                        color = MaterialTheme.colorScheme.primaryTextColor,
+                    )
+                )
+            }
             Text(
-                text = "${item.date}(${item.day})",
-                style = MaterialTheme.typography.titleSmall.copy(
-                    color = MaterialTheme.colorScheme.primaryTextColor
+                text = item.attendanceStatus,
+                style = MaterialTheme.typography.titleMedium.copy(
+                    color = item.attendanceTextColor.textColor
                 )
             )
         }
+        if (item.isPresent){
+            HorizontalDivider(modifier = Modifier.height(MaterialTheme.dimens.extraSmall))
+            LowTextContent(item = item)
+        }
+
+    }
+}
+@Composable
+fun LowTextContent(
+    item: HistoryDataUI
+){
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = MaterialTheme.dimens.small2))
+    {
+        RowInfoText(
+            name = stringResource(SharedRes.Strings.clock_in_time),
+            titleTextColor = MaterialTheme.colorScheme.darkPrimaryTextColor,
+            value =stringResource(SharedRes.Strings.clock_out_time),
+        )
+        RowInfoText(
+            name = item.clockInTime,
+            subTitleTextColor = MaterialTheme.colorScheme.primaryTextColor,
+            value = item.clockOutTime,
+        )
+        if (item.lateInTime.isNotBlank() && item.earlyOutTime.isNotBlank() ){
+            RowInfoText(
+                name = "Late: ${item.lateInTime} min",
+                titleTextColor = MaterialTheme.colorScheme.lightRedColor,
+                subTitleTextColor = MaterialTheme.colorScheme.lightGreenColor,
+                value = "Early: ${item.earlyOutTime} min"
+            )
+        }
+
+    }
+    if (item.leaveDuration.isNotBlank()){
         HorizontalDivider(modifier = Modifier.height(MaterialTheme.dimens.extraSmall))
 
+        Text(
+            modifier = Modifier.padding(top = MaterialTheme.dimens.small2),
+            text = stringResource(SharedRes.Strings.leaveRequest),
+            style = MaterialTheme.typography.titleSmall.copy(
+                color = MaterialTheme.colorScheme.darkPrimaryTextColor
+            )
+        )
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = MaterialTheme.dimens.small2))
         {
-            RowInfoText(
-                name = stringResource(SharedRes.Strings.clock_in_time),
-                titleTextColor = MaterialTheme.colorScheme.darkPrimaryTextColor,
-                value =stringResource(SharedRes.Strings.clock_out_time),
-            )
-            RowInfoText(
-                name = item.clockInTime,
-                subTitleTextColor = MaterialTheme.colorScheme.primaryTextColor,
-                value = item.clockOutTime,
-            )
-            if (item.lateInTime.isNotBlank() && item.earlyOutTime.isNotBlank() ){
-                RowInfoText(
-                    name = "Late: ${item.lateInTime} min",
-                    titleTextColor = MaterialTheme.colorScheme.lightRedColor,
-                    subTitleTextColor = MaterialTheme.colorScheme.lightGreenColor,
-                    value = "Early: ${item.earlyOutTime} min"
-                )
-            }
 
-        }
-        HorizontalDivider(modifier = Modifier.height(MaterialTheme.dimens.extraSmall))
-
-        Column(
-            modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = MaterialTheme.dimens.small2))
-        {
-            Text(
-                text = stringResource(SharedRes.Strings.leaveRequest),
-                style = MaterialTheme.typography.titleSmall.copy(
-                    color = MaterialTheme.colorScheme.darkPrimaryTextColor
-                )
-            )
             RowInfoText(
-                name = "Assigned",
+                name = stringResource(SharedRes.Strings.assigned),
                 value = item.assigneeName
             )
             RowInfoText(
-                name = "Remarks",
+                name = stringResource(SharedRes.Strings.remarks),
                 value = item.leaveApproverRemarks
             )
             RowInfoText(
-                name = "Response",
+                name = stringResource(SharedRes.Strings.response),
                 value = item.response
             )
             RowInfoText(
-                name = "Status",
+                name = stringResource(SharedRes.Strings.status),
                 value = item.leaveRequestStatus
             )
             RowInfoText(
-                name = "Leave Duration",
+                name = stringResource(SharedRes.Strings.leave_duration),
                 value = item.leaveDuration
             )
 
 
         }
+    }
+
+    if (item.assigneeName.isNotBlank()){
         HorizontalDivider(modifier = Modifier.height(MaterialTheme.dimens.extraSmall))
+        Text(
+            modifier = Modifier.padding(top = MaterialTheme.dimens.small2),
+            text = stringResource(SharedRes.Strings.attendanceRequest),
+            style = MaterialTheme.typography.titleSmall.copy(
+                color = MaterialTheme.colorScheme.darkPrimaryTextColor
+            )
+        )
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = MaterialTheme.dimens.small2)
         ) {
-            Text(
-                text = stringResource(SharedRes.Strings.attendanceRequest),
-                style = MaterialTheme.typography.titleSmall.copy(
-                    color = MaterialTheme.colorScheme.darkPrimaryTextColor
-                )
-            )
+
             if(item.assigneeName.isNotBlank()){
                 RowInfoText(
                     name = "Assigned",
@@ -260,8 +308,8 @@ fun HistoryScreenContent(
 
         }
     }
-}
 
+}
 @Composable
 fun RowInfoText(
     name : String,
@@ -295,88 +343,37 @@ fun RowInfoText(
         )
     }
 }
+
 @Composable
 fun DateFilterHistory(
     state: HistoryState,
-    onClose: () -> Unit,
-) {
-
-
-    val yearInBS = remember { (2070..2085).map { it.toString() } }
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
+    onAction: (HistoryScreenViewAction) -> Unit
+){
+    DateFilterDropdown(
+        modifier = Modifier.fillMaxWidth()
             .padding(
                 bottom = MaterialTheme.dimens.small3,
-                start = MaterialTheme.dimens.small2,
-                end = MaterialTheme.dimens.small2
-            )
-    ) {
-        IconButton(
-            onClick = onClose,
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-        ) {
-            Icon(
-                imageVector = Icons.Default.Close,
-                contentDescription = "Close Filter",
-                tint = MaterialTheme.colorScheme.primaryTextColor
-            )
+                start = MaterialTheme.dimens.small1,
+                end = MaterialTheme.dimens.small1
+            ),
+        selectedMonth = state.monthDisplay,
+        selectedYear = state.year.toString(),
+        monthError = state.endMonthError,
+        yearError = state.endYearError,
+        onMonthSelected = { monthName, monthIndex ->
+            onAction(HistoryScreenViewAction.FromMonth(showMonth = monthName, month = monthIndex))
+        },
+        onYearSelected = { year ->
+            onAction(HistoryScreenViewAction.FromYear(year))
+        },
+        onMonthError = { message ->
+            onAction(HistoryScreenViewAction.MonthPickerError(message))
+        },
+        onYearError = { message ->
+            onAction(HistoryScreenViewAction.YearPickerError(message))
+        },
+        onSubmit = {
+            onAction(HistoryScreenViewAction.Submit(employeeId = state.employeeId))
         }
-
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = MaterialTheme.dimens.small3),
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
-        ) {
-            DropDownText(
-                dropdownIcon = {
-                    Icon(
-                        imageVector = Icons.Default.CalendarMonth,
-                        contentDescription = "Calender Image",
-
-                    )
-                },
-                label = SharedRes.Strings.month,
-                hint = SharedRes.Strings.month,
-                selectedValue = "",
-                error = state.endMonthError,
-                onError = {
-
-                },
-                listOfItems = stringArrayResource(SharedRes.Arrays.months),
-                rules = FormValidate.requiredValidationRules,
-                itemClicked = {
-
-                },
-            )
-
-            DropDownText(
-                dropdownIcon = {
-                    Icon(
-                        imageVector = Icons.Default.CalendarMonth,
-                        contentDescription = "Calender Image",
-
-                        )
-                },
-                label = SharedRes.Strings.month,
-                hint = SharedRes.Strings.month,
-                selectedValue = "",
-                error = state.endYearError,
-                onError = {
-
-                },
-                listOfItems = yearInBS,
-                rules = FormValidate.requiredValidationRules,
-                itemClicked = {}
-            )
-
-            ERPButton(
-                onClick = { },
-                modifier = Modifier.fillMaxWidth(),
-                text = stringResource(SharedRes.Strings.submit),
-            )
-        }
-    }
+    )
 }

@@ -20,5 +20,4 @@ data class HistoryData(
     val leaveDuration: String,
     val attendanceStatus: String
 
-
-    )
+)

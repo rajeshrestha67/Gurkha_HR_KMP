@@ -13,6 +13,7 @@ import com.gurkha.hr.profile.model.profile_screen.AccountList
 import com.gurkha.hr.profile.model.profile_screen.GeneralList
 import com.gurkha.hr.profile.profile_info.ProfileInfoScreen
 import com.gurkha.hr.profile.profile_screen.ProfileScreen
+import com.gurkha.hr.profile.report_screen.ReportScreen
 import com.gurkha.hr.profile.time_and_attendance.TimeAndAttendanceScreen
 
 
@@ -73,7 +74,7 @@ fun NavGraphBuilder.profileScreenBuilder(
                     }
 
                     GeneralList.Report ->
-                        TODO()
+                        navController.navigate(ProfileRoute.ReportScreenRoute)
                 }
             }
         )
@@ -107,6 +108,11 @@ fun NavGraphBuilder.profileScreenBuilder(
     }
     composable<ProfileRoute.HistoryScreenRoute> {
         HistoryScreen(onBackPressed = {
+            navController.popBackStack()
+        })
+    }
+    composable<ProfileRoute.ReportScreenRoute> {
+        ReportScreen(onBackPressed = {
             navController.popBackStack()
         })
     }

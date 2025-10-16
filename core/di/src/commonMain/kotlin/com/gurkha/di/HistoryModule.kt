@@ -2,6 +2,7 @@ package com.gurkha.di
 
 import com.gurkha.hr.data.history.KtorHistoryRemoteRepository
 import com.gurkha.hr.datastore.user_data.repository.UserDataRepository
+import com.gurkha.hr.domain.form.RequiredValidationUseCase
 import com.gurkha.hr.domain.history.repository.HistoryRemoteRepository
 import com.gurkha.hr.domain.history.useCase.HistoryUseCase
 import com.gurkha.hr.profile.history.HistoryViewModel
@@ -21,9 +22,11 @@ class HistoryModule {
 
     @Factory
     fun getHistoryScreenViewModel(
-        historyUseCase: HistoryUseCase
+        historyUseCase: HistoryUseCase,
+        requiredValidationUseCase: RequiredValidationUseCase
     ): HistoryViewModel = HistoryViewModel(
-        historyUseCase = historyUseCase
+        historyUseCase = historyUseCase,
+        requiredValidationUseCase = requiredValidationUseCase
     )
 
 }
