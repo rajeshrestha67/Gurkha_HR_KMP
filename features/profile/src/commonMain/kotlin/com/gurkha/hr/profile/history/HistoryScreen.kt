@@ -27,6 +27,7 @@ import com.gurkha.hr.components.shimmer.ShimmerView
 import com.gurkha.hr.components.textField.DropDownText
 import com.gurkha.hr.components.textField.FormValidate
 import com.gurkha.hr.date.BSPointer
+import com.gurkha.hr.domain.history.mapper.mapAttendanceStatusToColor
 import com.gurkha.hr.domain.history.model.HistoryData
 import com.gurkha.hr.profile.model.history_screen.HistoryScreenViewAction
 import com.gurkha.hr.profile.model.history_screen.HistoryState
@@ -163,52 +164,79 @@ fun HistoryScreenContent(
         .background(MaterialTheme.colorScheme.highLightColor)
         .padding(MaterialTheme.dimens.small2)
     ){
-
-        Column(
+        Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = MaterialTheme.dimens.small2)
-        ) {
-            Text(
-                stringResource(SharedRes.Strings.date),
-                style = MaterialTheme.typography.titleSmall.copy(
-                    color = MaterialTheme.colorScheme.darkPrimaryTextColor)
-            )
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
 
-            Text(
-                text = "${item.date} (${item.day})",
-                style = MaterialTheme.typography.titleSmall.copy(
-                    color = MaterialTheme.colorScheme.primaryTextColor
-                )
-            )
-        }
-        HorizontalDivider(modifier = Modifier.height(MaterialTheme.dimens.extraSmall))
-
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = MaterialTheme.dimens.small2))
+        )
         {
-            RowInfoText(
-                name = stringResource(SharedRes.Strings.clock_in_time),
-                titleTextColor = MaterialTheme.colorScheme.darkPrimaryTextColor,
-                value =stringResource(SharedRes.Strings.clock_out_time),
-            )
-            RowInfoText(
-                name = item.clockInTime,
-                subTitleTextColor = MaterialTheme.colorScheme.primaryTextColor,
-                value = item.clockOutTime,
-            )
-            if (item.lateInTime.isNotBlank() && item.earlyOutTime.isNotBlank() ){
-                RowInfoText(
-                    name = "Late: ${item.lateInTime} min",
-                    titleTextColor = MaterialTheme.colorScheme.lightRedColor,
-                    subTitleTextColor = MaterialTheme.colorScheme.lightGreenColor,
-                    value = "Early: ${item.earlyOutTime} min"
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(vertical = MaterialTheme.dimens.small2)
+
+            ) {
+                Text(
+                    stringResource(SharedRes.Strings.date),
+                    style = MaterialTheme.typography.titleSmall.copy(
+                        color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                    )
+                )
+
+                Text(
+                    text = "${item.date} (${item.day})",
+                    style = MaterialTheme.typography.titleSmall.copy(
+                        color = MaterialTheme.colorScheme.primaryTextColor,
+                    )
                 )
             }
-
+            Text(
+                text = item.attendanceStatus,
+                style = MaterialTheme.typography.titleMedium.copy(
+                    color = item.colorUi.textColor
+                )
+            )
         }
+        if (item.attendanceStatus == "P"){
+            HorizontalDivider(modifier = Modifier.height(MaterialTheme.dimens.extraSmall))
+            LowTextContent(item = item)
+        }
+
+    }
+}
+@Composable
+fun LowTextContent(
+    item: HistoryData
+){
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = MaterialTheme.dimens.small2))
+    {
+        RowInfoText(
+            name = stringResource(SharedRes.Strings.clock_in_time),
+            titleTextColor = MaterialTheme.colorScheme.darkPrimaryTextColor,
+            value =stringResource(SharedRes.Strings.clock_out_time),
+        )
+        RowInfoText(
+            name = item.clockInTime,
+            subTitleTextColor = MaterialTheme.colorScheme.primaryTextColor,
+            value = item.clockOutTime,
+        )
+        if (item.lateInTime.isNotBlank() && item.earlyOutTime.isNotBlank() ){
+            RowInfoText(
+                name = "Late: ${item.lateInTime} min",
+                titleTextColor = MaterialTheme.colorScheme.lightRedColor,
+                subTitleTextColor = MaterialTheme.colorScheme.lightGreenColor,
+                value = "Early: ${item.earlyOutTime} min"
+            )
+        }
+
+    }
+    if (item.assigneeName.isNotBlank()){
         HorizontalDivider(modifier = Modifier.height(MaterialTheme.dimens.extraSmall))
 
         Text(
@@ -218,48 +246,39 @@ fun HistoryScreenContent(
                 color = MaterialTheme.colorScheme.darkPrimaryTextColor
             )
         )
-        if (item.assigneeName.isBlank()){
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = MaterialTheme.dimens.small2))
+        {
+
             RowInfoText(
-                name = "- ",
-                value = ""
+                name = stringResource(SharedRes.Strings.assigned),
+                value = item.assigneeName
             )
-        }else{
+            RowInfoText(
+                name = stringResource(SharedRes.Strings.remarks),
+                value = item.leaveApproverRemarks
+            )
+            RowInfoText(
+                name = stringResource(SharedRes.Strings.response),
+                value = item.response
+            )
+            RowInfoText(
+                name = stringResource(SharedRes.Strings.status),
+                value = item.leaveRequestStatus
+            )
+            RowInfoText(
+                name = stringResource(SharedRes.Strings.leave_duration),
+                value = item.leaveDuration
+            )
 
 
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = MaterialTheme.dimens.small2))
-            {
-
-                RowInfoText(
-                    name = stringResource(SharedRes.Strings.assigned),
-                    value = item.assigneeName
-                )
-                RowInfoText(
-                    name = stringResource(SharedRes.Strings.remarks),
-                    value = item.leaveApproverRemarks
-                )
-                RowInfoText(
-                    name = stringResource(SharedRes.Strings.response),
-                    value = item.response
-                )
-                RowInfoText(
-                    name = stringResource(SharedRes.Strings.status),
-                    value = item.leaveRequestStatus
-                )
-                RowInfoText(
-                    name = stringResource(SharedRes.Strings.leave_duration),
-                    value = item.leaveDuration
-                )
-
-
-            }
         }
+    }
 
-
+    if (item.assigneeName.isNotBlank()){
         HorizontalDivider(modifier = Modifier.height(MaterialTheme.dimens.extraSmall))
-
         Text(
             modifier = Modifier.padding(top = MaterialTheme.dimens.small2),
             text = stringResource(SharedRes.Strings.attendanceRequest),
@@ -267,46 +286,37 @@ fun HistoryScreenContent(
                 color = MaterialTheme.colorScheme.darkPrimaryTextColor
             )
         )
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = MaterialTheme.dimens.small2)
+        ) {
 
-        if (item.assigneeName.isBlank()){
-            RowInfoText(
-                name = "- ",
-                value = ""
-            )
-        }else{
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = MaterialTheme.dimens.small2)
-            ) {
-
-                if(item.assigneeName.isNotBlank()){
-                    RowInfoText(
-                        name = "Assigned",
-                        value = item.assigneeName
-                    )
-                    RowInfoText(
-                        name = "Remarks",
-                        value = item.remarks
-                    )
-                    RowInfoText(
-                        name = "Response",
-                        value = item.response
-                    )
-                    RowInfoText(
-                        name = "Status",
-                        value = item.assigneeStatus
-                    )
-                }
-
-
-
+            if(item.assigneeName.isNotBlank()){
+                RowInfoText(
+                    name = "Assigned",
+                    value = item.assigneeName
+                )
+                RowInfoText(
+                    name = "Remarks",
+                    value = item.remarks
+                )
+                RowInfoText(
+                    name = "Response",
+                    value = item.response
+                )
+                RowInfoText(
+                    name = "Status",
+                    value = item.assigneeStatus
+                )
             }
+
+
+
         }
-
     }
-}
 
+}
 @Composable
 fun RowInfoText(
     name : String,

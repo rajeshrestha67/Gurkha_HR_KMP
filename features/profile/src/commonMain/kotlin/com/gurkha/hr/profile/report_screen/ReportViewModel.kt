@@ -46,6 +46,7 @@ class ReportViewModel(
             println("report_data $data")
             _state.update {
                 it.copy(
+                    isLoading = false,
                     reportListItems = _state.value.reportListItems.mapIndexed { index, reportItems ->
                         when(
                             index

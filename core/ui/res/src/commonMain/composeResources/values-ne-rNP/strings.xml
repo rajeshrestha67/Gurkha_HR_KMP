@@ -55,7 +55,6 @@
 
     <string name="leave_summary">सारांश छोड्नुहोस्</string>
     <string name="leave_type_name">बिदाको प्रकारको नाम</string>
-    <string name="total_days">कुल दिनहरू</string>">
     <string name="leave_taken">बिदा लिइयो</string>">
     <string name="remaining_leave">बाँकी बिदा</string>">
 
@@ -83,6 +82,14 @@
     <string name="monthly_attendance">मासिक उपस्थिति</string>">
     <string name="monthly_attendance_report">मासिक उपस्थिति रिपोर्ट</string>">
     <string name="attendance_summary">उपस्थिति सारांश</string>">
+
+    <string name="total_days">जम्मा दिनहरू</string>
+    <string name="holidays">बिदा</string>
+    <string name="total_working_days">जम्मा कार्य दिनहरू</string>
+    <string name="total_worked_days">काम गरेको दिनहरू</string>
+    <string name="total_leave_taken">लिएको बिदा</string>
+    <string name="total_present_days">उपस्थित दिनहरू</string>
+    <string name="total_absent_days">अनुपस्थित दिनहरू</string>
 
     <string name="cancel">रद्द गर्नुहोस्</string>">
     <string name="submit">पेश गर्नुहोस्</string>">

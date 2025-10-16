@@ -68,6 +68,7 @@ import gurkhahr.core.ui.res.generated.resources.guardian_phone
 import gurkhahr.core.ui.res.generated.resources.half_afternoon
 import gurkhahr.core.ui.res.generated.resources.half_morning
 import gurkhahr.core.ui.res.generated.resources.history
+import gurkhahr.core.ui.res.generated.resources.holidays
 import gurkhahr.core.ui.res.generated.resources.home
 import gurkhahr.core.ui.res.generated.resources.invalid_email_address
 import gurkhahr.core.ui.res.generated.resources.invalid_password_digit
@@ -149,7 +150,12 @@ import gurkhahr.core.ui.res.generated.resources.theme
 import gurkhahr.core.ui.res.generated.resources.time_and_attendance
 import gurkhahr.core.ui.res.generated.resources.to_date
 import gurkhahr.core.ui.res.generated.resources.today
+import gurkhahr.core.ui.res.generated.resources.total_absent_days
 import gurkhahr.core.ui.res.generated.resources.total_days
+import gurkhahr.core.ui.res.generated.resources.total_leave_taken
+import gurkhahr.core.ui.res.generated.resources.total_present_days
+import gurkhahr.core.ui.res.generated.resources.total_worked_days
+import gurkhahr.core.ui.res.generated.resources.total_working_days
 import gurkhahr.core.ui.res.generated.resources.type_here
 import gurkhahr.core.ui.res.generated.resources.typing
 import gurkhahr.core.ui.res.generated.resources.unknown_error_occurred
@@ -279,6 +285,14 @@ object SharedRes {
         val monthlyAttendance = Res.string.monthly_attendance
         val monthlyAttendanceReport = Res.string.monthly_attendance_report
         val attendanceSummary = Res.string.attendance_summary
+
+        val holidays = Res.string.holidays
+        val totalWorkingDays = Res.string.total_working_days
+        val totalWorkedDays = Res.string.total_worked_days
+        val totalLeaveTaken = Res.string.total_leave_taken
+        val totalPresentDays = Res.string.total_present_days
+        val totalAbsentDays = Res.string.total_absent_days
+
 
         val year = Res.string.year
         val remarks = Res.string.remarks

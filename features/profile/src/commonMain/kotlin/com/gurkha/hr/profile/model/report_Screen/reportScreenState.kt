@@ -1,7 +1,14 @@
 package com.gurkha.hr.profile.model.report_Screen
 
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.graphics.Color
 import com.gurkha.hr.domain.history.model.HistoryData
 import com.gurkha.hr.domain.reportScreen.model.ReportData
+import com.gurkha.hr.res.SharedRes
+import com.gurkha.hr.res.theme.holidayBlueColor
+import com.gurkha.hr.res.theme.lightGreenColor
+import com.gurkha.hr.res.theme.lightRedColor
+import com.gurkha.model.history.ui.AttendanceStatusColorUi
 import org.jetbrains.compose.resources.StringResource
 
 data class ReportScreenState(
@@ -11,7 +18,6 @@ data class ReportScreenState(
     val year: Int = 2082,
     val monthDisplay: String = "Asoj",
     val employeeId: Int? = null,
-    val reportSummaryList: List<ReportData> = emptyList(),
     val historySummaryList: List<HistoryData> = emptyList(),
 
     val endYearError: StringResource? = null,
@@ -19,32 +25,37 @@ data class ReportScreenState(
 
     val reportListItems: List<ReportItems> = listOf<ReportItems>(
         ReportItems(
-            title = "Total Days",
+            title = SharedRes.Strings.totalDays,
             days = ""
             ),
         ReportItems(
-            title = "Holidays",
+            title = SharedRes.Strings.holidays,
             days = ""),
         ReportItems(
-            title = "Total Working Days",
+            title = SharedRes.Strings.totalWorkingDays,
             days =  ""),
         ReportItems(
-            title = "Total Worked Days",
+            title = SharedRes.Strings.totalWorkedDays,
             days = ""),
         ReportItems(
-            title = "Total Leave Taken",
+            title = SharedRes.Strings.totalLeaveTaken,
             days = ""),
         ReportItems(
-            title = "Total Present Days",
+            title = SharedRes.Strings.totalPresentDays,
             days = ""),
         ReportItems(
-            title = "Total Absent Days",
+            title = SharedRes.Strings.totalAbsentDays,
             days = "")
     )
 )
 
 data class ReportItems(
-    val title: String,
+    val title: StringResource,
     val days: String,
 )
 
+
+data class ColorUI(
+    val colorUI: AttendanceStatusColorUi
+)
+//UI Class and one for enum

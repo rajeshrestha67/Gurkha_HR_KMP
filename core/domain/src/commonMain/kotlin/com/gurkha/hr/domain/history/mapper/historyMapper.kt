@@ -1,7 +1,9 @@
 package com.gurkha.hr.domain.history.mapper
 
+import androidx.compose.ui.graphics.Color
 import com.gurkha.hr.domain.history.model.HistoryData
 import com.gurkha.model.history.HistoryResponseDTO
+import com.gurkha.model.history.ui.AttendanceStatusColorUi
 
 fun HistoryResponseDTO.toData(): List<HistoryData> {
     return detail?.flatMap { attendanceDetail ->
@@ -12,9 +14,9 @@ fun HistoryResponseDTO.toData(): List<HistoryData> {
                 clockInTime = daily.clockInTime?: "-",
                 clockOutTime = daily.clockOutTime ?: "- ",
                 status = daily.attendanceStatus ?: " - ",
-                isPresent = daily.attendanceStatus == "Present",
-                isHoliday = daily.attendanceStatus == "Holiday",
-                isAbsent = daily.attendanceStatus == "Absent",
+                isPresent = daily.attendanceStatus == "P",
+                isHoliday = daily.attendanceStatus == "H",
+                isAbsent = daily.attendanceStatus == "A",
                 lateInTime = daily.lateInTime ?: "",
                 earlyOutTime = daily.earlyOutTime ?: "",
                 assigneeName = daily.assigneeName ?: "",
@@ -24,8 +26,18 @@ fun HistoryResponseDTO.toData(): List<HistoryData> {
                 leaveRequestStatus = daily.leaveRequestStatus?:" - ",
                 leaveApproverRemarks = daily.leaveApproverRemarks?:" - ",
                 leaveDuration = daily.leaveDuration?:" - ",
-                attendanceStatus = daily.attendanceStatus
+                attendanceStatus = daily.attendanceStatus,
+                colorUi = mapAttendanceStatusToColor(daily.attendanceStatus)
             )
         }
     } ?: emptyList()
+}
+
+fun mapAttendanceStatusToColor(status: String): AttendanceStatusColorUi {
+    val color = when (status.uppercase()) {
+        "H" -> Color(0xFF42A5F5) // holidayBlueColor
+        "A" -> Color(0xFFE57373) // lightRedColor
+        else -> Color(0xFF81C784) // lightGreenColor
+    }
+    return AttendanceStatusColorUi(textColor = color)
 }

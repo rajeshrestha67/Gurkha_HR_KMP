@@ -40,12 +40,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gurkha.hr.components.dateFilterDropDown.DateFilterDropdown
+import com.gurkha.hr.components.shimmer.ShimmerView
 import com.gurkha.hr.domain.history.model.HistoryData
 import com.gurkha.hr.domain.reportScreen.model.ReportData
 import com.gurkha.hr.profile.model.report_Screen.Heading
@@ -61,6 +63,7 @@ import com.gurkha.hr.res.theme.lightRedColor
 import com.gurkha.hr.res.theme.outGoingBubbleColor
 import com.gurkha.hr.res.theme.primaryTextColor
 import com.gurkha.hr.res.theme.veryLightGray
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -186,12 +189,24 @@ fun ReportScreenContent(
 
         when (state.selectedTab) {
             0 -> {
+                if (state.isLoading){
+                    items(count = 12){
+                        val differentHeight = remember{(50..180).random()}
+                        ShimmerView(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(differentHeight.dp)
+                                .clip(MaterialTheme.shapes.small)
+                        )
+                    }
+                }else{
+                    items(items = state.historySummaryList, key = {it.toString()}, itemContent = {item ->
+                        MonthlyAttendanceItemsBox(
+                            item = item
+                        )
+                    })
+                }
 
-                items(items = state.historySummaryList, key = {it.toString()}, itemContent = {item ->
-                    MonthlyAttendanceItemsBox(
-                        item = item
-                    )
-                })
 
             }
 
@@ -211,11 +226,6 @@ fun ReportScreenContent(
 fun MonthlyAttendanceItemsBox(
     item : HistoryData
 ){
-    val textColor = when (item.attendanceStatus){
-        "H" -> MaterialTheme.colorScheme.holidayBlueColor
-        "A" -> MaterialTheme.colorScheme.lightRedColor
-        else -> MaterialTheme.colorScheme.lightGreenColor
-    }
     Surface(
         tonalElevation = 4.dp,
         shape = MaterialTheme.shapes.small,
@@ -248,7 +258,7 @@ fun MonthlyAttendanceItemsBox(
                 Text(
                     text = item.attendanceStatus,
                     style = MaterialTheme.typography.titleLarge.copy(
-                        color =textColor
+                        color = item.colorUi.textColor
 
                     )
                 )
@@ -294,7 +304,7 @@ fun InOutText(
 }
 @Composable
 fun InfoAttendanceItemsBox(
-    name: String,
+    name: StringResource,
     value: String,
 ) {
     Surface(
@@ -313,15 +323,15 @@ fun InfoAttendanceItemsBox(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = name,
+                text = stringResource(name),
                 style = MaterialTheme.typography.titleMedium.copy(
                     color = MaterialTheme.colorScheme.primaryTextColor
                 )
             )
             Text(
                 text = value,
-                style = MaterialTheme.typography.displayMedium.copy(
-                    color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                style = MaterialTheme.typography.displaySmall.copy(
+                    color = MaterialTheme.colorScheme.primaryTextColor
                 )
             )
 

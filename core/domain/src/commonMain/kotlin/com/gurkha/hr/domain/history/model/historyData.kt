@@ -1,5 +1,7 @@
 package com.gurkha.hr.domain.history.model
 
+import com.gurkha.model.history.ui.AttendanceStatusColorUi
+
 data class HistoryData(
     val date: String,
     val day: String,
@@ -18,7 +20,7 @@ data class HistoryData(
     val leaveRequestStatus: String,
     val leaveApproverRemarks: String,
     val leaveDuration: String,
-    val attendanceStatus: String
-
+    val attendanceStatus: String,
+    val colorUi: AttendanceStatusColorUi
 
     )
