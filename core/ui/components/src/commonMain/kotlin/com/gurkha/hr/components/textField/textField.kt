@@ -18,6 +18,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -59,6 +60,7 @@ fun ERPBaseTextField(
     error: StringResource? = null,
     maxLength: Int = Int.MAX_VALUE,
     singleLine: Boolean = false,
+    imeAction: ImeAction,
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
     rules: List<Rule> = listOf(),
     onErrorStateChange: (StringResource?) -> Unit,
@@ -105,6 +107,9 @@ fun ERPBaseTextField(
         } else Modifier
 
 
+        LaunchedEffect(Unit) {
+            println("imeAction $imeAction $label")
+        }
         OutlinedTextField(
             enabled = enabled && onDropDown == null,
             modifier = Modifier
@@ -153,7 +158,7 @@ fun ERPBaseTextField(
                 )
             },
             visualTransformation = visualTransformation,
-            keyboardOptions = keyboardOptions,
+            keyboardOptions = keyboardOptions.copy(imeAction = imeAction),
             keyboardActions = keyboardActions,
             readOnly = readOnly,
             isError = error != null,
@@ -195,6 +200,7 @@ fun ERPTextField(
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     singleLine: Boolean = false,
+    imeAction: ImeAction,
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
     readOnly: Boolean = false,
     error: StringResource? = null,
@@ -226,6 +232,7 @@ fun ERPTextField(
         trailingIcon = trailingIcon,
         maxLength = maxLength,
         rules = rules,
+        imeAction = imeAction,
         onErrorStateChange = onErrorStateChange,
         enabled = enabled,
         showErrorMessage = showErrorMessage,
@@ -288,7 +295,8 @@ fun ERPTextField(
         trailingIcon = trailingIcon,
         validateOnFocusChanged = validateOnFocusChanged,
         visualTransformation = visualTransformation,
-        keyboardOptions = keyboardOptions.copy(imeAction = imeAction),
+        keyboardOptions = keyboardOptions,
+        imeAction = imeAction,
         keyboardActions = keyboardActions,
         readOnly = readOnly,
         error = error,
@@ -318,7 +326,7 @@ fun AGMobileTextField(
     value: String,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardOptions: KeyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-    imeAction: ImeAction = ImeAction.Next,
+    imeAction: ImeAction,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     readOnly: Boolean = false,
     error: StringResource? = null,
@@ -337,7 +345,8 @@ fun AGMobileTextField(
         hint = hint,
         onValueChange = onValueChange,
         visualTransformation = visualTransformation,
-        keyboardOptions = keyboardOptions.copy(imeAction = imeAction),
+        keyboardOptions = keyboardOptions,
+        imeAction = imeAction,
         keyboardActions = keyboardActions,
         readOnly = readOnly,
         error = error,
@@ -361,7 +370,7 @@ fun AGEmailTextField(
     value: String,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardOptions: KeyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-    imeAction: ImeAction = ImeAction.Next,
+    imeAction: ImeAction,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     readOnly: Boolean = false,
     error: StringResource? = null,
@@ -381,7 +390,8 @@ fun AGEmailTextField(
         hint = hint,
         onValueChange = onValueChange,
         visualTransformation = visualTransformation,
-        keyboardOptions = keyboardOptions.copy(imeAction = imeAction),
+        imeAction = imeAction,
+        keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
         readOnly = readOnly,
         error = error,
@@ -404,7 +414,7 @@ fun PasswordTextField(
     onValueChange: (String) -> Unit,
     value: String,
     keyboardOptions: KeyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-    imeAction: ImeAction = ImeAction.Done,
+    imeAction: ImeAction,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     error: StringResource? = null,
     onErrorStateChange: (StringResource?) -> Unit,
@@ -425,6 +435,7 @@ fun PasswordTextField(
         visualTransformation = if (revealed) VisualTransformation.None else PasswordVisualTransformation(),
         keyboardOptions = keyboardOptions.copy(imeAction = imeAction),
         keyboardActions = keyboardActions,
+        imeAction = imeAction,
         readOnly = false,
         error = error,
         rules = rules,
