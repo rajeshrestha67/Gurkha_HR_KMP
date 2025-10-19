@@ -35,7 +35,7 @@ import com.gurkha.hr.components.hideKeyboardOnTap
 import com.gurkha.hr.components.notificationPermission.CAMERA_PERMISSION
 import com.gurkha.hr.components.notificationPermission.GALLERY_PERMISSION
 import com.gurkha.hr.components.notificationPermission.POST_NOTIFICATIONS_PERMISSION
-import com.gurkha.hr.components.notificationPermission.RequestPermission
+import com.gurkha.hr.components.notificationPermission.rememberRequestPermission
 import com.gurkha.hr.components.textField.AGEmailTextField
 import com.gurkha.hr.components.textField.FormValidate
 import com.gurkha.hr.components.textField.PasswordTextField
@@ -75,7 +75,7 @@ fun LoginScreen(
         }
     }
 
-    RequestPermission(
+    val onPermission = rememberRequestPermission(
         permissions = listOf(
             POST_NOTIFICATIONS_PERMISSION,
             CAMERA_PERMISSION,
@@ -102,11 +102,14 @@ fun LoginScreen(
         onAllGranted = {
             AppLogger.i(
                 tag = TAG,
-                message = "All Permission denied permanent"
+                message = "All Permission granted"
             )
-        }
-    )
+        })
 
+
+    LaunchedEffect(Unit) {
+        onPermission()
+    }
     LoginScreenContent(
         state = state,
         onAction = loginViewModel::onAction

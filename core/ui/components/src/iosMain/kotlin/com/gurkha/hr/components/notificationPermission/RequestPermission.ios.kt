@@ -1,8 +1,9 @@
 package com.gurkha.hr.components.notificationPermission
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import kotlinx.coroutines.delay
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import platform.AVFoundation.AVCaptureDevice
 import platform.AVFoundation.AVMediaTypeVideo
@@ -14,31 +15,32 @@ import platform.UserNotifications.UNAuthorizationOptionSound
 import platform.UserNotifications.UNUserNotificationCenter
 import kotlin.coroutines.resume
 
-@Composable
-actual fun RequestPermission(
-    permissions: List<String>,
-    onGranted: (String) -> Unit,
-    onDenied: (String) -> Unit,
-    onPermanentlyDenied: (String) -> Unit,
-    onAllGranted: () -> Unit
-) {
-    LaunchedEffect(Unit) {
-        for (permission in permissions) {
-            val granted = when (permission) {
-                POST_NOTIFICATIONS_PERMISSION -> requestNotificationPermission()
-                CAMERA_PERMISSION -> requestCameraPermission()
-                GALLERY_PERMISSION -> requestGalleryPermission()
-                else -> false
-            }
-
-            if (granted) onGranted(permission)
-            else onDenied(permission)
-        }
-
-        delay(100) // optional small delay
-        onAllGranted()
-    }
-}
+//
+//@Composable
+//actual fun RequestPermission(
+//    permissions: List<String>,
+//    onGranted: (String) -> Unit,
+//    onDenied: (String) -> Unit,
+//    onPermanentlyDenied: (String) -> Unit,
+//    onAllGranted: () -> Unit
+//) {
+//    LaunchedEffect(Unit) {
+//        for (permission in permissions) {
+//            val granted = when (permission) {
+//                POST_NOTIFICATIONS_PERMISSION -> requestNotificationPermission()
+//                CAMERA_PERMISSION -> requestCameraPermission()
+//                GALLERY_PERMISSION -> requestGalleryPermission()
+//                else -> false
+//            }
+//
+//            if (granted) onGranted(permission)
+//            else onDenied(permission)
+//        }
+//
+//        delay(100) // optional small delay
+//        onAllGranted()
+//    }
+//}
 // -------- Helper suspend functions -------- //
 
 private suspend fun requestNotificationPermission(): Boolean =
@@ -69,3 +71,42 @@ private suspend fun requestGalleryPermission(): Boolean =
             cont.resume(status == 3L) // 3 = authorized
         }
     }
+
+@Composable
+actual fun rememberRequestPermission(
+    permissions: List<String>,
+    onGranted: (String) -> Unit,
+    onDenied: (String) -> Unit,
+    onPermanentlyDenied: (String) -> Unit,
+    onAllGranted: () -> Unit
+): () -> Unit {
+    val coroutineScope = rememberCoroutineScope()
+
+    return remember {
+        {
+            coroutineScope.launch {
+                val deniedPermissions = mutableListOf<String>()
+
+                for (permission in permissions) {
+                    val granted = when (permission) {
+                        POST_NOTIFICATIONS_PERMISSION -> requestNotificationPermission()
+                        CAMERA_PERMISSION -> requestCameraPermission()
+                        GALLERY_PERMISSION -> requestGalleryPermission()
+                        else -> true
+                    }
+
+                    if (granted) {
+                        onGranted(permission)
+                    } else {
+                        onDenied(permission)
+                        deniedPermissions.add(permission)
+                    }
+                }
+
+                if (deniedPermissions.isEmpty()) {
+                    onAllGranted()
+                }
+            }
+        }
+    }
+}

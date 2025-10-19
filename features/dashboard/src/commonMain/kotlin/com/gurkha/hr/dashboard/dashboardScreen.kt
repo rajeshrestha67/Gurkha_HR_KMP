@@ -30,7 +30,7 @@ import com.gurkha.hr.components.AnimatedNavHost
 import com.gurkha.hr.components.PlatformMessage
 import com.gurkha.hr.components.navigationBar.ERPNavigationBar
 import com.gurkha.hr.components.notificationPermission.POST_NOTIFICATIONS_PERMISSION
-import com.gurkha.hr.components.notificationPermission.RequestPermission
+import com.gurkha.hr.components.notificationPermission.rememberRequestPermission
 import com.gurkha.hr.dashboard.graph.attendanceScreenBuilder
 import com.gurkha.hr.dashboard.graph.chatScreenBuilder
 import com.gurkha.hr.dashboard.graph.homeScreenBuilder
@@ -101,7 +101,31 @@ fun DashboardScreen(
             }
         }
     }
-    RequestPermission(
+
+
+
+    DashboardScreenContent(
+        bottomBarState = bottomBarState,
+        state = state,
+        navController = navController,
+        onLogout = onLogout,
+        onAction = viewModel::action
+    )
+
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@Composable
+fun DashboardScreenContent(
+    bottomBarState: Boolean,
+    state: DashboardScreenState,
+    navController: NavHostController,
+    onLogout: () -> Unit,
+    onAction: (DashboardScreenAction) -> Unit
+) {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+    val onPermission = rememberRequestPermission(
         permissions = listOf(
             POST_NOTIFICATIONS_PERMISSION
         ),
@@ -126,33 +150,13 @@ fun DashboardScreen(
         onAllGranted = {
             AppLogger.i(
                 tag = TAG,
-                message = "All Permission denied permanent"
+                message = "All Permission granted"
             )
         }
-
     )
-    DashboardScreenContent(
-        bottomBarState = bottomBarState,
-        state = state,
-        navController = navController,
-        onLogout = onLogout,
-        onAction = viewModel::action
-    )
-
-}
-
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
-@Composable
-fun DashboardScreenContent(
-    bottomBarState: Boolean,
-    state: DashboardScreenState,
-    navController: NavHostController,
-    onLogout: () -> Unit,
-    onAction: (DashboardScreenAction) -> Unit
-) {
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route
-
+    LaunchedEffect(Unit) {
+        onPermission()
+    }
     LaunchedEffect(currentRoute) {
         if (currentRoute != null) {
             val destination = when (currentRoute) {
