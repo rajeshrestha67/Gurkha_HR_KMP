@@ -35,8 +35,9 @@ data class HomeScreenState(
     val upComingWorkAnniversary: List<UpComingWorkAnniversaryData> = emptyList(),
 
     val calendarData: List<CalendarDay> = listOf(),
-    val todayBS: CalendarDate,
-    val selectedDay: Int = 1
+    val todayBS: CalendarDate = CalendarDate(0, 0, 0, 0),
+    val selectedDay: Int = 1,
+    val showSwipeView: Boolean = true
 )
 
 data class RequestItem(

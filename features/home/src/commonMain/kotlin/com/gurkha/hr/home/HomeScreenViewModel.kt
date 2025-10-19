@@ -36,7 +36,7 @@ class HomeScreenViewModel(
     private val upComingWorkAnniversaryUseCase: UpComingWorkAnniversaryUseCase,
     private val calendarModel: CalendarModel
 ) : ViewModel() {
-    private val _state = MutableStateFlow(HomeScreenState(todayBS = calendarModel.today))
+    private val _state = MutableStateFlow(HomeScreenState())
     val state = _state
         .onStart {
             fetchCurrentUser()
@@ -48,7 +48,7 @@ class HomeScreenViewModel(
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = HomeScreenState(todayBS = calendarModel.today)
+            initialValue = HomeScreenState()
         )
 
     fun onAction(action: HomeScreenActions) {
@@ -115,7 +115,10 @@ class HomeScreenViewModel(
     //    fetch the attendance report
     private fun fetchAttendance() = viewModelScope.launch {
         _state.update {
-            it.copy(isAttendanceLoading = true)
+            it.copy(
+                isAttendanceLoading = true,
+                showSwipeView = false
+            )
         }
 
         val todayDays =
@@ -151,6 +154,7 @@ class HomeScreenViewModel(
                 it.copy(
                     isAttendanceLoading = false,
                     attendanceReport = data,
+                    showSwipeView = !(attendanceData?.isHoliday ?: false),
                     attendanceReportHistory = data.filter { mData ->
                         try {
                             val day = getDayFromDate(date = mData.date)?.toInt()
@@ -179,7 +183,7 @@ class HomeScreenViewModel(
                 "fetchAttendance date filter: ${error.toErrorMessage()}"
             )
             _state.update {
-                it.copy(isAttendanceLoading = false)
+                it.copy(isAttendanceLoading = false, showSwipeView = true)
             }
         }
     }

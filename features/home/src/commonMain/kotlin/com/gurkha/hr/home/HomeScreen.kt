@@ -160,7 +160,9 @@ fun HomeScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreenContent(
-    modifier: Modifier = Modifier, state: HomeScreenState, onAction: (HomeScreenActions) -> Unit
+    modifier: Modifier = Modifier,
+    state: HomeScreenState,
+    onAction: (HomeScreenActions) -> Unit
 ) {
 
     val (showNotification, onChangeNotification) = rememberSaveable {
@@ -189,10 +191,10 @@ fun HomeScreenContent(
         }
     }
 
-    val shouldShowSwipeToDismiss by remember {
-        derivedStateOf { !isScrolling || isAtTop || isAtEnd }
+    val shouldShowSwipeToDismiss by remember(state.showSwipeView) {
+        derivedStateOf { (!isScrolling || isAtTop || isAtEnd) && state.showSwipeView }
     }
-
+    
     Box(
         modifier = modifier,
         contentAlignment = Alignment.BottomCenter,

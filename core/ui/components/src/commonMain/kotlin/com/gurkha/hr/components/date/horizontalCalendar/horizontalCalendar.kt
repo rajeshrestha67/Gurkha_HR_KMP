@@ -56,7 +56,7 @@ fun HorizontalCalendar(
     val months = stringArrayResource(SharedRes.Arrays.months)
 
     val month = remember(today) {
-        months[today.month - 1]
+        months[(today.month - 1).coerceAtLeast(0)]
     }
 
     val weekNames = stringArrayResource(SharedRes.Arrays.weeksDays)
