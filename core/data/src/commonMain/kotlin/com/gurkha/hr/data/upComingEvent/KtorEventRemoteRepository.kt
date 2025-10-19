@@ -7,7 +7,7 @@ import com.gurkha.hr.networkhelper.EndPoint
 import com.gurkha.hr.networkhelper.get
 import com.gurkha.hr.networkhelper.safeCall
 import com.gurkha.model.network.DataError
-import com.gurkha.upComingEvents.EventsResponseDto
+import com.gurkha.model.upComingEvents.EventsResponseDto
 import io.ktor.client.HttpClient
 
 class KtorEventRemoteRepository(

@@ -1,4 +1,4 @@
-package com.gurkha.upComingEvents
+package com.gurkha.model.upComingEvents
 
 import kotlinx.serialization.Serializable
 

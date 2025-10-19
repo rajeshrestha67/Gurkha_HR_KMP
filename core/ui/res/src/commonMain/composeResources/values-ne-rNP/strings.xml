@@ -145,6 +145,16 @@
 
     <string name="upcoming_events">कार्यक्रमहरू</string>
 
+    <string name="notification_des">तपाईँको बिदाको अनुरोध स्वीकार गरिएको छ</string>
+
+    <string name="notification">सूचनाहरू</string>
+
+    <string name="leave_req_accepted">तपाईँको बिदाको अनुरोध स्वीकार गरिएको छ</string>
+    <string name = "leave_req_rejected"> तपाईँको बिदाको अनुरोध </string> द्वारा अस्वीकार गरिएको छ
+
+    <string name = "attendance_req_accepted"> तपाईँको उपस्थिति अनुरोध स्वीकार गरिएको छ</string>
+    <string name="attendance_req_rejected">तपाईँको उपस्थिति अनुरोध अस्वीकार गरिएको छ</string>
+
     <string name="view_all">सबै हेर्नुहोस्</string>
     <string name="profile">प्रोफाइल</string>
     <string name="time_and_attendance">समय र उपस्थिति</string>

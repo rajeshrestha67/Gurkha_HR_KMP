@@ -8,6 +8,7 @@ import com.gurkha.hr.date.Year
 import com.gurkha.hr.date.data.model.CalendarModel
 import com.gurkha.hr.domain.attendance.attendanceReport.model.AttendanceData
 import com.gurkha.hr.domain.attendance.attendanceReport.usecase.AttendanceUseCase
+import com.gurkha.hr.domain.notification.notificationCount.useCase.NotificationCountUseCase
 import com.gurkha.hr.domain.upComingBirthday.usecase.UpComingBirthdayUseCase
 import com.gurkha.hr.domain.upComingEvent.useCase.EventUseCase
 import com.gurkha.hr.domain.upComingWorkAnniversaries.useCase.UpComingWorkAnniversaryUseCase
@@ -36,7 +37,8 @@ class HomeScreenViewModel(
     private val upComingBirthdayUseCase: UpComingBirthdayUseCase,
     private val upComingWorkAnniversaryUseCase: UpComingWorkAnniversaryUseCase,
     private val eventUseCase: EventUseCase,
-    private val calendarModel: CalendarModel
+    private val calendarModel: CalendarModel,
+    private val notificationCountUseCase : NotificationCountUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(HomeScreenState(todayBS = calendarModel.today))
     val state = _state
@@ -47,6 +49,7 @@ class HomeScreenViewModel(
             fetchAttendance()
             fetchCalendarValue()
             fetchUpComingEvents()
+            getTotalNotificationCount()
         }
         .stateIn(
             scope = viewModelScope,
@@ -293,6 +296,28 @@ class HomeScreenViewModel(
             }
         }
 
+    }
+
+    private fun getTotalNotificationCount()=viewModelScope.launch {
+        _state.update {
+            it.copy(
+                isNotificationCountLoading = true
+            )
+        }
+        notificationCountUseCase().onSuccess {data ->
+            _state.update {
+                it.copy(
+                    isNotificationCountLoading = false,
+                    totalNotificationCount =data
+                )
+            }
+        }.onError {
+            _state.update {
+                it.copy(
+                    isNotificationCountLoading = false
+                )
+            }
+        }
     }
 
 }

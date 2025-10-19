@@ -1,7 +1,7 @@
 package com.gurkha.hr.domain.upComingEvent.mapper
 
 import com.gurkha.hr.domain.upComingEvent.model.EventData
-import com.gurkha.upComingEvents.EventsResponseDto
+import com.gurkha.model.upComingEvents.EventsResponseDto
 
 fun EventsResponseDto.toData(): List<EventData> {
     return detail?.map {

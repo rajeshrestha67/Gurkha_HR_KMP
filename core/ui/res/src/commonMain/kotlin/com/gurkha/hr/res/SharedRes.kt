@@ -25,6 +25,8 @@ import gurkhahr.core.ui.res.generated.resources.attendance
 import gurkhahr.core.ui.res.generated.resources.attendance_approved
 import gurkhahr.core.ui.res.generated.resources.attendance_cancelled
 import gurkhahr.core.ui.res.generated.resources.attendance_pending
+import gurkhahr.core.ui.res.generated.resources.attendance_req_accepted
+import gurkhahr.core.ui.res.generated.resources.attendance_req_rejected
 import gurkhahr.core.ui.res.generated.resources.attendance_request
 import gurkhahr.core.ui.res.generated.resources.attendance_request_form
 import gurkhahr.core.ui.res.generated.resources.attendance_summary
@@ -57,8 +59,6 @@ import gurkhahr.core.ui.res.generated.resources.document
 import gurkhahr.core.ui.res.generated.resources.edit
 import gurkhahr.core.ui.res.generated.resources.edit_notes
 import gurkhahr.core.ui.res.generated.resources.early_out
-import gurkhahr.core.ui.res.generated.resources.edit
-import gurkhahr.core.ui.res.generated.resources.edit_notes
 import gurkhahr.core.ui.res.generated.resources.email
 import gurkhahr.core.ui.res.generated.resources.emergency_contact
 import gurkhahr.core.ui.res.generated.resources.end_date
@@ -84,7 +84,6 @@ import gurkhahr.core.ui.res.generated.resources.guardian_phone
 import gurkhahr.core.ui.res.generated.resources.half_afternoon
 import gurkhahr.core.ui.res.generated.resources.half_morning
 import gurkhahr.core.ui.res.generated.resources.history
-import gurkhahr.core.ui.res.generated.resources.holiday
 import gurkhahr.core.ui.res.generated.resources.holiday
 import gurkhahr.core.ui.res.generated.resources.holidays
 import gurkhahr.core.ui.res.generated.resources.home
@@ -132,9 +131,11 @@ import gurkhahr.core.ui.res.generated.resources.no_assets_available
 import gurkhahr.core.ui.res.generated.resources.no_data_found
 import gurkhahr.core.ui.res.generated.resources.note
 import gurkhahr.core.ui.res.generated.resources.notes
+import gurkhahr.core.ui.res.generated.resources.leave_req_accepted
+import gurkhahr.core.ui.res.generated.resources.leave_req_rejected
+import gurkhahr.core.ui.res.generated.resources.notification
 import gurkhahr.core.ui.res.generated.resources.numbers
 import gurkhahr.core.ui.res.generated.resources.ok
-import gurkhahr.core.ui.res.generated.resources.one
 import gurkhahr.core.ui.res.generated.resources.one
 import gurkhahr.core.ui.res.generated.resources.on_time
 import gurkhahr.core.ui.res.generated.resources.outline_logout_24
@@ -183,9 +184,6 @@ import gurkhahr.core.ui.res.generated.resources.total_absent_days
 import gurkhahr.core.ui.res.generated.resources.total_days
 import gurkhahr.core.ui.res.generated.resources.total_leave
 import gurkhahr.core.ui.res.generated.resources.two
-import gurkhahr.core.ui.res.generated.resources.two
-import gurkhahr.core.ui.res.generated.resources.total_leave
-import gurkhahr.core.ui.res.generated.resources.two
 import gurkhahr.core.ui.res.generated.resources.total_leave_taken
 import gurkhahr.core.ui.res.generated.resources.total_present_days
 import gurkhahr.core.ui.res.generated.resources.total_worked_days
@@ -209,7 +207,6 @@ import gurkhahr.core.ui.res.generated.resources.view_all
 import gurkhahr.core.ui.res.generated.resources.weeks_days
 import gurkhahr.core.ui.res.generated.resources.welcome
 import gurkhahr.core.ui.res.generated.resources.work_anniversaries
-import gurkhahr.core.ui.res.generated.resources.working_days
 import gurkhahr.core.ui.res.generated.resources.working_days
 import gurkhahr.core.ui.res.generated.resources.year
 import gurkhahr.core.ui.res.generated.resources.yes
@@ -379,6 +376,15 @@ object SharedRes {
         val delete_confirmation = Res.string.delete_confirmation
 
         val upcoming_events = Res.string.upcoming_events
+
+        val notification_des = Res.string.leave_req_accepted
+
+        val notification = Res.string.notification
+        val leave_req_accepted = Res.string.leave_req_accepted
+        val leave_req_rejected = Res.string.leave_req_rejected
+        val attendance_req_accepted = Res.string.attendance_req_accepted
+        val attendance_req_rejected = Res.string.attendance_req_rejected
+
 
         val invalidEmailAddress = Res.string.invalid_email_address
         val email = Res.string.email

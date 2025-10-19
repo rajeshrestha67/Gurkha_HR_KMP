@@ -10,6 +10,7 @@ import com.gurkha.hr.date.data.CalendarDate
 import com.gurkha.hr.date.data.CalendarDay
 import com.gurkha.hr.domain.attendance.attendanceReport.model.AttendanceData
 import com.gurkha.hr.domain.attendance.attendanceReport.model.AttendanceStatus
+import com.gurkha.hr.domain.notification.notificationCount.model.NotificationCountData
 import com.gurkha.hr.domain.upComingBirthday.model.UpComingBirthdayData
 import com.gurkha.hr.domain.upComingEvent.model.EventData
 import com.gurkha.hr.domain.upComingWorkAnniversaries.model.UpComingWorkAnniversaryData
@@ -40,7 +41,10 @@ data class HomeScreenState(
     val selectedDay: Int = 1,
 
     val isEventLoading : Boolean = false,
-    val upComingEvent : List<EventData> = emptyList<EventData>()
+    val upComingEvent : List<EventData> = emptyList(),
+
+    val totalNotificationCount : NotificationCountData? = null ,
+    val isNotificationCountLoading : Boolean = false
 )
 
 data class RequestItem(

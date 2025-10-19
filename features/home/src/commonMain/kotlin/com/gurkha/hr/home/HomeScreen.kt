@@ -32,6 +32,8 @@ import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -61,6 +63,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gurkha.hr.components.ProfilePicture
 import com.gurkha.hr.components.date.horizontalCalendar.HorizontalCalendar
 import com.gurkha.hr.components.extractInitials
+import com.gurkha.hr.components.noRippleClickable
 import com.gurkha.hr.components.shimmer.ShimmerView
 import com.gurkha.hr.components.swipeToDismiss.SwipeToDismissBox
 import com.gurkha.hr.date.data.CalendarDate
@@ -87,7 +90,8 @@ import org.koin.compose.viewmodel.koinViewModel
 fun HomeScreen(
     topAppBarScrollBehavior: TopAppBarScrollBehavior,
     onChatClick: () -> Unit,
-    onNotificationClick: () -> Unit
+    onNotificationClick: () -> Unit,
+    onViewAllClick: (String?) -> Unit
 ) {
     val viewModel: HomeScreenViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -95,12 +99,14 @@ fun HomeScreen(
 
     Scaffold(
         contentWindowInsets = WindowInsets(),
-        modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
+        modifier = Modifier
+            .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
             .fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth(),
                 windowInsets = WindowInsets(),
                 title = {
                     Row(
@@ -141,7 +147,18 @@ fun HomeScreen(
                             contentDescription = "chat"
                         )
                     }
-                    IconButton(onClick = onNotificationClick) {
+                    BadgedBox(
+                        modifier = Modifier
+                            .noRippleClickable(onClick = onNotificationClick)
+                            .padding(horizontal = MaterialTheme.dimens.small3),
+                        badge = {
+                            Badge(
+                                contentColor = MaterialTheme.colorScheme.onError
+                            ) {
+                                Text(text = state.totalNotificationCount?.count.toString())
+                            }
+                        }
+                    ) {
                         Icon(
                             imageVector = Icons.Filled.Notifications,
                             contentDescription = "notification icon"
@@ -764,59 +781,62 @@ fun AttendanceItemContent(
 
 fun LazyListScope.eventSection(
     state: HomeScreenState
-){
-   if(state.upComingEvent.isNotEmpty()){
-       item(key = "event title") {
-           TitleBar(
-               modifier = Modifier.fillMaxWidth()
-                   .padding(start = MaterialTheme.dimens.small3, end = MaterialTheme.dimens.small1),
-               onViewAll = {},
-               title = SharedRes.Strings.upcoming_events,
-               subTitle = SharedRes.Strings.view_all
-           )
-       }
-       item(key = "event list") {
-           when {
-               state.isEventLoading -> {
+) {
+    if (state.upComingEvent.isNotEmpty()) {
+        item(key = "event title") {
+            TitleBar(
+                modifier = Modifier.fillMaxWidth()
+                    .padding(
+                        start = MaterialTheme.dimens.small3,
+                        end = MaterialTheme.dimens.small1
+                    ),
+                onViewAll = {},
+                title = SharedRes.Strings.upcoming_events,
+                subTitle = SharedRes.Strings.view_all
+            )
+        }
+        item(key = "event list") {
+            when {
+                state.isEventLoading -> {
 
-                   Row(
-                       modifier = Modifier.fillMaxWidth()
-                           .padding(horizontal = MaterialTheme.dimens.small3),
-                       horizontalArrangement = Arrangement.spacedBy(
-                           MaterialTheme.dimens.small2, alignment = Alignment.Start
-                       )
-                   ) {
-                       repeat(2) {
-                           ShimmerView(
-                               modifier = Modifier.size(MaterialTheme.dimens.bottomBar)
-                                   .clip(MaterialTheme.shapes.small)
-                           )
-                       }
-                   }
+                    Row(
+                        modifier = Modifier.fillMaxWidth()
+                            .padding(horizontal = MaterialTheme.dimens.small3),
+                        horizontalArrangement = Arrangement.spacedBy(
+                            MaterialTheme.dimens.small2, alignment = Alignment.Start
+                        )
+                    ) {
+                        repeat(2) {
+                            ShimmerView(
+                                modifier = Modifier.size(MaterialTheme.dimens.bottomBar)
+                                    .clip(MaterialTheme.shapes.small)
+                            )
+                        }
+                    }
 
-               }
+                }
 
-               else -> {
-                   LazyRow(
-                       modifier = Modifier.fillMaxWidth(),
-                       contentPadding = PaddingValues(horizontal = MaterialTheme.dimens.small3),
-                       verticalAlignment = Alignment.CenterVertically,
-                       horizontalArrangement = state.upComingWorkAnniversary.size.let { size ->
-                           if (size > 2) Arrangement.spacedBy(MaterialTheme.dimens.medium3)
-                           else Arrangement.SpaceBetween
-                       }
+                else -> {
+                    LazyRow(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentPadding = PaddingValues(horizontal = MaterialTheme.dimens.small3),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = state.upComingWorkAnniversary.size.let { size ->
+                            if (size > 2) Arrangement.spacedBy(MaterialTheme.dimens.medium3)
+                            else Arrangement.SpaceBetween
+                        }
 
-                   ) {
-                       items(state.upComingEvent) { item ->
-                           EventCard(
-                               item = item
-                           )
-                       }
-                   }
-               }
-           }
-       }
-   }
+                    ) {
+                        items(state.upComingEvent) { item ->
+                            EventCard(
+                                item = item
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 
@@ -828,10 +848,19 @@ fun UpComingCard(
     date: String,
 ) {
     Column(
-        modifier = Modifier.widthIn(min = 150.dp)
-            .padding(
-                MaterialTheme.dimens.small2
+        modifier = Modifier.widthIn(min = MaterialTheme.dimens.eventWidth)
+            .clip(shape = MaterialTheme.shapes.small)
+            .background(
+                MaterialTheme.colorScheme.primary.copy(
+                    alpha = 0.1f
+                )
             )
+            .padding(
+                vertical = MaterialTheme.dimens.small2,
+                horizontal = MaterialTheme.dimens.small3
+            ),
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small1),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -842,7 +871,7 @@ fun UpComingCard(
                 imageUrl = imageUrl,
                 employeeName = fullName,
                 nameInitials = fullName.extractInitials(),
-                size = MaterialTheme.dimens.medium2,
+                size = MaterialTheme.dimens.medium3,
                 shape = CircleShape,
                 background = MaterialTheme.colorScheme.imageBackgroundColor,
                 borderWidth = 0.dp,
@@ -892,19 +921,41 @@ fun TitleBar(
 
 @Composable
 fun EventCard(
-    item : EventData
-){
-    Column {
-        Text(text = item.name, style = MaterialTheme.typography.titleMedium.copy(
-            color = MaterialTheme.colorScheme.darkPrimaryTextColor
-        ))
+    item: EventData
+) {
+    Column(
+        modifier = Modifier
+            .widthIn(min = 150.dp)
+            .clip(shape = MaterialTheme.shapes.small)
+            .background(
+                MaterialTheme.colorScheme.primary.copy(
+                    alpha = 0.1f
+                )
+            )
+            .padding(
+                vertical = MaterialTheme.dimens.small2,
+                horizontal = MaterialTheme.dimens.small3
+            ),
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small1)
 
-        Text(text = "${item.fromDateBs} to ${item.toDateBs}" , style = MaterialTheme.typography.titleSmall.copy(
-            color = MaterialTheme.colorScheme.primaryTextColor
-        ))
+    ) {
+        Text(
+            text = item.name, style = MaterialTheme.typography.titleMedium.copy(
+                color = MaterialTheme.colorScheme.darkPrimaryTextColor
+            )
+        )
 
-        Text(text = item.description, style = MaterialTheme.typography.titleSmall.copy(
-            color = MaterialTheme.colorScheme.darkPrimaryTextColor
-        ))
+        Text(
+            text = "${item.fromDateBs} to ${item.toDateBs}",
+            style = MaterialTheme.typography.titleSmall.copy(
+                color = MaterialTheme.colorScheme.primaryTextColor
+            )
+        )
+
+        Text(
+            text = item.description, style = MaterialTheme.typography.titleSmall.copy(
+                color = MaterialTheme.colorScheme.darkPrimaryTextColor
+            )
+        )
     }
 }

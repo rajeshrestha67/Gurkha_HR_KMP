@@ -42,9 +42,9 @@ import com.gurkha.hr.dashboard.model.DashboardScreenAction
 import com.gurkha.hr.dashboard.model.DashboardScreenState
 import com.gurkha.hr.dashboard.route.AttendanceRoute
 import com.gurkha.hr.dashboard.route.DashboardRoute
+import com.gurkha.hr.dashboard.route.HomeRoute
 import com.gurkha.hr.dashboard.route.LeaveRoute
 import com.gurkha.hr.dashboard.route.NoteRoute
-import com.gurkha.hr.domain.note.addNote.model.AddNoteData
 import com.gurkha.hr.res.SharedRes
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -191,7 +191,13 @@ fun DashboardScreenContent(
         ) {
             homeScreenBuilder(
                 navController = navController,
-                topAppBarScrollBehavior = topScrollBehavior
+                topAppBarScrollBehavior = topScrollBehavior,
+                onViewAllClick={ eventsJson->
+                    eventsJson?.let {
+                        navController.navigate(HomeRoute.ViewAllRoute(json = eventsJson))
+
+                    }
+                }
             )
             profileScreenBuilder(
                 onLogout = onLogout,
