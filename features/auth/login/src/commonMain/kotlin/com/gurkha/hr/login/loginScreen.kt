@@ -32,6 +32,10 @@ import coil3.compose.AsyncImage
 import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.PlatformMessage
 import com.gurkha.hr.components.hideKeyboardOnTap
+import com.gurkha.hr.components.notificationPermission.CAMERA_PERMISSION
+import com.gurkha.hr.components.notificationPermission.GALLERY_PERMISSION
+import com.gurkha.hr.components.notificationPermission.POST_NOTIFICATIONS_PERMISSION
+import com.gurkha.hr.components.notificationPermission.RequestPermission
 import com.gurkha.hr.components.textField.AGEmailTextField
 import com.gurkha.hr.components.textField.FormValidate
 import com.gurkha.hr.components.textField.PasswordTextField
@@ -68,6 +72,27 @@ fun LoginScreen(
             }
         }
     }
+
+    RequestPermission(
+        permissions = listOf(
+            POST_NOTIFICATIONS_PERMISSION,
+            CAMERA_PERMISSION,
+            GALLERY_PERMISSION
+        ),
+        onGranted = { permission ->
+            println("Permission granted: $permission")
+        },
+        onDenied = { permission ->
+            println("Permission denied: $permission")
+        },
+        onPermanentlyDenied = { permission ->
+            println("Permission denied permanent: $permission")
+        },
+        onAllGranted = {
+            println("All denied")
+        }
+    )
+
     LoginScreenContent(
         state = state,
         onAction = loginViewModel::onAction

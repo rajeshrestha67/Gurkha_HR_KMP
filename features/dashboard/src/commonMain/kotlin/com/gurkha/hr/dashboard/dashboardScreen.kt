@@ -27,9 +27,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.gurkha.hr.components.AnimatedNavHost
-import com.gurkha.hr.components.NotificationPermissionRequest
 import com.gurkha.hr.components.PlatformMessage
 import com.gurkha.hr.components.navigationBar.ERPNavigationBar
+import com.gurkha.hr.components.notificationPermission.POST_NOTIFICATIONS_PERMISSION
+import com.gurkha.hr.components.notificationPermission.RequestPermission
 import com.gurkha.hr.dashboard.graph.attendanceScreenBuilder
 import com.gurkha.hr.dashboard.graph.chatScreenBuilder
 import com.gurkha.hr.dashboard.graph.homeScreenBuilder
@@ -44,7 +45,6 @@ import com.gurkha.hr.dashboard.route.AttendanceRoute
 import com.gurkha.hr.dashboard.route.DashboardRoute
 import com.gurkha.hr.dashboard.route.LeaveRoute
 import com.gurkha.hr.dashboard.route.NoteRoute
-import com.gurkha.hr.domain.note.addNote.model.AddNoteData
 import com.gurkha.hr.res.SharedRes
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -99,7 +99,24 @@ fun DashboardScreen(
             }
         }
     }
-    NotificationPermissionRequest()
+    RequestPermission(
+        permissions = listOf(
+            POST_NOTIFICATIONS_PERMISSION
+        ),
+        onGranted = { permission ->
+            println("Permission granted: $permission")
+        },
+        onDenied = { permission ->
+            println("Permission denied: $permission")
+        },
+        onPermanentlyDenied = { permission ->
+            println("Permission denied permanent: $permission")
+        },
+        onAllGranted = {
+            println("All denied")
+        }
+
+    )
     DashboardScreenContent(
         bottomBarState = bottomBarState,
         state = state,
@@ -213,10 +230,10 @@ fun DashboardScreenContent(
 
             noteScreenBuilder(
                 navController = navController,
-                onGoToAddNotesScreen ={noteJson->
+                onGoToAddNotesScreen = { noteJson ->
                     navController.navigate(NoteRoute.AddNoteRoute(json = noteJson))
                 },
-                onGoToDetailNotesScreen ={noteJson->
+                onGoToDetailNotesScreen = { noteJson ->
                     noteJson?.let {
                         navController.navigate(NoteRoute.DetailNoteRoute(json = noteJson))
                     }

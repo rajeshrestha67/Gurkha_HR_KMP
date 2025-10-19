@@ -33,6 +33,7 @@ class MainActivity : ComponentActivity() {
                 showSplashScreen
             }
         }
+        android.Manifest.permission.CAMERA
         getKoin().setProperty("activity", this)
         setContent {
             val view = LocalView.current

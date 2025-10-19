@@ -1,0 +1,74 @@
+package com.gurkha.hr.components.notificationPermission
+
+import android.app.Activity
+import android.content.pm.PackageManager
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
+import kotlinx.coroutines.delay
+
+@Composable
+actual fun RequestPermission(
+    permissions: List<String>,
+    onGranted: (String) -> Unit,
+    onDenied: (String) -> Unit,
+    onPermanentlyDenied: (String) -> Unit,
+    onAllGranted: () -> Unit
+) {
+
+    val context = LocalContext.current
+    val activity = context as? Activity
+
+    var currentIndex by remember { mutableIntStateOf(0) }
+    var currentPermission by remember { mutableStateOf<String?>(null) }
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        val permission = currentPermission ?: return@rememberLauncherForActivityResult
+
+        if (granted) {
+            onGranted(permission)
+        } else {
+            val shouldShowRationale =
+                activity?.shouldShowRequestPermissionRationale(permission) ?: false
+            if (shouldShowRationale) {
+                onDenied(permission)
+            } else {
+                onPermanentlyDenied(permission)
+            }
+        }
+
+        // Move to next after a slight delay
+        currentIndex++
+    }
+
+    LaunchedEffect(currentIndex) {
+        if (currentIndex < permissions.size) {
+            val permission = permissions[currentIndex]
+            currentPermission = permission
+
+            if (ContextCompat.checkSelfPermission(context, permission)
+                == PackageManager.PERMISSION_GRANTED
+            ) {
+                onGranted(permission)
+                currentIndex++
+            } else {
+                // Delay ensures dialogs are spaced apart (fixes POST_NOTIFICATIONS issue)
+                delay(300)
+                permissionLauncher.launch(permission)
+            }
+        } else {
+            onAllGranted()
+        }
+    }
+}
+

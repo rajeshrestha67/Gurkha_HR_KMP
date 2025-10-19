@@ -2,8 +2,6 @@ package com.gurkha.hr
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.gurkha.hr.components.AnimatedNavHost
@@ -30,12 +28,6 @@ fun App(
 fun AppScreen(isFirstTime: Boolean) {
 
     val navController = rememberNavController()
-
-    val scope = rememberCoroutineScope()
-
-    LaunchedEffect(Unit) {
-
-    }
 
     AnimatedNavHost(
         modifier = Modifier.fillMaxSize(),

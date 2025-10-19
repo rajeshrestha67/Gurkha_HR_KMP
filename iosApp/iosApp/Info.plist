@@ -11,5 +11,10 @@
 		<key>UIImageName</key>
 		<string>gurkha_hr</string>
 	</dict>
+   
+   <key>NSCameraUsageDescription</key>
+   <string>We need to access your camera for scanning QR code</string>
+   <key>NSPhotoLibraryUsageDescription</key>
+   <string>We need to add images to photo library inorder to save statements, receipts.</string>
 </dict>
 </plist>
