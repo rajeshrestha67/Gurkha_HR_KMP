@@ -45,6 +45,7 @@ import com.gurkha.hr.dashboard.route.AttendanceRoute
 import com.gurkha.hr.dashboard.route.DashboardRoute
 import com.gurkha.hr.dashboard.route.LeaveRoute
 import com.gurkha.hr.dashboard.route.NoteRoute
+import com.gurkha.hr.logger.AppLogger
 import com.gurkha.hr.res.SharedRes
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -53,6 +54,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
+private const val TAG = "DashboardScreen"
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
@@ -104,16 +106,28 @@ fun DashboardScreen(
             POST_NOTIFICATIONS_PERMISSION
         ),
         onGranted = { permission ->
-            println("Permission granted: $permission")
+            AppLogger.i(
+                tag = TAG,
+                message = "Permission granted: $permission"
+            )
         },
         onDenied = { permission ->
-            println("Permission denied: $permission")
+            AppLogger.i(
+                tag = TAG,
+                message = "Permission denied: $permission"
+            )
         },
         onPermanentlyDenied = { permission ->
-            println("Permission denied permanent: $permission")
+            AppLogger.i(
+                tag = TAG,
+                message = "Permission denied permanent: $permission"
+            )
         },
         onAllGranted = {
-            println("All denied")
+            AppLogger.i(
+                tag = TAG,
+                message = "All Permission denied permanent"
+            )
         }
 
     )

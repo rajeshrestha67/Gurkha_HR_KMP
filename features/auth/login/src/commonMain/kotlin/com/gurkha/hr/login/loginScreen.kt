@@ -39,6 +39,7 @@ import com.gurkha.hr.components.notificationPermission.RequestPermission
 import com.gurkha.hr.components.textField.AGEmailTextField
 import com.gurkha.hr.components.textField.FormValidate
 import com.gurkha.hr.components.textField.PasswordTextField
+import com.gurkha.hr.logger.AppLogger
 import com.gurkha.hr.login.model.LoginScreenAction
 import com.gurkha.hr.login.model.LoginScreenState
 import com.gurkha.hr.res.SharedRes
@@ -47,6 +48,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
+private const val TAG = "LoginScreen"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -80,16 +82,28 @@ fun LoginScreen(
             GALLERY_PERMISSION
         ),
         onGranted = { permission ->
-            println("Permission granted: $permission")
+            AppLogger.i(
+                tag = TAG,
+                message = "Permission granted: $permission"
+            )
         },
         onDenied = { permission ->
-            println("Permission denied: $permission")
+            AppLogger.i(
+                tag = TAG,
+                message = "Permission denied: $permission"
+            )
         },
         onPermanentlyDenied = { permission ->
-            println("Permission denied permanent: $permission")
+            AppLogger.i(
+                tag = TAG,
+                message = "Permission denied permanent: $permission"
+            )
         },
         onAllGranted = {
-            println("All denied")
+            AppLogger.i(
+                tag = TAG,
+                message = "All Permission denied permanent"
+            )
         }
     )
 

@@ -78,6 +78,7 @@ kotlin {
                 implementation(projects.core.networkHelper)
                 implementation(projects.core.ui.res)
                 implementation(projects.core.model)
+                implementation(projects.core.logger)
                 implementation(projects.core.ui.components)
 
                 implementation(libs.coil.compose)
