@@ -231,6 +231,9 @@
     <string name="go_home">Go Home</string>
     <string name="total_leave">Total Leave</string>
     <string name="working_days">Working Days</string>
+    <string name="swipe_to_check_in">Swipe to Check In</string>
+    <string name="swipe_to_check_out">Swipe to Check Out</string>
+    <string name="swipe_to_dismiss">Swipe to Dismiss">Working Days</string>
 
 
     <string-array name="months">

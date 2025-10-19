@@ -130,7 +130,7 @@ fun Modifier.swipeToDismiss(
                         targetValue = 0f,
                         initialVelocity = velocity
                     )
-                    if (targetOffsetX.absoluteValue >= size.width * 0.7f) {
+                    if (targetOffsetX.absoluteValue >= size.width * 0.6f) {
                         onDismissed()
                     }
                 }

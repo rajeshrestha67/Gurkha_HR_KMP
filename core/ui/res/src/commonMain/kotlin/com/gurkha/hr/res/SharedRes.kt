@@ -54,8 +54,6 @@ import gurkhahr.core.ui.res.generated.resources.delete_confirmation
 import gurkhahr.core.ui.res.generated.resources.description
 import gurkhahr.core.ui.res.generated.resources.do_you_really_want_to_logout
 import gurkhahr.core.ui.res.generated.resources.document
-import gurkhahr.core.ui.res.generated.resources.edit
-import gurkhahr.core.ui.res.generated.resources.edit_notes
 import gurkhahr.core.ui.res.generated.resources.early_out
 import gurkhahr.core.ui.res.generated.resources.edit
 import gurkhahr.core.ui.res.generated.resources.edit_notes
@@ -84,7 +82,6 @@ import gurkhahr.core.ui.res.generated.resources.guardian_phone
 import gurkhahr.core.ui.res.generated.resources.half_afternoon
 import gurkhahr.core.ui.res.generated.resources.half_morning
 import gurkhahr.core.ui.res.generated.resources.history
-import gurkhahr.core.ui.res.generated.resources.holiday
 import gurkhahr.core.ui.res.generated.resources.holiday
 import gurkhahr.core.ui.res.generated.resources.holidays
 import gurkhahr.core.ui.res.generated.resources.home
@@ -134,9 +131,8 @@ import gurkhahr.core.ui.res.generated.resources.note
 import gurkhahr.core.ui.res.generated.resources.notes
 import gurkhahr.core.ui.res.generated.resources.numbers
 import gurkhahr.core.ui.res.generated.resources.ok
-import gurkhahr.core.ui.res.generated.resources.one
-import gurkhahr.core.ui.res.generated.resources.one
 import gurkhahr.core.ui.res.generated.resources.on_time
+import gurkhahr.core.ui.res.generated.resources.one
 import gurkhahr.core.ui.res.generated.resources.outline_logout_24
 import gurkhahr.core.ui.res.generated.resources.password
 import gurkhahr.core.ui.res.generated.resources.password_does_not_match
@@ -172,6 +168,8 @@ import gurkhahr.core.ui.res.generated.resources.start_time
 import gurkhahr.core.ui.res.generated.resources.status
 import gurkhahr.core.ui.res.generated.resources.submit
 import gurkhahr.core.ui.res.generated.resources.support
+import gurkhahr.core.ui.res.generated.resources.swipe_to_check_in
+import gurkhahr.core.ui.res.generated.resources.swipe_to_check_out
 import gurkhahr.core.ui.res.generated.resources.system_default
 import gurkhahr.core.ui.res.generated.resources.terms_and_services
 import gurkhahr.core.ui.res.generated.resources.theme
@@ -182,14 +180,11 @@ import gurkhahr.core.ui.res.generated.resources.today
 import gurkhahr.core.ui.res.generated.resources.total_absent_days
 import gurkhahr.core.ui.res.generated.resources.total_days
 import gurkhahr.core.ui.res.generated.resources.total_leave
-import gurkhahr.core.ui.res.generated.resources.two
-import gurkhahr.core.ui.res.generated.resources.two
-import gurkhahr.core.ui.res.generated.resources.total_leave
-import gurkhahr.core.ui.res.generated.resources.two
 import gurkhahr.core.ui.res.generated.resources.total_leave_taken
 import gurkhahr.core.ui.res.generated.resources.total_present_days
 import gurkhahr.core.ui.res.generated.resources.total_worked_days
 import gurkhahr.core.ui.res.generated.resources.total_working_days
+import gurkhahr.core.ui.res.generated.resources.two
 import gurkhahr.core.ui.res.generated.resources.type_here
 import gurkhahr.core.ui.res.generated.resources.typing
 import gurkhahr.core.ui.res.generated.resources.unknown_error_occurred
@@ -208,7 +203,6 @@ import gurkhahr.core.ui.res.generated.resources.view_all
 import gurkhahr.core.ui.res.generated.resources.weeks_days
 import gurkhahr.core.ui.res.generated.resources.welcome
 import gurkhahr.core.ui.res.generated.resources.work_anniversaries
-import gurkhahr.core.ui.res.generated.resources.working_days
 import gurkhahr.core.ui.res.generated.resources.working_days
 import gurkhahr.core.ui.res.generated.resources.year
 import gurkhahr.core.ui.res.generated.resources.yes
@@ -378,7 +372,6 @@ object SharedRes {
         val delete_confirmation = Res.string.delete_confirmation
 
 
-
         val invalidEmailAddress = Res.string.invalid_email_address
         val email = Res.string.email
         val enterYourEmail = Res.string.enter_your_email
@@ -467,6 +460,9 @@ object SharedRes {
         val goHome = Res.string.go_home
         val totalLeave = Res.string.total_leave
         val workingDays = Res.string.working_days
+
+        val swipeToCheckIn = Res.string.swipe_to_check_in
+        val swipeToCheckOut = Res.string.swipe_to_check_out
 
     }
 }

@@ -19,6 +19,7 @@ import com.gurkha.hr.home.model.toUI
 import com.gurkha.hr.logger.AppLogger
 import com.gurkha.hr.networkhelper.onError
 import com.gurkha.hr.networkhelper.onSuccess
+import com.gurkha.hr.res.SharedRes
 import com.gurkha.model.network.toErrorMessage
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -81,6 +82,14 @@ class HomeScreenViewModel(
                         requests = state.value.requests.updateDuration(
                             attendanceData = attendanceData
                         )
+                    )
+                }
+            }
+
+            is HomeScreenActions.SwipeToDismiss -> {
+                _state.update {
+                    it.copy(
+                        swipeText = SharedRes.Strings.swipeToCheckOut
                     )
                 }
             }
@@ -152,13 +161,14 @@ class HomeScreenViewModel(
                 it.copy(
                     isAttendanceLoading = false,
                     attendanceReport = data,
+                    todayAttendance = attendanceData,
                     showSwipeView = !(attendanceData?.isHoliday ?: false),
                     attendanceReportHistory = data.filter { mData ->
                         try {
                             val day = getDayFromDate(date = mData.date)?.toInt()
-                            day?.let {
+                            day?.let { mDay ->
                                 val today = calendarModel.today.dayOfMonth
-                                it in (today - 7..today)
+                                mDay in (today - 7..today)
                             } ?: false
                         } catch (_: Exception) {
                             AppLogger.e(

@@ -194,7 +194,7 @@ fun HomeScreenContent(
     val shouldShowSwipeToDismiss by remember(state.showSwipeView) {
         derivedStateOf { (!isScrolling || isAtTop || isAtEnd) && state.showSwipeView }
     }
-    
+
     Box(
         modifier = modifier,
         contentAlignment = Alignment.BottomCenter,
@@ -250,9 +250,11 @@ fun HomeScreenContent(
             modifier = Modifier.align(Alignment.BottomCenter)
         ) {
             SwipeToDismissBox(
-                text = "Swipe to Check In", onDismissed = {
-
-                })
+                text = stringResource(state.swipeText),
+                onDismissed = {
+                    onAction(HomeScreenActions.SwipeToDismiss)
+                }
+            )
         }
     }
 }

@@ -37,7 +37,9 @@ data class HomeScreenState(
     val calendarData: List<CalendarDay> = listOf(),
     val todayBS: CalendarDate = CalendarDate(0, 0, 0, 0),
     val selectedDay: Int = 1,
-    val showSwipeView: Boolean = true
+    val showSwipeView: Boolean = true,
+    val todayAttendance: AttendanceData? = null,
+    val swipeText: StringResource = SharedRes.Strings.swipeToCheckIn,
 )
 
 data class RequestItem(

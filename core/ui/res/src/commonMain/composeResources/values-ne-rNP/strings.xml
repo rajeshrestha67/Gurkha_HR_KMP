@@ -233,6 +233,9 @@
     <string name="total_leave">कुल बिदा</string>
     <string name="working_days">काम गर्ने दिनहरू</string>
 
+    <string name="swipe_to_check_in">चेक इन गर्न स्वाइप गर्नुहोस्</string>
+    <string name="swipe_to_check_out">चेक आउट गर्न स्वाइप गर्नुहोस्</string>
+
     <string-array name="months">
         <item>बैशाख</item>
         <item>जेठ</item>
