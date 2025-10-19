@@ -26,8 +26,6 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.number
 
 class HomeScreenViewModel(
     private val attendanceUseCase: AttendanceUseCase,
@@ -194,14 +192,6 @@ class HomeScreenViewModel(
         if (split.size < 3) return null
         return split[2]
     }
-
-    private fun LocalDate.formatDate(): String {
-        val day = this.day.toString().padStart(2, '0')
-        val month = this.month.number.toString().padStart(2, '0')
-        val year = this.year
-        return "$year-$month-$day"
-    }
-
 
     //    fetch the current user details
     private fun fetchCurrentUser() = viewModelScope.launch {
