@@ -11,8 +11,6 @@ actual fun rememberGalleryLauncher(
     onImageSelected: (String) -> Unit,
     onError: (Throwable) -> Unit
 ): () -> Unit {
-
-    // Launcher for picking a single image from gallery
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
@@ -26,7 +24,6 @@ actual fun rememberGalleryLauncher(
     return remember {
         {
             try {
-                // Launch picker for images only
                 galleryLauncher.launch("image/*")
             } catch (e: Exception) {
                 onError(e)
