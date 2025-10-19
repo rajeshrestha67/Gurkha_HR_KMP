@@ -62,6 +62,7 @@ import com.gurkha.hr.components.ProfilePicture
 import com.gurkha.hr.components.date.horizontalCalendar.HorizontalCalendar
 import com.gurkha.hr.components.extractInitials
 import com.gurkha.hr.components.media.rememberCameraLauncher
+import com.gurkha.hr.components.media.rememberGalleryLauncher
 import com.gurkha.hr.components.shimmer.ShimmerView
 import com.gurkha.hr.components.swipeToDismiss.SwipeToDismissBox
 import com.gurkha.hr.date.data.CalendarDate
@@ -173,6 +174,14 @@ fun HomeScreenContent(
             println("❌ Error: ${e.message}")
         }
     )
+    val openGallery = rememberGalleryLauncher(
+        onImageSelected = { uri ->
+            println("✅ Captured image: $uri")
+        },
+        onError = { e ->
+            println("❌ Error: ${e.message}")
+        }
+    )
     val (showNotification, onChangeNotification) = rememberSaveable {
         mutableStateOf(true)
     }
@@ -261,7 +270,7 @@ fun HomeScreenContent(
                 text = stringResource(state.swipeText),
                 onDismissed = {
                     //onAction(HomeScreenActions.SwipeToDismiss)
-                    openCamera()
+                    openGallery()
                 }
             )
         }

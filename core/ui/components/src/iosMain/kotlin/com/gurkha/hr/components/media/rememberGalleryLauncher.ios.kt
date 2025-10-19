@@ -19,30 +19,33 @@ import platform.UIKit.UIImagePickerControllerSourceType
 import platform.UIKit.UINavigationControllerDelegateProtocol
 import platform.darwin.NSObject
 
-
 @Composable
-actual fun rememberCameraLauncher(
-    onImageCaptured: (String) -> Unit,
+actual fun rememberGalleryLauncher(
+    onImageSelected: (String) -> Unit,
     onError: (Throwable) -> Unit
 ): () -> Unit {
     val viewController = LocalUIViewController.current
 
     return remember {
         {
-            val picker = UIImagePickerController().apply {
-                sourceType =
-                    UIImagePickerControllerSourceType.UIImagePickerControllerSourceTypeCamera
-                delegate = ImagePickerDelegate(onImageCaptured, onError)
+            try {
+                val picker = UIImagePickerController().apply {
+                    sourceType =
+                        UIImagePickerControllerSourceType.UIImagePickerControllerSourceTypePhotoLibrary
+                    delegate = GalleryPickerDelegate(onImageSelected, onError)
+                }
+                viewController?.presentViewController(picker, true, null)
+            } catch (e: Exception) {
+                onError(e)
             }
-            viewController.presentViewController(picker, true, null)
         }
     }
 }
 
 @OptIn(BetaInteropApi::class)
 @ExportObjCClass
-private class ImagePickerDelegate(
-    val onCaptured: (String) -> Unit,
+private class GalleryPickerDelegate(
+    val onSelected: (String) -> Unit,
     val onError: (Throwable) -> Unit
 ) : NSObject(), UIImagePickerControllerDelegateProtocol, UINavigationControllerDelegateProtocol {
 
@@ -53,19 +56,23 @@ private class ImagePickerDelegate(
         val image = didFinishPickingMediaWithInfo[UIImagePickerControllerOriginalImage] as? UIImage
         if (image != null) {
             val imageData = UIImagePNGRepresentation(image)
-            val filePath =
-                NSTemporaryDirectory() + "/captured_${NSDate().timeIntervalSince1970}.png"
-            val fileUrl = NSURL.fileURLWithPath(filePath)
-            imageData?.writeToURL(fileUrl, true)
-            fileUrl.absoluteString?.let { onCaptured(it) }
+            if (imageData != null) {
+                val filePath =
+                    NSTemporaryDirectory() + "/gallery_${NSDate().timeIntervalSince1970}.png"
+                val fileUrl = NSURL.fileURLWithPath(filePath)
+                val success = imageData.writeToURL(fileUrl, true)
+                if (success) fileUrl.absoluteString?.let { onSelected(it) }
+                else onError(Exception("Failed to save image"))
+            } else {
+                onError(Exception("Failed to convert image to PNG"))
+            }
         } else {
-            onError(Exception("No image found"))
+            onError(Exception("No image selected"))
         }
         picker.dismissViewControllerAnimated(true, null)
     }
 
     override fun imagePickerControllerDidCancel(picker: UIImagePickerController) {
-        onError(Exception("User Cancelled"))
         picker.dismissViewControllerAnimated(true, null)
     }
 }
