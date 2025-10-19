@@ -9,6 +9,7 @@ import com.gurkha.hr.date.data.model.CalendarModel
 import com.gurkha.hr.domain.attendance.attendanceReport.model.AttendanceData
 import com.gurkha.hr.domain.attendance.attendanceReport.usecase.AttendanceUseCase
 import com.gurkha.hr.domain.upComingBirthday.usecase.UpComingBirthdayUseCase
+import com.gurkha.hr.domain.upComingEvent.useCase.EventUseCase
 import com.gurkha.hr.domain.upComingWorkAnniversaries.useCase.UpComingWorkAnniversaryUseCase
 import com.gurkha.hr.domain.userDetail.usecase.FetchUserDetailUseCase
 import com.gurkha.hr.home.model.HomeScreenActions
@@ -34,6 +35,7 @@ class HomeScreenViewModel(
     private val userDetailUseCase: FetchUserDetailUseCase,
     private val upComingBirthdayUseCase: UpComingBirthdayUseCase,
     private val upComingWorkAnniversaryUseCase: UpComingWorkAnniversaryUseCase,
+    private val eventUseCase: EventUseCase,
     private val calendarModel: CalendarModel
 ) : ViewModel() {
     private val _state = MutableStateFlow(HomeScreenState(todayBS = calendarModel.today))
@@ -44,6 +46,7 @@ class HomeScreenViewModel(
             fetchUpComingWorkAnniversary()
             fetchAttendance()
             fetchCalendarValue()
+            fetchUpComingEvents()
         }
         .stateIn(
             scope = viewModelScope,
@@ -266,6 +269,30 @@ class HomeScreenViewModel(
                 )
             }
         }
+    }
+
+    private fun fetchUpComingEvents()=viewModelScope.launch {
+        _state.update {
+            it.copy(
+                isEventLoading = true
+            )
+        }
+
+        eventUseCase().onSuccess { data ->
+            _state.update {
+                it.copy(
+                    isEventLoading = false,
+                    upComingEvent = data
+                )
+            }
+        }.onError {
+            _state.update {
+                it.copy(
+                    isEventLoading = false
+                )
+            }
+        }
+
     }
 
 }

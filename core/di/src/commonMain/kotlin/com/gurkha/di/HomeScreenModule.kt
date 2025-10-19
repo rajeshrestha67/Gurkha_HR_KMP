@@ -2,6 +2,7 @@ package com.gurkha.di
 
 import com.gurkha.hr.data.attendance.KtorAttendanceRemoteRepository
 import com.gurkha.hr.data.upComingBirthday.KtorUpComingBirthdayRemoteRepository
+import com.gurkha.hr.data.upComingEvent.KtorEventRemoteRepository
 import com.gurkha.hr.data.upComingWorkAnniversary.KtorUpComingWorkAnniversaryRemoteRepository
 import com.gurkha.hr.data.userDetail.KtorUserDetailRemoteRepository
 import com.gurkha.hr.datastore.user_data.local.UserDataDataStore
@@ -13,6 +14,8 @@ import com.gurkha.hr.domain.attendance.attendanceReport.repository.AttendanceRem
 import com.gurkha.hr.domain.attendance.attendanceReport.usecase.AttendanceUseCase
 import com.gurkha.hr.domain.upComingBirthday.repository.UpComingBirthdayRemoteRepository
 import com.gurkha.hr.domain.upComingBirthday.usecase.UpComingBirthdayUseCase
+import com.gurkha.hr.domain.upComingEvent.repository.EventRemoteRepository
+import com.gurkha.hr.domain.upComingEvent.useCase.EventUseCase
 import com.gurkha.hr.domain.upComingWorkAnniversaries.repository.UpComingWorkAnniversaryRemoteRepository
 import com.gurkha.hr.domain.upComingWorkAnniversaries.useCase.UpComingWorkAnniversaryUseCase
 import com.gurkha.hr.domain.userDetail.repository.UserDetailRemoteRepository
@@ -28,6 +31,8 @@ class HomeScreenModule {
     @Factory(binds = [AttendanceRemoteRepository::class])
     fun attendanceRepository(httpClient: HttpClient) = KtorAttendanceRemoteRepository(httpClient)
 
+    @Factory(binds = [EventRemoteRepository::class])
+    fun eventRemoteRepository(httpClient: HttpClient) = KtorEventRemoteRepository(httpClient)
 
     @Factory(binds = [CalendarModel::class])
     fun getCalendarModel() = CalendarModelImpl()
@@ -58,6 +63,9 @@ class HomeScreenModule {
         AttendanceUseCase(attendanceRemoteRepository)
 
     @Factory
+    fun eventUseCase(eventRemoteRepository: EventRemoteRepository): EventUseCase= EventUseCase(eventRemoteRepository = eventRemoteRepository)
+
+    @Factory
     fun fetchUserDetailUseCase(
         userDetailRemoteRepository: UserDetailRemoteRepository,
         userDataRepository: UserDataRepository
@@ -80,13 +88,15 @@ class HomeScreenModule {
         userDetailUseCase: FetchUserDetailUseCase,
         upComingBirthdayUseCase: UpComingBirthdayUseCase,
         upComingWorkAnniversaryUseCase: UpComingWorkAnniversaryUseCase,
-        calendarModel: CalendarModel
+        calendarModel: CalendarModel,
+        eventUseCase: EventUseCase
     ): HomeScreenViewModel = HomeScreenViewModel(
         attendanceUseCase = attendanceUseCase,
         userDetailUseCase = userDetailUseCase,
         upComingBirthdayUseCase = upComingBirthdayUseCase,
         upComingWorkAnniversaryUseCase = upComingWorkAnniversaryUseCase,
-        calendarModel = calendarModel
+        calendarModel = calendarModel,
+        eventUseCase = eventUseCase
     )
 }
 

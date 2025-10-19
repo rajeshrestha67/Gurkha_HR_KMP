@@ -65,6 +65,7 @@ import com.gurkha.hr.components.shimmer.ShimmerView
 import com.gurkha.hr.components.swipeToDismiss.SwipeToDismissBox
 import com.gurkha.hr.date.data.CalendarDate
 import com.gurkha.hr.date.data.CalendarDay
+import com.gurkha.hr.domain.upComingEvent.model.EventData
 import com.gurkha.hr.home.model.AttendanceHistoryItemUI
 import com.gurkha.hr.home.model.HomeScreenActions
 import com.gurkha.hr.home.model.HomeScreenState
@@ -225,6 +226,11 @@ fun HomeScreenContent(
             // request section
             requestSection(state = state)
 
+            // event section
+            eventSection(
+                state = state
+            )
+
             //birthday section
             birthDaySection(
                 state = state
@@ -302,7 +308,7 @@ fun LazyListScope.anniversarySection(
 
                 ) {
                     items(state.upComingWorkAnniversary) { item ->
-                        EventCard(
+                        UpComingCard(
                             fullName = item.fullName,
                             imageUrl = item.imageUrl,
                             date = item.joinedDate,
@@ -360,7 +366,7 @@ fun LazyListScope.birthDaySection(
 
                 ) {
                     items(state.upComingBirthday) { item ->
-                        EventCard(
+                        UpComingCard(
                             fullName = item.fullName,
                             imageUrl = item.imageUrl,
                             date = item.dateOfBirth,
@@ -601,45 +607,6 @@ fun LazyListScope.requestSection(
         )
     }
 
-    // request part
-//    item(key = "request") {
-//        Column(
-//            modifier = Modifier.fillMaxWidth()
-//                .padding(horizontal = MaterialTheme.dimens.small3)
-//        ) {
-//            Row(
-//                modifier = Modifier
-//                    .fillMaxWidth(),
-//                verticalAlignment = Alignment.CenterVertically,
-//                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
-//            ) {
-//                state.requestRow1.forEach { item ->
-//                    AttendanceItemContent(
-//                        modifier = Modifier.weight(1f),
-//                        item = item
-//                    )
-//                }
-//            }
-//
-//            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small3))
-//
-//            //  second row
-//            Row(
-//                modifier = Modifier
-//                    .fillMaxWidth(),
-//                verticalAlignment = Alignment.CenterVertically,
-//                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
-//            ) {
-//                state.requestRow2.forEach { item ->
-//                    AttendanceItemContent(
-//                        modifier = Modifier.weight(1f),
-//                        item = item
-//                    )
-//                }
-//            }
-//        }
-//    }
-
 //    new approach
     state.requests.chunked(2).forEach { rowItems ->
         item {
@@ -795,9 +762,66 @@ fun AttendanceItemContent(
     }
 }
 
+fun LazyListScope.eventSection(
+    state: HomeScreenState
+){
+   if(state.upComingEvent.isNotEmpty()){
+       item(key = "event title") {
+           TitleBar(
+               modifier = Modifier.fillMaxWidth()
+                   .padding(start = MaterialTheme.dimens.small3, end = MaterialTheme.dimens.small1),
+               onViewAll = {},
+               title = SharedRes.Strings.upcoming_events,
+               subTitle = SharedRes.Strings.view_all
+           )
+       }
+       item(key = "event list") {
+           when {
+               state.isEventLoading -> {
+
+                   Row(
+                       modifier = Modifier.fillMaxWidth()
+                           .padding(horizontal = MaterialTheme.dimens.small3),
+                       horizontalArrangement = Arrangement.spacedBy(
+                           MaterialTheme.dimens.small2, alignment = Alignment.Start
+                       )
+                   ) {
+                       repeat(2) {
+                           ShimmerView(
+                               modifier = Modifier.size(MaterialTheme.dimens.bottomBar)
+                                   .clip(MaterialTheme.shapes.small)
+                           )
+                       }
+                   }
+
+               }
+
+               else -> {
+                   LazyRow(
+                       modifier = Modifier.fillMaxWidth(),
+                       contentPadding = PaddingValues(horizontal = MaterialTheme.dimens.small3),
+                       verticalAlignment = Alignment.CenterVertically,
+                       horizontalArrangement = state.upComingWorkAnniversary.size.let { size ->
+                           if (size > 2) Arrangement.spacedBy(MaterialTheme.dimens.medium3)
+                           else Arrangement.SpaceBetween
+                       }
+
+                   ) {
+                       items(state.upComingEvent) { item ->
+                           EventCard(
+                               item = item
+                           )
+                       }
+                   }
+               }
+           }
+       }
+   }
+}
+
 
 @Composable
-fun EventCard(
+fun UpComingCard(
     imageUrl: String,
     fullName: String,
     designationName: String,
@@ -805,11 +829,6 @@ fun EventCard(
 ) {
     Column(
         modifier = Modifier.widthIn(min = 150.dp)
-//            .border(
-//                width = 1.dp,
-//                color = MaterialTheme.colorScheme.borderColor,
-//                shape = RoundedCornerShape(MaterialTheme.dimens.small2)
-//            )
             .padding(
                 MaterialTheme.dimens.small2
             )
@@ -829,12 +848,6 @@ fun EventCard(
                 borderWidth = 0.dp,
                 borderColor = Color.Transparent,
                 ratio = 1f
-            )
-
-            Text(
-                text = "", style = MaterialTheme.typography.titleSmall.copy(
-                    color = MaterialTheme.colorScheme.primaryTextColor
-                )
             )
         }
         Text(text = fullName, style = MaterialTheme.typography.titleMedium)
@@ -873,5 +886,25 @@ fun TitleBar(
                     )
                 })
         }
+    }
+}
+
+
+@Composable
+fun EventCard(
+    item : EventData
+){
+    Column {
+        Text(text = item.name, style = MaterialTheme.typography.titleMedium.copy(
+            color = MaterialTheme.colorScheme.darkPrimaryTextColor
+        ))
+
+        Text(text = "${item.fromDateBs} to ${item.toDateBs}" , style = MaterialTheme.typography.titleSmall.copy(
+            color = MaterialTheme.colorScheme.primaryTextColor
+        ))
+
+        Text(text = item.description, style = MaterialTheme.typography.titleSmall.copy(
+            color = MaterialTheme.colorScheme.darkPrimaryTextColor
+        ))
     }
 }

@@ -194,6 +194,7 @@ import gurkhahr.core.ui.res.generated.resources.type_here
 import gurkhahr.core.ui.res.generated.resources.typing
 import gurkhahr.core.ui.res.generated.resources.unknown_error_occurred
 import gurkhahr.core.ui.res.generated.resources.upcoming_birthday
+import gurkhahr.core.ui.res.generated.resources.upcoming_events
 import gurkhahr.core.ui.res.generated.resources.upload_bachelor
 import gurkhahr.core.ui.res.generated.resources.upload_citizenship_back
 import gurkhahr.core.ui.res.generated.resources.upload_citizenship_front
@@ -377,7 +378,7 @@ object SharedRes {
 
         val delete_confirmation = Res.string.delete_confirmation
 
-
+        val upcoming_events = Res.string.upcoming_events
 
         val invalidEmailAddress = Res.string.invalid_email_address
         val email = Res.string.email

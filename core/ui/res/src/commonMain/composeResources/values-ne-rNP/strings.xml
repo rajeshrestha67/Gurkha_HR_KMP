@@ -143,6 +143,8 @@
 
     <string name="delete_confirmation">के तपाईं मेटाउन निश्चित हुनुहुन्छ?</string>
 
+    <string name="upcoming_events">कार्यक्रमहरू</string>
+
     <string name="view_all">सबै हेर्नुहोस्</string>
     <string name="profile">प्रोफाइल</string>
     <string name="time_and_attendance">समय र उपस्थिति</string>
