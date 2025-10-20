@@ -51,6 +51,8 @@ import com.gurkha.hr.components.ProfilePicture
 import com.gurkha.hr.components.media.MediaSelectorModalBottomSheet
 import com.gurkha.hr.profile.model.profile_screen.AccountList
 import com.gurkha.hr.profile.model.profile_screen.GeneralList
+import com.gurkha.hr.profile.model.profile_screen.ProfileScreenState
+import com.gurkha.hr.profile.profile_screen.model.ProfileScreenAction
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.borderColor
 import com.gurkha.hr.res.theme.dimens
@@ -66,7 +68,6 @@ import org.koin.compose.viewmodel.koinViewModel
 private const val TAG = "ProfileScreen"
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
     onLogout: () -> Unit,
@@ -76,6 +77,24 @@ fun ProfileScreen(
     val viewModel: ProfileScreenViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
+    ProfileScreenContent(
+        onLogout = onLogout,
+        onAccountClick = onAccountClick,
+        onGeneralClick = onGeneralClick,
+        state = state,
+        onAction = viewModel::onAction
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ProfileScreenContent(
+    onLogout: () -> Unit,
+    onAccountClick: (AccountList) -> Unit,
+    onGeneralClick: (GeneralList) -> Unit,
+    state: ProfileScreenState,
+    onAction: (ProfileScreenAction) -> Unit
+) {
     var showMediaBottomSheet by remember { mutableStateOf(false) }
 
     Scaffold(
@@ -102,7 +121,6 @@ fun ProfileScreen(
                             borderColor = MaterialTheme.colorScheme.borderColor,
                             ratio = 1f,
                             onClick = {
-                                println("called")
                                 showMediaBottomSheet = true
                             }
                         )
@@ -153,8 +171,9 @@ fun ProfileScreen(
             onDismiss = {
                 showMediaBottomSheet = false
             },
-            onImageReceived = {
-                
+            onImageReceived = { uri ->
+                showMediaBottomSheet = false
+                onAction(ProfileScreenAction.OnProfileImageReceived(uri))
             }
         )
     }

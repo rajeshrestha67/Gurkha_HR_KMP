@@ -1,36 +1,41 @@
 package com.gurkha.hr.components.media
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.BrowseGallery
 import androidx.compose.material.icons.filled.Camera
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
-import com.gurkha.hr.components.noRippleClickable
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import coil3.compose.AsyncImage
 import com.gurkha.hr.components.notificationPermission.CAMERA_PERMISSION
 import com.gurkha.hr.components.notificationPermission.GALLERY_PERMISSION
 import com.gurkha.hr.components.notificationPermission.rememberRequestPermission
 import com.gurkha.hr.logger.AppLogger
-import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.dimens
-import com.gurkha.hr.res.theme.primaryTextColor
 import com.gurkha.model.network.DataError
-import org.jetbrains.compose.resources.stringResource
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -40,6 +45,18 @@ fun MediaSelectorModalBottomSheet(
     onDismiss: () -> Unit,
     onImageReceived: (String) -> Unit
 ) {
+    var galleryImages by remember { mutableStateOf<List<String>>(emptyList()) }
+    val loadGallery = rememberGalleryLoader(onLoaded = { galleryImages = it }, onError = {
+        AppLogger.e(
+            tag = tag,
+            message = "Error on gallery launcher",
+            error = DataError.LocalError.Custom(it)
+        )
+    })
+
+    LaunchedEffect(Unit) {
+        loadGallery()
+    }
 
     val openCamera = rememberCameraLauncher(
         onImageCaptured = { uri ->
@@ -57,24 +74,8 @@ fun MediaSelectorModalBottomSheet(
             )
         }
     )
-    val openGallery = rememberGalleryLauncher(
-        onImageSelected = { uri ->
-            onImageReceived(uri)
-            AppLogger.i(
-                tag = tag,
-                message = "Gallery Image received: $uri"
-            )
-        },
-        onError = { e ->
-            AppLogger.e(
-                tag = tag,
-                message = "Error on gallery launcher",
-                error = DataError.LocalError.Custom(e)
-            )
-        }
-    )
 
-    rememberRequestPermission(
+    val onPermission = rememberRequestPermission(
         permissions = listOf(
             CAMERA_PERMISSION,
             GALLERY_PERMISSION
@@ -104,66 +105,61 @@ fun MediaSelectorModalBottomSheet(
             )
         }
     )
-    val sheet = rememberModalBottomSheetState(
-        skipPartiallyExpanded = true,
-        confirmValueChange = { newValue ->
-            newValue != SheetValue.Hidden
-        }
-    )
+
+    LaunchedEffect(Unit) {
+        onPermission()
+    }
 
     ModalBottomSheet(
-        sheetState = sheet,
         modifier = Modifier
-            .fillMaxWidth()
-            .statusBarsPadding(),
+            .fillMaxSize(),
         onDismissRequest = onDismiss,
         containerColor = MaterialTheme.colorScheme.background,
     ) {
 
-        Column(
-            modifier = Modifier.fillMaxWidth().padding(MaterialTheme.dimens.small3),
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2)
-        ) {
+        Column(Modifier.fillMaxWidth().padding(MaterialTheme.dimens.small3)) {
+            Text(
+                "Select a photo",
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(MaterialTheme.dimens.small3)
+            )
 
-            Row(
-                modifier = Modifier.fillMaxWidth().noRippleClickable(onClick = openCamera),
-                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2)
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(3),
+                modifier = Modifier.weight(1f).fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small1),
+                verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small1)
             ) {
+                // Camera preview item
+                item {
+                    Box(
+                        modifier = Modifier
+                            .aspectRatio(9f / 16f)
+                            .background(Color.DarkGray, MaterialTheme.shapes.extraSmall)
+                            .clickable { openCamera() },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Camera,
+                            contentDescription = "camera"
+                        )
+                    }
+                }
 
-                Icon(
-                    modifier = Modifier.size(MaterialTheme.dimens.medium2),
-                    imageVector = Icons.Filled.Camera,
-                    contentDescription = "Camera"
-                )
-
-                Text(
-                    modifier = Modifier.align(Alignment.CenterVertically),
-                    text = stringResource(SharedRes.Strings.camera),
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        color = MaterialTheme.colorScheme.primaryTextColor
-                    ),
-                    textAlign = TextAlign.Center
-                )
-            }
-            Row(
-                modifier = Modifier.fillMaxWidth().noRippleClickable(onClick = openGallery),
-                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2)
-            ) {
-
-                Icon(
-                    modifier = Modifier.size(MaterialTheme.dimens.medium2),
-                    imageVector = Icons.Filled.BrowseGallery,
-                    contentDescription = "gallery"
-                )
-
-                Text(
-                    modifier = Modifier.align(Alignment.CenterVertically),
-                    text = stringResource(SharedRes.Strings.gallery),
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        color = MaterialTheme.colorScheme.primaryTextColor
-                    ),
-                    textAlign = TextAlign.Center
-                )
+                // Gallery items
+                items(galleryImages.size) { index ->
+                    val uri = galleryImages[index]
+                    AsyncImage(
+                        model = uri,
+                        contentDescription = null,
+                        contentScale = ContentScale.FillWidth,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(MaterialTheme.shapes.extraSmall)
+                            .aspectRatio(9f / 16f)
+                            .clickable { onImageReceived(uri) }
+                    )
+                }
             }
         }
 

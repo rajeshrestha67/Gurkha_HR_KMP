@@ -6,6 +6,7 @@ import com.gurkha.hr.domain.userDetail.usecase.FetchUserDetailUseCase
 import com.gurkha.hr.networkhelper.onError
 import com.gurkha.hr.networkhelper.onSuccess
 import com.gurkha.hr.profile.model.profile_screen.ProfileScreenState
+import com.gurkha.hr.profile.profile_screen.model.ProfileScreenAction
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
@@ -27,6 +28,18 @@ class ProfileScreenViewModel(
             initialValue = ProfileScreenState()
         )
 
+    fun onAction(action: ProfileScreenAction) {
+        when (action) {
+            is ProfileScreenAction.OnProfileImageReceived -> {
+                _state.update {
+                    it.copy(
+                        userProfileUrl = action.url
+                    )
+                }
+            }
+        }
+    }
+
     private fun fetchUserDetails() = viewModelScope.launch {
         _state.update {
             it.copy(
@@ -42,7 +55,6 @@ class ProfileScreenViewModel(
                     userProfileUrl = data.userProfileUrl,
                     phoneNumber = data.phoneNumber,
                     initials = data.initials
-
                 )
             }
         }.onError {
