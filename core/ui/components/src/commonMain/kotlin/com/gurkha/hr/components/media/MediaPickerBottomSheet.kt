@@ -4,11 +4,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.icons.Icons
@@ -17,7 +16,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -117,49 +115,42 @@ fun MediaSelectorModalBottomSheet(
         containerColor = MaterialTheme.colorScheme.background,
     ) {
 
-        Column(Modifier.fillMaxWidth().padding(MaterialTheme.dimens.small3)) {
-            Text(
-                "Select a photo",
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(MaterialTheme.dimens.small3)
-            )
-
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(3),
-                modifier = Modifier.weight(1f).fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small1),
-                verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small1)
-            ) {
-                // Camera preview item
-                item {
-                    Box(
-                        modifier = Modifier
-                            .aspectRatio(9f / 16f)
-                            .background(Color.DarkGray, MaterialTheme.shapes.extraSmall)
-                            .clickable { openCamera() },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Camera,
-                            contentDescription = "camera"
-                        )
-                    }
-                }
-
-                // Gallery items
-                items(galleryImages.size) { index ->
-                    val uri = galleryImages[index]
-                    AsyncImage(
-                        model = uri,
-                        contentDescription = null,
-                        contentScale = ContentScale.FillWidth,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(MaterialTheme.shapes.extraSmall)
-                            .aspectRatio(9f / 16f)
-                            .clickable { onImageReceived(uri) }
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(3),
+            modifier = Modifier.weight(1f).fillMaxWidth(),
+            contentPadding = PaddingValues(horizontal = MaterialTheme.dimens.small3),
+            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small1),
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small1)
+        ) {
+            // Camera preview item
+            item {
+                Box(
+                    modifier = Modifier
+                        .aspectRatio(9f / 16f)
+                        .background(Color.DarkGray, MaterialTheme.shapes.extraSmall)
+                        .clickable { openCamera() },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Camera,
+                        contentDescription = "camera"
                     )
                 }
+            }
+
+            // Gallery items
+            items(galleryImages.size) { index ->
+                val uri = galleryImages[index]
+                AsyncImage(
+                    model = uri,
+                    contentDescription = null,
+                    contentScale = ContentScale.FillWidth,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(MaterialTheme.shapes.extraSmall)
+                        .aspectRatio(9f / 16f)
+                        .clickable { onImageReceived(uri) }
+                )
             }
         }
 

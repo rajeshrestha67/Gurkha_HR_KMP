@@ -21,9 +21,7 @@ sealed interface DataError : ERPError {
         data object NoData : LocalError
         data object DiskFull : LocalError
         data object UnKnown : LocalError
-        data class Custom(val throwable: Throwable) : LocalError {
-            constructor(exception: Exception) : this(exception as Throwable)
-        }
+        data class Custom(val throwable: Throwable) : LocalError
     }
 }
 
@@ -66,6 +64,6 @@ fun DataError.toException(): Exception {
         DataError.LocalError.DiskFull -> Exception("Disk full")
         DataError.LocalError.NoData -> Exception("No data")
         DataError.LocalError.UnKnown -> Exception("Unknown local error")
-        is DataError.LocalError.Custom -> this.throwable as Exception
+        is DataError.LocalError.Custom -> Exception(throwable.message)
     }
 }
