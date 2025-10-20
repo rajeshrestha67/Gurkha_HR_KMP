@@ -48,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.ProfilePicture
+import com.gurkha.hr.components.media.MediaSelectorModalBottomSheet
 import com.gurkha.hr.profile.model.profile_screen.AccountList
 import com.gurkha.hr.profile.model.profile_screen.GeneralList
 import com.gurkha.hr.res.SharedRes
@@ -62,6 +63,8 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
+private const val TAG = "ProfileScreen"
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -72,6 +75,8 @@ fun ProfileScreen(
 ) {
     val viewModel: ProfileScreenViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    var showMediaBottomSheet by remember { mutableStateOf(false) }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -95,7 +100,11 @@ fun ProfileScreen(
                             background = MaterialTheme.colorScheme.imageBackgroundColor,
                             borderWidth = 0.5.dp,
                             borderColor = MaterialTheme.colorScheme.borderColor,
-                            ratio = 1f
+                            ratio = 1f,
+                            onClick = {
+                                println("called")
+                                showMediaBottomSheet = true
+                            }
                         )
                         Column(
                             modifier = Modifier
@@ -137,6 +146,17 @@ fun ProfileScreen(
             onGeneralClick = onGeneralClick
         )
 
+    }
+    if (showMediaBottomSheet) {
+        MediaSelectorModalBottomSheet(
+            tag = TAG,
+            onDismiss = {
+                showMediaBottomSheet = false
+            },
+            onImageReceived = {
+                
+            }
+        )
     }
 }
 

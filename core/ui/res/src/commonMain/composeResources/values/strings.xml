@@ -225,6 +225,9 @@
     <string name="present">Present</string>
     <string name="absent">Absent</string>
 
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
+
     <string name="check_in">Check In</string>
     <string name="check_out">Check Out</string>
     <string name="on_time">On Time</string>

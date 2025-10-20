@@ -73,6 +73,7 @@ kotlin {
                 implementation(projects.core.ui.res)
                 implementation(projects.core.ui.date)
                 implementation(projects.core.model)
+                implementation(projects.core.logger)
 
                 implementation(libs.koin.core)
                 implementation(libs.koin.compose)

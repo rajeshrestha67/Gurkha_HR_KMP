@@ -21,6 +21,7 @@ sealed interface DataError : ERPError {
         data object NoData : LocalError
         data object DiskFull : LocalError
         data object UnKnown : LocalError
+        data class Custom(val throwable: Throwable) : LocalError
     }
 }
 
@@ -41,6 +42,10 @@ fun DataError.toErrorMessage(): String {
         is DataError.NetworkError.Custom -> {
             this.message
         }
+
+        is DataError.LocalError.Custom -> {
+            this.throwable.message ?: "Something went wrong!"
+        }
     }
 }
 
@@ -59,5 +64,6 @@ fun DataError.toException(): Exception {
         DataError.LocalError.DiskFull -> Exception("Disk full")
         DataError.LocalError.NoData -> Exception("No data")
         DataError.LocalError.UnKnown -> Exception("Unknown local error")
+        is DataError.LocalError.Custom -> Exception(this.throwable.message)
     }
 }

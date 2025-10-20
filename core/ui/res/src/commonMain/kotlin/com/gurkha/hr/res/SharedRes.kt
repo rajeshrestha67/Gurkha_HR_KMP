@@ -30,6 +30,7 @@ import gurkhahr.core.ui.res.generated.resources.attendance_request_form
 import gurkhahr.core.ui.res.generated.resources.attendance_summary
 import gurkhahr.core.ui.res.generated.resources.bachelor
 import gurkhahr.core.ui.res.generated.resources.bs
+import gurkhahr.core.ui.res.generated.resources.camera
 import gurkhahr.core.ui.res.generated.resources.cancel
 import gurkhahr.core.ui.res.generated.resources.cancelled
 import gurkhahr.core.ui.res.generated.resources.change_password
@@ -72,6 +73,7 @@ import gurkhahr.core.ui.res.generated.resources.experience_document
 import gurkhahr.core.ui.res.generated.resources.faq
 import gurkhahr.core.ui.res.generated.resources.from_date
 import gurkhahr.core.ui.res.generated.resources.full_day
+import gurkhahr.core.ui.res.generated.resources.gallery
 import gurkhahr.core.ui.res.generated.resources.gender
 import gurkhahr.core.ui.res.generated.resources.general
 import gurkhahr.core.ui.res.generated.resources.getStarted
@@ -464,5 +466,7 @@ object SharedRes {
         val swipeToCheckIn = Res.string.swipe_to_check_in
         val swipeToCheckOut = Res.string.swipe_to_check_out
 
+        val camera = Res.string.camera
+        val gallery = Res.string.gallery
     }
 }

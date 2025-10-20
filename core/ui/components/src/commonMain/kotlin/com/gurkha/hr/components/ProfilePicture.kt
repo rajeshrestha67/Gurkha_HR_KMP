@@ -37,7 +37,8 @@ fun ProfilePicture(
     background: Color,
     borderWidth: Dp,
     borderColor: Color,
-    ratio: Float
+    ratio: Float,
+    onClick: () -> Unit = {}
 ) {
 
     val context = LocalPlatformContext.current
@@ -61,7 +62,8 @@ fun ProfilePicture(
         }
     }
     AnimatedContent(
-        modifier = Modifier.size(size = size),
+        modifier = Modifier.size(size = size)
+            .noRippleClickable(onClick),
         targetState = imageState,
         label = "ProfilePicture"
     ) { state ->
