@@ -1,6 +1,5 @@
 package com.gurkha.hr.components
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -9,6 +8,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -52,7 +52,7 @@ fun ProfilePicture(
         model = imageRequest
     )
 
-    val currentState = painter.state.collectAsStateWithLifecycle().value
+    val currentState by painter.state.collectAsStateWithLifecycle()
     val imageState = remember(currentState) {
         when (currentState) {
             is AsyncImagePainter.State.Loading -> ImageState.Loading
@@ -61,13 +61,12 @@ fun ProfilePicture(
             else -> ImageState.Loading
         }
     }
-    AnimatedContent(
-        modifier = Modifier.size(size = size)
-            .noRippleClickable(onClick),
-        targetState = imageState,
-        label = "ProfilePicture"
-    ) { state ->
-        when (state) {
+    Box(
+        Modifier.size(size = size)
+            .noRippleClickable(onClick)
+    ) {
+
+        when (imageState) {
             is ImageState.Loading -> {
                 ShimmerView(
                     modifier = Modifier.size(size = size).clip(shape)
@@ -103,6 +102,50 @@ fun ProfilePicture(
             }
         }
     }
+//    AnimatedContent(
+//        modifier = Modifier.size(size = size)
+//            .noRippleClickable(onClick),
+//        targetState = imageUrl,
+//        label = "ProfilePicture"
+//    ) { state ->
+
+
+//        when (state) {
+//            is ImageState.Loading -> {
+//                ShimmerView(
+//                    modifier = Modifier.size(size = size).clip(shape)
+//                )
+//            }
+//
+//            is ImageState.Error -> {
+//                ProfilePictureInitialsText(
+//                    nameInitials = nameInitials,
+//                    size = size,
+//                    background = background,
+//                    shape = shape,
+//                    borderWidth = borderWidth,
+//                    borderColor = borderColor
+//                )
+//            }
+//
+//            is ImageState.Success -> {
+//                AsyncImage(
+//                    modifier = Modifier
+//                        .size(size = size)
+//                        .border(
+//                            width = borderWidth,
+//                            color = borderColor,
+//                            shape = shape
+//                        )
+//                        .aspectRatio(ratio = ratio)
+//                        .clip(shape = shape),
+//                    model = imageRequest,
+//                    contentDescription = employeeName,
+//                    contentScale = ContentScale.Crop
+//                )
+//            }
+//        }
+    //}
 }
 
 @Composable

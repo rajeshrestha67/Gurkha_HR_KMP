@@ -15,14 +15,16 @@ class KtorImageUploadRepository(
 ) : ImageUploadRepository {
     override suspend fun uploadImage(
         filePath: String,
-        imageName: String
+        imageName: String,
+        onProgress: (Int) -> Unit
     ): ERPResult<UploadImageResponseDto, DataError> {
         val bytes = getFileBytes(filePath)
         return safeCall {
             httpClient.uploadImage(
                 endPoint = EndPoint.IMAGE_UPLOAD_END_POINT,
                 fileName = imageName,
-                fileBytes = bytes
+                fileBytes = bytes,
+                onProgress = onProgress
             )
         }
     }

@@ -7,6 +7,7 @@ import com.gurkha.model.uploadImage.UploadImageResponseDto
 interface ImageUploadRepository {
     suspend fun uploadImage(
         filePath: String,
-        imageName: String
+        imageName: String,
+        onProgress: (Int) -> Unit
     ): ERPResult<UploadImageResponseDto, DataError>
 }

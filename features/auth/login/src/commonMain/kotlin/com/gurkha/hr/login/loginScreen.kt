@@ -32,10 +32,10 @@ import coil3.compose.AsyncImage
 import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.PlatformMessage
 import com.gurkha.hr.components.hideKeyboardOnTap
-import com.gurkha.hr.components.notificationPermission.CAMERA_PERMISSION
-import com.gurkha.hr.components.notificationPermission.GALLERY_PERMISSION
-import com.gurkha.hr.components.notificationPermission.POST_NOTIFICATIONS_PERMISSION
-import com.gurkha.hr.components.notificationPermission.rememberRequestPermission
+import com.gurkha.hr.components.permissions.CAMERA_PERMISSION
+import com.gurkha.hr.components.permissions.GALLERY_PERMISSION
+import com.gurkha.hr.components.permissions.POST_NOTIFICATIONS_PERMISSION
+import com.gurkha.hr.components.permissions.rememberRequestPermission
 import com.gurkha.hr.components.textField.AGEmailTextField
 import com.gurkha.hr.components.textField.FormValidate
 import com.gurkha.hr.components.textField.PasswordTextField

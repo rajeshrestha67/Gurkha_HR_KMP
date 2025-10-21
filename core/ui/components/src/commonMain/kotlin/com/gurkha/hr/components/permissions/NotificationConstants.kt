@@ -1,4 +1,4 @@
-package com.gurkha.hr.components.notificationPermission
+package com.gurkha.hr.components.permissions
 
 expect val POST_NOTIFICATIONS_PERMISSION: String
 

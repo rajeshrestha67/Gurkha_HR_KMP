@@ -29,8 +29,8 @@ import androidx.navigation.compose.rememberNavController
 import com.gurkha.hr.components.AnimatedNavHost
 import com.gurkha.hr.components.PlatformMessage
 import com.gurkha.hr.components.navigationBar.ERPNavigationBar
-import com.gurkha.hr.components.notificationPermission.POST_NOTIFICATIONS_PERMISSION
-import com.gurkha.hr.components.notificationPermission.rememberRequestPermission
+import com.gurkha.hr.components.permissions.POST_NOTIFICATIONS_PERMISSION
+import com.gurkha.hr.components.permissions.rememberRequestPermission
 import com.gurkha.hr.dashboard.graph.attendanceScreenBuilder
 import com.gurkha.hr.dashboard.graph.chatScreenBuilder
 import com.gurkha.hr.dashboard.graph.homeScreenBuilder

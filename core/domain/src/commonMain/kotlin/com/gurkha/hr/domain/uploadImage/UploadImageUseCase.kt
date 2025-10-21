@@ -11,9 +11,14 @@ class UploadImageUseCase(
 
     suspend operator fun invoke(
         filePath: String,
-        imageName: String
+        imageName: String,
+        onProgress: (Int) -> Unit
     ): ERPResult<UploadImageData, DataError> {
-        return imageUploadRepository.uploadImage(filePath = filePath, imageName = imageName).map {
+        return imageUploadRepository.uploadImage(
+            filePath = filePath,
+            imageName = imageName,
+            onProgress = onProgress
+        ).map {
             UploadImageData(
                 a = it.message
             )

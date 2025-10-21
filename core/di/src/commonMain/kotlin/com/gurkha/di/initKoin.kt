@@ -32,7 +32,8 @@ fun initKoin(config: KoinAppDeclaration? = null) {
             HistoryModule().module,
             ReportScreenModule().module,
             NoteScreenModule().module,
-            UploadImageModule().module
+            UploadImageModule().module,
+            NotificationModule().module
         )
     }
 }

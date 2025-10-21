@@ -2,24 +2,29 @@ package com.gurkha.hr.profile.profile_screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gurkha.hr.components.permissions.ProgressNotification
 import com.gurkha.hr.domain.uploadImage.UploadImageUseCase
 import com.gurkha.hr.domain.userDetail.usecase.FetchUserDetailUseCase
 import com.gurkha.hr.networkhelper.onError
 import com.gurkha.hr.networkhelper.onSuccess
 import com.gurkha.hr.profile.model.profile_screen.ProfileScreenState
 import com.gurkha.hr.profile.profile_screen.model.ProfileScreenAction
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ProfileScreenViewModel(
     private val userDetailUseCase: FetchUserDetailUseCase,
     private val uploadImageUseCase: UploadImageUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(ProfileScreenState())
+    private val notification = ProgressNotification()
+    
     val state = _state
         .onStart {
             fetchUserDetails()
@@ -33,6 +38,8 @@ class ProfileScreenViewModel(
     fun onAction(action: ProfileScreenAction) {
         when (action) {
             is ProfileScreenAction.OnProfileImageReceived -> {
+
+
                 uploadImage(
                     uri = action.url
                 )
@@ -46,7 +53,20 @@ class ProfileScreenViewModel(
                 userProfileUrl = uri
             )
         }
-        uploadImageUseCase(uri, "image.jpg")
+        notification.preloadImage(uri)
+        uploadImageUseCase(
+            filePath = uri,
+            imageName = "image.jpg",
+            onProgress = { progress ->
+                viewModelScope.launch {
+                    withContext(Dispatchers.Main.immediate) {
+                        notification.showNotification(
+                            progress = progress
+                        )
+                    }
+                }
+            }
+        )
     }
 
     private fun fetchUserDetails() = viewModelScope.launch {

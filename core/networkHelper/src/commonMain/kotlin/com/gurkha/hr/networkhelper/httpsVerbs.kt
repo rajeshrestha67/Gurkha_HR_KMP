@@ -2,6 +2,7 @@ package com.gurkha.hr.networkhelper
 
 import com.gurkha.hr.datastore.token.repository.TokenRepository
 import io.ktor.client.HttpClient
+import io.ktor.client.plugins.onUpload
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.delete
 import io.ktor.client.request.forms.MultiPartFormDataContent
@@ -56,7 +57,8 @@ suspend inline fun HttpClient.uploadImage(
     fileName: String,
     fileBytes: ByteArray,
     contentType: ContentType = ContentType.Image.JPEG,
-    crossinline block: HttpRequestBuilder.() -> Unit = {}
+    crossinline block: HttpRequestBuilder.() -> Unit = {},
+    crossinline onProgress: (Int) -> Unit
 ): HttpResponse {
     return post(
         baseUrl = baseUrl,
@@ -72,6 +74,10 @@ suspend inline fun HttpClient.uploadImage(
                 }
             )
         )
+        onUpload { written, total ->
+            val progress = (written * 100) / (total ?: 0L)
+            onProgress(progress.toInt())
+        }
         block()
     }
 }

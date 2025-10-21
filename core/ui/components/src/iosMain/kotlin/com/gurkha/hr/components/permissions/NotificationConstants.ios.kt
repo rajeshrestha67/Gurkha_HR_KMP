@@ -1,4 +1,4 @@
-package com.gurkha.hr.components.notificationPermission
+package com.gurkha.hr.components.permissions
 
 actual val POST_NOTIFICATIONS_PERMISSION: String
     get() = "ios.permission.NOTIFICATION"

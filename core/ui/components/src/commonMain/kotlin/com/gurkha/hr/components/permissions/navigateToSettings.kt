@@ -1,4 +1,4 @@
-package com.gurkha.hr.components.notificationPermission
+package com.gurkha.hr.components.permissions
 
 import androidx.compose.runtime.Composable
 
