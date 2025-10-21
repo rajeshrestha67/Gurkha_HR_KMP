@@ -4,17 +4,9 @@ import com.gurkha.hr.logger.AppLogger
 import com.gurkha.model.chat.Content
 import com.piasy.kmp.socketio.socketio.IO
 import com.piasy.kmp.socketio.socketio.Socket
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
@@ -22,20 +14,19 @@ import kotlinx.serialization.json.put
 
 class SocketManager {
     var socket: Socket? = null
-    private val _onConnect = MutableSharedFlow<Unit>(replay = 1)
-    val onConnect: SharedFlow<Unit> = _onConnect
 
-    private val _onContent = MutableSharedFlow<Content>()
-    val onContent: SharedFlow<Content> = _onContent
+    private val _onContent = MutableStateFlow<Content?>(null)
+    val onContent: StateFlow<Content?> = _onContent
 
-    private val _onTyping = MutableSharedFlow<Unit>()
-    val onTyping: SharedFlow<Unit> = _onTyping
-    private val _onTypingStop = MutableSharedFlow<Unit>()
-    val onTypingStop: SharedFlow<Unit> = _onTypingStop
+    private val _onTyping = MutableStateFlow(false)
+    val onTyping: StateFlow<Boolean> = _onTyping
+
+    //    private val _onTypingStop = MutableStateFlow(Unit)
+//    val onTypingStop: StateFlow<Unit> = _onTypingStop
     private val _isConnected = MutableStateFlow(false)
     val isConnected: StateFlow<Boolean> = _isConnected
 
-    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    //private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     fun connect(username: String, chatId: String, socketPrefix: String) {
         if (isConnected.value) {
             return
@@ -59,9 +50,9 @@ class SocketManager {
                 _isConnected.update {
                     true
                 }
-                scope.launch {
-                    _onConnect.emit(Unit)
-                }
+//                CoroutineScope(Dispatchers.IO).launch {
+//                    _onConnect.emit(Unit)
+//                }
             }
             socket.on(Socket.EVENT_DISCONNECT) {
                 AppLogger.i(TAG, "socket disconnected")
@@ -84,24 +75,34 @@ class SocketManager {
                         val json = Json { ignoreUnknownKeys = true }
                         val content = json.decodeFromString<Content>(string = arg.toString())
                         AppLogger.i(TAG, "socket new message $arg")
-                        scope.launch {
-                            _onContent.emit(content)
+                        _onContent.update {
+                            content
                         }
+//                        CoroutineScope(Dispatchers.IO).launch {
+//                            AppLogger.i(TAG, "socket new message1 $arg")
+//                            _onContent.emit(content)
+//                        }
                     }
                 }
             }
             socket.on("$TYPING:$chatId") {
                 AppLogger.i(TAG, "socket typing")
-                scope.launch {
-                    _onTyping.emit(Unit)
+//                CoroutineScope(Dispatchers.IO).launch {
+//                    _onTyping.emit(Unit)
+//                }
+                _onTyping.update {
+                    true
                 }
 
             }
 
             socket.on("$STOP_TYPING:$chatId") {
                 AppLogger.i(TAG, "socket stop typing")
-                scope.launch {
-                    _onTypingStop.emit(Unit)
+//                CoroutineScope(Dispatchers.IO).launch {
+//                    _onTypingStop.emit(Unit)
+//                }
+                _onTyping.update {
+                    false
                 }
             }
             socket.open()
@@ -148,7 +149,7 @@ class SocketManager {
     fun disconnect() {
         AppLogger.i(TAG, "socket closed")
         socket?.close()
-        scope.cancel()
+//        scope.cancel()
         socket = null
     }
 

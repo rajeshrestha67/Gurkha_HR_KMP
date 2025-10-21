@@ -49,31 +49,8 @@ class ChatRoomViewModel(
 
     init {
         viewModelScope.launch {
-            observeSocketEventsUseCase.onTyping.collect {
-                _state.update {
-                    it.copy(
-                        isTyping = true
-                    )
-                }
-            }
-            observeSocketEventsUseCase.onTypingStop.collect {
-                _state.update {
-                    it.copy(
-                        isTyping = false
-                    )
-                }
-            }
-            observeSocketEventsUseCase.onContent.collect { content ->
-                val chatMessage = createChatMessage(
-                    fromMe = false,
-                    message = content.content
-                )
-                _state.update {
-                    it.copy(
-                        messages = state.value.messages.addMessage(chatMessage)
-                    )
-                }
-            }
+
+
         }
     }
 
@@ -147,20 +124,22 @@ class ChatRoomViewModel(
 
     }
 
-    private fun createChatMessage(fromMe: Boolean, message: String): ChatMessage {
-        val nowPair = getCurrentDataAndTime()
-        return ChatMessage(
-            message = message,
-            date = nowPair.first,
-            time = nowPair.second,
-            fromMe = fromMe
-        )
-
+    private fun createChatMessage(fromMe: Boolean, message: String?): ChatMessage? {
+        return message?.let {
+            val nowPair = getCurrentDataAndTime()
+            ChatMessage(
+                message = message,
+                date = nowPair.first,
+                time = nowPair.second,
+                fromMe = fromMe
+            )
+        }
     }
 
     private fun LinkedHashMap<String, List<ChatMessage>>.addMessage(
-        chatMessage: ChatMessage
+        chatMessage: ChatMessage?
     ): LinkedHashMap<String, List<ChatMessage>> {
+        if (chatMessage == null) return this
         val dateKey = chatMessage.date
         return LinkedHashMap(this).apply {
             this[dateKey] = (this[dateKey] ?: emptyList()) + chatMessage
@@ -170,18 +149,54 @@ class ChatRoomViewModel(
     /*
     private fun LinkedHashMap<String, List<ChatMessage>>.addMessage(chatMessage: ChatMessage): LinkedHashMap<String, List<ChatMessage>> { val dateKey = chatMessage.date return LinkedHashMap(this).apply { this[dateKey] = listOf(chatMessage) + (this[dateKey] ?: emptyList()) } }
      */
-    private fun initSocket(chatUserData: ChatUserData) = viewModelScope.launch {
-        connectSocketUseCase(
-            chatId = chatUserData.chatId,
-            socketPrefix = "mbank"
-        )
-
-        observeSocketEventsUseCase.isConnected.collect {
-            if (it) {
-                joinRoomUseCase(
-                    chatId = chatUserData.chatId,
-                    initiatorId = "app_mbank"
+    private fun initSocket(chatUserData: ChatUserData) {
+        viewModelScope.launch {
+            connectSocketUseCase(
+                chatId = chatUserData.chatId,
+                socketPrefix = "mbank"
+            )
+        }
+        viewModelScope.launch {
+            observeSocketEventsUseCase.isConnected.collect {
+                if (it) {
+                    joinRoomUseCase(
+                        chatId = chatUserData.chatId,
+                        initiatorId = "app_mbank"
+                    )
+                }
+            }
+        }
+        viewModelScope.launch {
+            observeSocketEventsUseCase.onTyping.collect { typing ->
+                println("ChatRoomViewModel typing $typing")
+                _state.update {
+                    it.copy(
+                        isTyping = typing
+                    )
+                }
+            }
+        }
+        viewModelScope.launch {
+//            observeSocketEventsUseCase.onTypingStop.collect {
+//                println("ChatRoomViewModel typing stop")
+//                _state.update {
+//                    it.copy(
+//                        isTyping = false
+//                    )
+//                }
+//            }
+        }
+        viewModelScope.launch {
+            observeSocketEventsUseCase.onContent.collect { content ->
+                val chatMessage = createChatMessage(
+                    fromMe = false,
+                    message = content?.content
                 )
+                _state.update {
+                    it.copy(
+                        messages = state.value.messages.addMessage(chatMessage)
+                    )
+                }
             }
         }
     }

@@ -11,7 +11,6 @@ import kotlin.time.ExperimentalTime
 data class ChatRoomScreenState(
     val isLoading: Boolean = false,
     val isTyping: Boolean = false,
-    val isUserTyping: Boolean = false,
     val chatUserData: ChatUserData? = null,
     val message: String = "",
     val messages: LinkedHashMap<String, List<ChatMessage>> = LinkedHashMap(),

@@ -6,10 +6,9 @@ import com.gurkha.hr.network.SocketManager
 class IOChatSocketRepository(
     private val socketManager: SocketManager
 ) : ChatSocketRepository {
-    override val onConnect = socketManager.onConnect
+
     override val onContent = socketManager.onContent
     override val onTyping = socketManager.onTyping
-    override val onTypingStop = socketManager.onTypingStop
     override val isConnected = socketManager.isConnected
 
     override suspend fun connect(username: String, chatId: String, socketPrefix: String) =
