@@ -4,11 +4,16 @@ import com.gurkha.hr.datastore.token.repository.TokenRepository
 import io.ktor.client.HttpClient
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.delete
+import io.ktor.client.request.forms.MultiPartFormDataContent
+import io.ktor.client.request.forms.formData
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.post
+import io.ktor.client.request.setBody
 import io.ktor.client.request.url
 import io.ktor.client.statement.HttpResponse
+import io.ktor.http.ContentType
+import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpMessageBuilder
 import kotlinx.coroutines.flow.firstOrNull
@@ -43,6 +48,32 @@ suspend inline fun HttpClient.delete(
         baseUrl = baseUrl,
         endPoint = endPoint, block = block
     )
+}
+
+suspend inline fun HttpClient.uploadImage(
+    baseUrl: BaseUrl = BaseUrl.Generic,
+    endPoint: String,
+    fileName: String,
+    fileBytes: ByteArray,
+    contentType: ContentType = ContentType.Image.JPEG,
+    crossinline block: HttpRequestBuilder.() -> Unit = {}
+): HttpResponse {
+    return post(
+        baseUrl = baseUrl,
+        endPoint = endPoint
+    ) {
+        setBody(
+            MultiPartFormDataContent(
+                formData {
+                    append("files", fileBytes, Headers.build {
+                        append(HttpHeaders.ContentType, contentType.toString())
+                        append(HttpHeaders.ContentDisposition, "filename=\"$fileName\"")
+                    })
+                }
+            )
+        )
+        block()
+    }
 }
 
 suspend inline fun HttpRequestBuilder.appendLocalAttributes(

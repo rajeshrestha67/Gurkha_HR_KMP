@@ -26,5 +26,6 @@ object EndPoint {
     const val UPDATE_NOTE_END_POINT = "api/note/update"
     const val DELETE_NOTE_END_POINT = "api/note/delete"
     const val REPORT_END_POINT = "api/attendance/employee/summary"
+    const val IMAGE_UPLOAD_END_POINT = "api/file-upload/image"
 
 }

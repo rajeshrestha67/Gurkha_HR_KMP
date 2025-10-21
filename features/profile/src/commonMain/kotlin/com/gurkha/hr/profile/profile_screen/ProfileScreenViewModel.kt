@@ -2,6 +2,7 @@ package com.gurkha.hr.profile.profile_screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gurkha.hr.domain.uploadImage.UploadImageUseCase
 import com.gurkha.hr.domain.userDetail.usecase.FetchUserDetailUseCase
 import com.gurkha.hr.networkhelper.onError
 import com.gurkha.hr.networkhelper.onSuccess
@@ -15,7 +16,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ProfileScreenViewModel(
-    private val userDetailUseCase: FetchUserDetailUseCase
+    private val userDetailUseCase: FetchUserDetailUseCase,
+    private val uploadImageUseCase: UploadImageUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(ProfileScreenState())
     val state = _state
@@ -31,13 +33,20 @@ class ProfileScreenViewModel(
     fun onAction(action: ProfileScreenAction) {
         when (action) {
             is ProfileScreenAction.OnProfileImageReceived -> {
-                _state.update {
-                    it.copy(
-                        userProfileUrl = action.url
-                    )
-                }
+                uploadImage(
+                    uri = action.url
+                )
             }
         }
+    }
+
+    private fun uploadImage(uri: String) = viewModelScope.launch {
+        _state.update {
+            it.copy(
+                userProfileUrl = uri
+            )
+        }
+        uploadImageUseCase(uri, "image.jpg")
     }
 
     private fun fetchUserDetails() = viewModelScope.launch {

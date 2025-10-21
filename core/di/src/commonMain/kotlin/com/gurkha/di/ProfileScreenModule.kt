@@ -4,6 +4,7 @@ import com.gurkha.hr.data.userDetail.KtorUserDetailRemoteRepository
 import com.gurkha.hr.datastore.user_data.local.UserDataDataStore
 import com.gurkha.hr.datastore.user_data.repository.LocalUserDataRepository
 import com.gurkha.hr.datastore.user_data.repository.UserDataRepository
+import com.gurkha.hr.domain.uploadImage.UploadImageUseCase
 import com.gurkha.hr.domain.userDetail.repository.UserDetailRemoteRepository
 import com.gurkha.hr.domain.userDetail.usecase.FetchUserDetailUseCase
 import com.gurkha.hr.profile.profile_screen.ProfileScreenViewModel
@@ -39,8 +40,10 @@ class ProfileScreenModule {
 
     @KoinViewModel
     fun getProfileScreenViewModel(
-        userDetailUseCase: FetchUserDetailUseCase
+        userDetailUseCase: FetchUserDetailUseCase,
+        uploadImageUseCase: UploadImageUseCase
     ): ProfileScreenViewModel = ProfileScreenViewModel(
-        userDetailUseCase = userDetailUseCase
+        userDetailUseCase = userDetailUseCase,
+        uploadImageUseCase = uploadImageUseCase
     )
 }
