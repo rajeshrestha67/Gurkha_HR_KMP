@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyCNjMDPLRzf18qYw29fppgVPiOujTvG8fc</string>
+	<key>GCM_SENDER_ID</key>
+	<string>820563193977</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.gurkha.hr.gurkhahr</string>
+	<key>PROJECT_ID</key>
+	<string>gurkha-hr</string>
+	<key>STORAGE_BUCKET</key>
+	<string>gurkha-hr.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:820563193977:ios:68b70a4f3496821c70e4a8</string>
+</dict>
+</plist>

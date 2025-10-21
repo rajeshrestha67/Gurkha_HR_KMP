@@ -4,6 +4,12 @@
 <dict>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+		<string>fetch</string>
+		<string>processing</string>
+	</array>
 	<key>UILaunchScreen</key>
 	<dict>
 		<key>UIColorName</key>
@@ -11,10 +17,5 @@
 		<key>UIImageName</key>
 		<string>gurkha_hr</string>
 	</dict>
-   
-   <key>NSCameraUsageDescription</key>
-   <string>We need to access your camera for scanning QR code</string>
-   <key>NSPhotoLibraryUsageDescription</key>
-   <string>We need to add images to photo library inorder to save statements, receipts.</string>
 </dict>
 </plist>
