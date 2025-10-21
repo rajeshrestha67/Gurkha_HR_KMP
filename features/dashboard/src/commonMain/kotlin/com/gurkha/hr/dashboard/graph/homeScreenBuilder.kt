@@ -11,6 +11,7 @@ import com.gurkha.hr.dashboard.route.DashboardRoute
 import com.gurkha.hr.dashboard.route.HomeRoute
 import com.gurkha.hr.home.HomeScreen
 import com.gurkha.hr.notification.Notification
+import com.gurkha.hr.viewAllScreen.ViewAllScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 fun NavGraphBuilder.homeScreenBuilder(
@@ -24,7 +25,6 @@ fun NavGraphBuilder.homeScreenBuilder(
             topAppBarScrollBehavior = topAppBarScrollBehavior,
             onChatClick = {
                 navController.navigate(ChatRoute.ChatList)
-                
             },
             onViewAllClick = onViewAllClick,
             onNotificationClick={
@@ -33,15 +33,15 @@ fun NavGraphBuilder.homeScreenBuilder(
         )
     }
 
-//    composable<HomeRoute.ViewAllRoute>{
-//        val json : String? = it.toRoute<HomeRoute.ViewAllRoute>().json
-//        Notification(
-//            json = json,
-//            onBackClicked = {
-//                navController.popBackStack()
-//            }
-//        )
-//    }
+    composable<HomeRoute.ViewAllRoute>{
+        val json : String? = it.toRoute<HomeRoute.ViewAllRoute>().json
+        ViewAllScreen(
+            json = json,
+            onBackClicked = {
+                navController.popBackStack()
+            }
+        )
+    }
 
         composable<HomeRoute.NotificationRoute>{
         Notification(

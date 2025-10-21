@@ -6,6 +6,9 @@ import com.gurkha.hr.data.upComingBirthday.KtorUpComingBirthdayRemoteRepository
 import com.gurkha.hr.data.upComingEvent.KtorEventRemoteRepository
 import com.gurkha.hr.data.upComingWorkAnniversary.KtorUpComingWorkAnniversaryRemoteRepository
 import com.gurkha.hr.data.userDetail.KtorUserDetailRemoteRepository
+import com.gurkha.hr.datastore.notificationCount.local.NotificationCountDataStore
+import com.gurkha.hr.datastore.notificationCount.repository.LocalNotificationCountDataRepository
+import com.gurkha.hr.datastore.notificationCount.repository.NotificationCountDataRepository
 import com.gurkha.hr.datastore.user_data.local.UserDataDataStore
 import com.gurkha.hr.datastore.user_data.repository.LocalUserDataRepository
 import com.gurkha.hr.datastore.user_data.repository.UserDataRepository
@@ -57,19 +60,30 @@ class HomeScreenModule {
     fun notificationRemoteRepository(httpClient: HttpClient) =
         KtorNotificationRemoteRepository(httpClient)
 
+
     @Factory
     fun notificationUseCase(
-        notificationRemoteRepository: NotificationRemoteRepository
+        notificationRemoteRepository: NotificationRemoteRepository,
     ): NotificationUseCase = NotificationUseCase(
-        notificationRemoteRepository = notificationRemoteRepository
+        notificationRemoteRepository = notificationRemoteRepository,
     )
+
+    @Factory(binds = [UserDataRepository::class])
+    fun notificationCountDataRepository(
+        notificationCountDataStore: NotificationCountDataStore
+    ): NotificationCountDataRepository =
+        LocalNotificationCountDataRepository(
+            notificationCountDataStore = notificationCountDataStore
+        )
 
 
     @Factory
     fun notificationCountUseCase(
-        notificationRemoteRepository: NotificationRemoteRepository
+        notificationRemoteRepository: NotificationRemoteRepository,
+        notificationCountDataRepository:NotificationCountDataRepository
     ): NotificationCountUseCase = NotificationCountUseCase(
-        notificationRemoteRepository = notificationRemoteRepository
+        notificationRemoteRepository = notificationRemoteRepository,
+        notificationCountDataRepository = notificationCountDataRepository
     )
 
     @Factory(binds = [UserDataRepository::class])
@@ -86,7 +100,8 @@ class HomeScreenModule {
         AttendanceUseCase(attendanceRemoteRepository)
 
     @Factory
-    fun eventUseCase(eventRemoteRepository: EventRemoteRepository): EventUseCase= EventUseCase(eventRemoteRepository = eventRemoteRepository)
+    fun eventUseCase(eventRemoteRepository: EventRemoteRepository): EventUseCase =
+        EventUseCase(eventRemoteRepository = eventRemoteRepository)
 
     @Factory
     fun fetchUserDetailUseCase(
@@ -113,6 +128,7 @@ class HomeScreenModule {
         upComingWorkAnniversaryUseCase: UpComingWorkAnniversaryUseCase,
         calendarModel: CalendarModel,
         eventUseCase: EventUseCase,
+        notificationUseCase: NotificationUseCase,
         notificationCountUseCase: NotificationCountUseCase
     ): HomeScreenViewModel = HomeScreenViewModel(
         attendanceUseCase = attendanceUseCase,
@@ -121,7 +137,8 @@ class HomeScreenModule {
         upComingWorkAnniversaryUseCase = upComingWorkAnniversaryUseCase,
         calendarModel = calendarModel,
         eventUseCase = eventUseCase,
-        notificationCountUseCase = notificationCountUseCase
+        notificationCountUseCase = notificationCountUseCase,
+        notificationUseCase = notificationUseCase
     )
 }
 

@@ -195,7 +195,6 @@ fun DashboardScreenContent(
                 onViewAllClick={ eventsJson->
                     eventsJson?.let {
                         navController.navigate(HomeRoute.ViewAllRoute(json = eventsJson))
-
                     }
                 }
             )

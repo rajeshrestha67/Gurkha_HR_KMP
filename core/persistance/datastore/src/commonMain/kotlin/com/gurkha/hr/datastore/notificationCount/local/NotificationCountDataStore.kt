@@ -2,8 +2,7 @@ package com.gurkha.hr.datastore.notificationCount.local
 
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.okio.OkioStorage
-import com.gurkha.hr.datastore.notificationCount.model.NotificationCountData
-import com.gurkha.hr.datastore.user_data.local.UserDataJsonSerializer
+import com.gurkha.hr.datastore.notificationCount.model.NotificationTotalCountData
 import kotlinx.coroutines.flow.Flow
 import okio.FileSystem
 import okio.Path.Companion.toPath
@@ -23,12 +22,12 @@ class NotificationCountDataStore(
     )
 
     //get notification count
-    val notificationFlow: Flow<NotificationCountData>
+    val notificationFlow: Flow<NotificationTotalCountData>
         get() = db.data
 
-    suspend fun update(notificationCount: NotificationCountData) {
+    suspend fun update(notificationTotalCountData: NotificationTotalCountData) {
         db.updateData { _ ->
-            notificationCount
+            notificationTotalCountData
         }
     }
 }

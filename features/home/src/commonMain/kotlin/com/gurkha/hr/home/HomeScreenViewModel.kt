@@ -8,7 +8,9 @@ import com.gurkha.hr.date.Year
 import com.gurkha.hr.date.data.model.CalendarModel
 import com.gurkha.hr.domain.attendance.attendanceReport.model.AttendanceData
 import com.gurkha.hr.domain.attendance.attendanceReport.usecase.AttendanceUseCase
+import com.gurkha.hr.domain.notification.notificationCount.model.NotificationCountData
 import com.gurkha.hr.domain.notification.notificationCount.useCase.NotificationCountUseCase
+import com.gurkha.hr.domain.notification.notificationData.useCase.NotificationUseCase
 import com.gurkha.hr.domain.upComingBirthday.usecase.UpComingBirthdayUseCase
 import com.gurkha.hr.domain.upComingEvent.useCase.EventUseCase
 import com.gurkha.hr.domain.upComingWorkAnniversaries.useCase.UpComingWorkAnniversaryUseCase
@@ -30,6 +32,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.number
+import kotlin.collections.plus
 
 class HomeScreenViewModel(
     private val attendanceUseCase: AttendanceUseCase,
@@ -38,7 +41,8 @@ class HomeScreenViewModel(
     private val upComingWorkAnniversaryUseCase: UpComingWorkAnniversaryUseCase,
     private val eventUseCase: EventUseCase,
     private val calendarModel: CalendarModel,
-    private val notificationCountUseCase : NotificationCountUseCase
+    private val notificationCountUseCase : NotificationCountUseCase,
+    private val notificationUseCase: NotificationUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(HomeScreenState(todayBS = calendarModel.today))
     val state = _state
@@ -49,6 +53,7 @@ class HomeScreenViewModel(
             fetchAttendance()
             fetchCalendarValue()
             fetchUpComingEvents()
+            getAllNotifications()
             getTotalNotificationCount()
         }
         .stateIn(
@@ -76,7 +81,9 @@ class HomeScreenViewModel(
             }
 
             is HomeScreenActions.OnCheckOutClicked -> TODO()
-            is HomeScreenActions.OnNotificationClicked -> TODO()
+            is HomeScreenActions.OnNotificationClicked -> {
+
+            }
             is HomeScreenActions.OnSearchedClicked -> TODO()
             is HomeScreenActions.OnDateSelected -> {
                 val attendanceData = state.value.attendanceReport.find { data ->
@@ -297,6 +304,17 @@ class HomeScreenViewModel(
         }
 
     }
+    private fun getAllNotifications() = viewModelScope.launch {
+        notificationUseCase().onSuccess { data ->
+            val groupedNotifications = data.groupByTo(LinkedHashMap()) { it.seen }
+            val seenCount = groupedNotifications[true]?.size ?: 0
+            _state.update {
+                it.copy(
+                    totalSeenNotification = seenCount
+                )
+            }
+        }
+    }
 
     private fun getTotalNotificationCount()=viewModelScope.launch {
         _state.update {
@@ -304,13 +322,18 @@ class HomeScreenViewModel(
                 isNotificationCountLoading = true
             )
         }
-        notificationCountUseCase().onSuccess {data ->
-            _state.update {
-                it.copy(
-                    isNotificationCountLoading = false,
-                    totalNotificationCount =data
+        notificationCountUseCase(true).onSuccess {data ->
+            _state.update { currentState ->
+                val seenCount = currentState.totalSeenNotification
+                val updatedPendingCount = data.count - seenCount
+
+                currentState.copy(
+                    totalNotificationCount = currentState.totalNotificationCount?.copy(
+                        count = updatedPendingCount
+                    ) ?: NotificationCountData(count = updatedPendingCount)
                 )
             }
+
         }.onError {
             _state.update {
                 it.copy(
@@ -319,5 +342,7 @@ class HomeScreenViewModel(
             }
         }
     }
+
+
 
 }

@@ -3,7 +3,7 @@ package com.gurkha.hr.datastore.notificationCount.local
 
 import androidx.datastore.core.okio.OkioSerializer
 import com.gurkha.hr.crypto.CryptoFactory
-import com.gurkha.hr.datastore.notificationCount.model.NotificationCountData
+import com.gurkha.hr.datastore.notificationCount.model.NotificationTotalCountData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
@@ -11,13 +11,13 @@ import okio.BufferedSink
 import okio.BufferedSource
 import okio.use
 
-internal object NotificationDataJsonSerializer : OkioSerializer<NotificationCountData> {
-    override val defaultValue: NotificationCountData
-        get() = NotificationCountData(0)
+internal object NotificationDataJsonSerializer : OkioSerializer<NotificationTotalCountData> {
+    override val defaultValue: NotificationTotalCountData
+        get() = NotificationTotalCountData(0)
 
 
     //read the value from the source and then decrypt and if failed fallback to the default value
-    override suspend fun readFrom(source: BufferedSource): NotificationCountData {
+    override suspend fun readFrom(source: BufferedSource): NotificationTotalCountData {
         val encryptedByte = withContext(Dispatchers.IO) {
             source.readByteArray()
         }
@@ -29,7 +29,7 @@ internal object NotificationDataJsonSerializer : OkioSerializer<NotificationCoun
     }
 
     override suspend fun writeTo(
-        t: NotificationCountData,
+        t: NotificationTotalCountData,
         sink: BufferedSink
     ) {
         sink.use {

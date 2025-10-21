@@ -44,7 +44,9 @@ data class HomeScreenState(
     val upComingEvent : List<EventData> = emptyList(),
 
     val totalNotificationCount : NotificationCountData? = null ,
-    val isNotificationCountLoading : Boolean = false
+    val isNotificationCountLoading : Boolean = false,
+
+    val totalSeenNotification : Int = 0,
 )
 
 data class RequestItem(

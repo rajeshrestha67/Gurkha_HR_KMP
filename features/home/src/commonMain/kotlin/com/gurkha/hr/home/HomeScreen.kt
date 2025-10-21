@@ -170,7 +170,8 @@ fun HomeScreen(
         HomeScreenContent(
             modifier = Modifier.fillMaxSize().padding(paddingValues),
             state = state,
-            onAction = viewModel::onAction
+            onAction = viewModel::onAction,
+            onViewAllClick=onViewAllClick
         )
     }
 }
@@ -178,7 +179,10 @@ fun HomeScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreenContent(
-    modifier: Modifier = Modifier, state: HomeScreenState, onAction: (HomeScreenActions) -> Unit
+    modifier: Modifier = Modifier,
+    state: HomeScreenState,
+    onAction: (HomeScreenActions) -> Unit,
+    onViewAllClick: (String?) -> Unit
 ) {
 
     val (showNotification, onChangeNotification) = rememberSaveable {
@@ -245,17 +249,20 @@ fun HomeScreenContent(
 
             // event section
             eventSection(
-                state = state
+                state = state,
+                onViewAllClick = onViewAllClick
             )
 
             //birthday section
             birthDaySection(
-                state = state
+                state = state,
+                onViewAllClick = onViewAllClick
             )
 
             // anniversary Section
             anniversarySection(
-                state = state
+                state = state,
+                onViewAllClick = onViewAllClick
             )
 
             // attendance title
@@ -280,13 +287,14 @@ fun HomeScreenContent(
 
 
 fun LazyListScope.anniversarySection(
-    state: HomeScreenState
+    state: HomeScreenState,
+    onViewAllClick: (String?) -> Unit
 ) {
     item(key = "anniversary title") {
         TitleBar(
             modifier = Modifier.fillMaxWidth()
                 .padding(start = MaterialTheme.dimens.small3, end = MaterialTheme.dimens.small1),
-            onViewAll = {},
+            onViewAll = { onViewAllClick("will be sending data") },
             title = SharedRes.Strings.work_anniversaries,
             subTitle = SharedRes.Strings.view_all
         )
@@ -318,10 +326,7 @@ fun LazyListScope.anniversarySection(
                     modifier = Modifier.fillMaxWidth(),
                     contentPadding = PaddingValues(horizontal = MaterialTheme.dimens.small3),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = state.upComingWorkAnniversary.size.let { size ->
-                        if (size > 2) Arrangement.spacedBy(MaterialTheme.dimens.medium3)
-                        else Arrangement.SpaceBetween
-                    }
+                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
 
                 ) {
                     items(state.upComingWorkAnniversary) { item ->
@@ -340,13 +345,14 @@ fun LazyListScope.anniversarySection(
 
 
 fun LazyListScope.birthDaySection(
-    state: HomeScreenState
+    state: HomeScreenState,
+    onViewAllClick: (String?) -> Unit
 ) {
     item(key = "birthday") {
         TitleBar(
             modifier = Modifier.fillMaxWidth()
                 .padding(start = MaterialTheme.dimens.small3, end = MaterialTheme.dimens.small1),
-            onViewAll = {},
+            onViewAll = { onViewAllClick("will be sending data") },
             title = SharedRes.Strings.upcoming_birthday,
             subTitle = SharedRes.Strings.view_all
         )
@@ -376,11 +382,7 @@ fun LazyListScope.birthDaySection(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                     contentPadding = PaddingValues(horizontal = MaterialTheme.dimens.small3),
-                    horizontalArrangement = state.upComingBirthday.size.let { size ->
-                        if (size > 2) Arrangement.spacedBy(MaterialTheme.dimens.medium3)
-                        else Arrangement.SpaceBetween
-                    }
-
+                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
                 ) {
                     items(state.upComingBirthday) { item ->
                         UpComingCard(
@@ -780,7 +782,8 @@ fun AttendanceItemContent(
 }
 
 fun LazyListScope.eventSection(
-    state: HomeScreenState
+    state: HomeScreenState,
+    onViewAllClick: (String?) -> Unit
 ) {
     if (state.upComingEvent.isNotEmpty()) {
         item(key = "event title") {
@@ -790,7 +793,7 @@ fun LazyListScope.eventSection(
                         start = MaterialTheme.dimens.small3,
                         end = MaterialTheme.dimens.small1
                     ),
-                onViewAll = {},
+                onViewAll = { onViewAllClick("will be sending data") },
                 title = SharedRes.Strings.upcoming_events,
                 subTitle = SharedRes.Strings.view_all
             )

@@ -12,4 +12,5 @@ sealed interface HomeScreenActions {
     data class OnSpecificDayClicked(val date: String) : HomeScreenActions
     data class OnDateSelected(val day: Int) : HomeScreenActions
 
+
 }

@@ -20,6 +20,7 @@ class FetchUserDetailUseCase(
 ) {
     suspend operator fun invoke(force: Boolean = false): ERPResult<UserDetailData, DataError> {
         val userData = userDataRepository.userDataFlow.firstOrNull()
+
         return if (userData == null || force) {
             remoteFetch(userData)
         } else {

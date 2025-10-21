@@ -9,4 +9,5 @@ sealed interface HomeRoute {
 
     @Serializable
     data object NotificationRoute: HomeRoute
+
 }

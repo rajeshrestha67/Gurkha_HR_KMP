@@ -150,8 +150,7 @@ fun NoteScreen(
             topBar = {
                 TopAppBar(
                     windowInsets = WindowInsets(0.dp), title = {
-//                        Text(text = stringResource(SharedRes.Strings.notes))
-                        Text(text = state.selectedId.toString())
+                        Text(text = stringResource(SharedRes.Strings.notes))
                     })
             },
             floatingActionButton = {

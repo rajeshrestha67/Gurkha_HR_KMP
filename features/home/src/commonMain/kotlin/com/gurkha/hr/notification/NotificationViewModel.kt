@@ -2,7 +2,6 @@ package com.gurkha.hr.notification
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gurkha.hr.domain.notification.notificationData.model.NotificationData
 import com.gurkha.hr.domain.notification.notificationData.useCase.NotificationUseCase
 import com.gurkha.hr.networkhelper.onError
 import com.gurkha.hr.networkhelper.onSuccess

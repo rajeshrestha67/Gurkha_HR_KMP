@@ -90,10 +90,7 @@ fun NotificationScreenContent(
 ) {
     LazyColumn(
         modifier = modifier.fillMaxWidth(),
-        contentPadding = PaddingValues(
-            vertical = MaterialTheme.dimens.small2
-        ),
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
+//        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
     ) {
         state.notificationGrouped.forEach { (date, notification) ->
             item {
@@ -126,7 +123,6 @@ fun NotificationBox(
     )
     Box(
         modifier = Modifier
-            .clip(shape = MaterialTheme.shapes.small)
             .fillMaxWidth()
             .clickable(onClick = {})
             .background(color = color)
