@@ -32,7 +32,6 @@ import com.gurkha.hr.components.navigationBar.ERPNavigationBar
 import com.gurkha.hr.components.permissions.POST_NOTIFICATIONS_PERMISSION
 import com.gurkha.hr.components.permissions.rememberRequestPermission
 import com.gurkha.hr.dashboard.graph.attendanceScreenBuilder
-import com.gurkha.hr.dashboard.graph.chatScreenBuilder
 import com.gurkha.hr.dashboard.graph.homeScreenBuilder
 import com.gurkha.hr.dashboard.graph.leaveScreenBuilder
 import com.gurkha.hr.dashboard.graph.noteScreenBuilder
@@ -58,7 +57,8 @@ private const val TAG = "DashboardScreen"
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun DashboardScreen(
-    onLogout: () -> Unit
+    onLogout: () -> Unit,
+    onChatClick: () -> Unit
 ) {
     val viewModel: DashboardViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -108,7 +108,8 @@ fun DashboardScreen(
         state = state,
         navController = navController,
         onLogout = onLogout,
-        onAction = viewModel::action
+        onAction = viewModel::action,
+        onChatClick = onChatClick
     )
 
 }
@@ -119,6 +120,7 @@ fun DashboardScreenContent(
     bottomBarState: Boolean,
     state: DashboardScreenState,
     navController: NavHostController,
+    onChatClick: () -> Unit,
     onLogout: () -> Unit,
     onAction: (DashboardScreenAction) -> Unit
 ) {
@@ -225,7 +227,8 @@ fun DashboardScreenContent(
         ) {
             homeScreenBuilder(
                 navController = navController,
-                topAppBarScrollBehavior = topScrollBehavior
+                topAppBarScrollBehavior = topScrollBehavior,
+                onChatClick = onChatClick
             )
             profileScreenBuilder(
                 onLogout = onLogout,
@@ -257,9 +260,6 @@ fun DashboardScreenContent(
             )
 
             settingsScreenBuilder(
-                navController = navController
-            )
-            chatScreenBuilder(
                 navController = navController
             )
         }

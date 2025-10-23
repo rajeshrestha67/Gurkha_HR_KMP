@@ -16,11 +16,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -120,7 +120,6 @@ private fun ChatRoomScreenContent(
         modifier = Modifier
             .fillMaxSize()
             .imePadding(),
-        contentWindowInsets = WindowInsets(),
         containerColor = MaterialTheme.colorScheme.chatBackgroundColor,
         topBar = {
             state.chatUserData?.let {
@@ -165,12 +164,12 @@ private fun ChatBottomBar(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.background)
             .padding(
                 start = MaterialTheme.dimens.small3,
                 end = MaterialTheme.dimens.small1,
-                top = MaterialTheme.dimens.small3
-            ),
+                top = MaterialTheme.dimens.small1,
+                bottom = MaterialTheme.dimens.small1
+            ).navigationBarsPadding(),
         horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -216,7 +215,6 @@ private fun ChatTopBar(
     userData: ChatUserData
 ) {
     TopAppBar(
-        windowInsets = WindowInsets(),
         title = {
             Row(
                 modifier = Modifier.fillMaxWidth()

@@ -8,6 +8,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
 import com.gurkha.hr.components.AnimatedNavHost
 import com.gurkha.hr.components.AppTheme
+import com.gurkha.hr.dashboard.graph.chatScreenBuilder
+import com.gurkha.hr.dashboard.route.ChatRoute
 import com.gurkha.hr.graph.dashboardScreenBuilder
 import com.gurkha.hr.graph.loginScreenBuilder
 import com.gurkha.hr.graph.onBoardingBuilder
@@ -48,6 +50,11 @@ fun AppScreen(isFirstTime: Boolean) {
     ) {
         onBoardingBuilder(navController = navController)
         loginScreenBuilder(navController = navController)
-        dashboardScreenBuilder(navController = navController)
+        dashboardScreenBuilder(navController = navController, onChatClick = {
+            navController.navigate(ChatRoute.ChatList)
+        })
+        chatScreenBuilder(
+            navController = navController
+        )
     }
 }
