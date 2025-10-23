@@ -30,12 +30,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.prompts.PromptModalBottomSheet
 import com.gurkha.hr.components.prompts.PromptType
 import com.gurkha.hr.model.detail.DetailNoteScreenAction
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.darkPrimaryTextColor
-import com.gurkha.hr.res.theme.dimens
 import com.gurkha.model.note.ui.NoteDataUi
 import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.stringResource

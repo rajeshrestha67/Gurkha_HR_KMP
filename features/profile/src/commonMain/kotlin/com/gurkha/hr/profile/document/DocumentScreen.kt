@@ -31,10 +31,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.gurkha.hr.components.dimens
 import com.gurkha.hr.profile.model.document_screen.DocumentList
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.borderColor
-import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.primaryTextColor
 import com.gurkha.hr.res.theme.secondaryTextColor
 import org.jetbrains.compose.resources.stringResource

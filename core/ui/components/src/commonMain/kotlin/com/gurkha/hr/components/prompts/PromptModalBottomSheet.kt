@@ -26,8 +26,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import com.gurkha.hr.components.ERPButton
+import com.gurkha.hr.components.dimens
 import com.gurkha.hr.res.SharedRes
-import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.primaryTextColor
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource

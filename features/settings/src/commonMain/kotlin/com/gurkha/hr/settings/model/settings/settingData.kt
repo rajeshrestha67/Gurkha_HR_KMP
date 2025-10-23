@@ -1,4 +1,4 @@
-package com.gurkha.hr.settings.model
+package com.gurkha.hr.settings.model.settings
 
 import com.gurkha.hr.res.SharedRes
 import org.jetbrains.compose.resources.StringResource
@@ -6,7 +6,7 @@ import org.jetbrains.compose.resources.StringResource
 
 enum class SettingList(val title: StringResource) {
     ChangePassword(title = SharedRes.Strings.change_password),
-    Theme(title = SharedRes.Strings.theme),
+    AppAppearance(title = SharedRes.Strings.appAppearance),
     Language(title = SharedRes.Strings.language),
 
     Notification(title = SharedRes.Strings.notifications);
@@ -20,7 +20,7 @@ enum class SettingList(val title: StringResource) {
             SettingList.typeMap[typeName] ?: ChangePassword
 
         val list: List<SettingList>
-            get() = SettingList.entries.toList().map { it }
+            get() = entries.toList().map { it }
     }
 }
 

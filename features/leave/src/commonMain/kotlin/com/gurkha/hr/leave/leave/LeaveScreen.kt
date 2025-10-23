@@ -41,6 +41,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.shimmer.ShimmerView
 import com.gurkha.hr.components.tabbar.ERPTabView
 import com.gurkha.hr.domain.leave.leaveReport.model.LeaveReportData
@@ -49,7 +50,6 @@ import com.gurkha.hr.leave.model.leave.LeaveScreenAction
 import com.gurkha.hr.leave.model.leave.LeaveScreenState
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.darkPrimaryTextColor
-import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.highLightColor
 import com.gurkha.hr.res.theme.primaryTextColor
 import kotlinx.coroutines.delay

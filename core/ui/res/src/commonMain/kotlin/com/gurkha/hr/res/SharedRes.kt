@@ -12,6 +12,7 @@ import gurkhahr.core.ui.res.generated.resources.address
 import gurkhahr.core.ui.res.generated.resources.all_leaves
 import gurkhahr.core.ui.res.generated.resources.allocated_leave
 import gurkhahr.core.ui.res.generated.resources.annual_leave
+import gurkhahr.core.ui.res.generated.resources.app_appearance
 import gurkhahr.core.ui.res.generated.resources.apply_days
 import gurkhahr.core.ui.res.generated.resources.approved
 import gurkhahr.core.ui.res.generated.resources.approver
@@ -48,6 +49,7 @@ import gurkhahr.core.ui.res.generated.resources.confirm
 import gurkhahr.core.ui.res.generated.resources.confirm_password
 import gurkhahr.core.ui.res.generated.resources.contact_info
 import gurkhahr.core.ui.res.generated.resources.current_password
+import gurkhahr.core.ui.res.generated.resources.dark
 import gurkhahr.core.ui.res.generated.resources.date
 import gurkhahr.core.ui.res.generated.resources.date_of_birth
 import gurkhahr.core.ui.res.generated.resources.delete
@@ -109,6 +111,7 @@ import gurkhahr.core.ui.res.generated.resources.leave_summary
 import gurkhahr.core.ui.res.generated.resources.leave_taken
 import gurkhahr.core.ui.res.generated.resources.leave_type
 import gurkhahr.core.ui.res.generated.resources.leave_type_name
+import gurkhahr.core.ui.res.generated.resources.light
 import gurkhahr.core.ui.res.generated.resources.location
 import gurkhahr.core.ui.res.generated.resources.log_out
 import gurkhahr.core.ui.res.generated.resources.login
@@ -173,9 +176,9 @@ import gurkhahr.core.ui.res.generated.resources.submit
 import gurkhahr.core.ui.res.generated.resources.support
 import gurkhahr.core.ui.res.generated.resources.swipe_to_check_in
 import gurkhahr.core.ui.res.generated.resources.swipe_to_check_out
+import gurkhahr.core.ui.res.generated.resources.system
 import gurkhahr.core.ui.res.generated.resources.system_default
 import gurkhahr.core.ui.res.generated.resources.terms_and_services
-import gurkhahr.core.ui.res.generated.resources.theme
 import gurkhahr.core.ui.res.generated.resources.time_and_attendance
 import gurkhahr.core.ui.res.generated.resources.title
 import gurkhahr.core.ui.res.generated.resources.to_date
@@ -399,7 +402,7 @@ object SharedRes {
         val month = Res.string.month
 
         val setting = Res.string.setting
-        val theme = Res.string.theme
+        val appAppearance = Res.string.app_appearance
         val system_default = Res.string.system_default
         val confirm = Res.string.confirm
         val language = Res.string.language
@@ -470,5 +473,8 @@ object SharedRes {
         val camera = Res.string.camera
         val gallery = Res.string.gallery
         val notifications = Res.string.notifications
+        val dark = Res.string.dark
+        val light = Res.string.light
+        val system = Res.string.system
     }
 }

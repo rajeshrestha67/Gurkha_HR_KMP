@@ -45,6 +45,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gurkha.hr.components.ColumnItemRow
 import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.ProfilePicture
+import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.media.MediaSelectorModalBottomSheet
 import com.gurkha.hr.profile.model.profile_screen.AccountList
 import com.gurkha.hr.profile.model.profile_screen.GeneralList
@@ -53,7 +54,6 @@ import com.gurkha.hr.profile.profile_screen.model.ProfileScreenAction
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.borderColor
 import com.gurkha.hr.res.theme.darkPrimaryTextColor
-import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.imageBackgroundColor
 import com.gurkha.hr.res.theme.logOutTextColor
 import com.gurkha.hr.res.theme.primaryTextColor

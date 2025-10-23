@@ -30,12 +30,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.shimmer.ShimmerView
 import com.gurkha.hr.date.data.CalendarDate
 import com.gurkha.hr.date.data.CalendarDay
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.borderColor
-import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.highLightColor
 import com.gurkha.hr.res.theme.linkColor
 import com.gurkha.hr.res.theme.primaryTextColor

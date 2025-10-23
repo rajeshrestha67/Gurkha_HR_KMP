@@ -33,8 +33,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.gurkha.hr.components.ERPButton
+import com.gurkha.hr.components.dimens
 import com.gurkha.hr.res.SharedRes
-import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.primaryTextColor
 import com.gurkha.hr.splashscreen.model.Indicator
 import com.gurkha.hr.splashscreen.model.OnBoardingAction

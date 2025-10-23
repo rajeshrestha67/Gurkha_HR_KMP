@@ -12,7 +12,7 @@ fun initKoin(config: KoinAppDeclaration? = null) {
         modules(
             NetworkModule().module,
             AuthModule().module,
-            PlatformMessageModule().module,
+            PlatformModule().module,
             DataStoreModule().module,
             FormModule().module,
             SplashScreenModule().module,
@@ -33,7 +33,9 @@ fun initKoin(config: KoinAppDeclaration? = null) {
             ReportScreenModule().module,
             NoteScreenModule().module,
             UploadImageModule().module,
-            NotificationModule().module
+            NotificationModule().module,
+            AppModule().module,
+            SettingsModule().module
         )
     }
 }

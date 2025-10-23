@@ -41,6 +41,7 @@ import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.date.ERPDateTextField
 import com.gurkha.hr.components.date.FutureAndTodayDate
 import com.gurkha.hr.components.date.RangeSelectableDates
+import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.isKeyboardVisible
 import com.gurkha.hr.components.prompts.PromptModalBottomSheet
 import com.gurkha.hr.components.prompts.PromptType
@@ -50,7 +51,6 @@ import com.gurkha.hr.components.textField.FormValidate
 import com.gurkha.hr.leave.model.leave_request.LeaveRequestScreenAction
 import com.gurkha.hr.leave.model.leave_request.LeaveRequestScreenState
 import com.gurkha.hr.res.SharedRes
-import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.primaryTextColor
 import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.stringResource

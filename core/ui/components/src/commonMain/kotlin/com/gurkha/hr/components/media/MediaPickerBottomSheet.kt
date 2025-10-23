@@ -33,12 +33,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import coil3.compose.AsyncImage
+import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.permissions.CAMERA_PERMISSION
 import com.gurkha.hr.components.permissions.GALLERY_PERMISSION
 import com.gurkha.hr.components.permissions.navigateToSettings
 import com.gurkha.hr.components.permissions.rememberRequestPermission
 import com.gurkha.hr.logger.AppLogger
-import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.primaryTextColor
 import com.gurkha.model.network.DataError
 

@@ -68,6 +68,7 @@ kotlin {
                 implementation(projects.core.domain)
                 implementation(projects.core.networkHelper)
                 implementation(projects.core.network)
+                implementation(projects.core.persistance.datastore)
                 implementation(projects.core.ui.components)
 
                 implementation(projects.core.logger)

@@ -1,7 +1,7 @@
 package com.gurkha.hr.domain.splash
 
-import com.gurkha.hr.datastore.user_info.model.UserInfo
 import com.gurkha.hr.datastore.user_info.repository.UserInfoRepository
+import com.gurkha.model.user_info.UserInfo
 import kotlinx.coroutines.flow.firstOrNull
 
 

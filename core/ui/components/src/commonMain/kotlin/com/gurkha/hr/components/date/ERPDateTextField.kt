@@ -30,11 +30,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.date.ui.CalendarContent
+import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.textField.ERPTextField
 import com.gurkha.hr.components.textField.Rule
 import com.gurkha.hr.date.data.CalendarDate
 import com.gurkha.hr.res.SharedRes
-import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.disabledTextFieldBorderColor
 import com.gurkha.hr.res.theme.primaryTextColor
 import kotlinx.datetime.TimeZone

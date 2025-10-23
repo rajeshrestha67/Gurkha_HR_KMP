@@ -32,13 +32,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gurkha.hr.components.ProfilePicture
+import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.tabbar.ERPTabView
 import com.gurkha.hr.profile.model.profileinfo_screen.InfoList
 import com.gurkha.hr.profile.model.profileinfo_screen.ProfileInfo
 import com.gurkha.hr.profile.model.profileinfo_screen.ProfileInfoScreenState
 import com.gurkha.hr.profile.model.profileinfo_screen.ProfileInfoViewAction
 import com.gurkha.hr.res.SharedRes
-import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.imageBackgroundColor
 import com.gurkha.hr.res.theme.primaryTextColor
 import com.gurkha.hr.res.theme.secondaryTextColor

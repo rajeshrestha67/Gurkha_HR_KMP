@@ -1,4 +1,4 @@
-package com.gurkha.hr.datastore.user_data.model
+package com.gurkha.model.user_data
 
 import kotlinx.serialization.Serializable
 

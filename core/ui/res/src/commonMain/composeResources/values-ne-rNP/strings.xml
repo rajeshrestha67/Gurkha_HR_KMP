@@ -161,7 +161,7 @@
     <string name="confirm">पुष्टि गर्नुहोस्</string>
     <string name="light_mode">लाइट मोड</string>
     <string name="language">भाषा</string>
-    <string name="theme">विषयवस्तु</string>
+    <string name="app_appearance">अनुप्रयोगको उपस्थिति</string>
     <string name="system_default">प्रणाली पूर्वनिर्धारित</string>
     <string name="dark_mode">गाढा मोड</string>
     <string name="yes">हो</string>
@@ -238,6 +238,11 @@
     <string name="camera">क्यामेरा</string>
     <string name="gallery">ग्यालरी</string>
     <string name="notifications">सूचनाहरू</string>
+
+    <string name="light">उज्यालो</string>
+    <string name="dark">अँध्यारो</string>
+    <string name="system">प्रणाली</string>
+
     <string-array name="months">
         <item>बैशाख</item>
         <item>जेठ</item>

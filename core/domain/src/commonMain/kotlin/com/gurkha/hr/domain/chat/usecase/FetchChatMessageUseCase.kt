@@ -1,6 +1,5 @@
 package com.gurkha.hr.domain.chat.usecase
 
-import com.gurkha.hr.datastore.user_data.model.UserData
 import com.gurkha.hr.datastore.user_data.repository.UserDataRepository
 import com.gurkha.hr.domain.chat.mapper.toChatMessageData
 import com.gurkha.hr.domain.chat.model.ChatMessageData
@@ -8,6 +7,7 @@ import com.gurkha.hr.domain.chat.repository.ChatRemoteRepository
 import com.gurkha.hr.networkhelper.ERPResult
 import com.gurkha.hr.networkhelper.map
 import com.gurkha.model.network.DataError
+import com.gurkha.model.user_data.UserData
 import kotlinx.coroutines.flow.firstOrNull
 
 class FetchChatMessageUseCase(

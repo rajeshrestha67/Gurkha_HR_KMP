@@ -11,10 +11,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
+import com.gurkha.hr.components.dimens
 import com.gurkha.hr.date.data.CalendarDate
 import com.gurkha.hr.date.data.CalendarMonth
 import com.gurkha.hr.date.data.model.CalendarModel
-import com.gurkha.hr.res.theme.dimens
 
 @Composable
 fun HorizontalMonthsList(

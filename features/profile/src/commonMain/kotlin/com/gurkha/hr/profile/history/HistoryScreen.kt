@@ -2,8 +2,15 @@ package com.gurkha.hr.profile.history
 
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -11,8 +18,20 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.FilterAlt
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -21,13 +40,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gurkha.hr.components.dateFilterDropDown.DateFilterDropdown
+import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.shimmer.ShimmerView
 import com.gurkha.hr.profile.model.history_screen.HistoryDataUI
 import com.gurkha.hr.profile.model.history_screen.HistoryScreenViewAction
 import com.gurkha.hr.profile.model.history_screen.HistoryState
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.darkPrimaryTextColor
-import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.highLightColor
 import com.gurkha.hr.res.theme.lightGreenColor
 import com.gurkha.hr.res.theme.lightRedColor
@@ -67,7 +86,7 @@ fun HistoryScreen(
                     IconButton(onClick = { showFilter = !showFilter }) {
 
                         Icon(
-                            imageVector = if (!showFilter)Icons.Default.FilterAlt else Icons.Default.Close,
+                            imageVector = if (!showFilter) Icons.Default.FilterAlt else Icons.Default.Close,
                             contentDescription = "Filter Option"
                         )
 
@@ -90,7 +109,7 @@ fun HistoryScreen(
 
 @Composable
 fun HistoryScreenContainer(
-    state : HistoryState ,
+    state: HistoryState,
     modifier: Modifier = Modifier,
     showFilter: Boolean,
     onAction: (HistoryScreenViewAction) -> Unit
@@ -106,8 +125,12 @@ fun HistoryScreenContainer(
         modifier = modifier,
         contentPadding = PaddingValues(
             horizontal = MaterialTheme.dimens.small3,
-            vertical = MaterialTheme.dimens.small2),
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2, alignment = Alignment.Top)
+            vertical = MaterialTheme.dimens.small2
+        ),
+        verticalArrangement = Arrangement.spacedBy(
+            MaterialTheme.dimens.small2,
+            alignment = Alignment.Top
+        )
     ) {
         if (showFilter) {
             item {
@@ -117,10 +140,13 @@ fun HistoryScreenContainer(
                 )
             }
         }
-        if(state.isLoading){
-            items(4){
+        if (state.isLoading) {
+            items(4) {
                 Column(
-                    verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2, alignment = Alignment.CenterVertically),
+                    verticalArrangement = Arrangement.spacedBy(
+                        MaterialTheme.dimens.small2,
+                        alignment = Alignment.CenterVertically
+                    ),
                 ) {
                     ShimmerView(
                         modifier = Modifier
@@ -130,9 +156,9 @@ fun HistoryScreenContainer(
                     )
                 }
             }
-        }else{
+        } else {
 
-            items( items = state.historySummaryList, key = {it.toString()}, itemContent = { item ->
+            items(items = state.historySummaryList, key = { it.toString() }, itemContent = { item ->
                 HistoryScreenContent(
                     item = item,
                     state = state
@@ -148,15 +174,15 @@ fun HistoryScreenContainer(
 fun HistoryScreenContent(
     item: HistoryDataUI,
     state: HistoryState
-){
+) {
 
-    Column (
+    Column(
         modifier = Modifier
             .fillMaxWidth()
-        .clip(MaterialTheme.shapes.medium)
-        .background(MaterialTheme.colorScheme.highLightColor)
-        .padding(MaterialTheme.dimens.small2)
-    ){
+            .clip(MaterialTheme.shapes.medium)
+            .background(MaterialTheme.colorScheme.highLightColor)
+            .padding(MaterialTheme.dimens.small2)
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth(),
@@ -192,34 +218,36 @@ fun HistoryScreenContent(
                 )
             )
         }
-        if (item.isPresent){
+        if (item.isPresent) {
             HorizontalDivider(modifier = Modifier.height(MaterialTheme.dimens.extraSmall))
             LowTextContent(item = item)
         }
 
     }
 }
+
 @Composable
 fun LowTextContent(
     item: HistoryDataUI
-){
+) {
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = MaterialTheme.dimens.small2))
+            .padding(vertical = MaterialTheme.dimens.small2)
+    )
     {
         RowInfoText(
             name = stringResource(SharedRes.Strings.clock_in_time),
             titleTextColor = MaterialTheme.colorScheme.darkPrimaryTextColor,
-            value =stringResource(SharedRes.Strings.clock_out_time),
+            value = stringResource(SharedRes.Strings.clock_out_time),
         )
         RowInfoText(
             name = item.clockInTime,
             subTitleTextColor = MaterialTheme.colorScheme.primaryTextColor,
             value = item.clockOutTime,
         )
-        if (item.lateInTime.isNotBlank() && item.earlyOutTime.isNotBlank() ){
+        if (item.lateInTime.isNotBlank() && item.earlyOutTime.isNotBlank()) {
             RowInfoText(
                 name = "Late: ${item.lateInTime} min",
                 titleTextColor = MaterialTheme.colorScheme.lightRedColor,
@@ -229,7 +257,7 @@ fun LowTextContent(
         }
 
     }
-    if (item.leaveDuration.isNotBlank()){
+    if (item.leaveDuration.isNotBlank()) {
         HorizontalDivider(modifier = Modifier.height(MaterialTheme.dimens.extraSmall))
 
         Text(
@@ -242,7 +270,8 @@ fun LowTextContent(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = MaterialTheme.dimens.small2))
+                .padding(vertical = MaterialTheme.dimens.small2)
+        )
         {
 
             RowInfoText(
@@ -270,7 +299,7 @@ fun LowTextContent(
         }
     }
 
-    if (item.assigneeName.isNotBlank()){
+    if (item.assigneeName.isNotBlank()) {
         HorizontalDivider(modifier = Modifier.height(MaterialTheme.dimens.extraSmall))
         Text(
             modifier = Modifier.padding(top = MaterialTheme.dimens.small2),
@@ -285,7 +314,7 @@ fun LowTextContent(
                 .padding(vertical = MaterialTheme.dimens.small2)
         ) {
 
-            if(item.assigneeName.isNotBlank()){
+            if (item.assigneeName.isNotBlank()) {
                 RowInfoText(
                     name = "Assigned",
                     value = item.assigneeName
@@ -305,23 +334,23 @@ fun LowTextContent(
             }
 
 
-
         }
     }
 
 }
+
 @Composable
 fun RowInfoText(
-    name : String,
+    name: String,
     value: String,
     titleTextColor: Color = MaterialTheme.colorScheme.primaryTextColor,
     subTitleTextColor: Color = MaterialTheme.colorScheme.darkPrimaryTextColor,
-){
+) {
 
-    Row (
+    Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Start
-    ){
+    ) {
         Text(
             modifier = Modifier.weight(1f),
             text = name,
@@ -348,7 +377,7 @@ fun RowInfoText(
 fun DateFilterHistory(
     state: HistoryState,
     onAction: (HistoryScreenViewAction) -> Unit
-){
+) {
     DateFilterDropdown(
         modifier = Modifier.fillMaxWidth()
             .padding(

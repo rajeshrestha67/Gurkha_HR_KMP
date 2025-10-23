@@ -1,9 +1,9 @@
 package com.gurkha.hr.domain.userDetail.mapper
 
 import com.gurkha.hr.components.extractInitials
-import com.gurkha.hr.datastore.user_data.model.UserData
 import com.gurkha.hr.domain.userDetail.model.UserDetailData
 import com.gurkha.model.userDetail.UserDetailResponseDto
+import com.gurkha.model.user_data.UserData
 
 fun UserDetailResponseDto.toData(): UserDetailData {
     return UserDetailData(

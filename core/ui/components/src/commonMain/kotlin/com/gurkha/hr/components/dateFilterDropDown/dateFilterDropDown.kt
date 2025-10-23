@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material3.Icon
@@ -13,17 +12,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.gurkha.hr.components.ERPButton
+import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.textField.DropDownText
 import com.gurkha.hr.components.textField.FormValidate
 import com.gurkha.hr.date.BSPointer
 import com.gurkha.hr.res.SharedRes
-import com.gurkha.hr.res.theme.dimens
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringArrayResource
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.resources.StringResource
+
 @Composable
 fun DateFilterDropdown(
-    modifier:Modifier = Modifier,
+    modifier: Modifier = Modifier,
     selectedMonth: String,
     selectedYear: String,
     monthError: StringResource? = null,
@@ -32,7 +32,7 @@ fun DateFilterDropdown(
     onYearSelected: (year: Int) -> Unit,
     onMonthError: (StringResource?) -> Unit,
     onYearError: (StringResource?) -> Unit,
-    yearInBS:List<String> = remember { (2070..BSPointer.getLastDay().first).map { it.toString() } },
+    yearInBS: List<String> = remember { (2070..BSPointer.getLastDay().first).map { it.toString() } },
     months: List<String> = stringArrayResource(SharedRes.Arrays.months),
     onSubmit: () -> Unit
 ) {

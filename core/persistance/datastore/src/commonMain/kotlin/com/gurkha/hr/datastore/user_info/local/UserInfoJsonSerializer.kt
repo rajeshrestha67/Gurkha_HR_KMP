@@ -2,8 +2,9 @@ package com.gurkha.hr.datastore.user_info.local
 
 import androidx.datastore.core.okio.OkioSerializer
 import com.gurkha.hr.crypto.CryptoFactory
+import com.gurkha.model.user_info.UserInfo
 
-import com.gurkha.hr.datastore.user_info.model.UserInfo
+
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext

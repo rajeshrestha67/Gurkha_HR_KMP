@@ -20,8 +20,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.gurkha.hr.components.ERPButton
+import com.gurkha.hr.components.dimens
 import com.gurkha.hr.res.SharedRes
-import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.disabledTextFieldBorderColor
 import com.gurkha.hr.res.theme.primaryTextColor
 import org.jetbrains.compose.resources.StringResource
@@ -82,7 +82,11 @@ fun ERPTimeTestField(
                     ERPButton(
                         onClick = {
                             showTimeDialog = false
-                            onTimeSelected("${timeState.hour.toString().padStart(2,'0')}:${timeState.minute.toString().padStart(2,'0')}")
+                            onTimeSelected(
+                                "${
+                                    timeState.hour.toString().padStart(2, '0')
+                                }:${timeState.minute.toString().padStart(2, '0')}"
+                            )
                         },
                         text = stringResource(SharedRes.Strings.confirm)
                     )

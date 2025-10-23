@@ -64,6 +64,7 @@ kotlin {
             implementation(projects.features.leave)
             implementation(projects.features.profile)
             implementation(projects.features.settings)
+            implementation(projects.core.model)
             implementation(projects.core.logger)
 
             implementation(libs.koin.compose.viewmodel)

@@ -196,7 +196,7 @@
     <string name="language">Language</string>
     <string name="light_mode">Light Mode</string>
     <string name="system_default">System Default</string>
-    <string name="theme">Theme</string>
+    <string name="app_appearance">App Appearance</string>
     <string name="dark_mode">Dark Mode</string>
     <string name="are_you_sure">Are you Sure?</string>
     <string name="do_you_really_want_to_logout">Do you really want to logout?</string>
@@ -238,6 +238,10 @@
     <string name="swipe_to_check_out">Swipe to Check Out</string>
     <string name="swipe_to_dismiss">Swipe to Dismiss">Working Days</string>
     <string name="notifications">Notifications</string>
+
+    <string name="light">Light</string>
+    <string name="dark">Dark</string>
+    <string name="system">System</string>
 
 
     <string-array name="months">

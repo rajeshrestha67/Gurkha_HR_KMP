@@ -5,7 +5,7 @@ import org.koin.core.annotation.Module
 import org.koin.core.annotation.Single
 
 @Module
-actual class PlatformMessageModule actual constructor() {
+actual class PlatformModule {
     @Single
     actual fun getPlatformMessage(): PlatformMessage {
         return PlatformMessage()

@@ -27,14 +27,13 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.PlatformMessage
+import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.isKeyboardVisible
 import com.gurkha.hr.components.textField.FormValidate
 import com.gurkha.hr.components.textField.PasswordTextField
 import com.gurkha.hr.res.SharedRes
-import com.gurkha.hr.res.theme.dimens
-import com.gurkha.hr.settings.model.ChangePasswordScreenAction
-import com.gurkha.hr.settings.model.ChangePasswordScreenState
-import com.gurkha.hr.settings.model.ChangePasswordViewModel
+import com.gurkha.hr.settings.model.changePassword.ChangePasswordScreenAction
+import com.gurkha.hr.settings.model.changePassword.ChangePasswordScreenState
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel

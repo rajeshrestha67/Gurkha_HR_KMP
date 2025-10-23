@@ -38,6 +38,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.shimmer.ShimmerView
 import com.gurkha.hr.components.tabbar.ERPTabView
 import com.gurkha.hr.domain.attendance.attendanceStatus.model.AttendanceStatusData
@@ -46,7 +47,6 @@ import com.gurkha.hr.model.attendanceScreen.AttendanceItem
 import com.gurkha.hr.model.attendanceScreen.AttendanceScreenState
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.darkPrimaryTextColor
-import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.highLightColor
 import com.gurkha.hr.res.theme.primaryTextColor
 import org.jetbrains.compose.resources.stringResource

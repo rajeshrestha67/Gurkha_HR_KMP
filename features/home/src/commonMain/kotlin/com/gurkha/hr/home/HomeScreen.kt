@@ -60,6 +60,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gurkha.hr.components.ProfilePicture
 import com.gurkha.hr.components.date.horizontalCalendar.HorizontalCalendar
+import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.extractInitials
 import com.gurkha.hr.components.media.rememberCameraLauncher
 import com.gurkha.hr.components.media.rememberGalleryLauncher
@@ -74,7 +75,6 @@ import com.gurkha.hr.home.model.RequestItem
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.borderColor
 import com.gurkha.hr.res.theme.darkPrimaryTextColor
-import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.highLightColor
 import com.gurkha.hr.res.theme.imageBackgroundColor
 import com.gurkha.hr.res.theme.linkColor

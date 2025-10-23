@@ -1,12 +1,12 @@
 package com.gurkha.hr.domain.chat.mapper
 
-import com.gurkha.hr.datastore.user_data.model.UserData
 import com.gurkha.hr.domain.chat.model.ChatMessageContent
 import com.gurkha.hr.domain.chat.model.ChatMessageData
 import com.gurkha.hr.domain.chat.model.ChatMessageMetaData
 import com.gurkha.model.chat.list.ChatMessageContentResponseDto
 import com.gurkha.model.chat.list.ChatMessageDetailResponseDto
 import com.gurkha.model.chat.list.ChatMessageResponseDto
+import com.gurkha.model.user_data.UserData
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.format

@@ -26,15 +26,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.gurkha.hr.components.dimens
 import com.gurkha.hr.domain.companyAssets.model.CompanyAssetsData
 import com.gurkha.hr.profile.model.companyAssets.CompanyAssetsState
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.darkPrimaryTextColor
-import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.highLightColor
 import com.gurkha.hr.res.theme.primaryTextColor
 import com.gurkha.hr.res.theme.secondaryTextColor
@@ -101,12 +100,12 @@ fun CompanyAssetsScreenContainer(
                 text = SharedRes.Strings.assignedAssets
             )
         }
-        if (state.companyAssetsList.isEmpty()){
+        if (state.companyAssetsList.isEmpty()) {
             item {
                 EmptyMessage()
             }
 
-        }else{
+        } else {
             items(
                 state.companyAssetsList, key = { it.toString() },
                 itemContent = { item ->
@@ -123,7 +122,7 @@ fun CompanyAssetsScreenContainer(
 
 
 @Composable
-fun EmptyMessage(){
+fun EmptyMessage() {
     Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.Center,
@@ -135,9 +134,10 @@ fun EmptyMessage(){
                 color = MaterialTheme.colorScheme.darkPrimaryTextColor
             ),
 
-        )
+            )
     }
 }
+
 @Composable
 fun HeaderSection(text: StringResource) {
 

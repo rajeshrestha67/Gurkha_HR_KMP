@@ -2,8 +2,8 @@ package com.gurkha.hr.splashscreen.model
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import com.gurkha.hr.components.dimens
 import com.gurkha.hr.res.SharedRes
-import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.onBoardingIndicatorSelectedColor
 import com.gurkha.hr.res.theme.onBoardingIndicatorUnSelectedColor
 import org.jetbrains.compose.resources.StringResource

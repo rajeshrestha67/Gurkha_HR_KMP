@@ -33,9 +33,9 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.Dp
+import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.noRippleClickable
 import com.gurkha.hr.res.theme.borderColor
-import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.disabledTextFieldBorderColor
 import com.gurkha.hr.res.theme.primaryTextColor
 import org.jetbrains.compose.resources.StringResource

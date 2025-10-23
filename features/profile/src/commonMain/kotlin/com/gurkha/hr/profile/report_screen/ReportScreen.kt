@@ -41,6 +41,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gurkha.hr.components.dateFilterDropDown.DateFilterDropdown
+import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.shimmer.ShimmerView
 import com.gurkha.hr.components.tabbar.ERPTabView
 import com.gurkha.hr.profile.model.history_screen.HistoryDataUI
@@ -48,7 +49,6 @@ import com.gurkha.hr.profile.model.report_Screen.ReportScreenState
 import com.gurkha.hr.profile.model.report_Screen.ReportScreenViewAction
 import com.gurkha.hr.profile.model.report_Screen.ReportType
 import com.gurkha.hr.res.SharedRes
-import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.primaryTextColor
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource

@@ -66,13 +66,13 @@ import com.gurkha.hr.chat_room.components.triangle.Triangle
 import com.gurkha.hr.chat_room.model.ChatMessage
 import com.gurkha.hr.chat_room.model.ChatRoomScreenAction
 import com.gurkha.hr.chat_room.model.ChatRoomScreenState
+import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.isKeyboardVisible
 import com.gurkha.hr.components.textField.ERPTextField
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.borderColor
 import com.gurkha.hr.res.theme.chatBackgroundColor
 import com.gurkha.hr.res.theme.chatSecondaryTextColor
-import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.inComingBubbleColor
 import com.gurkha.hr.res.theme.inComingTextColor
 import com.gurkha.hr.res.theme.outGoingBubbleColor

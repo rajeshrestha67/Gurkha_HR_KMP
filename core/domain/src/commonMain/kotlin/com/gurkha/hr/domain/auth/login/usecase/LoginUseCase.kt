@@ -2,7 +2,6 @@ package com.gurkha.hr.domain.auth.login.usecase
 
 import com.gurkha.hr.datastore.token.model.Token
 import com.gurkha.hr.datastore.token.repository.TokenRepository
-import com.gurkha.hr.datastore.user_data.model.UserData
 import com.gurkha.hr.datastore.user_data.repository.UserDataRepository
 import com.gurkha.hr.domain.auth.login.mapper.toData
 import com.gurkha.hr.domain.auth.login.model.LoginData
@@ -11,6 +10,7 @@ import com.gurkha.hr.networkhelper.ERPResult
 import com.gurkha.hr.networkhelper.map
 import com.gurkha.hr.networkhelper.onSuccess
 import com.gurkha.model.network.DataError
+import com.gurkha.model.user_data.UserData
 import kotlinx.coroutines.flow.firstOrNull
 
 class LoginUseCase(

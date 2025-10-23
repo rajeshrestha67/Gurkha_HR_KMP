@@ -36,12 +36,12 @@ import androidx.compose.ui.unit.sp
 import com.gurkha.hr.components.date.DatePickerHorizontalPadding
 import com.gurkha.hr.components.date.MaxCalendarRows
 import com.gurkha.hr.components.date.RecommendedSizeForAccessibility
+import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.noRippleClickable
 import com.gurkha.hr.date.data.CalendarDate
 import com.gurkha.hr.date.data.CalendarMonth
 import com.gurkha.hr.date.data.model.CalendarModel
 import com.gurkha.hr.res.SharedRes
-import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.primaryTextColor
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

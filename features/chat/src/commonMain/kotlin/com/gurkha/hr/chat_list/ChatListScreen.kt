@@ -43,12 +43,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gurkha.hr.chat_list.model.ChatListScreenAction
 import com.gurkha.hr.chat_list.model.ChatListScreenState
 import com.gurkha.hr.components.ProfilePicture
+import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.shimmer.ShimmerView
 import com.gurkha.hr.components.textField.ERPTextField
 import com.gurkha.hr.domain.chat.model.ChatItem
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.borderColor
-import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.primaryTextColor
 import com.gurkha.hr.res.theme.secondaryTextColor
 import org.jetbrains.compose.resources.stringResource

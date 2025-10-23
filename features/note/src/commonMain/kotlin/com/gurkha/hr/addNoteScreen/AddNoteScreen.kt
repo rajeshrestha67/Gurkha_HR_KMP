@@ -47,6 +47,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.date.ERPDateTextField
+import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.prompts.PromptModalBottomSheet
 import com.gurkha.hr.components.prompts.PromptType
 import com.gurkha.hr.components.textField.ERPTextField
@@ -56,7 +57,6 @@ import com.gurkha.hr.model.addNotes.AddNotesAction
 import com.gurkha.hr.model.addNotes.AddNotesState
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.borderColor
-import com.gurkha.hr.res.theme.dimens
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.stringResource

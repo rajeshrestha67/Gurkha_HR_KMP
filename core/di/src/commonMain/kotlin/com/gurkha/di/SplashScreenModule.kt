@@ -1,8 +1,10 @@
 package com.gurkha.di
 
 import com.gurkha.hr.datastore.user_info.repository.UserInfoRepository
+import com.gurkha.hr.domain.app.usecase.FetchUserThemeModeUseCase
 import com.gurkha.hr.domain.splash.CheckFirstTimeUserUseCase
 import com.gurkha.hr.domain.splash.UpdateFirstTimeCheckUseCase
+import com.gurkha.hr.splashscreen.AppViewModel
 import com.gurkha.hr.splashscreen.OnBoardingViewModel
 import org.koin.android.annotation.KoinViewModel
 import org.koin.core.annotation.Factory
@@ -26,4 +28,8 @@ class SplashScreenModule {
     @Factory
     fun getUpdateFirstTimeUserUseCase(userInfoRepository: UserInfoRepository) =
         UpdateFirstTimeCheckUseCase(userInfoRepository = userInfoRepository)
+
+    @KoinViewModel
+    fun appThemeViewModel(fetchUserThemeModeUseCase: FetchUserThemeModeUseCase) =
+        AppViewModel(fetchUserThemeModeUseCase = fetchUserThemeModeUseCase)
 }

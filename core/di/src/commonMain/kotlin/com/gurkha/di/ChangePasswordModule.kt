@@ -5,7 +5,7 @@ import com.gurkha.hr.datastore.user_data.repository.UserDataRepository
 import com.gurkha.hr.domain.changePassword.repository.ChangePasswordRemoteRepository
 import com.gurkha.hr.domain.changePassword.usecase.ChangePasswordUseCase
 import com.gurkha.hr.domain.form.PasswordValidateUseCase
-import com.gurkha.hr.settings.model.ChangePasswordViewModel
+import com.gurkha.hr.settings.ChangePasswordViewModel
 import io.ktor.client.HttpClient
 import org.koin.android.annotation.KoinViewModel
 import org.koin.core.annotation.Factory

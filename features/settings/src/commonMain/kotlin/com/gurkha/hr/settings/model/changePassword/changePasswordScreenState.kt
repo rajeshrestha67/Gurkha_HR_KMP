@@ -1,4 +1,4 @@
-package com.gurkha.hr.settings.model
+package com.gurkha.hr.settings.model.changePassword
 
 import org.jetbrains.compose.resources.StringResource
 

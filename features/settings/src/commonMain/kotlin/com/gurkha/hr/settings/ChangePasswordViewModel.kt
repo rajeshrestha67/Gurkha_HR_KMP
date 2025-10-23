@@ -1,4 +1,4 @@
-package com.gurkha.hr.settings.model
+package com.gurkha.hr.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -7,6 +7,8 @@ import com.gurkha.hr.domain.form.PasswordValidateUseCase
 import com.gurkha.hr.networkhelper.onError
 import com.gurkha.hr.networkhelper.onSuccess
 import com.gurkha.hr.res.SharedRes
+import com.gurkha.hr.settings.model.changePassword.ChangePasswordScreenAction
+import com.gurkha.hr.settings.model.changePassword.ChangePasswordScreenState
 import com.gurkha.model.network.toErrorMessage
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,7 +35,7 @@ class ChangePasswordViewModel(
     val state = _state
         .stateIn(
             viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
+            started = SharingStarted.Companion.WhileSubscribed(5000),
             initialValue = ChangePasswordScreenState()
         )
 

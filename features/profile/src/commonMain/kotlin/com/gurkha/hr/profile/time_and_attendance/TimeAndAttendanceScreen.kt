@@ -47,6 +47,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.date.ERPDateTextField
 import com.gurkha.hr.components.date.FutureAndTodayDate
+import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.shimmer.ShimmerView
 import com.gurkha.hr.components.textField.FormValidate
 import com.gurkha.hr.domain.attendance.attendanceReport.model.AttendanceData
@@ -54,7 +55,6 @@ import com.gurkha.hr.profile.model.time_and_attendance_screen.TimeAndAttendanceS
 import com.gurkha.hr.profile.model.time_and_attendance_screen.TimeAndAttendanceViewAction
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.darkPrimaryTextColor
-import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.highLightColor
 import com.gurkha.hr.res.theme.primaryTextColor
 import com.gurkha.hr.res.theme.secondaryTextColor

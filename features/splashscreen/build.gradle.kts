@@ -76,6 +76,7 @@ kotlin {
                 implementation(compose.components.resources)
 
                 implementation(projects.core.domain)
+                implementation(projects.core.model)
                 implementation(projects.core.networkHelper)
                 implementation(projects.core.ui.res)
                 implementation(projects.core.ui.components)

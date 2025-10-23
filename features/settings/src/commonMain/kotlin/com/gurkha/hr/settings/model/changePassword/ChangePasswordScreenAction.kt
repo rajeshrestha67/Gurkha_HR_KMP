@@ -1,4 +1,4 @@
-package com.gurkha.hr.settings.model
+package com.gurkha.hr.settings.model.changePassword
 
 import org.jetbrains.compose.resources.StringResource
 
@@ -7,9 +7,11 @@ sealed interface ChangePasswordScreenAction {
 
     data class OnConfirmPasswordChanged(val confirmPassword: String) : ChangePasswordScreenAction
 
-    data class OnNewPasswordError(val newPasswordError: StringResource?) : ChangePasswordScreenAction
+    data class OnNewPasswordError(val newPasswordError: StringResource?) :
+        ChangePasswordScreenAction
 
-    data class OnConfirmPasswordError(val confirmPasswordError: StringResource?) : ChangePasswordScreenAction
+    data class OnConfirmPasswordError(val confirmPasswordError: StringResource?) :
+        ChangePasswordScreenAction
 
     data object ConfirmClicked : ChangePasswordScreenAction
 }

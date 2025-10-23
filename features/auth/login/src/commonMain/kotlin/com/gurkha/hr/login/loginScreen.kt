@@ -31,6 +31,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.PlatformMessage
+import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.hideKeyboardOnTap
 import com.gurkha.hr.components.permissions.CAMERA_PERMISSION
 import com.gurkha.hr.components.permissions.GALLERY_PERMISSION
@@ -43,7 +44,6 @@ import com.gurkha.hr.logger.AppLogger
 import com.gurkha.hr.login.model.LoginScreenAction
 import com.gurkha.hr.login.model.LoginScreenState
 import com.gurkha.hr.res.SharedRes
-import com.gurkha.hr.res.theme.dimens
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
