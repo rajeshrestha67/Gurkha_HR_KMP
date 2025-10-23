@@ -18,6 +18,6 @@ enum class LeaveStatusEnum(val value: String) {
 
 }
 
-val tabItemsList = LeaveStatusEnum.list
+
 
 

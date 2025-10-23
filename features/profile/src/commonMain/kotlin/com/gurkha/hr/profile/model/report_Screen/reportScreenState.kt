@@ -1,19 +1,10 @@
 package com.gurkha.hr.profile.model.report_Screen
 
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.ui.graphics.Color
-import com.gurkha.hr.domain.history.model.HistoryData
-import com.gurkha.hr.domain.reportScreen.model.ReportData
 import com.gurkha.hr.profile.model.history_screen.HistoryDataUI
 import com.gurkha.hr.res.SharedRes
-import com.gurkha.hr.res.theme.holidayBlueColor
-import com.gurkha.hr.res.theme.lightGreenColor
-import com.gurkha.hr.res.theme.lightRedColor
-import com.gurkha.model.history.ui.AttendanceStatusColorUi
 import org.jetbrains.compose.resources.StringResource
 
 data class ReportScreenState(
-    val selectedTab: Int = 0,
     val isLoading: Boolean = false,
     val monthValue: Int = 6,
     val year: Int = 2082,
@@ -28,26 +19,34 @@ data class ReportScreenState(
         ReportItems(
             title = SharedRes.Strings.totalDays,
             days = ""
-            ),
+        ),
         ReportItems(
             title = SharedRes.Strings.holidays,
-            days = ""),
+            days = ""
+        ),
         ReportItems(
             title = SharedRes.Strings.totalWorkingDays,
-            days =  ""),
+            days = ""
+        ),
         ReportItems(
             title = SharedRes.Strings.totalWorkedDays,
-            days = ""),
+            days = ""
+        ),
         ReportItems(
             title = SharedRes.Strings.totalLeaveTaken,
-            days = ""),
+            days = ""
+        ),
         ReportItems(
             title = SharedRes.Strings.totalPresentDays,
-            days = ""),
+            days = ""
+        ),
         ReportItems(
             title = SharedRes.Strings.totalAbsentDays,
-            days = "")
-    )
+            days = ""
+        )
+    ),
+    val items: List<ReportType> = ReportType.list,
+    val selectedTab: ReportType = ReportType.MonthlyAttendance
 )
 
 data class ReportItems(

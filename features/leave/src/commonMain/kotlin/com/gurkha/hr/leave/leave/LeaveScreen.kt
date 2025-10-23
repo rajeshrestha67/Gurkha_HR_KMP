@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -29,9 +30,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SecondaryTabRow
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -44,18 +42,16 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.gurkha.hr.components.shimmer.ShimmerView
+import com.gurkha.hr.components.tabbar.ERPTabView
 import com.gurkha.hr.domain.leave.leaveReport.model.LeaveReportData
 import com.gurkha.hr.leave.model.leave.LeaveItem
 import com.gurkha.hr.leave.model.leave.LeaveScreenAction
 import com.gurkha.hr.leave.model.leave.LeaveScreenState
-import com.gurkha.hr.leave.model.leave.LeaveStatusEnum
-import com.gurkha.hr.leave.model.leave.tabItemsList
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.darkPrimaryTextColor
 import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.highLightColor
 import com.gurkha.hr.res.theme.primaryTextColor
-import com.gurkha.hr.res.theme.veryLightGray
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -135,8 +131,8 @@ fun LeaveScreenContent(
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3),
         horizontalAlignment = Alignment.CenterHorizontally,
         contentPadding = PaddingValues(
-            top = MaterialTheme.dimens.small2,
-            bottom = MaterialTheme.dimens.bottomBar
+            vertical = MaterialTheme.dimens.small2,
+            horizontal = MaterialTheme.dimens.small3,
         ),
     ) {
 //        show the 4 leave options
@@ -146,7 +142,7 @@ fun LeaveScreenContent(
 
 //        show the tabs for the attendance status
         leaveStatusTab(
-            selectedItem = state.leaveStatus,
+            state = state,
             onAction = onAction
         )
 
@@ -161,8 +157,7 @@ fun LazyListScope.leaveOptions(itemsPerRow: Int = 2, state: LeaveScreenState) {
         item {
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = MaterialTheme.dimens.small3),
+                    .fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
             ) {
                 if (state.isLeaveSummaryLoading) {
@@ -227,46 +222,30 @@ fun LeaveBox(
 }
 
 fun LazyListScope.leaveStatusTab(
-    selectedItem: LeaveStatusEnum = LeaveStatusEnum.PENDING,
+    state: LeaveScreenState,
     onAction: (LeaveScreenAction) -> Unit
 ) {
     stickyHeader(key = "leaveStatusTab") {
-        SecondaryTabRow(
-            selectedItem.ordinal,
-            Modifier
-                .fillMaxWidth()
-                .padding(horizontal = MaterialTheme.dimens.small3),
-            TabRowDefaults.primaryContainerColor, TabRowDefaults.primaryContentColor, {},
-            {}) {
-            tabItemsList.forEach { item ->
-                val isSelected = selectedItem == item
-                Tab(
-                    modifier = Modifier
-                        .clip(shape = MaterialTheme.shapes.small)
-                        .background(
-                            if (isSelected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.veryLightGray
-                        ),
-                    selected = isSelected,
-                    onClick = {
-                        onAction(
-                            LeaveScreenAction.OnStatusChange(
-                                item
-                            )
-                        )
-                    },
-                    text = {
-                        val color =
-                            if (isSelected) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.primaryTextColor
-                        Text(
-                            text = item.name,
-                            style = MaterialTheme.typography.titleSmall.copy(
-                                color = color
-                            )
-                        )
-                    }
+        ERPTabView(
+            items = state.tabItemsList,
+            selectedTab = state.leaveStatus,
+            shape = MaterialTheme.shapes.medium,
+            onItemSelected = { item ->
+                onAction(
+                    LeaveScreenAction.OnStatusChange(
+                        item
+                    )
                 )
             }
-
+        ) { item, isSelected ->
+            val color =
+                if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onBackground
+            Text(
+                text = item.name,
+                style = MaterialTheme.typography.titleSmall.copy(
+                    color = color
+                )
+            )
         }
     }
 }
@@ -279,8 +258,7 @@ fun LazyListScope.leaveResults(
         state.pendingTapItem.isLoading || state.approvedTapItem.isLoading || state.rejectedTapItem.isLoading ->
             item {
                 Column(
-                    modifier = Modifier.fillMaxWidth()
-                        .padding(horizontal = MaterialTheme.dimens.small3),
+                    modifier = Modifier.fillMaxWidth(),
                     verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2)
                 ) {
                     repeat(4) {
@@ -301,7 +279,12 @@ fun LazyListScope.leaveResults(
                 }
             } else {
                 item {
-                    Text(text = stringResource(SharedRes.Strings.no_data_found))
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                    ) {
+                        Text(text = stringResource(SharedRes.Strings.no_data_found))
+                    }
                 }
             }
         }
@@ -319,7 +302,6 @@ fun LazyItemScope.ResultBox(
         modifier = Modifier
             .fillMaxWidth()
             .padding(
-                horizontal = MaterialTheme.dimens.small3,
                 vertical = MaterialTheme.dimens.small1
             )
             .clip(MaterialTheme.shapes.medium)

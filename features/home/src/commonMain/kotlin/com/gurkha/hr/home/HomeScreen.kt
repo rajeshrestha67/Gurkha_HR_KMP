@@ -269,8 +269,7 @@ fun HomeScreenContent(
             SwipeToDismissBox(
                 text = stringResource(state.swipeText),
                 onDismissed = {
-                    //onAction(HomeScreenActions.SwipeToDismiss)
-                    openGallery()
+                    onAction(HomeScreenActions.SwipeToDismiss)
                 }
             )
         }

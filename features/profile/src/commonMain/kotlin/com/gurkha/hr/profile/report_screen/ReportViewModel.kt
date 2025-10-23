@@ -21,7 +21,7 @@ class ReportViewModel(
     private val reportUseCase: ReportUseCase,
     private val historyUseCase: HistoryUseCase
 
-): ViewModel() {
+) : ViewModel() {
 
     private val _state = MutableStateFlow(ReportScreenState())
     val state = _state
@@ -34,9 +34,10 @@ class ReportViewModel(
             initialValue = ReportScreenState()
         )
 
-    private fun onFetchData (
+    private fun onFetchData(
     ) = viewModelScope.launch {
-        _state.update { it.copy(isLoading = true)
+        _state.update {
+            it.copy(isLoading = true)
         }
 
         reportUseCase(
@@ -49,30 +50,37 @@ class ReportViewModel(
                 it.copy(
                     isLoading = false,
                     reportListItems = _state.value.reportListItems.mapIndexed { index, reportItems ->
-                        when(
+                        when (
                             index
-                        ){
+                        ) {
                             0 -> reportItems.copy(
                                 days = data[0].totalDays.toString()
                             )
+
                             1 -> reportItems.copy(
                                 days = data[0].holidays.toString()
                             )
+
                             2 -> reportItems.copy(
                                 days = data[0].totalWorkingDays.toString()
                             )
+
                             3 -> reportItems.copy(
                                 days = data[0].totalWorkedDays.toString()
                             )
+
                             4 -> reportItems.copy(
                                 days = data[0].totalLeaveTaken.toString()
                             )
+
                             5 -> reportItems.copy(
                                 days = data[0].totalPresentDays.toString()
                             )
+
                             6 -> reportItems.copy(
                                 days = data[0].totalAbsentDays.toString()
                             )
+
                             else -> reportItems
                         }
                     }
@@ -82,27 +90,28 @@ class ReportViewModel(
         historyUseCase(
             bsMonth = _state.value.monthValue,
             bsYear = _state.value.year
-        ).onSuccess {
-            data ->
-            println("history_data $data")
+        ).onSuccess { data ->
+            
             _state.update {
                 it.copy(
-                    historySummaryList = data.map {mdata-> mdata.toUI() }
-            ) }
+                    historySummaryList = data.map { mdata -> mdata.toUI() }
+                )
+            }
 
         }
     }
 
-    fun onAction(action: ReportScreenViewAction){
-        when(action){
+    fun onAction(action: ReportScreenViewAction) {
+        when (action) {
             is ReportScreenViewAction.OnItemSelected -> {
                 _state.update {
                     it.copy(
-                        selectedTab = action.index
+                        selectedTab = action.reportType
                     )
                 }
             }
-            is ReportScreenViewAction.YearField ->{
+
+            is ReportScreenViewAction.YearField -> {
                 _state.update {
                     it.copy(
                         year = action.year,
@@ -110,7 +119,8 @@ class ReportViewModel(
                     )
                 }
             }
-            is ReportScreenViewAction.MonthField ->{
+
+            is ReportScreenViewAction.MonthField -> {
                 _state.update {
                     it.copy(
                         monthDisplay = action.showMonth,
@@ -118,20 +128,24 @@ class ReportViewModel(
                     )
                 }
             }
-            is ReportScreenViewAction.YearFieldError ->{
+
+            is ReportScreenViewAction.YearFieldError -> {
                 _state.update {
                     it.copy(
-                        endYearError = action.error)
+                        endYearError = action.error
+                    )
                 }
             }
-            is ReportScreenViewAction.MonthFieldError ->{
+
+            is ReportScreenViewAction.MonthFieldError -> {
                 _state.update {
                     it.copy(
                         endMonthError = action.error
                     )
                 }
             }
-            is ReportScreenViewAction .Submit ->{
+
+            is ReportScreenViewAction.Submit -> {
                 _state.update {
                     it.copy(
                         employeeId = action.employeeId
@@ -141,12 +155,13 @@ class ReportViewModel(
             }
         }
     }
+
     private fun submit(
 
-    )= viewModelScope.launch {
+    ) = viewModelScope.launch {
         val monthPickerError = requiredValidationUseCase(state.value.monthDisplay)
 
-        when{
+        when {
             monthPickerError != null -> {
                 _state.update {
                     it.copy(
@@ -154,7 +169,8 @@ class ReportViewModel(
                     )
                 }
             }
-            else ->{
+
+            else -> {
                 _state.update {
                     it.copy(
                         endYearError = null

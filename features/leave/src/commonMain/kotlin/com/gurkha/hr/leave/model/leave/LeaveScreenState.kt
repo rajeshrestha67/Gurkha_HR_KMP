@@ -10,6 +10,7 @@ data class LeaveScreenState(
     val approvedTapItem: LeaveTapItem = LeaveTapItem(),
     val rejectedTapItem: LeaveTapItem = LeaveTapItem(),
     val currentTapItem: LeaveTapItem = LeaveTapItem(),
+    val tabItemsList: List<LeaveStatusEnum> = LeaveStatusEnum.list,
     val fromDate: String = "",
     val toDate: String = "",
     val leaveStatus: LeaveStatusEnum = LeaveStatusEnum.PENDING,

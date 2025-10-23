@@ -16,8 +16,9 @@ data class ProfileInfoScreenState(
     val branchName: String = "",
     val address: String = "",
     val joinedDate: String = "",
-    var contactInfo: List<ProfileInfo> = emptyList(),
-    var personalDetails: List<ProfileInfo> = emptyList(),
-    var guardianInfo: List<ProfileInfo> = emptyList(),
-    val selectedTab:Int = 0
+    val contactInfo: List<ProfileInfo> = emptyList(),
+    val personalDetails: List<ProfileInfo> = emptyList(),
+    val guardianInfo: List<ProfileInfo> = emptyList(),
+    val infoList: List<InfoList> = InfoList.list,
+    val selectedTab: InfoList = InfoList.PersonalInfo
 )

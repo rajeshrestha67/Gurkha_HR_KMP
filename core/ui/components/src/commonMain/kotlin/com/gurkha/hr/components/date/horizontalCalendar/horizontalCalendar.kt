@@ -81,7 +81,9 @@ fun HorizontalCalendar(
                     horizontal = MaterialTheme.dimens.small3
                 ),
                 text = month,
-                style = MaterialTheme.typography.titleLarge
+                style = MaterialTheme.typography.titleLarge.copy(
+                    color = MaterialTheme.colorScheme.primary
+                )
             )
 
             AnimatedVisibility(selectedDay != today.dayOfMonth) {

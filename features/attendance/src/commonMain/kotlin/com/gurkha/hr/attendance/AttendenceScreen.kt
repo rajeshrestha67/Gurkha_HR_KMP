@@ -27,9 +27,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SecondaryTabRow
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -42,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.gurkha.hr.components.shimmer.ShimmerView
+import com.gurkha.hr.components.tabbar.ERPTabView
 import com.gurkha.hr.domain.attendance.attendanceStatus.model.AttendanceStatusData
 import com.gurkha.hr.model.attendanceScreen.AttendanceAction
 import com.gurkha.hr.model.attendanceScreen.AttendanceItem
@@ -51,7 +49,6 @@ import com.gurkha.hr.res.theme.darkPrimaryTextColor
 import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.highLightColor
 import com.gurkha.hr.res.theme.primaryTextColor
-import com.gurkha.hr.res.theme.veryLightGray
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -150,7 +147,6 @@ fun AttendanceContent(
 //        show the tab
         attendanceStatusTab(
             state = state,
-            modifier = Modifier,
             onAction = onAction
         )
 
@@ -239,44 +235,29 @@ fun AttendanceBox(
 
 fun LazyListScope.attendanceStatusTab(
     state: AttendanceScreenState,
-    modifier: Modifier = Modifier,
     onAction: (AttendanceAction) -> Unit
 ) {
     stickyHeader(key = "AttendanceStatus") {
-        SecondaryTabRow(
-            state.selectedTab.ordinal,
-            modifier
-                .fillMaxWidth(),
-            TabRowDefaults.primaryContainerColor, TabRowDefaults.primaryContentColor, {},
-            {}) {
-            state.tabItemsList.forEach { item ->
-                val isSelected = state.selectedTab == item
-                Tab(
-                    modifier = Modifier
-                        .clip(shape = MaterialTheme.shapes.small)
-                        .background(
-                            if (isSelected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.veryLightGray
-                        ),
-                    selected = isSelected,
-                    onClick = {
-                        onAction(
-                            AttendanceAction.OnStatusChange(
-                                item
-                            )
-                        )
-                    },
-                    text = {
-                        val color =
-                            if (isSelected) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.primaryTextColor
-                        Text(
-                            text = item.name,
-                            style = MaterialTheme.typography.titleSmall.copy(
-                                color = color
-                            )
-                        )
-                    }
+        ERPTabView(
+            items = state.tabItemsList,
+            selectedTab = state.selectedTab,
+            shape = MaterialTheme.shapes.medium,
+            onItemSelected = { item ->
+                onAction(
+                    AttendanceAction.OnStatusChange(
+                        item
+                    )
                 )
             }
+        ) { item, isSelected ->
+            val color =
+                if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onBackground
+            Text(
+                text = item.name,
+                style = MaterialTheme.typography.titleSmall.copy(
+                    color = color
+                )
+            )
         }
     }
 }

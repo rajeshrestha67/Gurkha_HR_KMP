@@ -90,7 +90,6 @@ kotlin {
                 implementation(projects.features.profile)
                 implementation(projects.features.attendance)
                 implementation(projects.features.leave)
-                implementation(projects.features.report)
                 implementation(projects.features.settings)
                 implementation(projects.features.chat)
                 implementation(projects.features.note)
