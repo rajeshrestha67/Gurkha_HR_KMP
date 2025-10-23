@@ -130,7 +130,7 @@ fun LoginScreenContent(
     }
 
     Scaffold(
-        modifier = Modifier.fillMaxSize().hideKeyboardOnTap(
+        modifier = Modifier.fillMaxSize().imePadding().hideKeyboardOnTap(
             focusManager = focusManager,
             keyboardController = keyboardController
         ),
@@ -141,8 +141,7 @@ fun LoginScreenContent(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(contentPadding)
-                .imePadding(),
+                .padding(contentPadding),
         ) {
 
             AsyncImage(

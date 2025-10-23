@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -48,11 +49,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
@@ -63,6 +66,7 @@ import com.gurkha.hr.chat_room.components.triangle.Triangle
 import com.gurkha.hr.chat_room.model.ChatMessage
 import com.gurkha.hr.chat_room.model.ChatRoomScreenAction
 import com.gurkha.hr.chat_room.model.ChatRoomScreenState
+import com.gurkha.hr.components.isKeyboardVisible
 import com.gurkha.hr.components.textField.ERPTextField
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.borderColor
@@ -81,6 +85,7 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ChatRoomScreen(
     onBackPressed: () -> Unit,
@@ -89,6 +94,8 @@ fun ChatRoomScreen(
 
     val viewModel = koinViewModel<ChatRoomViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+
 
     LaunchedEffect(key1 = chatUserJsonData) {
         viewModel.onAction(action = ChatRoomScreenAction.UpdateChatData(json = chatUserJsonData))
@@ -101,22 +108,30 @@ fun ChatRoomScreen(
     )
 }
 
-
 @Composable
 private fun ChatRoomScreenContent(
     onBackPressed: () -> Unit,
     state: ChatRoomScreenState,
     onAction: (ChatRoomScreenAction) -> Unit
 ) {
-
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val isKeyboardOpen by isKeyboardVisible()
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .imePadding(),
         contentWindowInsets = WindowInsets(),
         containerColor = MaterialTheme.colorScheme.chatBackgroundColor,
         topBar = {
             state.chatUserData?.let {
                 ChatTopBar(
-                    onBackPressed = onBackPressed,
+                    onBackPressed = {
+                        if (isKeyboardOpen) {
+                            keyboardController?.hide()
+                        } else {
+                            onBackPressed()
+                        }
+                    },
                     userData = it
                 )
             }
@@ -127,15 +142,17 @@ private fun ChatRoomScreenContent(
                 onAction = onAction
             )
         }
-
     ) { contentPadding ->
         ChatRoomLazyColumn(
-            modifier = Modifier.padding(paddingValues = contentPadding).fillMaxSize(),
+            modifier = Modifier
+                .padding(contentPadding)
+                .fillMaxSize(),
+            isKeyboardOpen = isKeyboardOpen,
             state = state
         )
     }
-
 }
+
 
 @Composable
 private fun ChatBottomBar(
@@ -144,24 +161,25 @@ private fun ChatBottomBar(
 ) {
     var typingJob by remember { mutableStateOf<Job?>(null) }
     val coroutineScope = rememberCoroutineScope()
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.background)
             .padding(
                 start = MaterialTheme.dimens.small3,
                 end = MaterialTheme.dimens.small1,
-                top = MaterialTheme.dimens.small2,
-                bottom = MaterialTheme.dimens.small2
+                top = MaterialTheme.dimens.small3
             ),
-        horizontalArrangement = Arrangement.spacedBy(space = MaterialTheme.dimens.small2),
+        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2),
         verticalAlignment = Alignment.CenterVertically
     ) {
         ERPTextField(
-            modifier = Modifier.weight(weight = 1f),
+            modifier = Modifier.weight(1f),
             text = message,
             hint = stringResource(resource = SharedRes.Strings.type_here),
             onValueChange = {
-                onAction(ChatRoomScreenAction.MessageChanged(message = it))
+                onAction(ChatRoomScreenAction.MessageChanged(it))
                 typingJob?.cancel()
                 onAction(ChatRoomScreenAction.OnTyping(isTyping = it.isNotEmpty()))
                 typingJob = coroutineScope.launch {
@@ -173,18 +191,14 @@ private fun ChatBottomBar(
             imeAction = ImeAction.Send,
             focusedBorderColor = Color.Transparent,
             unfocusedBorderColor = Color.Transparent,
-            keyboardActions = KeyboardActions(
-                onSend = {
-                    onAction(ChatRoomScreenAction.Send)
-                }
-            )
+            keyboardActions = KeyboardActions(onSend = {
+                onAction(ChatRoomScreenAction.Send)
+            })
         )
 
         IconButton(
             enabled = message.isNotEmpty(),
-            onClick = {
-                onAction(ChatRoomScreenAction.Send)
-            }
+            onClick = { onAction(ChatRoomScreenAction.Send) }
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.Send,
@@ -192,7 +206,6 @@ private fun ChatBottomBar(
                 tint = MaterialTheme.colorScheme.primary
             )
         }
-
     }
 }
 
@@ -279,12 +292,24 @@ private fun ChatTopBar(
 @Composable
 private fun ChatRoomLazyColumn(
     modifier: Modifier = Modifier,
+    isKeyboardOpen: Boolean,
     state: ChatRoomScreenState
 ) {
+
     val listState = rememberLazyListState()
     LaunchedEffect(state.messages) {
         if (state.messages.isNotEmpty()) {
-            //listState.animateScrollToItem(0)
+            val allMessages = state.messages.values.flatten()
+
+            if (allMessages.isNotEmpty()) {
+                // Scroll to the last item
+                listState.animateScrollToItem(allMessages.lastIndex)
+            }
+        }
+    }
+    LaunchedEffect(isKeyboardOpen) {
+        if (isKeyboardOpen && state.messages.isNotEmpty()) {
+            delay(100) // give time for keyboard animation
             val allMessages = state.messages.values.flatten()
 
             if (allMessages.isNotEmpty()) {
@@ -294,11 +319,15 @@ private fun ChatRoomLazyColumn(
         }
     }
 
+
     Column(
+        // 4. CRITICAL: Apply imePadding here on the container Column.
+        // This forces the vertical layout to correctly reserve space above the keyboard.
         modifier = modifier
     ) {
         AnimatedContent(
-            modifier = Modifier.weight(1f),
+            // This takes the remaining vertical space above the TypingIndicator
+            modifier = Modifier.weight(1f).fillMaxWidth(),
             targetState = state.isLoading
         ) { isLoading ->
             if (isLoading) {
@@ -310,12 +339,16 @@ private fun ChatRoomLazyColumn(
                 }
             } else {
                 LazyColumn(
+                    // LazyColumn should fill the AnimatedContent size.
                     modifier = Modifier.fillMaxSize(),
                     state = listState,
                     contentPadding = PaddingValues(
                         start = MaterialTheme.dimens.small3,
                         end = MaterialTheme.dimens.small3,
-                        top = MaterialTheme.dimens.small2
+                        top = MaterialTheme.dimens.small2,
+                        // Small aesthetic padding is fine, IME offset is handled by the Column modifier
+                        bottom = MaterialTheme.dimens.small2
+
                     )
                 ) {
                     state.messages.keys.forEach { key ->

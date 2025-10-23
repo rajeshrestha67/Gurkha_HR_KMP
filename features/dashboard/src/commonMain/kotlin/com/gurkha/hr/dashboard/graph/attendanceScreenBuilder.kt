@@ -22,7 +22,7 @@ fun NavGraphBuilder.attendanceScreenBuilder(
     composable<AttendanceRoute.AttendanceRequestScreen> {
         AttendanceRequestScreen(
             navController = navController,
-            onBackClicked = {
+            onBackPressed = {
                 navController.popBackStack()
             }
         )

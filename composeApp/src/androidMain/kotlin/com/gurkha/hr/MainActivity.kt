@@ -15,7 +15,6 @@ import androidx.core.view.WindowCompat
 import com.gurkha.hr.splashscreen.OnBoardingViewModel
 import com.gurkha.hr.splashscreen.model.OnBoardingAction
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.mp.KoinPlatform.getKoin
 
 
 class MainActivity : ComponentActivity() {
@@ -33,8 +32,7 @@ class MainActivity : ComponentActivity() {
                 showSplashScreen
             }
         }
-        android.Manifest.permission.CAMERA
-        getKoin().setProperty("activity", this)
+
         setContent {
             val view = LocalView.current
             val darkTheme = isSystemInDarkTheme()

@@ -283,13 +283,13 @@ fun AddNoteScreenContent(
     if (showErrorDialogue) {
         PromptModalBottomSheet(
             promptType = PromptType.FAILED,
-            onBackClicked = onBackClicked,
+            onBackPressed = onBackClicked,
             text = messageToShow
         )
     }
     if (showSuccessDialogue) {
         PromptModalBottomSheet(
-            onBackClicked = { onSendData() },
+            onBackPressed = { onSendData() },
             text = messageToShow
         )
     }

@@ -2,8 +2,10 @@ package com.gurkha.hr.settings
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.icons.Icons
@@ -19,10 +21,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.PlatformMessage
+import com.gurkha.hr.components.isKeyboardVisible
 import com.gurkha.hr.components.textField.FormValidate
 import com.gurkha.hr.components.textField.PasswordTextField
 import com.gurkha.hr.res.SharedRes
@@ -60,18 +64,40 @@ fun ChangePasswordScreen(
             platformMessage.showToast(error)
         }
     }
+    ChangePasswordScreenContent(
+        state = state,
+        onBackPressed = onBackPressed,
+        onAction = changePasswordViewModel::onAction
+    )
+
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ChangePasswordScreenContent(
+    state: ChangePasswordScreenState,
+    onBackPressed: () -> Unit,
+    onAction: (ChangePasswordScreenAction) -> Unit
+) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val isKeyboardOpen by isKeyboardVisible()
 
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().imePadding(),
         containerColor = MaterialTheme.colorScheme.background,
-
-
+        contentWindowInsets = WindowInsets(),
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(SharedRes.Strings.change_password)) },
                 navigationIcon = {
                     IconButton(
-                        onClick = onBackPressed
+                        onClick = {
+                            if (isKeyboardOpen) {
+                                keyboardController?.hide()
+                            } else {
+                                onBackPressed()
+                            }
+                        }
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Default.ArrowBack,
@@ -83,19 +109,19 @@ fun ChangePasswordScreen(
             )
         }
     ) { paddingValues ->
-        ChangePasswordScreenContainer(
+        ChangePasswordScreenForm(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues),
             state = state,
-            onAction = changePasswordViewModel::onAction,
+            onAction = onAction,
         )
 
     }
 }
 
 @Composable
-fun ChangePasswordScreenContainer(
+fun ChangePasswordScreenForm(
     modifier: Modifier = Modifier,
     state: ChangePasswordScreenState,
     onAction: (ChangePasswordScreenAction) -> Unit
@@ -147,7 +173,10 @@ fun ChangePasswordScreenContainer(
             imeAction = ImeAction.Send,
             error = state.confirmPasswordError,
             keyboardActions = KeyboardActions(
-                onSend = { }),
+                onSend = {
+                    onAction(ChangePasswordScreenAction.ConfirmClicked)
+                }
+            ),
             rules = FormValidate.passwordValidationRules
 
         )

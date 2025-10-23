@@ -1,21 +1,21 @@
 package com.gurkha.hr.attendanceRequestScreen
 
-import androidx.compose.foundation.background
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
-import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -37,7 +37,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -45,14 +45,13 @@ import androidx.navigation.NavHostController
 import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.date.ERPDateTextField
 import com.gurkha.hr.components.date.FutureAndTodayDate
+import com.gurkha.hr.components.isKeyboardVisible
 import com.gurkha.hr.components.prompts.PromptModalBottomSheet
 import com.gurkha.hr.components.prompts.PromptType
 import com.gurkha.hr.components.textField.DropDownText
-
 import com.gurkha.hr.components.textField.ERPTextField
 import com.gurkha.hr.components.textField.ERPTimeTestField
 import com.gurkha.hr.components.textField.FormValidate
-
 import com.gurkha.hr.model.attendanceRequestScreen.AttendanceRequestAction
 import com.gurkha.hr.model.attendanceRequestScreen.AttendanceRequestState
 import com.gurkha.hr.res.SharedRes
@@ -68,7 +67,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun AttendanceRequestScreen(
     navController: NavHostController,
-    onBackClicked: () -> Unit
+    onBackPressed: () -> Unit
 ) {
     val viewModel: AttendanceRequestViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -120,66 +119,103 @@ fun AttendanceRequestScreen(
             }
         }
     }
-
-    BoxWithConstraints(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        Scaffold(
-            modifier = Modifier.fillMaxSize(),
-            contentWindowInsets = WindowInsets(0.dp),
-            topBar = {
-                TopAppBar(
-                    windowInsets = WindowInsets(0.dp),
-                    title = {
-                        Text(text = stringResource(SharedRes.Strings.attendance_request_form))
-                    },
-                    navigationIcon = {
-                        IconButton(
-                            onClick = onBackClicked,
-                            content = {
-                                Icon(
-                                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                    contentDescription = ""
-                                )
-                            }
-                        )
-                    },
-                )
-            },
-        ) { contentPadding ->
-            AttendanceRequestScreenContent(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(contentPadding),
-                onAction = viewModel::onAction,
-                onBackClicked = onBackClicked,
-                state = state,
-                showSuccessDialogue = showSuccessDialogue,
-                showFailedDialogue = showFailedDialogue,
-                message = message,
-                onSendData = {
-                    sendData = true
-                }
-            )
+    AttendanceRequestScreenContent(
+        onBackPressed = onBackPressed,
+        onAction = viewModel::onAction,
+        state = state,
+        showSuccessDialogue = showSuccessDialogue,
+        showFailedDialogue = showFailedDialogue,
+        message = message,
+        sendData = {
+            sendData = true
         }
+    )
 
-        if (state.isRequestingAttendance) {
-            Box(
-                modifier = Modifier.fillMaxSize().background(color = Color(0x80000000)),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(MaterialTheme.dimens.medium3),
-                    color = MaterialTheme.colorScheme.secondaryContainer
-                )
-            }
-        }
-    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AttendanceRequestScreenContent(
+    onBackPressed: () -> Unit,
+    onAction: (AttendanceRequestAction) -> Unit,
+    state: AttendanceRequestState,
+    showSuccessDialogue: Boolean,
+    showFailedDialogue: Boolean,
+    message: String,
+    sendData: (Boolean) -> Unit
+) {
+
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val isKeyboardOpen by isKeyboardVisible()
+
+    Scaffold(
+        modifier = Modifier.fillMaxSize().imePadding(),
+        containerColor = MaterialTheme.colorScheme.background,
+        contentWindowInsets = WindowInsets(),
+        topBar = {
+            TopAppBar(
+                windowInsets = WindowInsets(),
+                title = {
+                    Text(text = stringResource(SharedRes.Strings.attendance_request_form))
+                },
+                navigationIcon = {
+                    IconButton(
+                        onClick = {
+                            if (isKeyboardOpen) {
+                                keyboardController?.hide()
+                            } else {
+                                onBackPressed()
+                            }
+                        },
+                        content = {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = ""
+                            )
+                        }
+                    )
+                },
+            )
+        },
+    ) { contentPadding ->
+
+        AnimatedContent(
+            modifier = Modifier.fillMaxSize().padding(paddingValues = contentPadding),
+            targetState = state.isRequestingAttendance
+        ) { isLoading ->
+            if (isLoading) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(MaterialTheme.dimens.medium3),
+                        color = MaterialTheme.colorScheme.secondaryContainer
+                    )
+                }
+            } else {
+                AttendanceRequestScreenForm(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    onAction = onAction,
+                    onBackClicked = onBackPressed,
+                    state = state,
+                    showSuccessDialogue = showSuccessDialogue,
+                    showFailedDialogue = showFailedDialogue,
+                    message = message,
+                    onSendData = {
+                        sendData(true)
+                    }
+                )
+            }
+        }
+
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AttendanceRequestScreenForm(
     modifier: Modifier = Modifier,
     onBackClicked: () -> Unit,
     onAction: (AttendanceRequestAction) -> Unit,
@@ -194,13 +230,14 @@ fun AttendanceRequestScreenContent(
 
     Column(
         modifier = modifier.fillMaxWidth()
+            .verticalScroll(rememberScrollState())
             .padding(
                 top = MaterialTheme.dimens.small2,
-                bottom = MaterialTheme.dimens.bottomBar,
+                bottom = 0.dp,
                 end = MaterialTheme.dimens.small3,
                 start = MaterialTheme.dimens.small3
             )
-            .verticalScroll(rememberScrollState())
+
             .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
     ) {
@@ -314,7 +351,12 @@ fun AttendanceRequestScreenContent(
                 onAction(AttendanceRequestAction.OnReasonChange(it))
 
             },
-            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Send),
+            imeAction = ImeAction.Send,
+            keyboardActions = KeyboardActions(
+                onSend = {
+                    onAction(AttendanceRequestAction.OnSubmit)
+                }
+            ),
             rules = FormValidate.requiredValidationRules,
             error = state.reasonError,
             onErrorStateChange = {
@@ -350,7 +392,7 @@ fun AttendanceRequestScreenContent(
         if (showSuccessDialogue) {
             PromptModalBottomSheet(
                 text = message,
-                onBackClicked = {
+                onBackPressed = {
 //                    trigger the send data back launched effect
                     onSendData()
 //                    go to prev screen
@@ -364,7 +406,7 @@ fun AttendanceRequestScreenContent(
                 text = message,
                 promptType = PromptType.FAILED,
                 buttonText = SharedRes.Strings.cancel,
-                onBackClicked = onBackClicked
+                onBackPressed = onBackClicked
             )
         }
     }

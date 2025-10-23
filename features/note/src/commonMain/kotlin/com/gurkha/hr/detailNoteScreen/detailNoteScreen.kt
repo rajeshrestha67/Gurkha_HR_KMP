@@ -170,7 +170,7 @@ fun DetailNoteScreen(
                             PromptModalBottomSheet(
                                 text = stringResource(SharedRes.Strings.delete_confirmation),
                                 cancelButton = true,
-                                onBackClicked = {
+                                onBackPressed = {
                                     viewModel.onAction(DetailNoteScreenAction.OnDeleteNote(note?.id))
                                     showDialogue = false
                                 },
@@ -206,7 +206,7 @@ fun DetailNoteScreen(
 
         if (showSuccessDialogue) {
             PromptModalBottomSheet(
-                onBackClicked = {
+                onBackPressed = {
                     sendData = true
                 },
                 text = messageToShow
@@ -215,7 +215,7 @@ fun DetailNoteScreen(
         if (showErrorDialogue) {
             PromptModalBottomSheet(
                 promptType = PromptType.FAILED,
-                onBackClicked = onBackClicked,
+                onBackPressed = onBackClicked,
                 text = messageToShow
             )
         }

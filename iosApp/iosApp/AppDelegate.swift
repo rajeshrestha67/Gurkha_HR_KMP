@@ -1,9 +1,3 @@
-//
-//  AppDelegate.swift
-//  iosApp
-//
-//  Created by Infinity on 21/10/2025.
-//
 import Firebase
 import UIKit
 class AppDelegate: NSObject, UIApplicationDelegate {

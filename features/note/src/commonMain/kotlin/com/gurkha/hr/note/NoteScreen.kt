@@ -266,14 +266,14 @@ fun NoteScreenContent(
 
     if (showSuccessDialogue) {
         PromptModalBottomSheet(
-            onBackClicked = onCloseSuccessDialogue,
+            onBackPressed = onCloseSuccessDialogue,
             text = messageToShow
         )
     }
     if (showErrorDialogue) {
         PromptModalBottomSheet(
             promptType = PromptType.FAILED,
-            onBackClicked = onCloseErrorDialogue,
+            onBackPressed = onCloseErrorDialogue,
             text = messageToShow
         )
     }
@@ -370,7 +370,7 @@ fun ResultBox(
                 PromptModalBottomSheet(
                     text = stringResource(SharedRes.Strings.delete_confirmation),
                     cancelButton = true,
-                    onBackClicked = {
+                    onBackPressed = {
                         onAction(NoteAction.OnDeleteNote)
                         showDialogue = false
                     },

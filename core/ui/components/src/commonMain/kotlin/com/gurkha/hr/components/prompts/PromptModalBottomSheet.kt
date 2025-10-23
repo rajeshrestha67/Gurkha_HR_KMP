@@ -24,7 +24,6 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.res.SharedRes
@@ -36,13 +35,13 @@ import org.jetbrains.compose.resources.stringResource
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PromptModalBottomSheet(
-    text : String,
+    text: String,
     promptType: PromptType = PromptType.SUCCESS,
     buttonText: StringResource = SharedRes.Strings.ok,
-    onBackClicked: () -> Unit,
+    onBackPressed: () -> Unit,
     cancelButton: Boolean? = false,
     closePopUp: (() -> Unit)? = null,
-){
+) {
     val sheet = rememberModalBottomSheetState(
         skipPartiallyExpanded = true,
         confirmValueChange = { newValue ->
@@ -59,7 +58,7 @@ fun PromptModalBottomSheet(
             closePopUp
         },
         containerColor = MaterialTheme.colorScheme.background,
-    ){
+    ) {
         Column(
             modifier = Modifier.fillMaxWidth().padding(
                 MaterialTheme.dimens.small3
@@ -70,10 +69,11 @@ fun PromptModalBottomSheet(
             ),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            val bgColor = when(promptType){
+            val bgColor = when (promptType) {
                 PromptType.SUCCESS -> {
                     MaterialTheme.colorScheme.primary
                 }
+
                 PromptType.FAILED -> {
                     MaterialTheme.colorScheme.error
                 }
@@ -93,34 +93,34 @@ fun PromptModalBottomSheet(
                     ),
                 contentAlignment = Alignment.Center
             ) {
-               when(promptType){
-                   PromptType.SUCCESS -> {
-                       Icon(
-                           imageVector =  Icons.Filled.Check,
-                           contentDescription = "Success",
-                           tint = MaterialTheme.colorScheme.onPrimary,
-                           modifier = Modifier.size(MaterialTheme.dimens.medium3)
-                       )
-                   }
+                when (promptType) {
+                    PromptType.SUCCESS -> {
+                        Icon(
+                            imageVector = Icons.Filled.Check,
+                            contentDescription = "Success",
+                            tint = MaterialTheme.colorScheme.onPrimary,
+                            modifier = Modifier.size(MaterialTheme.dimens.medium3)
+                        )
+                    }
 
-                   PromptType.FAILED -> {
-                       if(cancelButton == true){
-                           Icon(
-                               imageVector =  Icons.Filled.Delete,
-                               contentDescription = "Error",
-                               tint = MaterialTheme.colorScheme.onError,
-                               modifier = Modifier.size(MaterialTheme.dimens.medium3)
-                           )
-                       }else{
-                           Icon(
-                               imageVector =  Icons.Filled.Close,
-                               contentDescription = "Error",
-                               tint = MaterialTheme.colorScheme.onError,
-                               modifier = Modifier.size(MaterialTheme.dimens.medium3)
-                           )
-                       }
-                   }
-               }
+                    PromptType.FAILED -> {
+                        if (cancelButton == true) {
+                            Icon(
+                                imageVector = Icons.Filled.Delete,
+                                contentDescription = "Error",
+                                tint = MaterialTheme.colorScheme.onError,
+                                modifier = Modifier.size(MaterialTheme.dimens.medium3)
+                            )
+                        } else {
+                            Icon(
+                                imageVector = Icons.Filled.Close,
+                                contentDescription = "Error",
+                                tint = MaterialTheme.colorScheme.onError,
+                                modifier = Modifier.size(MaterialTheme.dimens.medium3)
+                            )
+                        }
+                    }
+                }
             }
             Text(
                 modifier = Modifier.padding(top = MaterialTheme.dimens.small2),
@@ -134,14 +134,13 @@ fun PromptModalBottomSheet(
             ERPButton(
                 modifier = Modifier.fillMaxWidth().padding(top = MaterialTheme.dimens.medium1),
                 text = stringResource(buttonText),
-                onClick = onBackClicked
+                onClick = onBackPressed
             )
-            if(cancelButton == true){
+            if (cancelButton == true) {
                 closePopUp?.let {
                     ERPButton(
                         modifier = Modifier
-                            .fillMaxWidth()
-                        ,
+                            .fillMaxWidth(),
                         backgroundColor = MaterialTheme.colorScheme.error,
                         text = stringResource(SharedRes.Strings.cancel),
                         onClick = closePopUp

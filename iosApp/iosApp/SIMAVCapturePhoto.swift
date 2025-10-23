@@ -1,10 +1,3 @@
-//
-//  SIMAVCapturePhoto.swift
-//  iosApp
-//
-//  Created by Infinity on 19/10/2025.
-//
-
 #if targetEnvironment(simulator) // To include only if in simulator
 import Foundation
 import UIKit
