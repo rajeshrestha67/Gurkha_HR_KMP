@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -331,12 +330,12 @@ fun LeaveRequestScreenForm(
             onValueChange = {
                 onAction(LeaveRequestScreenAction.OnReasonChange(it))
             },
-            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Send),
             rules = FormValidate.requiredValidationRules,
             error = state.reasonError,
             onErrorStateChange = {
                 onAction(LeaveRequestScreenAction.OnReasonError(it))
             },
+            imeAction = ImeAction.Send,
             keyboardActions = KeyboardActions(
                 onSend = {
                     onAction(LeaveRequestScreenAction.Submit)

@@ -309,11 +309,10 @@ private fun ChatRoomLazyColumn(
     }
     LaunchedEffect(isKeyboardOpen) {
         if (isKeyboardOpen && state.messages.isNotEmpty()) {
-            delay(100) // give time for keyboard animation
+            delay(100)
             val allMessages = state.messages.values.flatten()
 
             if (allMessages.isNotEmpty()) {
-                // Scroll to the last item
                 listState.animateScrollToItem(allMessages.lastIndex)
             }
         }
@@ -321,12 +320,9 @@ private fun ChatRoomLazyColumn(
 
 
     Column(
-        // 4. CRITICAL: Apply imePadding here on the container Column.
-        // This forces the vertical layout to correctly reserve space above the keyboard.
         modifier = modifier
     ) {
         AnimatedContent(
-            // This takes the remaining vertical space above the TypingIndicator
             modifier = Modifier.weight(1f).fillMaxWidth(),
             targetState = state.isLoading
         ) { isLoading ->
@@ -339,14 +335,12 @@ private fun ChatRoomLazyColumn(
                 }
             } else {
                 LazyColumn(
-                    // LazyColumn should fill the AnimatedContent size.
                     modifier = Modifier.fillMaxSize(),
                     state = listState,
                     contentPadding = PaddingValues(
                         start = MaterialTheme.dimens.small3,
                         end = MaterialTheme.dimens.small3,
                         top = MaterialTheme.dimens.small2,
-                        // Small aesthetic padding is fine, IME offset is handled by the Column modifier
                         bottom = MaterialTheme.dimens.small2
 
                     )
@@ -474,7 +468,7 @@ private fun TypingIndicator(
     dotSpacing: Dp = MaterialTheme.dimens.small1
 ) {
     val transition = rememberInfiniteTransition()
-    val delays = listOf(0, 300, 600)
+    val delays = remember { listOf(0, 300, 600) }
 
     Row(
         modifier = modifier,

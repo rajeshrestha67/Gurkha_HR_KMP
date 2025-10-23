@@ -103,6 +103,14 @@ class AttendanceRequestViewModel(
                     )
                 }
             }
+
+            is AttendanceRequestAction.OnRadioOptionChange -> {
+                _state.update {
+                    it.copy(
+                        selectedOption = action.option
+                    )
+                }
+            }
         }
     }
 

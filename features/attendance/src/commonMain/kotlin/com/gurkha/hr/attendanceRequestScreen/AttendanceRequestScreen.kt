@@ -4,7 +4,6 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -24,7 +22,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -48,6 +45,8 @@ import com.gurkha.hr.components.date.FutureAndTodayDate
 import com.gurkha.hr.components.isKeyboardVisible
 import com.gurkha.hr.components.prompts.PromptModalBottomSheet
 import com.gurkha.hr.components.prompts.PromptType
+import com.gurkha.hr.components.radioButton.RadioGroup
+import com.gurkha.hr.components.radioButton.RadioGroupOrientation
 import com.gurkha.hr.components.textField.DropDownText
 import com.gurkha.hr.components.textField.ERPTextField
 import com.gurkha.hr.components.textField.ERPTimeTestField
@@ -225,8 +224,6 @@ fun AttendanceRequestScreenForm(
     message: String,
     onSendData: () -> Unit
 ) {
-    val radioOptions = listOf("Clock In", "Clock Out")
-    val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[0]) }
 
     Column(
         modifier = modifier.fillMaxWidth()
@@ -256,39 +253,27 @@ fun AttendanceRequestScreenForm(
                 onAction(AttendanceRequestAction.OnDateChange(it))
             }
         )
-//radio option for the clock in time or clock out time selection
-        Row(
+
+        RadioGroup(
             modifier = Modifier
-                .fillMaxWidth()
-        ) {
-            radioOptions.forEach { text ->
-                Row(
-                    Modifier
-                        .weight(1f)
-                        .selectable(
-                            selected = (text == selectedOption),
-                            onClick = {
-                                onOptionSelected(text)
-                            }
-                        ),
-                    verticalAlignment = Alignment.CenterVertically
+                .fillMaxWidth(),
+            options = state.radioOptions,
+            selectedOption = state.selectedOption,
+            onOptionSelected = {
+                onAction(AttendanceRequestAction.OnRadioOptionChange(it))
+            },
+            optionLabel = { text, isSelected ->
+                Text(
+                    text = stringResource(text),
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        color = if (isSelected) MaterialTheme.colorScheme.primaryTextColor else MaterialTheme.colorScheme.secondaryTextColor
+                    ),
+                )
+            },
+            orientation = RadioGroupOrientation.Horizontal()
+        )
 
-                ) {
-                    RadioButton(
-                        selected = (text == selectedOption),
-                        onClick = { onOptionSelected(text) }
-                    )
-                    Text(
-                        text = text,
-                        style = MaterialTheme.typography.titleMedium.copy(
-                            color = if (text == selectedOption) MaterialTheme.colorScheme.primaryTextColor else MaterialTheme.colorScheme.secondaryTextColor
-                        ),
-                    )
-                }
-            }
-        }
-
-        if (selectedOption == radioOptions[0]) {
+        if (state.selectedOption == state.radioOptions.first()) {
             //        clock in time
             ERPTimeTestField(
                 modifier = Modifier.fillMaxWidth(),
