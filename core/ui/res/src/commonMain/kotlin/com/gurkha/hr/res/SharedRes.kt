@@ -131,6 +131,7 @@ import gurkhahr.core.ui.res.generated.resources.no_assets_available
 import gurkhahr.core.ui.res.generated.resources.no_data_found
 import gurkhahr.core.ui.res.generated.resources.note
 import gurkhahr.core.ui.res.generated.resources.notes
+import gurkhahr.core.ui.res.generated.resources.notifications
 import gurkhahr.core.ui.res.generated.resources.numbers
 import gurkhahr.core.ui.res.generated.resources.ok
 import gurkhahr.core.ui.res.generated.resources.on_time
@@ -468,5 +469,6 @@ object SharedRes {
 
         val camera = Res.string.camera
         val gallery = Res.string.gallery
+        val notifications = Res.string.notifications
     }
 }

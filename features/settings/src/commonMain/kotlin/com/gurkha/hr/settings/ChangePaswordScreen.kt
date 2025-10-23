@@ -17,6 +17,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -88,6 +89,8 @@ fun ChangePasswordScreenContent(
         contentWindowInsets = WindowInsets(),
         topBar = {
             TopAppBar(
+                windowInsets = WindowInsets(),
+                colors = TopAppBarDefaults.topAppBarColors(),
                 title = { Text(stringResource(SharedRes.Strings.change_password)) },
                 navigationIcon = {
                     IconButton(

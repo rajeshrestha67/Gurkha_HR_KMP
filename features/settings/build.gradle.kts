@@ -76,6 +76,7 @@ kotlin {
                 implementation(projects.core.domain)
                 implementation(projects.core.model)
                 implementation(projects.core.networkHelper)
+                implementation(libs.jetbrians.material3)
             }
         }
 

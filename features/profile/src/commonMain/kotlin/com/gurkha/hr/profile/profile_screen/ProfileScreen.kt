@@ -20,16 +20,12 @@ import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -46,6 +42,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.gurkha.hr.components.ColumnItemRow
 import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.ProfilePicture
 import com.gurkha.hr.components.media.MediaSelectorModalBottomSheet
@@ -55,11 +52,11 @@ import com.gurkha.hr.profile.model.profile_screen.ProfileScreenState
 import com.gurkha.hr.profile.profile_screen.model.ProfileScreenAction
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.borderColor
+import com.gurkha.hr.res.theme.darkPrimaryTextColor
 import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.imageBackgroundColor
-import com.gurkha.hr.res.theme.logOutButtonColor
+import com.gurkha.hr.res.theme.logOutTextColor
 import com.gurkha.hr.res.theme.primaryTextColor
-import com.gurkha.hr.res.theme.secondaryTextColor
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -100,15 +97,15 @@ private fun ProfileScreenContent(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
-        contentWindowInsets = WindowInsets(0.dp),
+        contentWindowInsets = WindowInsets(),
         topBar = {
             TopAppBar(
-                modifier = Modifier.padding(start = MaterialTheme.dimens.small2),
-                windowInsets = WindowInsets(0.dp),
+                modifier = Modifier.fillMaxWidth(),
+                windowInsets = WindowInsets(),
                 title = {
-
                     Row(
                         modifier = Modifier.fillMaxWidth()
+                            .padding(vertical = MaterialTheme.dimens.small2)
                     ) {
                         ProfilePicture(
                             imageUrl = state.userProfileUrl,
@@ -130,22 +127,24 @@ private fun ProfileScreenContent(
                                 .padding(horizontal = MaterialTheme.dimens.small2)
                         ) {
                             Text(
-                                style = MaterialTheme.typography.titleMedium,
+                                style = MaterialTheme.typography.titleMedium.copy(
+                                    color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                                ),
                                 text = state.fullName,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis
 
                             )
                             Text(
-                                style = MaterialTheme.typography.titleSmall.copy(
-                                    color = MaterialTheme.colorScheme.secondaryTextColor
+                                style = MaterialTheme.typography.bodyMedium.copy(
+                                    color = MaterialTheme.colorScheme.primaryTextColor
                                 ),
                                 maxLines = 1,
                                 text = state.levelName
                             )
                             Text(
-                                style = MaterialTheme.typography.titleSmall.copy(
-                                    color = MaterialTheme.colorScheme.secondaryTextColor
+                                style = MaterialTheme.typography.bodyMedium.copy(
+                                    color = MaterialTheme.colorScheme.primaryTextColor
                                 ),
                                 text = state.phoneNumber
                             )
@@ -209,9 +208,12 @@ fun ProfileScreenContainer(
         profileListGeneral(
             list = generalList
         ) { item ->
-            ProfileItemRow(
+            ColumnItemRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onGeneralClick(item) }
+                    .padding(vertical = MaterialTheme.dimens.small3),
                 text = stringResource(item.title),
-                onClick = { onGeneralClick(item) },
                 showDivider = item != GeneralList.Report
             )
 
@@ -226,49 +228,37 @@ fun ProfileScreenContainer(
         profileListAccount(
             list = accountList
         ) { item ->
-            ProfileItemRow(
-                text = stringResource(item.title),
-                onClick = {
-                    onAccountClick(item)
-                }
+            ColumnItemRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onAccountClick(item) }
+                    .padding(vertical = MaterialTheme.dimens.small3),
+                text = stringResource(item.title)
             )
         }
 
         //Log Out Button
         item {
-            TextButton(
-                onClick = { showDialog = true },
+            ColumnItemRow(
                 modifier = Modifier
-                    .padding(
-                        horizontal = MaterialTheme.dimens.small1,
-                        vertical = MaterialTheme.dimens.small2
-                    )
-                    .fillMaxWidth(),
-
-                ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Start
-                ) {
-                    Text(
-                        text = stringResource(SharedRes.Strings.log_out),
-                        style = MaterialTheme.typography.titleMedium.copy(
-                            color = MaterialTheme.colorScheme.logOutButtonColor
-                        )
-                    )
-                }
-            }
-
-            if (showDialog) {
-                LogoutBottomSheet(
-                    onDismiss = { showDialog = false },
-                    onConfirm = {
-                        onLogout()
-                        showDialog = false
-                    }
-                )
-            }
+                    .fillMaxWidth()
+                    .clickable { showDialog = true }
+                    .padding(vertical = MaterialTheme.dimens.small3),
+                text = stringResource(SharedRes.Strings.log_out),
+                textColor = MaterialTheme.colorScheme.logOutTextColor,
+                showDivider = false,
+                endIndicator = {}
+            )
         }
+    }
+    if (showDialog) {
+        LogoutBottomSheet(
+            onDismiss = { showDialog = false },
+            onConfirm = {
+                onLogout()
+                showDialog = false
+            }
+        )
     }
 }
 
@@ -302,56 +292,17 @@ private fun LazyListScope.profileListGeneral(
 
 @Composable
 fun SectionHeader(text: StringResource) {
-
     Text(
         modifier = Modifier
-            .padding(top = MaterialTheme.dimens.small1)
             .padding(
-                horizontal = MaterialTheme.dimens.small3,
-                vertical = MaterialTheme.dimens.small1,
+                vertical = MaterialTheme.dimens.small2,
             ),
         text = stringResource(text),
-        style = MaterialTheme.typography.titleLarge
+        style = MaterialTheme.typography.titleLarge.copy(
+            color = MaterialTheme.colorScheme.primary
+        )
 
     )
-}
-
-@Composable
-fun ProfileItemRow(
-    text: String,
-    onClick: () -> Unit,
-    showDivider: Boolean = true
-) {
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onClick() }
-            .padding(MaterialTheme.dimens.small2)
-            .padding(MaterialTheme.dimens.small2),
-
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            modifier = Modifier.weight(1f),
-            text = text,
-            color = MaterialTheme.colorScheme.secondaryTextColor
-        )
-        Icon(
-            imageVector = Icons.Filled.ChevronRight,
-            contentDescription = "Arrow Right"
-        )
-    }
-    if (showDivider) {
-        HorizontalDivider(
-            Modifier
-                .fillMaxWidth()
-                .padding(horizontal = MaterialTheme.dimens.small3),
-            thickness = 0.5.dp,
-            color = MaterialTheme.colorScheme.borderColor
-        )
-    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -64,15 +64,11 @@ val ColorScheme.highLightColor: Color
         light = Color.White.copy(alpha = 0.7f),
         dark = Color.White.copy(alpha = 0.7f)
     )
-val ColorScheme.logOutButtonColor: Color
-    @Composable get() = extendedColor(
-        light = Color.Red,
-        dark = Color.Gray
-    )
+
 val ColorScheme.logOutTextColor: Color
     @Composable get() = extendedColor(
-        light = Color.White,
-        dark = Color.Black
+        light = Color(0xFFC62828),
+        dark = Color(0xFFE53935)
     )
 val ColorScheme.lightRedColor: Color
     @Composable get() = extendedColor(
@@ -83,8 +79,8 @@ val ColorScheme.lightRedColor: Color
 
 val ColorScheme.darkPrimaryTextColor: Color
     @Composable get() = extendedColor(
-        light = Color.Black,
-        dark = Color.Black
+        light = Color(0xFF555975),
+        dark = Color(0xFFEAEAEA)
     )
 
 val ColorScheme.leaveBalanceBorder: Color

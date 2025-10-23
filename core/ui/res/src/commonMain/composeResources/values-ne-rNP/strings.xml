@@ -237,6 +237,7 @@
     <string name="swipe_to_check_out">चेक आउट गर्न स्वाइप गर्नुहोस्</string>
     <string name="camera">क्यामेरा</string>
     <string name="gallery">ग्यालरी</string>
+    <string name="notifications">सूचनाहरू</string>
     <string-array name="months">
         <item>बैशाख</item>
         <item>जेठ</item>

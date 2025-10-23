@@ -623,45 +623,6 @@ fun LazyListScope.requestSection(
         )
     }
 
-    // request part
-//    item(key = "request") {
-//        Column(
-//            modifier = Modifier.fillMaxWidth()
-//                .padding(horizontal = MaterialTheme.dimens.small3)
-//        ) {
-//            Row(
-//                modifier = Modifier
-//                    .fillMaxWidth(),
-//                verticalAlignment = Alignment.CenterVertically,
-//                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
-//            ) {
-//                state.requestRow1.forEach { item ->
-//                    AttendanceItemContent(
-//                        modifier = Modifier.weight(1f),
-//                        item = item
-//                    )
-//                }
-//            }
-//
-//            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small3))
-//
-//            //  second row
-//            Row(
-//                modifier = Modifier
-//                    .fillMaxWidth(),
-//                verticalAlignment = Alignment.CenterVertically,
-//                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
-//            ) {
-//                state.requestRow2.forEach { item ->
-//                    AttendanceItemContent(
-//                        modifier = Modifier.weight(1f),
-//                        item = item
-//                    )
-//                }
-//            }
-//        }
-//    }
-
 //    new approach
     state.requests.chunked(2).forEach { rowItems ->
         item {
@@ -882,18 +843,22 @@ fun TitleBar(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = stringResource(title), style = MaterialTheme.typography.titleLarge
+            text = stringResource(title),
+            style = MaterialTheme.typography.titleLarge.copy(
+                color = MaterialTheme.colorScheme.primary
+            )
         )
         subTitle?.let {
             TextButton(
-                onClick = onViewAll, content = {
-                    Text(
-                        text = stringResource(subTitle),
-                        style = MaterialTheme.typography.titleSmall.copy(
-                            color = MaterialTheme.colorScheme.linkColor
-                        )
+                onClick = onViewAll
+            ) {
+                Text(
+                    text = stringResource(subTitle),
+                    style = MaterialTheme.typography.titleSmall.copy(
+                        color = MaterialTheme.colorScheme.linkColor
                     )
-                })
+                )
+            }
         }
     }
 }

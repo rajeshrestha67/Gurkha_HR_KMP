@@ -237,6 +237,7 @@
     <string name="swipe_to_check_in">Swipe to Check In</string>
     <string name="swipe_to_check_out">Swipe to Check Out</string>
     <string name="swipe_to_dismiss">Swipe to Dismiss">Working Days</string>
+    <string name="notifications">Notifications</string>
 
 
     <string-array name="months">

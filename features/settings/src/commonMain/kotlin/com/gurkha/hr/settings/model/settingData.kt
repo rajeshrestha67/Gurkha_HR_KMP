@@ -1,13 +1,15 @@
 package com.gurkha.hr.settings.model
-import org.jetbrains.compose.resources.StringResource
+
 import com.gurkha.hr.res.SharedRes
+import org.jetbrains.compose.resources.StringResource
 
 
-
-enum class SettingList(val title: StringResource){
+enum class SettingList(val title: StringResource) {
     ChangePassword(title = SharedRes.Strings.change_password),
     Theme(title = SharedRes.Strings.theme),
-    Language(title = SharedRes.Strings.language);
+    Language(title = SharedRes.Strings.language),
+
+    Notification(title = SharedRes.Strings.notifications);
 
 
     companion object {
