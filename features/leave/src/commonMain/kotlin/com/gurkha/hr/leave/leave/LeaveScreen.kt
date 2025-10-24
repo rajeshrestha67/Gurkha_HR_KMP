@@ -148,6 +148,9 @@ fun LeaveScreenContent(
 
 //        show the result of the attendance
         leaveResults(state = state)
+        item {
+            Spacer(modifier = Modifier.height(MaterialTheme.dimens.bottomBar))
+        }
     }
 }
 

@@ -154,6 +154,10 @@ fun AttendanceContent(
         attendanceResult(
             state = state
         )
+
+        item {
+            Spacer(modifier = Modifier.height(MaterialTheme.dimens.bottomBar))
+        }
     }
 }
 
