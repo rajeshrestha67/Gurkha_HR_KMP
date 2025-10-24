@@ -168,7 +168,6 @@ class ChatRoomViewModel(
         }
         viewModelScope.launch {
             observeSocketEventsUseCase.onTyping.collect { typing ->
-                println("ChatRoomViewModel typing $typing")
                 _state.update {
                     it.copy(
                         isTyping = typing

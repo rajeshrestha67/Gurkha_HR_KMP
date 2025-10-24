@@ -45,7 +45,6 @@ class ReportViewModel(
             bsYear = _state.value.year
 
         ).onSuccess { data ->
-            println("report_data $data")
             _state.update {
                 it.copy(
                     isLoading = false,
@@ -91,7 +90,7 @@ class ReportViewModel(
             bsMonth = _state.value.monthValue,
             bsYear = _state.value.year
         ).onSuccess { data ->
-            
+
             _state.update {
                 it.copy(
                     historySummaryList = data.map { mdata -> mdata.toUI() }

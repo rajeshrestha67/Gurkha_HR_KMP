@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 
 class CompanyAssetsViewModel(
     private val companyAssetsUseCase: CompanyAssetsUseCase
-): ViewModel() {
+) : ViewModel() {
     private val _state = MutableStateFlow(CompanyAssetsState())
     val state = _state
         .onStart {
@@ -26,10 +26,9 @@ class CompanyAssetsViewModel(
             initialValue = CompanyAssetsState()
         )
 
-    private fun onFetchData()= viewModelScope.launch {
+    private fun onFetchData() = viewModelScope.launch {
         _state.update { it.copy(isLoading = true) }
-        companyAssetsUseCase(). onSuccess {
-            data -> println("companyAssets $data")
+        companyAssetsUseCase().onSuccess { data ->
             _state.update {
                 it.copy(
                     isLoading = false,

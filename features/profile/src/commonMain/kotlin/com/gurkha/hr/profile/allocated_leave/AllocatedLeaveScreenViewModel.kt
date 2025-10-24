@@ -41,12 +41,13 @@ class AllocatedLeaveScreenViewModel(
         _state.update { it.copy(isLoading = true) }
         allocatedLeaveUseCase(
         ).onSuccess { data ->
-            println("allocated_data $data")
-            _state.update { it.copy(
-                isLoading = false,
-                leaveSummaryList = data
+            _state.update {
+                it.copy(
+                    isLoading = false,
+                    leaveSummaryList = data
 
-            ) }
+                )
+            }
         }
 
     }

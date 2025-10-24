@@ -34,9 +34,6 @@ actual object LocalAppLocale {
         val userDefaults = NSUserDefaults.standardUserDefaults
         userDefaults.setObject(newLang, LANG_KEY)
 
-        // Optional: log or debug
-        println("iOS Locale set to: $newLang")
-
         // Provide new language to Composition
         return LocalAppLocale.provides(newLang)
     }

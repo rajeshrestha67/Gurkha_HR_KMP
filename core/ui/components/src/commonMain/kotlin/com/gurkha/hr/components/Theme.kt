@@ -175,7 +175,7 @@ fun AppTheme(
     }
 
     val colorScheme = if (darkTheme) darkScheme else lightScheme
-    println("erpAppLocale $erpAppLocale,selectedThemeMode $selectedThemeMode")
+
     ChangeStatusBarColor(
         darkIcons = !darkTheme
     )

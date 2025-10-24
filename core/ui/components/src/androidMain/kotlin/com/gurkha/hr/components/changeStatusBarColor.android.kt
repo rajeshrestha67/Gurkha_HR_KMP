@@ -11,7 +11,7 @@ actual fun ChangeStatusBarColor(
     darkIcons: Boolean
 ) {
     val activity = LocalActivity.current
-    println("activity $activity")
+
     DisposableEffect(darkIcons) {
         changeColor(activity = activity, darkIcons = darkIcons)
         onDispose {
