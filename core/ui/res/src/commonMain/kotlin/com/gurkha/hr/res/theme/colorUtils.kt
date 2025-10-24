@@ -80,7 +80,7 @@ val ColorScheme.lightRedColor: Color
 val ColorScheme.darkPrimaryTextColor: Color
     @Composable get() = extendedColor(
         light = Color(0xFF555975),
-        dark = Color(0xFFEAEAEA)
+        dark = Color(0xFFF2F2F2)
     )
 
 val ColorScheme.leaveBalanceBorder: Color
