@@ -30,6 +30,7 @@ import gurkhahr.core.ui.res.generated.resources.attendance_request
 import gurkhahr.core.ui.res.generated.resources.attendance_request_form
 import gurkhahr.core.ui.res.generated.resources.attendance_summary
 import gurkhahr.core.ui.res.generated.resources.bachelor
+import gurkhahr.core.ui.res.generated.resources.biometric
 import gurkhahr.core.ui.res.generated.resources.bs
 import gurkhahr.core.ui.res.generated.resources.camera
 import gurkhahr.core.ui.res.generated.resources.cancel
@@ -64,6 +65,7 @@ import gurkhahr.core.ui.res.generated.resources.email
 import gurkhahr.core.ui.res.generated.resources.emergency_contact
 import gurkhahr.core.ui.res.generated.resources.end_date
 import gurkhahr.core.ui.res.generated.resources.end_time
+import gurkhahr.core.ui.res.generated.resources.english
 import gurkhahr.core.ui.res.generated.resources.enter_description
 import gurkhahr.core.ui.res.generated.resources.enter_reason
 import gurkhahr.core.ui.res.generated.resources.enter_title
@@ -127,6 +129,7 @@ import gurkhahr.core.ui.res.generated.resources.mourning_leave
 import gurkhahr.core.ui.res.generated.resources.my_attendance
 import gurkhahr.core.ui.res.generated.resources.national_id
 import gurkhahr.core.ui.res.generated.resources.nationality
+import gurkhahr.core.ui.res.generated.resources.nepali
 import gurkhahr.core.ui.res.generated.resources.new_password
 import gurkhahr.core.ui.res.generated.resources.next
 import gurkhahr.core.ui.res.generated.resources.no
@@ -476,5 +479,9 @@ object SharedRes {
         val dark = Res.string.dark
         val light = Res.string.light
         val system = Res.string.system
+        val biometric = Res.string.biometric
+
+        val english = Res.string.english
+        val nepali = Res.string.nepali
     }
 }

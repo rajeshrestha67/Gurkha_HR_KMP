@@ -114,7 +114,7 @@ class FirebaseService : FirebaseMessagingService() {
         // Create the NotificationChannel for Android 8+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = title
-            val descriptionText = "Notification Channel for ${context.getString(R.string.app_name)}"
+            val descriptionText = "Biometric Channel for ${context.getString(R.string.app_name)}"
             val importance = NotificationManager.IMPORTANCE_HIGH
             val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
                 description = descriptionText
@@ -140,7 +140,7 @@ class FirebaseService : FirebaseMessagingService() {
     }
 
     companion object {
-        private const val CHANNEL_ID = "Normal Notification"
+        private const val CHANNEL_ID = "Normal Biometric"
     }
 
 }

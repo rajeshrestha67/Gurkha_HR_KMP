@@ -25,7 +25,6 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import com.gurkha.hr.components.AnimatedNavHost
 import com.gurkha.hr.components.PlatformMessage
 import com.gurkha.hr.components.navigationBar.ERPNavigationBar
@@ -57,13 +56,12 @@ private const val TAG = "DashboardScreen"
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun DashboardScreen(
+    navController: NavHostController,
     onLogout: () -> Unit,
     onChatClick: () -> Unit
 ) {
     val viewModel: DashboardViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
-
-    val navController = rememberNavController()
 
 
     var bottomBarState by remember {

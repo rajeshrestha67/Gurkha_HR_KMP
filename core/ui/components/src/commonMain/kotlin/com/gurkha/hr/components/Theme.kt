@@ -6,9 +6,7 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.compositionLocalOf
-import androidx.compose.runtime.key
 import com.gurkha.hr.components.locale.LocalAppLocale
 import com.gurkha.hr.components.locale.erpAppLocale
 import com.gurkha.hr.res.theme.AppTypography
@@ -177,6 +175,7 @@ fun AppTheme(
     }
 
     val colorScheme = if (darkTheme) darkScheme else lightScheme
+    println("erpAppLocale $erpAppLocale,selectedThemeMode $selectedThemeMode")
     ChangeStatusBarColor(
         darkIcons = !darkTheme
     )
@@ -185,17 +184,12 @@ fun AppTheme(
         LocalAppDimens provides CompactDimens,
         LocalAppLocale provides erpAppLocale,
     ) {
-        key(erpAppLocale) {
-            LaunchedEffect(erpAppLocale) {
-                println("customAppLocale theme $erpAppLocale")
-            }
-            MaterialTheme(
-                colorScheme = colorScheme,
-                typography = AppTypography,
-                content = content
-            )
-        }
 
+        MaterialTheme(
+            colorScheme = colorScheme,
+            typography = AppTypography,
+            content = content
+        )
     }
 }
 

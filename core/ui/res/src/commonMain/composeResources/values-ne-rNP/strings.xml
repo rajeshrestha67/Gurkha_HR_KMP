@@ -243,6 +243,11 @@
     <string name="dark">अँध्यारो</string>
     <string name="system">प्रणाली</string>
 
+    <string name="english">अंग्रेजी</string>
+    <string name="nepali">नेपाली</string>
+
+    <string name="biometric">बायोमेट्रिक</string>
+    
     <string-array name="months">
         <item>बैशाख</item>
         <item>जेठ</item>

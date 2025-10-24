@@ -9,7 +9,7 @@ enum class SettingList(val title: StringResource) {
     AppAppearance(title = SharedRes.Strings.appAppearance),
     Language(title = SharedRes.Strings.language),
 
-    Notification(title = SharedRes.Strings.notifications);
+    Biometric(title = SharedRes.Strings.biometric);
 
 
     companion object {

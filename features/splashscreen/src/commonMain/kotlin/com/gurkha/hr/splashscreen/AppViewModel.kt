@@ -2,7 +2,8 @@ package com.gurkha.hr.splashscreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gurkha.hr.domain.app.usecase.FetchUserThemeModeUseCase
+import com.gurkha.hr.components.locale.erpAppLocale
+import com.gurkha.hr.domain.app.usecase.FetchUserInfoUseCase
 import com.gurkha.hr.res.theme.ThemeMode
 import com.gurkha.hr.splashscreen.model.AppThemeAction
 import com.gurkha.hr.splashscreen.model.AppThemeState
@@ -13,7 +14,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class AppViewModel(
-    fetchUserThemeModeUseCase: FetchUserThemeModeUseCase,
+    fetchUserThemeModeUseCase: FetchUserInfoUseCase,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(AppThemeState())
@@ -27,15 +28,18 @@ class AppViewModel(
     init {
         viewModelScope.launch {
             fetchUserThemeModeUseCase().collect { userInfo ->
+                erpAppLocale = userInfo.langCode
                 _state.update {
-                    it.copy(userThemeMode = ThemeMode.get(userInfo.userThemeMode))
+                    it.copy(
+                        userThemeMode = ThemeMode.get(userInfo.userThemeMode)
+                    )
                 }
             }
         }
     }
 
     fun onAction(action: AppThemeAction) {
-       
+
     }
 
 }

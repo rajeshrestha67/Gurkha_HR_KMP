@@ -5,5 +5,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class UserInfo(
     val isFirstTime: Boolean? = null,
-    val userThemeMode: Int = 2
+    val userThemeMode: Int = 2,
+    val langCode: String = "en"
 )

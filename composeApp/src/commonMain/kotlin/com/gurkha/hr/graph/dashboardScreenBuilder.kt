@@ -8,10 +8,12 @@ import com.gurkha.hr.route.AppRoute
 
 fun NavGraphBuilder.dashboardScreenBuilder(
     navController: NavHostController,
+    dashboardNavController: NavHostController,
     onChatClick: () -> Unit
 ) {
     composable<AppRoute.DashboardRoute> {
         DashboardScreen(
+            navController = dashboardNavController,
             onLogout = {
                 navController.navigate(AppRoute.LoginRoute) {
                     popUpTo(AppRoute.DashboardRoute) { inclusive = true }

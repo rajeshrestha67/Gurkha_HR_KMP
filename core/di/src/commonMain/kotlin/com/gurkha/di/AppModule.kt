@@ -2,7 +2,7 @@ package com.gurkha.di
 
 
 import com.gurkha.hr.datastore.user_info.repository.UserInfoRepository
-import com.gurkha.hr.domain.app.usecase.FetchUserThemeModeUseCase
+import com.gurkha.hr.domain.app.usecase.FetchUserInfoUseCase
 import com.gurkha.hr.splashscreen.AppViewModel
 import org.koin.android.annotation.KoinViewModel
 import org.koin.core.annotation.Factory
@@ -13,10 +13,10 @@ class AppModule {
     @Factory
     fun fetchUserThemeModeUseCase(
         userInfoRepository: UserInfoRepository
-    ) = FetchUserThemeModeUseCase(userInfoRepository = userInfoRepository)
+    ) = FetchUserInfoUseCase(userInfoRepository = userInfoRepository)
 
 
     @KoinViewModel
-    fun appThemeViewModel(fetchUserThemeModeUseCase: FetchUserThemeModeUseCase) =
+    fun appThemeViewModel(fetchUserThemeModeUseCase: FetchUserInfoUseCase) =
         AppViewModel(fetchUserThemeModeUseCase = fetchUserThemeModeUseCase)
 }

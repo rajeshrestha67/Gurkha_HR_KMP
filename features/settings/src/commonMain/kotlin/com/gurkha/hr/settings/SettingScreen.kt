@@ -37,6 +37,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gurkha.hr.components.ColumnItemRow
 import com.gurkha.hr.components.dimens
 import com.gurkha.hr.res.SharedRes
+import com.gurkha.hr.res.theme.EPRLanguage
 import com.gurkha.hr.res.theme.ThemeMode
 import com.gurkha.hr.res.theme.primaryTextColor
 import com.gurkha.hr.settings.model.settings.SettingList
@@ -119,6 +120,7 @@ fun SettingScreenContent(
 ) {
 
     var showThemeBottomSheet by remember { mutableStateOf(false) }
+    var showLanguageBottomSheet by remember { mutableStateOf(false) }
 
     Box(
         modifier = modifier,
@@ -145,18 +147,18 @@ fun SettingScreenContent(
                                 }
 
                                 SettingList.Language -> {
-
+                                    showLanguageBottomSheet = true
                                 }
 
-                                SettingList.Notification -> {
+                                SettingList.Biometric -> {
                                     navigateToNotificationSettings()
                                 }
                             }
                         }
-                        .padding(vertical = if (item != SettingList.Notification) MaterialTheme.dimens.small3 else MaterialTheme.dimens.small1),
+                        .padding(vertical = if (item != SettingList.Biometric) MaterialTheme.dimens.small3 else MaterialTheme.dimens.small1),
                     text = stringResource(item.title),
                     endIndicator = {
-                        if (item == SettingList.Notification) {
+                        if (item == SettingList.Biometric) {
                             Switch(
                                 checked = state.notificationEnabled,
                                 onCheckedChange = {
@@ -183,6 +185,17 @@ fun SettingScreenContent(
             },
             onDismiss = { showThemeBottomSheet = false }
         )
+        LanguageBottomSheet(
+            showLanguageBottomSheet = showLanguageBottomSheet,
+            languages = state.languages,
+            onLanguageSelected = {
+                onAction(SettingsScreenAction.OnLanguageSelected(it))
+                showLanguageBottomSheet = false
+            },
+            onDismiss = {
+                showLanguageBottomSheet = false
+            }
+        )
     }
 }
 
@@ -195,6 +208,76 @@ private fun LazyListScope.settingListItems(
         items = list, key = { it.title.key },
         itemContent = itemContent
     )
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun LanguageBottomSheet(
+    showLanguageBottomSheet: Boolean,
+    languages: List<EPRLanguage>,
+    onDismiss: () -> Unit,
+    onLanguageSelected: (EPRLanguage) -> Unit
+) {
+
+    if (!showLanguageBottomSheet) {
+        return
+    }
+    ModalBottomSheet(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight(),
+        onDismissRequest = onDismiss,
+        containerColor = MaterialTheme.colorScheme.background
+    ) {
+        Column(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+
+            Text(
+                modifier = Modifier.padding(
+                    vertical = MaterialTheme.dimens.small2,
+                    horizontal = MaterialTheme.dimens.small3
+                ),
+                text = stringResource(SharedRes.Strings.appAppearance),
+                style = MaterialTheme.typography.titleLarge.copy(
+                    color = MaterialTheme.colorScheme.primary
+                )
+            )
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth(),
+                contentPadding = PaddingValues(
+                    horizontal = MaterialTheme.dimens.small3
+                )
+            ) {
+
+                items(items = languages, key = { it.langCode }) { theme ->
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                onLanguageSelected(theme)
+                            }
+
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(vertical = MaterialTheme.dimens.small2),
+                            text = stringResource(theme.displayName),
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                color = MaterialTheme.colorScheme.primaryTextColor
+                            )
+                        )
+                        HorizontalDivider(
+                            modifier = Modifier.fillMaxWidth(),
+                            thickness = 0.5.dp,
+                            color = MaterialTheme.colorScheme.outline
+                        )
+                    }
+
+                }
+            }
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -265,3 +348,4 @@ fun ThemeBottomSheet(
         }
     }
 }
+
