@@ -199,6 +199,7 @@ fun DashboardScreenContent(
                                         )
                                     )
                                     navController.navigate(item.route) {
+                                        popUpTo(DashboardRoute.HomeRoute) { inclusive = false }
                                         launchSingleTop = true
                                         restoreState = true
                                     }
