@@ -31,8 +31,7 @@ fun initKoin(config: KoinAppDeclaration? = null) {
             HistoryModule().module,
             HistoryModule().module,
             ReportScreenModule().module,
-            NoteScreenModule().module,
-            NotificationModule().module
+            NoteScreenModule().module
         )
     }
 }

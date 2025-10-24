@@ -1,4 +1,4 @@
-package com.gurkha.hr.notification.model
+package com.gurkha.hr.model.notification
 
 import com.gurkha.hr.domain.notification.notificationData.model.NotificationData
 

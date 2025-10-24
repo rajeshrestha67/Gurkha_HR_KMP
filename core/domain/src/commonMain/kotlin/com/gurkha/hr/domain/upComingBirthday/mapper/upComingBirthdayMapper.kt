@@ -1,7 +1,9 @@
 package com.gurkha.hr.domain.upComingBirthday.mapper
 
+import com.gurkha.hr.components.extractInitials
 import com.gurkha.hr.domain.upComingBirthday.model.UpComingBirthdayData
 import com.gurkha.model.upComingBirthday.UserUpComingBirthdayDetailDto
+import com.gurkha.model.upComingBirthday.ui.ViewAllUi
 
 
 fun UserUpComingBirthdayDetailDto.toData(): List<UpComingBirthdayData> {
@@ -11,7 +13,22 @@ fun UserUpComingBirthdayDetailDto.toData(): List<UpComingBirthdayData> {
             dateOfBirth = it.dateOfBirth ?: "",
             designationName = it.designationName ?: "",
             branchName = it.branchName ?: "",
-            imageUrl = it.imageUrl ?: ""
+            imageUrl = it.imageUrl ?: "",
+            initials = it.fullName?.extractInitials() ?: ""
         )
     } ?: emptyList()
+}
+
+
+
+fun List<UpComingBirthdayData>.toUi(): List<ViewAllUi> {
+    return map {
+        ViewAllUi(
+            fullName = it.fullName,
+            designationName = it.designationName,
+            branchName = it.branchName,
+            imageUrl = it.imageUrl,
+            initials = it.initials
+        )
+    }
 }

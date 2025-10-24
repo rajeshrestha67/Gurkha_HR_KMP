@@ -28,6 +28,8 @@ import com.gurkha.hr.domain.upComingWorkAnniversaries.useCase.UpComingWorkAnnive
 import com.gurkha.hr.domain.userDetail.repository.UserDetailRemoteRepository
 import com.gurkha.hr.domain.userDetail.usecase.FetchUserDetailUseCase
 import com.gurkha.hr.home.HomeScreenViewModel
+import com.gurkha.hr.notification.NotificationViewModel
+import com.gurkha.hr.viewAllScreen.ViewAllScreenViewModel
 import io.ktor.client.HttpClient
 import org.koin.android.annotation.KoinViewModel
 import org.koin.core.annotation.Factory
@@ -138,6 +140,16 @@ class HomeScreenModule {
         calendarModel = calendarModel,
         eventUseCase = eventUseCase,
         notificationCountUseCase = notificationCountUseCase,
+        notificationUseCase = notificationUseCase
+    )
+
+    @KoinViewModel
+    fun getViewAllViewModel(): ViewAllScreenViewModel = ViewAllScreenViewModel()
+
+    @KoinViewModel
+    fun getNotificationViewModel(
+        notificationUseCase: NotificationUseCase
+    ): NotificationViewModel= NotificationViewModel(
         notificationUseCase = notificationUseCase
     )
 }

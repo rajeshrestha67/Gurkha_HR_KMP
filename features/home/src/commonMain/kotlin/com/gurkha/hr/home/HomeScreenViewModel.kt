@@ -8,18 +8,17 @@ import com.gurkha.hr.date.Year
 import com.gurkha.hr.date.data.model.CalendarModel
 import com.gurkha.hr.domain.attendance.attendanceReport.model.AttendanceData
 import com.gurkha.hr.domain.attendance.attendanceReport.usecase.AttendanceUseCase
-import com.gurkha.hr.domain.notification.notificationCount.model.NotificationCountData
 import com.gurkha.hr.domain.notification.notificationCount.useCase.NotificationCountUseCase
 import com.gurkha.hr.domain.notification.notificationData.useCase.NotificationUseCase
 import com.gurkha.hr.domain.upComingBirthday.usecase.UpComingBirthdayUseCase
 import com.gurkha.hr.domain.upComingEvent.useCase.EventUseCase
 import com.gurkha.hr.domain.upComingWorkAnniversaries.useCase.UpComingWorkAnniversaryUseCase
 import com.gurkha.hr.domain.userDetail.usecase.FetchUserDetailUseCase
-import com.gurkha.hr.home.model.HomeScreenActions
-import com.gurkha.hr.home.model.HomeScreenState
-import com.gurkha.hr.home.model.RequestItem
-import com.gurkha.hr.home.model.RequestType
-import com.gurkha.hr.home.model.toUI
+import com.gurkha.hr.model.home.HomeScreenActions
+import com.gurkha.hr.model.home.HomeScreenState
+import com.gurkha.hr.model.home.RequestItem
+import com.gurkha.hr.model.home.RequestType
+import com.gurkha.hr.model.home.toUI
 import com.gurkha.hr.logger.AppLogger
 import com.gurkha.hr.networkhelper.onError
 import com.gurkha.hr.networkhelper.onSuccess
@@ -32,7 +31,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.number
-import kotlin.collections.plus
 
 class HomeScreenViewModel(
     private val attendanceUseCase: AttendanceUseCase,
@@ -53,7 +51,6 @@ class HomeScreenViewModel(
             fetchAttendance()
             fetchCalendarValue()
             fetchUpComingEvents()
-            getAllNotifications()
             getTotalNotificationCount()
         }
         .stateIn(
@@ -304,17 +301,6 @@ class HomeScreenViewModel(
         }
 
     }
-    private fun getAllNotifications() = viewModelScope.launch {
-        notificationUseCase().onSuccess { data ->
-            val groupedNotifications = data.groupByTo(LinkedHashMap()) { it.seen }
-            val seenCount = groupedNotifications[true]?.size ?: 0
-            _state.update {
-                it.copy(
-                    totalSeenNotification = seenCount
-                )
-            }
-        }
-    }
 
     private fun getTotalNotificationCount()=viewModelScope.launch {
         _state.update {
@@ -322,17 +308,12 @@ class HomeScreenViewModel(
                 isNotificationCountLoading = true
             )
         }
-        notificationCountUseCase(true).onSuccess {data ->
-            _state.update { currentState ->
-                val seenCount = currentState.totalSeenNotification
-                val updatedPendingCount = data.count - seenCount
-
-                currentState.copy(
-                    totalNotificationCount = currentState.totalNotificationCount?.copy(
-                        count = updatedPendingCount
-                    ) ?: NotificationCountData(count = updatedPendingCount)
-                )
-            }
+        notificationCountUseCase(force = true).onSuccess {data ->
+           _state.update {
+               it.copy(
+                   totalNotificationCount = data.count
+               )
+           }
 
         }.onError {
             _state.update {

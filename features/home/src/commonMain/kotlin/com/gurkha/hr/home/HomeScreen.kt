@@ -68,11 +68,13 @@ import com.gurkha.hr.components.shimmer.ShimmerView
 import com.gurkha.hr.components.swipeToDismiss.SwipeToDismissBox
 import com.gurkha.hr.date.data.CalendarDate
 import com.gurkha.hr.date.data.CalendarDay
+import com.gurkha.hr.domain.upComingBirthday.mapper.toUi
 import com.gurkha.hr.domain.upComingEvent.model.EventData
-import com.gurkha.hr.home.model.AttendanceHistoryItemUI
-import com.gurkha.hr.home.model.HomeScreenActions
-import com.gurkha.hr.home.model.HomeScreenState
-import com.gurkha.hr.home.model.RequestItem
+import com.gurkha.hr.domain.upComingWorkAnniversaries.mapper.toUi
+import com.gurkha.hr.model.home.AttendanceHistoryItemUI
+import com.gurkha.hr.model.home.HomeScreenActions
+import com.gurkha.hr.model.home.HomeScreenState
+import com.gurkha.hr.model.home.RequestItem
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.borderColor
 import com.gurkha.hr.res.theme.darkPrimaryTextColor
@@ -81,6 +83,8 @@ import com.gurkha.hr.res.theme.highLightColor
 import com.gurkha.hr.res.theme.imageBackgroundColor
 import com.gurkha.hr.res.theme.linkColor
 import com.gurkha.hr.res.theme.primaryTextColor
+import com.gurkha.model.upComingBirthday.ui.ViewAllUi
+import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -155,7 +159,7 @@ fun HomeScreen(
                             Badge(
                                 contentColor = MaterialTheme.colorScheme.onError
                             ) {
-                                Text(text = state.totalNotificationCount?.count.toString())
+                                Text(text = state.totalNotificationCount.toString())
                             }
                         }
                     ) {
@@ -250,7 +254,6 @@ fun HomeScreenContent(
             // event section
             eventSection(
                 state = state,
-                onViewAllClick = onViewAllClick
             )
 
             //birthday section
@@ -290,11 +293,12 @@ fun LazyListScope.anniversarySection(
     state: HomeScreenState,
     onViewAllClick: (String?) -> Unit
 ) {
+    val data = Json.encodeToString<List<ViewAllUi>>(state.upComingWorkAnniversary.toUi())
     item(key = "anniversary title") {
         TitleBar(
             modifier = Modifier.fillMaxWidth()
                 .padding(start = MaterialTheme.dimens.small3, end = MaterialTheme.dimens.small1),
-            onViewAll = { onViewAllClick("will be sending data") },
+            onViewAll = { onViewAllClick(data) },
             title = SharedRes.Strings.work_anniversaries,
             subTitle = SharedRes.Strings.view_all
         )
@@ -348,11 +352,12 @@ fun LazyListScope.birthDaySection(
     state: HomeScreenState,
     onViewAllClick: (String?) -> Unit
 ) {
+    val dataToSend = Json.encodeToString<List<ViewAllUi>>(state.upComingBirthday.toUi())
     item(key = "birthday") {
         TitleBar(
             modifier = Modifier.fillMaxWidth()
                 .padding(start = MaterialTheme.dimens.small3, end = MaterialTheme.dimens.small1),
-            onViewAll = { onViewAllClick("will be sending data") },
+            onViewAll = { onViewAllClick(dataToSend) },
             title = SharedRes.Strings.upcoming_birthday,
             subTitle = SharedRes.Strings.view_all
         )
@@ -783,7 +788,6 @@ fun AttendanceItemContent(
 
 fun LazyListScope.eventSection(
     state: HomeScreenState,
-    onViewAllClick: (String?) -> Unit
 ) {
     if (state.upComingEvent.isNotEmpty()) {
         item(key = "event title") {
@@ -793,9 +797,8 @@ fun LazyListScope.eventSection(
                         start = MaterialTheme.dimens.small3,
                         end = MaterialTheme.dimens.small1
                     ),
-                onViewAll = { onViewAllClick("will be sending data") },
+                onViewAll = {},
                 title = SharedRes.Strings.upcoming_events,
-                subTitle = SharedRes.Strings.view_all
             )
         }
         item(key = "event list") {

@@ -1,5 +1,4 @@
-package com.gurkha.hr.home.model
-
+package com.gurkha.hr.model.home
 
 sealed interface HomeScreenActions {
     data object OnCheckInClicked : HomeScreenActions

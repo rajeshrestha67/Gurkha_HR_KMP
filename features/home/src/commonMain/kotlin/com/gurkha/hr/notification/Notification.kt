@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -34,7 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gurkha.hr.components.ProfilePicture
 import com.gurkha.hr.domain.notification.notificationData.model.NotificationData
-import com.gurkha.hr.notification.model.NotificationState
+import com.gurkha.hr.model.notification.NotificationState
 import com.gurkha.hr.res.theme.borderColor
 import com.gurkha.hr.res.theme.darkPrimaryTextColor
 import com.gurkha.hr.res.theme.dimens
@@ -49,7 +50,6 @@ fun Notification(
 ) {
     val viewModel: NotificationViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
-
 
     Scaffold(
         contentWindowInsets = WindowInsets(0.dp),
@@ -102,11 +102,14 @@ fun NotificationScreenContent(
                 )
             }
 
-            items(notification) { item ->
+            itemsIndexed(notification){index, item->
                 NotificationBox(item = item)
                 HorizontalDivider(
                     modifier = Modifier.padding(horizontal = MaterialTheme.dimens.small2)
                 )
+                if(index == notification.lastIndex  && !state.isNotificationLoading){
+                    println("lastIndex_reached_fetchMore")
+                }
             }
         }
     }

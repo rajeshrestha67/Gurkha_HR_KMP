@@ -1,4 +1,4 @@
-package com.gurkha.hr.home.model
+package com.gurkha.hr.model.home
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.EditCalendar
@@ -10,7 +10,6 @@ import com.gurkha.hr.date.data.CalendarDate
 import com.gurkha.hr.date.data.CalendarDay
 import com.gurkha.hr.domain.attendance.attendanceReport.model.AttendanceData
 import com.gurkha.hr.domain.attendance.attendanceReport.model.AttendanceStatus
-import com.gurkha.hr.domain.notification.notificationCount.model.NotificationCountData
 import com.gurkha.hr.domain.upComingBirthday.model.UpComingBirthdayData
 import com.gurkha.hr.domain.upComingEvent.model.EventData
 import com.gurkha.hr.domain.upComingWorkAnniversaries.model.UpComingWorkAnniversaryData
@@ -43,7 +42,7 @@ data class HomeScreenState(
     val isEventLoading : Boolean = false,
     val upComingEvent : List<EventData> = emptyList(),
 
-    val totalNotificationCount : NotificationCountData? = null ,
+    val totalNotificationCount : Int = 0 ,
     val isNotificationCountLoading : Boolean = false,
 
     val totalSeenNotification : Int = 0,
@@ -89,7 +88,7 @@ enum class RequestType(
             RequestType.typeMap[typeName.key] ?: CheckIn
 
         val list: List<RequestType>
-            get() = RequestType.entries.toList().map { it }
+            get() = entries.toList().map { it }
     }
 
 }
