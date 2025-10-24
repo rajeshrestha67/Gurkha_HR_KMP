@@ -6,7 +6,11 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.key
+import com.gurkha.hr.components.locale.LocalAppLocale
+import com.gurkha.hr.components.locale.customAppLocale
 import com.gurkha.hr.res.theme.AppTypography
 import com.gurkha.hr.res.theme.CompactDimens
 import com.gurkha.hr.res.theme.ThemeMode
@@ -178,13 +182,20 @@ fun AppTheme(
     )
 
     CompositionLocalProvider(
-        LocalAppDimens provides CompactDimens
+        LocalAppDimens provides CompactDimens,
+        LocalAppLocale provides customAppLocale,
     ) {
-        MaterialTheme(
-            colorScheme = colorScheme,
-            typography = AppTypography,
-            content = content
-        )
+        key(customAppLocale) {
+            LaunchedEffect(customAppLocale) {
+                println("customAppLocale theme $customAppLocale")
+            }
+            MaterialTheme(
+                colorScheme = colorScheme,
+                typography = AppTypography,
+                content = content
+            )
+        }
+
     }
 }
 
