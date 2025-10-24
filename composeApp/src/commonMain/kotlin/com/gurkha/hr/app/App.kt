@@ -2,14 +2,12 @@ package com.gurkha.hr.app
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
 import com.gurkha.hr.components.AnimatedNavHost
 import com.gurkha.hr.components.AppTheme
-import com.gurkha.hr.components.locale.customAppLocale
 import com.gurkha.hr.dashboard.graph.chatScreenBuilder
 import com.gurkha.hr.dashboard.route.ChatRoute
 import com.gurkha.hr.graph.dashboardScreenBuilder
@@ -29,10 +27,7 @@ fun App(
 
     val appViewModel: AppViewModel = koinViewModel<AppViewModel>()
     val state by appViewModel.state.collectAsStateWithLifecycle()
-
-    LaunchedEffect(Unit) {
-        customAppLocale = "ne-rNP"
-    }
+    
     AppTheme(
         selectedThemeMode = state.userThemeMode
     ) {

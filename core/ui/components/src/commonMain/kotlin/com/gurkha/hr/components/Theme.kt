@@ -10,7 +10,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.key
 import com.gurkha.hr.components.locale.LocalAppLocale
-import com.gurkha.hr.components.locale.customAppLocale
+import com.gurkha.hr.components.locale.erpAppLocale
 import com.gurkha.hr.res.theme.AppTypography
 import com.gurkha.hr.res.theme.CompactDimens
 import com.gurkha.hr.res.theme.ThemeMode
@@ -183,11 +183,11 @@ fun AppTheme(
 
     CompositionLocalProvider(
         LocalAppDimens provides CompactDimens,
-        LocalAppLocale provides customAppLocale,
+        LocalAppLocale provides erpAppLocale,
     ) {
-        key(customAppLocale) {
-            LaunchedEffect(customAppLocale) {
-                println("customAppLocale theme $customAppLocale")
+        key(erpAppLocale) {
+            LaunchedEffect(erpAppLocale) {
+                println("customAppLocale theme $erpAppLocale")
             }
             MaterialTheme(
                 colorScheme = colorScheme,
