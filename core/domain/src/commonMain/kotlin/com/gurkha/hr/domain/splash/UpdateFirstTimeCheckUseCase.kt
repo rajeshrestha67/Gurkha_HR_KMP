@@ -9,11 +9,8 @@ class UpdateFirstTimeCheckUseCase(
     private val userInfoRepository: UserInfoRepository
 ) {
     suspend operator fun invoke() {
-        val user = userInfoRepository.userInfo.firstOrNull() ?: UserInfo(isFirstTime = true)
-
-        if (user.isFirstTime == true) {
-            userInfoRepository.saveUserInfo(user.copy(isFirstTime = false))
-        }
+        val user = userInfoRepository.userInfo.firstOrNull() ?: UserInfo()
+        userInfoRepository.saveUserInfo(user.copy(isFirstTime = false))
     }
 }
 
