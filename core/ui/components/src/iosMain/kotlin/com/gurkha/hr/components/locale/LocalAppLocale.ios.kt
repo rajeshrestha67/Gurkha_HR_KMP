@@ -31,10 +31,16 @@ actual object LocalAppLocale {
 
 
         // Save selected language in UserDefaults
-        val userDefaults = NSUserDefaults.standardUserDefaults
-        userDefaults.setObject(newLang, LANG_KEY)
+//        val userDefaults = NSUserDefaults.standardUserDefaults
+//        userDefaults.setObject(newLang, LANG_KEY)
+        println("newLang: $newLang")
 
         // Provide new language to Composition
+        if (value == null) {
+            NSUserDefaults.standardUserDefaults.removeObjectForKey(LANG_KEY)
+        } else {
+            NSUserDefaults.standardUserDefaults.setObject(arrayListOf(newLang), LANG_KEY)
+        }
         return LocalAppLocale.provides(newLang)
     }
 }
