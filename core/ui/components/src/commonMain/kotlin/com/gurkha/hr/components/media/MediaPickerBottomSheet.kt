@@ -51,13 +51,18 @@ fun MediaSelectorModalBottomSheet(
     onImageReceived: (String) -> Unit
 ) {
     var galleryImages by remember { mutableStateOf<List<String>>(emptyList()) }
-    val loadGallery = rememberGalleryLoader(onLoaded = { galleryImages = it }, onError = {
-        AppLogger.e(
-            tag = tag,
-            message = "Error on gallery launcher",
-            error = DataError.LocalError.Custom(it)
-        )
-    })
+    val loadGallery = rememberGalleryLoader(
+        onLoaded = {
+            println("images $it")
+            galleryImages = it
+        }, onError = {
+            AppLogger.e(
+                tag = tag,
+                message = "Error on gallery launcher",
+                error = DataError.LocalError.Custom(it)
+            )
+        }
+    )
 
     var isCameraPermissionPermanentDenied by remember { mutableStateOf(false) }
     var isGalleryPermissionPermanentDenied by remember { mutableStateOf(false) }
@@ -86,8 +91,7 @@ fun MediaSelectorModalBottomSheet(
 
     val onPermission = rememberRequestPermission(
         permissions = listOf(
-            CAMERA_PERMISSION,
-            GALLERY_PERMISSION
+            CAMERA_PERMISSION
         ),
         onGranted = { permission ->
             AppLogger.i(
@@ -201,13 +205,16 @@ fun MediaSelectorModalBottomSheet(
                 // Gallery items
                 items(galleryImages.size) { index ->
                     val uri = galleryImages[index]
+                    println("uri $uri")
                     AsyncImage(
                         model = uri,
                         contentDescription = null,
                         contentScale = ContentScale.FillWidth,
                         modifier = Modifier
                             .fillMaxWidth()
+                            .background(Color.Red)
                             .clip(MaterialTheme.shapes.extraSmall)
+                            .background(Color.Blue)
                             .aspectRatio(9f / 16f)
                             .clickable { onImageReceived(uri) }
                     )
