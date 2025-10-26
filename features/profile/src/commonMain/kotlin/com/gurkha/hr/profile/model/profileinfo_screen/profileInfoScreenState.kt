@@ -6,7 +6,6 @@ import com.gurkha.hr.profile.model.profile_screen.GeneralList
 data class ProfileInfoScreenState(
     val generalItems: List<GeneralList> = GeneralList.list,
     val accountItems: List<AccountList> = AccountList.list,
-    val isProfileLoading: Boolean = false,
     val fullName: String = "",
     val initials: String = "",
     val levelName: String = "",
@@ -16,8 +15,11 @@ data class ProfileInfoScreenState(
     val branchName: String = "",
     val address: String = "",
     val joinedDate: String = "",
+    val isProfileLoading: Boolean = false,
+
     var contactInfo: List<ProfileInfo> = emptyList(),
     var personalDetails: List<ProfileInfo> = emptyList(),
     var guardianInfo: List<ProfileInfo> = emptyList(),
     val selectedTab:Int = 0
 )
+

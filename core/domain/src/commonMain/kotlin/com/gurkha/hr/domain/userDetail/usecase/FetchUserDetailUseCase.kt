@@ -48,9 +48,10 @@ class FetchUserDetailUseCase(
                         nationality = userDetail.nationality,
                         maritalStatus = userDetail.maritalStatus,
                         guardianName = userDetail.guardianName,
-                        guardianPhone = userDetail.guardianPhone
+                        guardianPhone = userDetail.guardianNumber
                     ) ?: UserData()
                 )
             }
+
     }
 }

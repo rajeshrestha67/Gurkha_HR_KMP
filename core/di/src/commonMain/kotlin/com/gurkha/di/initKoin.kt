@@ -31,7 +31,7 @@ fun initKoin(config: KoinAppDeclaration? = null) {
             HistoryModule().module,
             HistoryModule().module,
             ReportScreenModule().module,
-
+            EditProfileModule().module,
             NoteScreenModule().module
         )
     }

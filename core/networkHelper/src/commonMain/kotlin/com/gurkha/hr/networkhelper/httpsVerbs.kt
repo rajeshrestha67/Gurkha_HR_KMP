@@ -7,6 +7,7 @@ import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.post
+import io.ktor.client.request.put
 import io.ktor.client.request.url
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.HttpHeaders
@@ -24,6 +25,16 @@ suspend inline fun HttpClient.post(
         endPoint = endPoint, block = block
     )
 }
+suspend inline fun HttpClient.put(
+    baseUrl: BaseUrl = BaseUrl.Generic,
+    endPoint: String, block: HttpRequestBuilder.() -> Unit = {}
+): HttpResponse = put {
+    appendLocalAttributes(
+        baseUrl = baseUrl,
+        endPoint = endPoint, block = block
+    )
+}
+
 
 suspend inline fun HttpClient.get(
     baseUrl: BaseUrl = BaseUrl.Generic,

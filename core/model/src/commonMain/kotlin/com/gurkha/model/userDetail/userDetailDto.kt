@@ -32,6 +32,7 @@ data class UserDetailDto(
     val enableManualAttendance: String? = null,
     val enableImageAttendance: String? = null,
     val imageUrl: String? = null,
+    val levelId: Long? = null,
     val experienceDocumentsUrl: String? = null,
     val citizenshipFrontImage: String? = null,
     val citizenshipBackImage: String? = null,
@@ -47,7 +48,12 @@ data class UserDetailDto(
     val isCompleteProfile: String? = null,
     val socketPrefix: String? = null,
     val allowAttendanceApproval: String? = null,
-    val editApproveLeave: String? = null
+    val editApproveLeave: String? = null,
+    val designation: String? = null,
+    val departmentId: Int? = null,
+    val designationId: Int? = null,
+    val department: String? = null,
+    val employeeType: String? = null,
 )
 
 @Serializable
@@ -79,7 +85,7 @@ data class EmployeeDetailsDto(
     val active: String? = null,
     val profileId: Int? = null,
     val enableManualAttendance: String? = null,
-    val mapId: String? = null,
+    val mapId: Int? = null,
     val isDetailComplete: String? = null,
     val enableImageAttendance: String? = null,
     val imageUrl: String? = null,
@@ -91,7 +97,9 @@ data class EmployeeDetailsDto(
     val plusTwoImage: String? = null,
     val bachelorImageUrl: String? = null,
     val masterImageUrl: String? = null,
-    val slcDocumentUrl: String? = null
+    val slcDocumentUrl: String? = null,
+
+
 )
 
 @Serializable
@@ -132,5 +140,44 @@ data class BranchDto(
     val active: String? = null,
     val targetHolidays: String? = null,
     val isDefaultHoliday: String? = null
+)
+
+@Serializable
+data class UpdateRequestUserDto(
+    val address: String,
+    val bachelorImage: String?,
+    val bloodGroup: String,
+    val branchId: Int,
+    val citizenshipBackImage: String?,
+    val citizenshipFrontImage: String?,
+    val dateOfBirth: String,
+    val departmentId: Int,
+    val designation: String,
+    val designationId: Int,
+    val email: String,
+    val employeeType: String,
+    val enableImageAttendance: String,
+    val enableManualAttendance: String,
+    val experienceDocuments: String?,
+    val fullName: String,
+    val gender: String,
+    val guardianName: String,
+    val guardianNumber: String,
+    val imageUrl: String?,
+    val joinedDate: String,
+    val level: String,
+    val levelId: Long,
+    val mapId: Int?,
+    val maritalStatus: String,
+    val masterImage: String?,
+    val nationalId: String?,
+    val panImage: String?,
+    val panNumber: String,
+    val password: String,
+    val pfNumber: String,
+    val phoneNumber: String,
+    val plusTwoImage: String?,
+    val profileId: Int,
+    val slcDocument: String?
 )
 

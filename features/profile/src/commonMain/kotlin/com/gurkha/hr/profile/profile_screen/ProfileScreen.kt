@@ -79,7 +79,7 @@ fun ProfileScreen(
         contentWindowInsets = WindowInsets(0.dp),
         topBar = {
             TopAppBar(
-                modifier = Modifier.padding(start = MaterialTheme.dimens.small2),
+                modifier = Modifier.padding(start = MaterialTheme.dimens.small2, top = MaterialTheme.dimens.small2),
                 windowInsets = WindowInsets(0.dp),
                 title = {
 
@@ -157,7 +157,7 @@ fun ProfileScreenContainer(
     LazyColumn(
         modifier = modifier,
         contentPadding = PaddingValues(
-            horizontal = MaterialTheme.dimens.small3,
+            horizontal = MaterialTheme.dimens.small2,
             vertical = MaterialTheme.dimens.small2
         )
     ) {

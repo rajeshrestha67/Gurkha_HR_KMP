@@ -289,7 +289,7 @@ fun AttendanceRequestScreenContent(
 //        select assignee
         DropDownText(
             label = SharedRes.Strings.assignee,
-            hint = SharedRes.Strings.select_assignee,
+            hint = stringResource(SharedRes.Strings.select_assignee),
             rules = FormValidate.requiredValidationRules,
             isFetching = state.isAssigneeLoading,
             isFetchingError = state.isAssigneeFetchingError,

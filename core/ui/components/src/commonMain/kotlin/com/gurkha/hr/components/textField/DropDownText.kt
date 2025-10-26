@@ -37,7 +37,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun <T> DropDownText(
     label: StringResource,
-    hint: StringResource,
+    hint: String,
     selectedValue: String,
     error: StringResource?,
     dropdownTextColor: Color = MaterialTheme.colorScheme.primaryTextColor,
@@ -80,9 +80,7 @@ fun <T> DropDownText(
             },
             readOnly = true,
             label = stringResource(label),
-            hint = stringResource(
-                hint
-            ),
+            hint = hint,
             trailingIcon = {
                 if (isFetchingError) {
                     IconButton(

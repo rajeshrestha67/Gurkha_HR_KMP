@@ -29,6 +29,7 @@ import gurkhahr.core.ui.res.generated.resources.attendance_request
 import gurkhahr.core.ui.res.generated.resources.attendance_request_form
 import gurkhahr.core.ui.res.generated.resources.attendance_summary
 import gurkhahr.core.ui.res.generated.resources.bachelor
+import gurkhahr.core.ui.res.generated.resources.blood_group
 import gurkhahr.core.ui.res.generated.resources.bs
 import gurkhahr.core.ui.res.generated.resources.cancel
 import gurkhahr.core.ui.res.generated.resources.cancelled
@@ -59,6 +60,7 @@ import gurkhahr.core.ui.res.generated.resources.edit_notes
 import gurkhahr.core.ui.res.generated.resources.early_out
 import gurkhahr.core.ui.res.generated.resources.edit
 import gurkhahr.core.ui.res.generated.resources.edit_notes
+import gurkhahr.core.ui.res.generated.resources.edit_profile
 import gurkhahr.core.ui.res.generated.resources.email
 import gurkhahr.core.ui.res.generated.resources.emergency_contact
 import gurkhahr.core.ui.res.generated.resources.end_date
@@ -95,6 +97,16 @@ import gurkhahr.core.ui.res.generated.resources.invalid_password_lowercase
 import gurkhahr.core.ui.res.generated.resources.invalid_password_special_char
 import gurkhahr.core.ui.res.generated.resources.invalid_password_uppercase
 import gurkhahr.core.ui.res.generated.resources.is_event
+import gurkhahr.core.ui.res.generated.resources.label_contract
+import gurkhahr.core.ui.res.generated.resources.label_designation
+import gurkhahr.core.ui.res.generated.resources.label_employee_type
+import gurkhahr.core.ui.res.generated.resources.label_joined_date
+import gurkhahr.core.ui.res.generated.resources.label_level
+import gurkhahr.core.ui.res.generated.resources.label_pan_number
+import gurkhahr.core.ui.res.generated.resources.label_permanent
+import gurkhahr.core.ui.res.generated.resources.label_pf_number
+import gurkhahr.core.ui.res.generated.resources.label_probation
+import gurkhahr.core.ui.res.generated.resources.label_user_id
 import gurkhahr.core.ui.res.generated.resources.language
 import gurkhahr.core.ui.res.generated.resources.late_in
 import gurkhahr.core.ui.res.generated.resources.leave
@@ -137,10 +149,12 @@ import gurkhahr.core.ui.res.generated.resources.ok
 import gurkhahr.core.ui.res.generated.resources.one
 import gurkhahr.core.ui.res.generated.resources.one
 import gurkhahr.core.ui.res.generated.resources.on_time
+import gurkhahr.core.ui.res.generated.resources.others
 import gurkhahr.core.ui.res.generated.resources.outline_logout_24
 import gurkhahr.core.ui.res.generated.resources.password
 import gurkhahr.core.ui.res.generated.resources.password_does_not_match
 import gurkhahr.core.ui.res.generated.resources.pending
+import gurkhahr.core.ui.res.generated.resources.personal
 import gurkhahr.core.ui.res.generated.resources.personal_details
 import gurkhahr.core.ui.res.generated.resources.personal_info
 import gurkhahr.core.ui.res.generated.resources.phone
@@ -291,6 +305,11 @@ object SharedRes {
         val uploadMaster = Res.string.upload_master
         val uploadExperienceDocument = Res.string.upload_experience_document
 
+        val editProfile = Res.string.edit_profile
+        val personal = Res.string.personal
+        val others = Res.string.others
+        val bloodGroup = Res.string.blood_group
+
         val profileImage = Res.string.profile_image
         val citizenshipFront = Res.string.citizenship_front
         val citizenshipBack = Res.string.citizenship_back
@@ -401,6 +420,18 @@ object SharedRes {
         val fromDate = Res.string.from_date
         val toDate = Res.string.to_date
         val month = Res.string.month
+
+        val labelDesignation = Res.string.label_designation
+        val labelLevel = Res.string.label_level
+        val labelEmployeeType = Res.string.label_employee_type
+        val labelPanNumber = Res.string.label_pan_number
+        val labelPfNumber = Res.string.label_pf_number
+        val labelUserId = Res.string.label_user_id
+        val labelJoinedDate = Res.string.label_joined_date
+        val labelContract = Res.string.label_contract
+        val labelProbation = Res.string.label_probation
+        val labelPermanent = Res.string.label_permanent
+
 
         val setting = Res.string.setting
         val theme = Res.string.theme
