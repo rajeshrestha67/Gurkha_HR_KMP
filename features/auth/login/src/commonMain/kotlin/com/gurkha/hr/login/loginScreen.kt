@@ -33,8 +33,6 @@ import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.PlatformMessage
 import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.hideKeyboardOnTap
-import com.gurkha.hr.components.permissions.CAMERA_PERMISSION
-import com.gurkha.hr.components.permissions.GALLERY_PERMISSION
 import com.gurkha.hr.components.permissions.POST_NOTIFICATIONS_PERMISSION
 import com.gurkha.hr.components.permissions.rememberRequestPermission
 import com.gurkha.hr.components.textField.AGEmailTextField
@@ -77,9 +75,7 @@ fun LoginScreen(
 
     val onPermission = rememberRequestPermission(
         permissions = listOf(
-            POST_NOTIFICATIONS_PERMISSION,
-            CAMERA_PERMISSION,
-            GALLERY_PERMISSION
+            POST_NOTIFICATIONS_PERMISSION
         ),
         onGranted = { permission ->
             AppLogger.i(

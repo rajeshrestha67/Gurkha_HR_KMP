@@ -1,5 +1,6 @@
 import Firebase
 import UIKit
+import UserNotifications
 class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions:
@@ -19,17 +20,11 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                 print("Error: \(String(describing: error?.localizedDescription))")
             }
         }
-        Messaging.messaging().token { token, error in
-            if let error = error {
-                print("❌ Error fetching FCM token: \(error)")
-            } else if let token = token {
-                print("✅ FCM token (manual fetch): \(token)")
-            }
-        }
+        
         return true
     }
 }
-extension AppDelegate: MessagingDelegate,UNUserNotificationCenterDelegate {
+extension AppDelegate: MessagingDelegate {
     
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         
@@ -42,9 +37,7 @@ extension AppDelegate: MessagingDelegate,UNUserNotificationCenterDelegate {
         
     }
     
-    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-        completionHandler(UIBackgroundFetchResult.newData)
-    }
+
     func application(_ application: UIApplication,didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         Messaging.messaging().apnsToken = deviceToken
         print("deviceToken",deviceToken)
@@ -53,22 +46,23 @@ extension AppDelegate: MessagingDelegate,UNUserNotificationCenterDelegate {
     
     
 }
-//
-//extension AppDelegate: UNUserNotificationCenterDelegate {
-//    
-//    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-//        
-//        let userInfo = notification.request.content.userInfo
-//        print("userInfo willPresent",userInfo)
-//        
-//        completionHandler([[.sound, .badge]])
-//    }
-//    
-//    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-//        
-//        let userInfo = response.notification.request.content.userInfo
-//        
-//        print("userInfo didReceive",userInfo)
-//    }
-//}
+
+extension AppDelegate: UNUserNotificationCenterDelegate {
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        
+        let userInfo = notification.request.content.userInfo
+        print("userInfo willPresent",userInfo)
+        
+        completionHandler([.banner, .sound, .badge])
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        
+        let userInfo = response.notification.request.content.userInfo
+        
+        print("userInfo didReceive",userInfo)
+        completionHandler()
+    }
+}
 
