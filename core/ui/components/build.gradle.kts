@@ -62,6 +62,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(libs.kotlin.stdlib)
+
                 // Add KMP dependencies here
                 implementation(compose.runtime)
                 implementation(compose.foundation)
@@ -70,15 +71,19 @@ kotlin {
                 implementation(compose.materialIconsExtended)
 
                 implementation(projects.core.ui.res)
+                implementation(projects.core.ui.date)
                 implementation(projects.core.model)
+                implementation(projects.core.logger)
 
                 implementation(libs.koin.core)
                 implementation(libs.koin.compose)
 
                 implementation(libs.org.jetbrains.navigation)
                 implementation(libs.kotlinx.datetime)
+
                 implementation(libs.jetbrians.material3)
 
+                implementation(libs.coil.compose)
             }
         }
 

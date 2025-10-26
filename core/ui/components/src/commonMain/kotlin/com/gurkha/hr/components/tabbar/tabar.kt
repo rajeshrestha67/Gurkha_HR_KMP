@@ -1,0 +1,79 @@
+package com.gurkha.hr.components.tabbar
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SecondaryTabRow
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRowDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
+
+
+@Composable
+fun <T> ERPTabView(
+    modifier: Modifier = Modifier,
+    items: List<T>,
+    selectedTab: T,
+    onItemSelected: (T) -> Unit,
+    onItemReSelected: (T) -> Unit = {},
+    shape: Shape = MaterialTheme.shapes.large,
+    backgroundColor: Color = MaterialTheme.colorScheme.background,
+    text: @Composable ((T, Boolean) -> Unit),
+) {
+
+    var selectedTabIndex by remember { mutableStateOf(0) }
+    var previousSelectedTabIndex by remember { mutableStateOf(0) }
+    Box(
+        modifier = modifier.fillMaxWidth().background(backgroundColor)
+    ) {
+
+        SecondaryTabRow(
+            selectedTabIndex = selectedTabIndex,
+            modifier = Modifier
+                .fillMaxSize()
+                .clip(shape),
+            containerColor = MaterialTheme.colorScheme.primary.copy(0.1f),
+            contentColor = TabRowDefaults.primaryContentColor,
+            divider = {},
+            indicator = {},
+        ) {
+            items.forEachIndexed { index, item ->
+                val isSelected = selectedTab == item
+                val tabBackgroundColor = if (isSelected) {
+                    MaterialTheme.colorScheme.primary
+                } else {
+                    Color.Transparent
+                }
+                Tab(
+                    modifier = Modifier.background(
+                        color = tabBackgroundColor,
+                        shape = shape
+                    ),
+                    selected = isSelected,
+                    onClick = {
+                        if (index == previousSelectedTabIndex) {
+                            onItemReSelected(item)
+                            return@Tab
+                        }
+                        selectedTabIndex = index
+                        onItemSelected(item)
+                        previousSelectedTabIndex = selectedTabIndex
+                    },
+                    text = {
+                        text(item, isSelected)
+                    }
+                )
+            }
+        }
+    }
+}

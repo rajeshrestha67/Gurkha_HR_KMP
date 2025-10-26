@@ -69,6 +69,7 @@ kotlin {
                 implementation(compose.material3)
                 implementation(compose.components.resources)
                 implementation(compose.materialIconsExtended)
+                implementation(libs.jetbrians.material3)
             }
         }
 

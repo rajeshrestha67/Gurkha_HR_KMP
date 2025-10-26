@@ -9,7 +9,9 @@ enum class GeneralList(val title: StringResource) {
     TimeAndAttendance(SharedRes.Strings.time_and_attendance),
     Document(SharedRes.Strings.document),
     CompanyAssets(SharedRes.Strings.company_assets),
-    History(SharedRes.Strings.history);
+    History(SharedRes.Strings.history),
+
+    Report(SharedRes.Strings.report);
 
     companion object {
         private val typeMap =

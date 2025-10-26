@@ -1,17 +1,23 @@
 package com.gurkha.hr.leave.leaveRequestPage
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -22,25 +28,30 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.input.ImeAction
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.gurkha.hr.components.ERPButton
+import com.gurkha.hr.components.date.ERPDateTextField
+import com.gurkha.hr.components.date.FutureAndTodayDate
+import com.gurkha.hr.components.date.RangeSelectableDates
+import com.gurkha.hr.components.dimens
+import com.gurkha.hr.components.isKeyboardVisible
+import com.gurkha.hr.components.prompts.PromptModalBottomSheet
+import com.gurkha.hr.components.prompts.PromptType
 import com.gurkha.hr.components.textField.DropDownText
-import com.gurkha.hr.components.textField.EPRTextField
-import com.gurkha.hr.components.textField.ERPDateTextField
+import com.gurkha.hr.components.textField.ERPTextField
 import com.gurkha.hr.components.textField.FormValidate
-import com.gurkha.hr.components.textField.FutureAndTodayDate
-import com.gurkha.hr.components.textField.RangeSelectableDates
-import com.gurkha.hr.leave.model.leave_request.LeaveDurationList
 import com.gurkha.hr.leave.model.leave_request.LeaveRequestScreenAction
 import com.gurkha.hr.leave.model.leave_request.LeaveRequestScreenState
-import com.gurkha.hr.leave.model.leave_request.LeaveTypeList
 import com.gurkha.hr.res.SharedRes
-import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.primaryTextColor
-import com.gurkha.model.leave_request.LeaveRequestData
 import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -52,18 +63,21 @@ import kotlin.time.ExperimentalTime
 @Composable
 fun LeaveRequestScreen(
     navController: NavHostController,
-    json: String?,
-    onBackClicked: () -> Unit
+    onBackPressed: () -> Unit
 ) {
 
     val viewModel: LeaveRequestScreenViewModel = koinViewModel()
-
     val state by viewModel.state.collectAsStateWithLifecycle()
+    var sendData by remember { mutableStateOf(false) }
+    var showFailedDialogue by remember { mutableStateOf(false) }
+    var showSuccessDialogue by remember { mutableStateOf(false) }
+    var messageToShow by remember { mutableStateOf("") }
 
-    LaunchedEffect(Unit) {
-        viewModel.dataChannel.collect { data ->
-            data?.let { safeData ->
-                val stringData = Json.encodeToString(safeData)
+    LaunchedEffect(sendData) {
+        if (sendData) {
+            val data = state.leaveRequestData
+            data?.let {
+                val stringData = Json.encodeToString(data)
                 navController.previousBackStackEntry
                     ?.savedStateHandle
                     ?.set("data", stringData)
@@ -72,40 +86,83 @@ fun LeaveRequestScreen(
         }
     }
 
-    LaunchedEffect(json) {
-        json?.let {
-            val data = Json.decodeFromString<LeaveRequestData>(it)
-            viewModel.onAction(LeaveRequestScreenAction.UpdateLeaveRequestData(data))
+    LaunchedEffect(Unit) {
+        viewModel.dataChannel.collect { data ->
+            data?.let {
+                viewModel.onAction(LeaveRequestScreenAction.UpdateLeaveRequestData(data))
+            }
         }
     }
+
+    LaunchedEffect(Unit) {
+        viewModel.successChannel.collect { it ->
+            it.let {
+                showSuccessDialogue = true
+                messageToShow = it
+            }
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.errorChannel.collect { it ->
+            it.let {
+                showFailedDialogue = true
+                messageToShow = it
+            }
+        }
+    }
+
+
+
     LeaveRequestPageContent(
-        onBackClicked = onBackClicked,
+        onBackPressed = onBackPressed,
         state = state,
-        onAction = viewModel::onAction
+        onAction = viewModel::onAction,
+        showSuccessDialogue = showSuccessDialogue,
+        showFailedDialogue = showFailedDialogue,
+        messageToShow = messageToShow,
+        onSendData = {
+            sendData = true
+        }
     )
+
 
 }
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
 fun LeaveRequestPageContent(
-    onBackClicked: () -> Unit,
+    onBackPressed: () -> Unit,
     state: LeaveRequestScreenState,
-    onAction: (LeaveRequestScreenAction) -> Unit
+    onAction: (LeaveRequestScreenAction) -> Unit,
+    showSuccessDialogue: Boolean,
+    showFailedDialogue: Boolean,
+    messageToShow: String,
+    onSendData: () -> Unit
 ) {
-
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val isKeyboardOpen by isKeyboardVisible()
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
-        contentWindowInsets = WindowInsets(0.dp),
+        contentWindowInsets = WindowInsets(),
         topBar = {
             TopAppBar(
-                windowInsets = WindowInsets(0.dp),
+                windowInsets = WindowInsets(),
                 navigationIcon = {
                     IconButton(
-                        onClick = onBackClicked,
+                        onClick = {
+                            if (isKeyboardOpen) {
+                                keyboardController?.hide()
+                            } else {
+                                onBackPressed()
+                            }
+                        },
                         content = {
-                            Icon(Icons.Filled.ArrowBack, contentDescription = "")
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = ""
+                            )
                         }
                     )
                 },
@@ -120,12 +177,35 @@ fun LeaveRequestPageContent(
             )
         },
     ) { paddingValues ->
-        LeaveRequestScreenForm(
-            modifier = Modifier.fillMaxSize().padding(paddingValues),
-            onBackClicked = onBackClicked,
-            state = state,
-            onAction = onAction
-        )
+
+        AnimatedContent(
+            modifier = Modifier.fillMaxSize().padding(paddingValues).imePadding(),
+            targetState = state.isRequestingLeave
+        ) { isLoading ->
+            if (isLoading) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(MaterialTheme.dimens.medium3),
+                        color = MaterialTheme.colorScheme.secondaryContainer
+                    )
+                }
+            } else {
+                LeaveRequestScreenForm(
+                    modifier = Modifier.fillMaxSize(),
+                    onBackPressed = onBackPressed,
+                    state = state,
+                    onAction = onAction,
+                    showSuccessDialogue = showSuccessDialogue,
+                    showFailedDialogue = showFailedDialogue,
+                    messageToShow = messageToShow,
+                    onSendData = onSendData
+                )
+            }
+        }
+
     }
 
 
@@ -135,8 +215,12 @@ fun LeaveRequestPageContent(
 fun LeaveRequestScreenForm(
     modifier: Modifier = Modifier,
     state: LeaveRequestScreenState,
-    onBackClicked: () -> Unit,
-    onAction: (LeaveRequestScreenAction) -> Unit
+    onBackPressed: () -> Unit,
+    onAction: (LeaveRequestScreenAction) -> Unit,
+    showSuccessDialogue: Boolean,
+    showFailedDialogue: Boolean,
+    messageToShow: String,
+    onSendData: () -> Unit
 ) {
 
     Column(
@@ -149,7 +233,7 @@ fun LeaveRequestScreenForm(
             .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
     ) {
-
+//start date
         ERPDateTextField(
             modifier = Modifier
                 .fillMaxWidth(),
@@ -159,7 +243,6 @@ fun LeaveRequestScreenForm(
             hint = stringResource(SharedRes.Strings.selectStartDate),
             error = state.startDateError,
             onErrorStateChange = {
-                //onAction(LeaveRequestScreenAction.OnStartDateError(it))
             },
             selectableDates = FutureAndTodayDate,
             onDateSelected = {
@@ -175,7 +258,6 @@ fun LeaveRequestScreenForm(
             rules = FormValidate.requiredValidationRules,
             error = state.endDateError,
             onErrorStateChange = {
-                //onAction(LeaveRequestScreenAction.OnEndDateError(it))
             },
             selectableDates = RangeSelectableDates(
                 minDateMillis = state.startDate?.actualValue?.plus(1.days.toLong(DurationUnit.DAYS))
@@ -184,15 +266,36 @@ fun LeaveRequestScreenForm(
                 onAction(LeaveRequestScreenAction.OnEndDateChange(it))
             }
         )
+
+        //        assignee
+        DropDownText(
+            label = SharedRes.Strings.assignee,
+            hint = SharedRes.Strings.select_assignee,
+            rules = FormValidate.requiredValidationRules,
+            isFetching = state.isAssigneeLoading,
+            isFetchingError = state.isAssigneeFetchingError,
+            listOfItems = state.leaveAssigneeList ?: emptyList(),
+            selectedValue = state.assignee?.name ?: "",
+            onError = {
+            },
+            error = state.assigneeError,
+            itemClicked = {
+                onAction(LeaveRequestScreenAction.OnAssigneeChange(assignee = it))
+            },
+            onRetry = {
+                onAction(LeaveRequestScreenAction.OnRefetchAssignee)
+            }
+        )
+
+
 //        leave duration
         DropDownText(
             label = SharedRes.Strings.leave_duration,
             hint = SharedRes.Strings.select_leave_duration,
             rules = FormValidate.requiredValidationRules,
-            listOfItems = LeaveDurationList.map { stringResource(it.title) },
-            selectedValue = state.leaveDuration,
+            listOfItems = state.leaveDurationList,
+            selectedValue = state.leaveDuration?.name ?: "",
             onError = {
-                // onAction(LeaveRequestScreenAction.OnLeaveDurationError(it))
             },
             error = state.leaveDurationError,
             itemClicked = {
@@ -204,18 +307,23 @@ fun LeaveRequestScreenForm(
             label = SharedRes.Strings.leaveType,
             hint = SharedRes.Strings.selectLeaveType,
             rules = FormValidate.requiredValidationRules,
-            listOfItems = LeaveTypeList.map { stringResource(it.title) },
-            selectedValue = state.leaveType,
+            isFetching = state.isLeaveTypeLoading,
+            isFetchingError = state.isLeaveTypeFetchingError,
+            listOfItems = state.leaveTypeList ?: emptyList(),
+            selectedValue = state.leaveType?.name ?: "",
             onError = {
-                //onAction(LeaveRequestScreenAction.OnLeaveTypeError(it))
             },
             error = state.leaveTypeError,
             itemClicked = {
                 onAction(LeaveRequestScreenAction.OnLeaveTypeChange(it))
+            },
+            onRetry = {
+                onAction(LeaveRequestScreenAction.OnRefetchLeaveType)
             }
         )
+
 //        leave reason
-        EPRTextField(
+        ERPTextField(
             text = state.reason,
             label = stringResource(SharedRes.Strings.reason),
             hint = stringResource(SharedRes.Strings.enterReason),
@@ -227,11 +335,15 @@ fun LeaveRequestScreenForm(
             onErrorStateChange = {
                 onAction(LeaveRequestScreenAction.OnReasonError(it))
             },
+            imeAction = ImeAction.Send,
+            keyboardActions = KeyboardActions(
+                onSend = {
+                    onAction(LeaveRequestScreenAction.Submit)
+                }
+            ),
             height = MaterialTheme.dimens.reasonTextField
         )
-        Spacer(
-            modifier = Modifier.weight(1f)
-        )
+
 
 //        buttons for cancel and submit
         Column(
@@ -251,8 +363,26 @@ fun LeaveRequestScreenForm(
             ERPButton(
                 modifier = Modifier.fillMaxWidth(),
                 backgroundColor = MaterialTheme.colorScheme.error,
-                onClick = onBackClicked,
+                onClick = onBackPressed,
                 text = stringResource(SharedRes.Strings.cancel),
+            )
+        }
+
+        if (showSuccessDialogue) {
+            PromptModalBottomSheet(
+                text = messageToShow,
+                onBackPressed = {
+                    onSendData()
+                    onBackPressed
+                }
+            )
+        }
+
+        if (showFailedDialogue) {
+            PromptModalBottomSheet(
+                promptType = PromptType.FAILED,
+                text = messageToShow,
+                onBackPressed = onBackPressed
             )
         }
     }

@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.android.kotlin.multiplatform.library)
     alias(libs.plugins.android.lint)
+    alias(libs.plugins.google.services)
 }
 
 kotlin {
@@ -66,6 +67,16 @@ kotlin {
                 implementation(projects.core.model)
                 implementation(projects.core.domain)
                 implementation(projects.core.networkHelper)
+                implementation(projects.core.network)
+                implementation(projects.core.persistance.datastore)
+                implementation(projects.core.ui.components)
+
+                implementation(projects.core.logger)
+
+
+                //firebase
+//                implementation(libs.firebase.messaging.ktx)
+//                implementation(project.dependencies.platform(libs.firebase.bom))
             }
         }
 
@@ -80,6 +91,8 @@ kotlin {
                 // Add Android-specific dependencies here. Note that this source set depends on
                 // commonMain by default and will correctly pull the Android artifacts of any KMP
                 // dependencies declared in commonMain.
+                implementation(libs.firebase.messaging.ktx)
+                implementation(project.dependencies.platform(libs.firebase.bom))
             }
         }
 

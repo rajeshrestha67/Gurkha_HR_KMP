@@ -1,15 +1,12 @@
 package com.gurkha.hr.profile.profile_info
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -23,31 +20,28 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil3.compose.AsyncImage
+import com.gurkha.hr.components.ProfilePicture
+import com.gurkha.hr.components.dimens
+import com.gurkha.hr.components.tabbar.ERPTabView
 import com.gurkha.hr.profile.model.profileinfo_screen.InfoList
 import com.gurkha.hr.profile.model.profileinfo_screen.ProfileInfo
 import com.gurkha.hr.profile.model.profileinfo_screen.ProfileInfoScreenState
 import com.gurkha.hr.profile.model.profileinfo_screen.ProfileInfoViewAction
 import com.gurkha.hr.res.SharedRes
-import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.imageBackgroundColor
 import com.gurkha.hr.res.theme.primaryTextColor
 import com.gurkha.hr.res.theme.secondaryTextColor
-import com.gurkha.hr.res.theme.veryLightGray
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -77,15 +71,16 @@ fun ProfileInfoScreenContainer(
     state: ProfileInfoScreenState,
     onAction: (ProfileInfoViewAction) -> Unit,
 ) {
-
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
-
+        contentWindowInsets = WindowInsets(),
 
         topBar = {
-            TopAppBar(
 
+            TopAppBar(
+                windowInsets = WindowInsets(0.dp),
+                modifier = Modifier.padding(top = MaterialTheme.dimens.small1),
                 title = { Text(stringResource(SharedRes.Strings.profile)) },
                 navigationIcon = {
                     IconButton(onClick = onBackPressed) {
@@ -118,7 +113,7 @@ fun ProfileInfoContainer(
     state: ProfileInfoScreenState,
     onAction: (ProfileInfoViewAction) -> Unit
 ) {
-    val infoList = InfoList.list.map { stringResource(it.title) }
+    //val infoList = InfoList.list.map { stringResource(it.title) }
 //    var selectedTab by remember { mutableStateOf(0) }
 
     LazyColumn(
@@ -135,8 +130,8 @@ fun ProfileInfoContainer(
         }
         stickyHeader {
             ProfileInfoRow(
-                selectedIndex = state.selectedTab,
-                items = infoList,
+                selectedTab = state.selectedTab,
+                items = state.infoList,
                 onTabSelected = { index ->
                     onAction(ProfileInfoViewAction.OnItemSelected(index))
                 }
@@ -146,7 +141,7 @@ fun ProfileInfoContainer(
 
 
         when (state.selectedTab) {
-            0 -> {
+            InfoList.PersonalInfo -> {
                 item {
                     HeaderSection(
                         title = SharedRes.Strings.contact_info,
@@ -161,9 +156,9 @@ fun ProfileInfoContainer(
                 }
                 item {
                     HeaderSection(
-                        title = SharedRes.Strings.personal_details,
+                        title = SharedRes.Strings.personal_details
 
-                        )
+                    )
                 }
 
                 items(state.personalDetails, key = { it.name.key }) { item ->
@@ -175,7 +170,7 @@ fun ProfileInfoContainer(
 
             }
 
-            1 -> {
+            InfoList.EmergencyContact -> {
                 item {
                     HeaderSection(
                         title = SharedRes.Strings.guardian_information
@@ -204,16 +199,17 @@ fun ProfileCard(
         verticalAlignment = Alignment.CenterVertically
     ) {
         // Avatar image
-        AsyncImage(
-            modifier = Modifier
-                .size(MaterialTheme.dimens.profileScreenImageSize)
-                .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.imageBackgroundColor),
-            model = state.userProfileUrl,
-            contentDescription = "Profile picture",
-            contentScale = ContentScale.Fit
+        ProfilePicture(
+            imageUrl = state.userProfileUrl,
+            employeeName = state.fullName,
+            nameInitials = state.initials,
+            size = MaterialTheme.dimens.profileScreenImageSize,
+            shape = CircleShape,
+            background = MaterialTheme.colorScheme.imageBackgroundColor,
+            borderWidth = 0.dp,
+            borderColor = Color.Transparent,
+            ratio = 1f
         )
-
         // User info
         Column(
             modifier = Modifier
@@ -299,53 +295,27 @@ fun ProfileCard(
 
 
 @Composable
-
 fun ProfileInfoRow(
-    selectedIndex: Int,
-    items: List<String>,
-    onTabSelected: (Int) -> Unit
+    selectedTab: InfoList,
+    items: List<InfoList>,
+    onTabSelected: (InfoList) -> Unit
 ) {
-    TabRow(
-        selectedTabIndex = selectedIndex,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = MaterialTheme.dimens.small3),
-
-        divider = {
-
-        },
-        indicator = {}
-    ) {
-        items.forEachIndexed { index, title ->
-            val isSelected = selectedIndex == index
-            val backgroundColor = if (isSelected) {
-                MaterialTheme.colorScheme.primaryContainer
-            } else {
-                MaterialTheme.colorScheme.veryLightGray
-            }
-            val textColor = if (isSelected) {
-                MaterialTheme.colorScheme.onBackground
-            } else {
-                MaterialTheme.colorScheme.primaryTextColor
-            }
-
-            Tab(
-                modifier = Modifier
-                    .background(backgroundColor),
-                selected = isSelected,
-                onClick = { onTabSelected(index) },
-                text = {
-                    Text(
-                        text = title,
-                        style = MaterialTheme.typography.titleSmall.copy(
-                            color = textColor
-                        ),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
-            )
+    ERPTabView(
+        items = items,
+        selectedTab = selectedTab,
+        shape = MaterialTheme.shapes.medium,
+        onItemSelected = {
+            onTabSelected(it)
         }
+    ) { item, isSelected ->
+        val color =
+            if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onBackground
+        Text(
+            text = stringResource(item.title),
+            style = MaterialTheme.typography.titleSmall.copy(
+                color = color
+            )
+        )
     }
 }
 

@@ -5,8 +5,7 @@ import com.gurkha.hr.datastore.user_data.local.UserDataDataStore
 import com.gurkha.hr.datastore.user_data.repository.LocalUserDataRepository
 import com.gurkha.hr.datastore.user_data.repository.UserDataRepository
 import com.gurkha.hr.domain.userDetail.repository.UserDetailRemoteRepository
-import com.gurkha.hr.domain.userDetail.usecase.FetchLocalUserDetailUseCase
-import com.gurkha.hr.domain.userDetail.usecase.FetchRemoteUserDetailUseCase
+import com.gurkha.hr.domain.userDetail.usecase.FetchUserDetailUseCase
 import com.gurkha.hr.profile.profile_info.ProfileInfoScreenViewModel
 import io.ktor.client.HttpClient
 import org.koin.android.annotation.KoinViewModel
@@ -30,23 +29,21 @@ class ProfileInfoScreenModule {
 
 
     @Factory
-    fun userDetailUseCase(userDetailRemoteRepository: UserDetailRemoteRepository, userDataRepository: UserDataRepository): FetchRemoteUserDetailUseCase =
-        FetchRemoteUserDetailUseCase(userDetailRemoteRepository
-            ,userDataRepository = userDataRepository)
-
-
-    @Factory
-    fun getFetchLocalUserDetailUseCase(
+    fun userDetailUseCase(
+        userDetailRemoteRepository: UserDetailRemoteRepository,
         userDataRepository: UserDataRepository
-    ) = FetchLocalUserDetailUseCase(
-        userDataRepository = userDataRepository
-    )
+    ): FetchUserDetailUseCase =
+        FetchUserDetailUseCase(
+            userDetailRemoteRepository, userDataRepository = userDataRepository
+        )
+
 
     @KoinViewModel
     fun getProfileInfoScreenViewModel(
-        userDetailUseCase:FetchLocalUserDetailUseCase
+        fetchUserDetailUseCase: FetchUserDetailUseCase
     ): ProfileInfoScreenViewModel = ProfileInfoScreenViewModel(
-        userDetailUseCase = userDetailUseCase)
+        fetchUserDetailUseCase = fetchUserDetailUseCase
+    )
 
 
 }

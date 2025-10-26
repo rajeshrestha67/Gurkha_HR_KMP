@@ -1,12 +1,35 @@
 package com.gurkha.hr.networkhelper
 
-object EndPoint{
+
+object EndPoint {
     const val LOGIN_END_POINT = "public/authenticate"
     const val CHANGE_PASSWORD_END_POINT = "/api/user/password-reset"
-    const val FETCH_ATTENDANCE_END_POINT ="api/attendance/employee/report"
+    const val FETCH_ATTENDANCE_END_POINT = "api/attendance/employee/report"
     const val CURRENT_USER_DETAIL_END_POINT = "api/user/current-user"
     const val UPCOMING_BIRTHDAY_END_POINT = "api/birthday/upcomingBirthdays"
     const val UPCOMING_WORK_ANNIVERSARY_END_POINT = "api/birthday/allWorkingAnniversaries"
     const val ATTENDANCE_STATUS_REPORT_ENDPOINT = "api/attendance/attendanceStatus"
+    const val LEAVE_STATUS_REPORT_ENDPOINT = "api/leave-request/employee/report"
+    const val LEAVE_ASSIGNEE_END_POINT = "api/user/fetch-assignee"
+    const val LEAVE_TYPE_END_POINT = "api/leave-type"
+    const val LEAVE_REQUEST_END_POINT = "api/leave-request"
+    const val EMPLOY_LIST_ENDPOINT = "api/chat/employee"
+    const val CHAT_MESSAGE_ENDPOINT = "api/external-chat/messages"
+    const val ALLOCATED_LEAVE_ENDPOINT = "api/employee-leave"
+    const val COMPANY_ASSETS_ENDPOINT = "api/employee-assets/get"
+    const val ATTENDANCE_REQUEST_END_POINT = "api/attendance/request"
+    const val HISTORY_END_POINT = "api/attendance/employee/monthly"
+    const val LEAVE_SUMMARY_END_POINT = "api/leave-request/overall-leave-detail"
+    const val ATTENDANCE_SUMMARY_END_POINT = "api/attendance/overall-count"
+    const val ALL_NOTES_END_POINT = "api/note/all"
+    const val CREATE_NOTE_END_POINT = "api/note/create"
+    const val UPDATE_NOTE_END_POINT = "api/note/update"
+    const val DELETE_NOTE_END_POINT = "api/note/delete"
+    const val REPORT_END_POINT = "api/attendance/employee/summary"
+    const val IMAGE_UPLOAD_END_POINT = "api/file-upload/image"
 
+    const val UPCOMING_EVENT_END_POINT = "api/importantEvents/upcoming"
+    const val TOTAL_NOTIFICATION_COUNT_END_POINT = "api/notifications/get-total"
+    const val TOTAL_UNREAD_NOTIFICATION_COUNT_END_POINT = "api/notifications/check-unread"
+    const val ALL_NOTIFICATION_END_POINT = "api/notifications/get-by-limit/12?offset=0"
 }

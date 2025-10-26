@@ -12,12 +12,59 @@
     <string name="my_attendance">मेरो उपस्थिति</string>
     <string name="request">अनुरोध</string>
     <string name="attendance">उपस्थिति</string>
+    <string name="leave_request">अनुरोध छोड्नुहोस्</string>
     <string name="leave_request_form">अनुरोध फारम छोड्नुहोस्</string>
+    <string name="upload_profile_image">प्रोफाइल छवि अपलोड गर्नुहोस्</string>
+    <string name="upload_citizenship_front">नागरिकता मोर्चा अपलोड गर्नुहोस्</string>
+    <string name="upload_citizenship_back">नागरिकता फिर्ता अपलोड गर्नुहोस्</string>
+    <string name="upload_national_id">राष्ट्रिय परिचयपत्र अपलोड गर्नुहोस्</string>
+    <string name="upload_slc_marksheet">एसएलसी मार्कसिट अपलोड गर्नुहोस्</string>
+    <string name="upload_plus_two_image">प्लस टु छवि अपलोड गर्नुहोस्</string>
+    <string name="upload_bachelor">स्नातक अपलोड गर्नुहोस्</string>
+    <string name="upload_master">मास्टर अपलोड गर्नुहोस्</string>
+    <string name="upload_experience_document">अनुभव कागजात अपलोड गर्नुहोस्</string>
+    <string name="month">महिना</string>">
+    <string name="year">वर्ष</string>">
 
-    <string name="leave_duration">बिदा अवधि</string>
+    <string name="no_assets_available">कुनै सम्पत्ति उपलब्ध छैन</string>
+
+    <string name="profile_image">प्रोफाइल छवि</string>
+    <string name="citizenship_front">नागरिकता मोर्चा</string>
+    <string name="citizenship_back">नागरिकता पछाडि</string>
+    <string name="national_id">राष्ट्रिय परिचय</string>
+    <string name="slc_marksheet">Slc मार्कशीट</string>
+    <string name="plus_two_image">प्लस टु छवि</string>
+    <string name="bachelor">स्नातक</string>
+    <string name="master">मास्टर</string>
+    <string name="experience_document">अनुभव कागजात</string>
+
+    <string name="remarks">टिप्पणीहरू</string>">
+    <string name="assigned">तोकिएको</string>">
+    <string name="leave_duration">छोड्ने अवधि</string>">
+    <string name="response">प्रतिक्रिया </string>">
+
+    <string name="assigned_assets">तोकिएका सम्पत्तिहरू</string>
+    <string name="asset_name">सम्पत्तिको नाम</string>
+    <string name="date">मिति</string>
+    <string name="description">विवरण</string>
+    <string name="assigned_date">तोकिएको मिति</string>
+
+    <string name="clockIn">घडी भित्र</string>
+    <string name="clockOut">घडी बाहिर</string>
+    <string name="status">स्थिति</string>
+
+    <string name="leave_summary">सारांश छोड्नुहोस्</string>
+    <string name="leave_type_name">बिदाको प्रकारको नाम</string>
+    <string name="leave_taken">बिदा लिइयो</string>">
+    <string name="remaining_leave">बाँकी बिदा</string>">
+
     <string name="start_date">सुरुवात मिति</string>
     <string name="select_start_date">सुरुवात मिति चयन गर्नुहोस्</string>
     <string name="end_date">अन्त्य मिति</string>
+
+    <string name="from_date">मिति देखि</string>
+    <string name="to_date">मिति सम्म</string>
+
 
     <string name="select_end_date">अन्त्य मिति चयन गर्नुहोस्</string>
     <string name="leave_type">बिदाको प्रकार चयन गर्नुहोस्</string>
@@ -32,9 +79,81 @@
     <string name="annual_leave">वार्षिक बिदा</string>">
     <string name="mourning_leave">शोक छोड्नुहोस्</string>">
 
+    <string name="monthly_attendance">मासिक उपस्थिति</string>">
+    <string name="monthly_attendance_report">मासिक उपस्थिति रिपोर्ट</string>">
+    <string name="attendance_summary">उपस्थिति सारांश</string>">
+
+    <string name="total_days">जम्मा दिनहरू</string>
+    <string name="holidays">बिदा</string>
+    <string name="total_working_days">जम्मा कार्य दिनहरू</string>
+    <string name="total_worked_days">काम गरेको दिनहरू</string>
+    <string name="total_leave_taken">लिएको बिदा</string>
+    <string name="total_present_days">उपस्थित दिनहरू</string>
+    <string name="total_absent_days">अनुपस्थित दिनहरू</string>
+
     <string name="cancel">रद्द गर्नुहोस्</string>">
     <string name="submit">पेश गर्नुहोस्</string>">
 
+    <string name="assignee">तोकिएको व्यक्ति</string>">
+    <string name="select_assignee">तोकिएको व्यक्ति चयन गर्नुहोस्</string>">
+
+    <string name="leave_processing">प्रशोधन छोड्नुहोस्</string>">
+    <string name="ok">ठीक छ</string>">
+
+    <string name="apply_days">दिनहरू लागू गर्नुहोस्</string>
+    <string name="approver">अनुमोदनकर्ता</string>
+
+    <string name="missed_attendance">छुटेको\nउपस्थिति</string>
+    <string name="attendance_approved">उपस्थिति\nअनुमोदित</string>
+    <string name="attendance_cancelled">उपस्थिति\nरद्द गरियो</string>
+    <string name="attendance_pending">उपस्थिति\nविचाराधिन</string>
+
+    <string name="no_data_found">कुनै डेटा फेला परेन</string>
+
+    <string name="select_date">मिति चयन गर्नुहोस्</string>
+    <string name="clock_in_time">घडी भित्रको समय</string>
+    <string name="clock_out_time">घडी बाहिरको समय</string>
+
+    <string name="attendance_request">उपस्थिति अनुरोध</string>
+    <string name="attendance_request_form">उपस्थिति अनुरोध फारम</string>
+
+    <string name="notes">नोटहरू</string>
+    <string name="add_notes">नोटहरू थप्नुहोस्</string>
+    <string name="edit_notes">नोटहरू सम्पादन गर्नुहोस्</string>
+
+    <string name="note">नोट</string>
+    <string name="event">घटना</string>
+
+    <string name="title">शीर्षक</string>
+    <string name="enter_title">शीर्षक प्रविष्ट गर्नुहोस्</string>
+    <string name="is_event">के घटना हो?</string>
+    <string name="enter_description">विवरण प्रविष्ट गर्नुहोस्</string>
+
+    <string name="one">१</string>
+    <string name="two">२</string>
+
+    <string name="start_time">सुरुवात समय</string>
+    <string name="end_time">अन्त्य समय</string>
+    <string name="location">स्थान</string>
+
+    <string name="edit_note">टिप्पणी सम्पादन गर्नुहोस्</string>
+
+    <string name="edit">सम्पादन गर्नुहोस्</string>
+    <string name="delete">मेटाउनुहोस्</string>
+
+    <string name="delete_confirmation">के तपाईं मेटाउन निश्चित हुनुहुन्छ?</string>
+
+    <string name="upcoming_events">कार्यक्रमहरू</string>
+
+    <string name="notification_des">तपाईँको बिदाको अनुरोध स्वीकार गरिएको छ</string>
+
+    <string name="notification">सूचनाहरू</string>
+
+    <string name="leave_req_accepted">तपाईँको बिदाको अनुरोध स्वीकार गरिएको छ</string>
+    <string name = "leave_req_rejected"> तपाईँको बिदाको अनुरोध </string> द्वारा अस्वीकार गरिएको छ
+
+    <string name = "attendance_req_accepted"> तपाईँको उपस्थिति अनुरोध स्वीकार गरिएको छ</string>
+    <string name="attendance_req_rejected">तपाईँको उपस्थिति अनुरोध अस्वीकार गरिएको छ</string>
 
     <string name="view_all">सबै हेर्नुहोस्</string>
     <string name="profile">प्रोफाइल</string>
@@ -54,7 +173,7 @@
     <string name="confirm">पुष्टि गर्नुहोस्</string>
     <string name="light_mode">लाइट मोड</string>
     <string name="language">भाषा</string>
-    <string name="theme">विषयवस्तु</string>
+    <string name="app_appearance">अनुप्रयोगको उपस्थिति</string>
     <string name="system_default">प्रणाली पूर्वनिर्धारित</string>
     <string name="dark_mode">गाढा मोड</string>
     <string name="yes">हो</string>
@@ -102,4 +221,79 @@
     <string name="gender">लिङ्ग</string>
     <string name="nationality">राष्ट्रियता</string>
     <string name="marital_status">वैवाहिक स्थिति</string>
+
+    <string name="chat">बातचीत</string>
+    <string name="search_users">प्रयोगकर्ताहरू खोज्नुहोस्</string>
+    <string name="type_here">यहाँ टाइप गर्नुहोस्...</string>
+    <string name="typing">टाइप गर्दै...</string>
+    <string name="ad">ई.सं.</string>
+    <string name="bs">वि.सं.</string>
+    <string name="today">आज</string>
+
+
+    <string name="holiday">बिदा</string>
+    <string name="late_in">लेट इन</string>
+    <string name="early_out">अर्ली आउट</string>
+    <string name="present">वर्तमान</string>
+    <string name="appresent">अनुपस्थित</string>
+
+    <string name="check_in">चेक इन</string>
+    <string name="check_out">चेक आउट</string>
+
+    <string name="on_time">समयमै</string>
+    <string name="go_home">घर जानुहोस्</string>
+    <string name="total_leave">कुल बिदा</string>
+    <string name="working_days">काम गर्ने दिनहरू</string>
+
+    <string name="swipe_to_check_in">चेक इन गर्न स्वाइप गर्नुहोस्</string>
+    <string name="swipe_to_check_out">चेक आउट गर्न स्वाइप गर्नुहोस्</string>
+    <string name="camera">क्यामेरा</string>
+    <string name="gallery">ग्यालरी</string>
+    <string name="notifications">सूचनाहरू</string>
+
+    <string name="light">उज्यालो</string>
+    <string name="dark">अँध्यारो</string>
+    <string name="system">प्रणाली</string>
+
+    <string name="english">अंग्रेजी</string>
+    <string name="nepali">नेपाली</string>
+
+    <string name="biometric">बायोमेट्रिक</string>
+    
+    <string-array name="months">
+        <item>बैशाख</item>
+        <item>जेठ</item>
+        <item>असार</item>
+        <item>साउन</item>
+        <item>भदौ</item>
+        <item>असोज</item>
+        <item>कार्तिक</item>
+        <item>मंसिर</item>
+        <item>पुष</item>
+        <item>माघ</item>
+        <item>फाल्गुन</item>
+        <item>चैत</item>
+    </string-array>
+
+    <string-array name="weeks_days">
+        <item>आइत</item>
+        <item>सोम</item>
+        <item>मंगल</item>
+        <item>बुध</item>
+        <item>बिही</item>
+        <item>शुक्र</item>
+        <item>शनि</item>
+    </string-array>
+    <string-array name="numbers">
+        <item>०</item>
+        <item>१</item>
+        <item>२</item>
+        <item>३</item>
+        <item>४</item>
+        <item>५</item>
+        <item>६</item>
+        <item>७</item>
+        <item>८</item>
+        <item>९</item>
+    </string-array>
 </resources>

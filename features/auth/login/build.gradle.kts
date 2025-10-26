@@ -77,12 +77,16 @@ kotlin {
                 implementation(projects.core.domain)
                 implementation(projects.core.networkHelper)
                 implementation(projects.core.ui.res)
+                implementation(projects.core.model)
+                implementation(projects.core.logger)
                 implementation(projects.core.ui.components)
 
                 implementation(libs.coil.compose)
                 implementation(libs.coil.compose.core)
                 implementation(libs.coil.mp)
                 implementation(libs.coil.network.ktor3)
+
+                implementation(projects.core.logger)
             }
         }
 

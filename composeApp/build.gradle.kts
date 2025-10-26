@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.jetbrains.kotlin.serialization)
+    alias(libs.plugins.google.services)
 }
 
 kotlin {
@@ -34,7 +35,11 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.core.splashscreen)
             implementation(projects.core.di)
-            implementation("androidx.activity:activity-compose:1.10.1")
+            implementation(libs.androidx.activity)
+
+            //firebase
+            implementation(libs.firebase.messaging.ktx)
+            implementation(project.dependencies.platform(libs.firebase.bom))
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -59,9 +64,12 @@ kotlin {
             implementation(projects.features.leave)
             implementation(projects.features.profile)
             implementation(projects.features.settings)
+            implementation(projects.core.model)
+            implementation(projects.core.logger)
 
             implementation(libs.koin.compose.viewmodel)
             implementation(compose.components.resources)
+
 
         }
         commonTest.dependencies {
@@ -105,6 +113,9 @@ android {
     }
     buildFeatures {
         buildConfig = true
+    }
+    androidResources {
+        generateLocaleConfig = true
     }
 }
 

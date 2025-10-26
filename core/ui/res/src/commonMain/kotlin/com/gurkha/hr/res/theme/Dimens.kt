@@ -22,7 +22,11 @@ data class Dimens(
     val bottomBar: Dp = 0.dp,
     val chartHeight: Dp = 0.dp,
     val leaveBoxHeight: Dp = 0.dp,
-    val reasonTextField: Dp = 0.dp
+    val reasonTextField: Dp = 0.dp,
+    val promptDialogSize: Dp = 0.dp,
+    val swipeToDismissHeight: Dp = 0.dp,
+    val heightForOptionBox: Dp = 0.dp,
+    val eventWidth: Dp = 0.dp,
 )
 
 
@@ -43,6 +47,10 @@ val CompactDimens = Dimens(
     loginImageSize = 200.dp,
     bottomBar = 80.dp,
     chartHeight = 200.dp,
-    leaveBoxHeight = 120.dp,
-    reasonTextField = 80.dp
+    leaveBoxHeight = 100.dp,
+    reasonTextField = 80.dp,
+    promptDialogSize = 120.dp,
+    swipeToDismissHeight = 72.dp,
+    heightForOptionBox = 100.dp,
+    eventWidth= 200.dp
 )

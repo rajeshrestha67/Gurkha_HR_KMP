@@ -1,57 +1,88 @@
 package com.gurkha.hr.settings
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.gurkha.hr.components.ColumnItemRow
+import com.gurkha.hr.components.dimens
 import com.gurkha.hr.res.SharedRes
-import com.gurkha.hr.res.theme.borderColor
-import com.gurkha.hr.res.theme.dimens
-import com.gurkha.hr.res.theme.secondaryTextColor
-import com.gurkha.hr.settings.model.SettingList
+import com.gurkha.hr.res.theme.EPRLanguage
+import com.gurkha.hr.res.theme.ThemeMode
+import com.gurkha.hr.res.theme.primaryTextColor
+import com.gurkha.hr.settings.model.settings.SettingList
+import com.gurkha.hr.settings.model.settings.SettingsScreenAction
+import com.gurkha.hr.settings.model.settings.SettingsScreenState
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun SettingScreen(
     onBackPressed: () -> Unit,
-    onButtonPressed: () -> Unit
-
-
+    navigateToChangePassword: () -> Unit,
+    navigateToNotificationSettings: () -> Unit
 ) {
+    val settingsViewModel = koinViewModel<SettingsViewModel>()
 
+    val state by settingsViewModel.state.collectAsStateWithLifecycle()
+
+    SettingScreenContainer(
+        onBackPressed = onBackPressed,
+        state = state,
+        navigateToChangePassword = navigateToChangePassword,
+        navigateToNotificationSettings = navigateToNotificationSettings,
+        onAction = settingsViewModel::onAction
+    )
+
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SettingScreenContainer(
+    onBackPressed: () -> Unit,
+    navigateToChangePassword: () -> Unit,
+    navigateToNotificationSettings: () -> Unit,
+    state: SettingsScreenState,
+    onAction: (SettingsScreenAction) -> Unit
+) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
-        contentWindowInsets = WindowInsets(0.dp),
-
+        contentWindowInsets = WindowInsets(),
         topBar = {
             TopAppBar(
-                windowInsets = WindowInsets(0.dp),
+                windowInsets = WindowInsets(),
                 title = { Text(stringResource(SharedRes.Strings.setting)) },
                 navigationIcon = {
                     IconButton(
@@ -67,52 +98,105 @@ fun SettingScreen(
             )
         }
     ) { paddingValues ->
-        SettingScreenContainer(
+        SettingScreenContent(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues),
-            onButtonPressed = (onButtonPressed),
+            navigateToNotificationSettings = navigateToNotificationSettings,
+            navigateToChangePassword = navigateToChangePassword,
+            state = state,
+            onAction = onAction
         )
-
     }
 }
 
 @Composable
-fun SettingScreenContainer(
+fun SettingScreenContent(
     modifier: Modifier = Modifier,
-    onButtonPressed: () -> Unit,
+    navigateToChangePassword: () -> Unit,
+    navigateToNotificationSettings: () -> Unit,
+    state: SettingsScreenState,
+    onAction: (SettingsScreenAction) -> Unit
 ) {
-    LazyColumn(
+
+    var showThemeBottomSheet by remember { mutableStateOf(false) }
+    var showLanguageBottomSheet by remember { mutableStateOf(false) }
+
+    Box(
         modifier = modifier,
-        contentPadding = PaddingValues(
-            horizontal = MaterialTheme.dimens.small3,
-            vertical = MaterialTheme.dimens.small2
-        )
     ) {
-        settingListItems(SettingList.values().toList()) { item ->
-            SettingsItemRow(
-                text = stringResource(item.title),
-                onClick = {
-                    when (item) {
-                        SettingList.ChangePassword -> {
-                            onButtonPressed()
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(
+                horizontal = MaterialTheme.dimens.small3,
+                vertical = MaterialTheme.dimens.small1
+            )
+        ) {
+            settingListItems(state.items) { item ->
+                ColumnItemRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            when (item) {
+                                SettingList.ChangePassword -> {
+                                    navigateToChangePassword()
+                                }
+
+                                SettingList.AppAppearance -> {
+                                    showThemeBottomSheet = true
+                                }
+
+                                SettingList.Language -> {
+                                    showLanguageBottomSheet = true
+                                }
+
+                                SettingList.Biometric -> {
+                                    navigateToNotificationSettings()
+                                }
+                            }
+                        }
+                        .padding(vertical = if (item != SettingList.Biometric) MaterialTheme.dimens.small3 else MaterialTheme.dimens.small1),
+                    text = stringResource(item.title),
+                    endIndicator = {
+                        if (item == SettingList.Biometric) {
+                            Switch(
+                                checked = state.notificationEnabled,
+                                onCheckedChange = {
+                                    onAction(SettingsScreenAction.OnNotificationStatusChange(it))
+                                }
+                            )
+                        } else {
+                            Icon(
+                                imageVector = Icons.Filled.ChevronRight,
+                                contentDescription = "Arrow Right"
+                            )
                         }
 
-                        SettingList.Theme -> {
-
-                        }
-
-                        SettingList.Language -> {
-
-                        }
                     }
-                },
-
                 )
+            }
         }
-
+        ThemeBottomSheet(
+            showThemeBottomSheet = showThemeBottomSheet,
+            themes = state.themes,
+            onThemeSelected = {
+                showThemeBottomSheet = false
+                onAction(SettingsScreenAction.OnThemeSelected(it))
+            },
+            onDismiss = { showThemeBottomSheet = false }
+        )
+        LanguageBottomSheet(
+            showLanguageBottomSheet = showLanguageBottomSheet,
+            languages = state.languages,
+            onLanguageSelected = {
+                onAction(SettingsScreenAction.OnLanguageSelected(it))
+                showLanguageBottomSheet = false
+            },
+            onDismiss = {
+                showLanguageBottomSheet = false
+            }
+        )
     }
-
 }
 
 
@@ -121,46 +205,147 @@ private fun LazyListScope.settingListItems(
     itemContent: @Composable LazyItemScope.(item: SettingList) -> Unit
 ) {
     items(
-        list, key = { it.toString() },
+        items = list, key = { it.title.key },
         itemContent = itemContent
     )
 }
 
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsItemRow(
-    text: String,
-    onClick: () -> Unit,
-    showDivider: Boolean = true
+fun LanguageBottomSheet(
+    showLanguageBottomSheet: Boolean,
+    languages: List<EPRLanguage>,
+    onDismiss: () -> Unit,
+    onLanguageSelected: (EPRLanguage) -> Unit
 ) {
 
-    Row(
+    if (!showLanguageBottomSheet) {
+        return
+    }
+    ModalBottomSheet(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onClick() }
-            .padding(MaterialTheme.dimens.small2)
-            .padding(MaterialTheme.dimens.small2),
-
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+            .wrapContentHeight(),
+        onDismissRequest = onDismiss,
+        containerColor = MaterialTheme.colorScheme.background
     ) {
-        Text(
-            modifier = Modifier.weight(1f),
-            text = text,
-            color = MaterialTheme.colorScheme.secondaryTextColor
-        )
-        Icon(
-            imageVector = Icons.Filled.ChevronRight,
-            contentDescription = "Arrow Right"
-        )
+        Column(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+
+            Text(
+                modifier = Modifier.padding(
+                    vertical = MaterialTheme.dimens.small2,
+                    horizontal = MaterialTheme.dimens.small3
+                ),
+                text = stringResource(SharedRes.Strings.appAppearance),
+                style = MaterialTheme.typography.titleLarge.copy(
+                    color = MaterialTheme.colorScheme.primary
+                )
+            )
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth(),
+                contentPadding = PaddingValues(
+                    horizontal = MaterialTheme.dimens.small3
+                )
+            ) {
+
+                items(items = languages, key = { it.langCode }) { theme ->
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                onLanguageSelected(theme)
+                            }
+
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(vertical = MaterialTheme.dimens.small2),
+                            text = stringResource(theme.displayName),
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                color = MaterialTheme.colorScheme.primaryTextColor
+                            )
+                        )
+                        HorizontalDivider(
+                            modifier = Modifier.fillMaxWidth(),
+                            thickness = 0.5.dp,
+                            color = MaterialTheme.colorScheme.outline
+                        )
+                    }
+
+                }
+            }
+        }
     }
-    if (showDivider) {
-        HorizontalDivider(
-            Modifier
-                .fillMaxWidth()
-                .padding(horizontal = MaterialTheme.dimens.small2),
-            thickness = 0.5.dp,
-            color = MaterialTheme.colorScheme.borderColor
-        )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ThemeBottomSheet(
+    showThemeBottomSheet: Boolean,
+    themes: List<ThemeMode>,
+    onDismiss: () -> Unit,
+    onThemeSelected: (ThemeMode) -> Unit
+) {
+
+    if (!showThemeBottomSheet) {
+        return
+    }
+    ModalBottomSheet(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight(),
+        onDismissRequest = onDismiss,
+        containerColor = MaterialTheme.colorScheme.background
+    ) {
+        Column(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+
+            Text(
+                modifier = Modifier.padding(
+                    vertical = MaterialTheme.dimens.small2,
+                    horizontal = MaterialTheme.dimens.small3
+                ),
+                text = stringResource(SharedRes.Strings.appAppearance),
+                style = MaterialTheme.typography.titleLarge.copy(
+                    color = MaterialTheme.colorScheme.primary
+                )
+            )
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth(),
+                contentPadding = PaddingValues(
+                    horizontal = MaterialTheme.dimens.small3
+                )
+            ) {
+
+                items(items = themes, key = { it.value }) { theme ->
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                onThemeSelected(theme)
+                            }
+
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(vertical = MaterialTheme.dimens.small2),
+                            text = stringResource(theme.title),
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                color = MaterialTheme.colorScheme.primaryTextColor
+                            )
+                        )
+                        HorizontalDivider(
+                            modifier = Modifier.fillMaxWidth(),
+                            thickness = 0.5.dp,
+                            color = MaterialTheme.colorScheme.outline
+                        )
+                    }
+
+                }
+            }
+        }
     }
 }
 

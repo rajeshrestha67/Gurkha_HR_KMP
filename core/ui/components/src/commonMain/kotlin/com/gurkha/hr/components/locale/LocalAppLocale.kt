@@ -1,0 +1,16 @@
+package com.gurkha.hr.components.locale
+
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ProvidedValue
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+
+var erpAppLocale by mutableStateOf<String?>("en")
+
+expect object LocalAppLocale {
+    val current: String @Composable get
+
+    @Composable
+    infix fun provides(value: String?): ProvidedValue<*>
+}

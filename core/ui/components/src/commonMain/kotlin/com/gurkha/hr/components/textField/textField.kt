@@ -33,9 +33,9 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.Dp
+import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.noRippleClickable
 import com.gurkha.hr.res.theme.borderColor
-import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.disabledTextFieldBorderColor
 import com.gurkha.hr.res.theme.primaryTextColor
 import org.jetbrains.compose.resources.StringResource
@@ -43,7 +43,7 @@ import org.jetbrains.compose.resources.stringResource
 
 
 @Composable
-fun EPRBaseTextField(
+fun ERPBaseTextField(
     modifier: Modifier = Modifier,
     textFieldValue: TextFieldValue,
     label: String?,
@@ -59,6 +59,7 @@ fun EPRBaseTextField(
     error: StringResource? = null,
     maxLength: Int = Int.MAX_VALUE,
     singleLine: Boolean = false,
+    imeAction: ImeAction,
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
     rules: List<Rule> = listOf(),
     onErrorStateChange: (StringResource?) -> Unit,
@@ -104,7 +105,6 @@ fun EPRBaseTextField(
             }
         } else Modifier
 
-
         OutlinedTextField(
             enabled = enabled && onDropDown == null,
             modifier = Modifier
@@ -131,11 +131,7 @@ fun EPRBaseTextField(
                 }.then(updatedModifier),
             shape = shape,
             leadingIcon = leadingIcon,
-            trailingIcon = {
-                trailingIcon?.let {
-                    it()
-                }
-            },
+            trailingIcon = trailingIcon,
             maxLines = maxLines,
             value = textFieldValue,
             textStyle = MaterialTheme.typography.bodySmall.copy(
@@ -157,7 +153,7 @@ fun EPRBaseTextField(
                 )
             },
             visualTransformation = visualTransformation,
-            keyboardOptions = keyboardOptions,
+            keyboardOptions = keyboardOptions.copy(imeAction = imeAction),
             keyboardActions = keyboardActions,
             readOnly = readOnly,
             isError = error != null,
@@ -186,7 +182,7 @@ fun EPRBaseTextField(
 
 
 @Composable
-fun EPRTextField(
+fun ERPTextField(
     modifier: Modifier = Modifier,
     textFieldValue: TextFieldValue,
     label: String? = null,
@@ -199,6 +195,7 @@ fun EPRTextField(
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     singleLine: Boolean = false,
+    imeAction: ImeAction,
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
     readOnly: Boolean = false,
     error: StringResource? = null,
@@ -214,7 +211,7 @@ fun EPRTextField(
     unfocusedBorderColor: Color = MaterialTheme.colorScheme.borderColor,
     onDropDown: (() -> Unit)? = null
 ) {
-    EPRBaseTextField(
+    ERPBaseTextField(
         modifier = modifier,
         textFieldValue = textFieldValue,
         label = label,
@@ -230,6 +227,7 @@ fun EPRTextField(
         trailingIcon = trailingIcon,
         maxLength = maxLength,
         rules = rules,
+        imeAction = imeAction,
         onErrorStateChange = onErrorStateChange,
         enabled = enabled,
         showErrorMessage = showErrorMessage,
@@ -246,7 +244,7 @@ fun EPRTextField(
 
 
 @Composable
-fun EPRTextField(
+fun ERPTextField(
     modifier: Modifier = Modifier,
     text: String,
     label: String? = null,
@@ -258,10 +256,11 @@ fun EPRTextField(
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
+    imeAction: ImeAction = ImeAction.Next,
     readOnly: Boolean = false,
     error: StringResource? = null,
     maxLength: Int = Int.MAX_VALUE,
-    rules: List<Rule>,
+    rules: List<Rule> = listOf(),
     onErrorStateChange: (StringResource?) -> Unit,
     enabled: Boolean = true,
     showErrorMessage: Boolean = true,
@@ -278,7 +277,7 @@ fun EPRTextField(
 
     val textFieldValue = textFieldValueState.copy(text = text)
 
-    EPRTextField(
+    ERPTextField(
         modifier = modifier,
         textFieldValue = textFieldValue,
         label = label,
@@ -292,6 +291,7 @@ fun EPRTextField(
         validateOnFocusChanged = validateOnFocusChanged,
         visualTransformation = visualTransformation,
         keyboardOptions = keyboardOptions,
+        imeAction = imeAction,
         keyboardActions = keyboardActions,
         readOnly = readOnly,
         error = error,
@@ -321,7 +321,7 @@ fun AGMobileTextField(
     value: String,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardOptions: KeyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-    imeAction: ImeAction = ImeAction.Next,
+    imeAction: ImeAction,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     readOnly: Boolean = false,
     error: StringResource? = null,
@@ -333,14 +333,15 @@ fun AGMobileTextField(
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
     height: Dp? = null
 ) {
-    EPRTextField(
+    ERPTextField(
         modifier = modifier,
         text = value,
         label = label,
         hint = hint,
         onValueChange = onValueChange,
         visualTransformation = visualTransformation,
-        keyboardOptions = keyboardOptions.copy(imeAction = imeAction),
+        keyboardOptions = keyboardOptions,
+        imeAction = imeAction,
         keyboardActions = keyboardActions,
         readOnly = readOnly,
         error = error,
@@ -364,7 +365,7 @@ fun AGEmailTextField(
     value: String,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardOptions: KeyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-    imeAction: ImeAction = ImeAction.Next,
+    imeAction: ImeAction,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     readOnly: Boolean = false,
     error: StringResource? = null,
@@ -377,14 +378,15 @@ fun AGEmailTextField(
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
     height: Dp? = null
 ) {
-    EPRTextField(
+    ERPTextField(
         modifier = modifier,
         text = value,
         label = label,
         hint = hint,
         onValueChange = onValueChange,
         visualTransformation = visualTransformation,
-        keyboardOptions = keyboardOptions.copy(imeAction = imeAction),
+        imeAction = imeAction,
+        keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
         readOnly = readOnly,
         error = error,
@@ -407,7 +409,7 @@ fun PasswordTextField(
     onValueChange: (String) -> Unit,
     value: String,
     keyboardOptions: KeyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-    imeAction: ImeAction = ImeAction.Done,
+    imeAction: ImeAction,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     error: StringResource? = null,
     onErrorStateChange: (StringResource?) -> Unit,
@@ -419,7 +421,7 @@ fun PasswordTextField(
 ) {
     var revealed by remember { mutableStateOf(false) }
 
-    EPRTextField(
+    ERPTextField(
         modifier = modifier,
         text = value,
         label = label,
@@ -428,6 +430,7 @@ fun PasswordTextField(
         visualTransformation = if (revealed) VisualTransformation.None else PasswordVisualTransformation(),
         keyboardOptions = keyboardOptions.copy(imeAction = imeAction),
         keyboardActions = keyboardActions,
+        imeAction = imeAction,
         readOnly = false,
         error = error,
         rules = rules,

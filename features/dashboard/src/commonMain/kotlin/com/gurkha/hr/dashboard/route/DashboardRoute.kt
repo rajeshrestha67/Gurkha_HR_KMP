@@ -22,4 +22,8 @@ sealed interface DashboardRoute {
     @Serializable
     data object ViewAllPageRoute : DashboardRoute
 
+    @Serializable
+    data object NoteRoute : DashboardRoute
+
+
 }

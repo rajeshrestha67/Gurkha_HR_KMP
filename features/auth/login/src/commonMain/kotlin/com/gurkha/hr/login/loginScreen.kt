@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
@@ -30,18 +31,22 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.PlatformMessage
+import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.hideKeyboardOnTap
+import com.gurkha.hr.components.permissions.POST_NOTIFICATIONS_PERMISSION
+import com.gurkha.hr.components.permissions.rememberRequestPermission
 import com.gurkha.hr.components.textField.AGEmailTextField
 import com.gurkha.hr.components.textField.FormValidate
 import com.gurkha.hr.components.textField.PasswordTextField
+import com.gurkha.hr.logger.AppLogger
 import com.gurkha.hr.login.model.LoginScreenAction
 import com.gurkha.hr.login.model.LoginScreenState
 import com.gurkha.hr.res.SharedRes
-import com.gurkha.hr.res.theme.dimens
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
+private const val TAG = "LoginScreen"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -67,6 +72,40 @@ fun LoginScreen(
             }
         }
     }
+
+    val onPermission = rememberRequestPermission(
+        permissions = listOf(
+            POST_NOTIFICATIONS_PERMISSION
+        ),
+        onGranted = { permission ->
+            AppLogger.i(
+                tag = TAG,
+                message = "Permission granted: $permission"
+            )
+        },
+        onDenied = { permission ->
+            AppLogger.i(
+                tag = TAG,
+                message = "Permission denied: $permission"
+            )
+        },
+        onPermanentlyDenied = { permission ->
+            AppLogger.i(
+                tag = TAG,
+                message = "Permission denied permanent: $permission"
+            )
+        },
+        onAllGranted = {
+            AppLogger.i(
+                tag = TAG,
+                message = "All Permission granted"
+            )
+        })
+
+
+    LaunchedEffect(Unit) {
+        onPermission()
+    }
     LoginScreenContent(
         state = state,
         onAction = loginViewModel::onAction
@@ -87,7 +126,7 @@ fun LoginScreenContent(
     }
 
     Scaffold(
-        modifier = Modifier.fillMaxSize().hideKeyboardOnTap(
+        modifier = Modifier.fillMaxSize().imePadding().hideKeyboardOnTap(
             focusManager = focusManager,
             keyboardController = keyboardController
         ),

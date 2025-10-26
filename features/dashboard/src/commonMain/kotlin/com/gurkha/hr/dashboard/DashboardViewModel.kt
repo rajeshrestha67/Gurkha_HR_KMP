@@ -5,19 +5,25 @@ import androidx.lifecycle.viewModelScope
 import com.gurkha.hr.dashboard.model.DashboardScreenAction
 import com.gurkha.hr.dashboard.model.DashboardScreenState
 import com.gurkha.hr.dashboard.route.DashboardRoute
-import com.gurkha.hr.domain.userDetail.usecase.FetchRemoteUserDetailUseCase
+import com.gurkha.hr.domain.userDetail.usecase.FetchUserDetailUseCase
 import com.gurkha.hr.networkhelper.onError
 import com.gurkha.hr.networkhelper.onSuccess
+import com.gurkha.model.AuthState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class DashboardViewModel(
-    private val userDetailUseCase: FetchRemoteUserDetailUseCase,
+    private val userDetailUseCase: FetchUserDetailUseCase,
+    private val authState: AuthState
 ) : ViewModel() {
     private val _state = MutableStateFlow(DashboardScreenState())
+
+    val sessionExpired: StateFlow<Boolean> = authState.sessionExpired
+
     val state = _state
         .stateIn(
             scope = viewModelScope,
@@ -34,11 +40,14 @@ class DashboardViewModel(
             is DashboardScreenAction.OnFetchCurrentUser -> {
 //                currentUserDetailFetch()
             }
+
+            is DashboardScreenAction.Reset -> {
+                authState.reset()
+            }
         }
     }
 
     private fun navigateTo(route: DashboardRoute) {
-
         _state.update {
             it.copy(currentScreen = route)
         }

@@ -25,7 +25,34 @@
     <string name="report">Report</string>
     <string name="request">Request</string>
     <string name="all_leaves">Leaves</string>
+    <string name="leave_request">Leave Request</string>
     <string name="leave_request_form">Leave Request Form</string>
+    <string name="upload_profile_image">Upload Profile Image</string>
+    <string name="upload_citizenship_front">Upload Citizenship Front</string>
+    <string name="upload_citizenship_back">Upload Citizenship Back</string>
+    <string name="upload_national_id">Upload National ID</string>
+    <string name="upload_slc_marksheet">Upload SLC Marksheet</string>
+    <string name="upload_plus_two_image">Upload Plus Two Image</string>
+    <string name="upload_bachelor">Upload Bachelor Document</string>
+    <string name="upload_master">Upload Master Document</string>
+    <string name="upload_experience_document">Upload Document</string>
+
+    <string name="profile_image">Profile Image</string>
+    <string name="citizenship_front">Citizenship Front</string>
+    <string name="citizenship_back">Citizenship Back</string>
+    <string name="national_id">National Id</string>
+    <string name="slc_marksheet">Slc Marksheet</string>
+    <string name="plus_two_image">Plus Two Image</string>
+    <string name="bachelor">Bachelor</string>
+    <string name="master">Master</string>
+    <string name="experience_document">Experience Document</string>
+
+    <string name="leave_summary">Leave Summary</string>
+    <string name="leave_type_name">Leave Type\nName</string>
+    <string name="leave_taken">Leave Taken</string>">
+    <string name="remaining_leave">Remaining Leave</string>">
+    <string name="month">Month</string>">
+
 
     <string name="start_date">Start Date</string>
     <string name="select_start_date">Select Start Date</string>
@@ -47,14 +74,102 @@
 
     <string name="cancel">Cancel</string>">
     <string name="submit">Submit</string>">
+    <string name="date">Date</string>">
+    <string name="clockIn">Clock In</string>
+    <string name="clockOut">Clock Out</string>
+    <string name="status">Status</string>
+    <string name="from_date">From Date</string>
+    <string name="to_date">To Date</string>
+
+    <string name="total_days">Total Days</string>
+    <string name="holidays">Holidays</string>
+    <string name="total_working_days">Total Working Days</string>
+    <string name="total_worked_days">Total Worked Days</string>
+    <string name="total_leave_taken">Total Leave Taken</string>
+    <string name="total_present_days">Total Present Days</string>
+    <string name="total_absent_days">Total Absent Days</string>
+    <string name="no_assets_available">No assets available</string>
+
+    <string name="remarks">Remarks</string>">
+    <string name="assigned">Assigned</string>">
+    <string name="response">Response</string>">
+    <string name="monthly_attendance">Monthly Attendance</string>">
+    <string name="monthly_attendance_report">Monthly Attendance Report</string>">
+    <string name="attendance_summary">Attendance Summary</string>">
+
+
+    <string name="assignee">Assignee</string>">
+    <string name="select_assignee">Select Assignee</string>">
+
+
+    <string name="leave_processing">Leave Processing</string>">
+    <string name="ok">OK</string>">
+    <string name="year">Year</string>">
 
 
     <string name="leave_duration">Leave Duration</string>
     <string name="select_leave_duration">Select Leave Duration</string>
+
     <string name="leave_balance">Leave\nBalance</string>
     <string name="leave_approved">Leave\nApproved</string>
     <string name="leave_pending">Leave\nPending</string>
     <string name="leave_cancelled">Leave\nCancelled</string>
+
+
+    <string name="apply_days">Apply Days</string>
+    <string name="approver">Approver</string>
+
+    <string name="missed_attendance">Missed\nAttendance</string>
+    <string name="attendance_approved">Attendance\nApproved</string>
+    <string name="attendance_cancelled">Attendance\nCancelled</string>
+    <string name="attendance_pending">Attendance\nPending</string>
+
+    <string name="no_data_found">No Data Found!</string>
+
+    <string name="select_date">Select Date</string>
+    <string name="clock_in_time">Clock In Time</string>
+    <string name="clock_out_time">Clock Out Time</string>
+
+    <string name="attendance_request">Attendance Request</string>
+    <string name="attendance_request_form">Attendance Request Form</string>
+
+    <string name="notes">Notes</string>
+    <string name="add_notes">Add Note</string>
+    <string name="edit_notes">Edit Note</string>
+
+    <string name="title">Title</string>
+    <string name="enter_title">Enter Title</string>
+    <string name="is_event">Is Event?</string>
+    <string name="enter_description">Enter Description</string>
+
+    <string name="note">Note</string>
+    <string name="event">Event</string>
+
+    <string name="one">1</string>
+    <string name="two">2</string>
+
+    <string name="start_time">Start Time</string>
+    <string name="end_time">End Time</string>
+    <string name="location">Location</string>
+
+    <string name="edit_note">Edit Note</string>
+
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+
+    <string name="delete_confirmation">Are you sure you want to delete?</string>
+
+    <string name="upcoming_events">Events</string>
+    <string name="notification_des">Your request has been accepted by</string>
+
+    <string name="notification">Notifications</string>
+
+    <string name="leave_req_accepted">Your Leave request has been accepted by</string>
+    <string name="leave_req_rejected">Your Leave request has been rejected by</string>
+
+    <string name="attendance_req_accepted">Your Attendance request has been accepted by</string>
+    <string name="attendance_req_rejected">Your Attendance request has been rejected by</string>
+
     <string name="attendance">Attendance</string>
     <string name="view_all">View all</string>
     <string name="pending">Pending</string>
@@ -92,16 +207,93 @@
     <string name="language">Language</string>
     <string name="light_mode">Light Mode</string>
     <string name="system_default">System Default</string>
-    <string name="theme">Theme</string>
+    <string name="app_appearance">App Appearance</string>
     <string name="dark_mode">Dark Mode</string>
-    <string name="are_you_sure">Are you Sure</string>
-    <string name="do_you_really_want_to_logout">Do you really want to logout</string>
+    <string name="are_you_sure">Are you Sure?</string>
+    <string name="do_you_really_want_to_logout">Do you really want to logout?</string>
     <string name="password_does_not_match">Password doesn't match</string>
     <string name="enter_your_password">Enter your Password</string>
+    <string name="chat">Chat</string>
+    <string name="search_users">Search Users</string>
+    <string name="type_here">Type here...</string>
+    <string name="typing">Typing...</string>
+    <string name="ad">AD</string>
+    <string name="bs">BS</string>
+    <string name="today">Today</string>
+    <string name="assigned_assets">Assigned Assets</string>
+    <string name="asset_name">Asset Name</string>
+    <string name="description">Description</string>
+    <string name="assigned_date">Assigned Date</string>
     <string name="invalid_password_length">Password must be at least 6 characters long</string>
     <string name="invalid_password_uppercase">Must contain at least one uppercase letter</string>
     <string name="invalid_password_lowercase">Must contain at least one lowercase letter</string>
     <string name="invalid_password_digit">Must contain at least one digit</string>
     <string name="invalid_password_special_char">Must contain at least one special character</string>
 
+    <string name="holiday">Holiday</string>
+    <string name="late_in">Late In</string>
+    <string name="early_out">Early Out</string>
+    <string name="present">Present</string>
+    <string name="absent">Absent</string>
+
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
+
+    <string name="check_in">Check In</string>
+    <string name="check_out">Check Out</string>
+    <string name="on_time">On Time</string>
+    <string name="go_home">Go Home</string>
+    <string name="total_leave">Total Leave</string>
+    <string name="working_days">Working Days</string>
+    <string name="swipe_to_check_in">Swipe to Check In</string>
+    <string name="swipe_to_check_out">Swipe to Check Out</string>
+    <string name="swipe_to_dismiss">Swipe to Dismiss">Working Days</string>
+    <string name="notifications">Notifications</string>
+
+    <string name="light">Light</string>
+    <string name="dark">Dark</string>
+    <string name="system">System</string>
+    <string name="english">English</string>
+    <string name="nepali">Nepali</string>
+
+    <string name="biometric">Biometric</string>
+
+
+    <string-array name="months">
+        <item>Baisakh</item>
+        <item>Jestha</item>
+        <item>Asar</item>
+        <item>Shrawan</item>
+        <item>Bhadra</item>
+        <item>Asoj</item>
+        <item>Kartik</item>
+        <item>Mangsir</item>
+        <item>Poush</item>
+        <item>Magh</item>
+        <item>Falgun</item>
+        <item>Chaitra</item>
+    </string-array>
+
+    <string-array name="weeks_days">
+        <item>Sun</item>
+        <item>Mon</item>
+        <item>Tue</item>
+        <item>Wed</item>
+        <item>Thu</item>
+        <item>Fri</item>
+        <item>Sat</item>
+    </string-array>
+
+    <string-array name="numbers">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+    </string-array>
 </resources>

@@ -1,7 +1,14 @@
 package com.gurkha.hr.networkhelper
 
 import com.gurkha.model.ErrorData
+import com.gurkha.model.attendance.attendanceRequest.AttendanceRequestResponseDto
+import com.gurkha.model.attendance.attendanceStatus.AttendanceStatusResponseDTO
 import com.gurkha.model.auth.login.LoginResponseDto
+import com.gurkha.model.network.DataError
+import com.gurkha.model.leave.leaveRequest.LeaveRequestResponseDto
+import com.gurkha.model.note.NoteDetailDto
+import com.gurkha.model.note.NotesRequestDto
+import com.gurkha.model.note.NotesResponseDto
 import io.ktor.client.call.NoTransformationFoundException
 import io.ktor.client.call.body
 import io.ktor.client.network.sockets.SocketTimeoutException
@@ -57,7 +64,8 @@ suspend inline fun <reified T> responseToResult(
         413 -> ERPResult.Error(DataError.NetworkError.PayloadTooLarge)
         in 500..599 -> ERPResult.Error(DataError.NetworkError.Server)
         else -> {
-            if (T::class == LoginResponseDto::class) {
+
+            if (T::class == LoginResponseDto::class || T::class == LeaveRequestResponseDto::class  || T::class == AttendanceRequestResponseDto::class ) {
                 val res = try {
                     response.body<ErrorData>()
                 } catch (e: Exception) {

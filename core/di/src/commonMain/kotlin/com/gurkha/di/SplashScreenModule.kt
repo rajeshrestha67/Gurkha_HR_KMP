@@ -26,4 +26,5 @@ class SplashScreenModule {
     @Factory
     fun getUpdateFirstTimeUserUseCase(userInfoRepository: UserInfoRepository) =
         UpdateFirstTimeCheckUseCase(userInfoRepository = userInfoRepository)
+
 }

@@ -2,7 +2,8 @@ package com.gurkha.hr.datastore.user_info.local
 
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.okio.OkioStorage
-import com.gurkha.hr.datastore.user_info.model.UserInfo
+import com.gurkha.model.user_info.UserInfo
+
 import kotlinx.coroutines.flow.Flow
 import okio.FileSystem
 import okio.Path.Companion.toPath

@@ -70,21 +70,26 @@ kotlin {
                 implementation(libs.androidx.lifecycle.viewmodelCompose)
                 implementation(libs.androidx.lifecycle.runtimeCompose)
 
-
                 implementation(libs.koin.compose.viewmodel)
                 implementation(compose.components.resources)
                 implementation(compose.materialIconsExtended)
 
                 implementation(projects.core.domain)
                 implementation(projects.core.persistance.datastore)
+                implementation(projects.core.model)
                 implementation(projects.core.networkHelper)
                 implementation(projects.core.ui.res)
                 implementation(projects.core.ui.components)
+                implementation(projects.core.logger)
 
                 implementation(libs.coil.compose)
                 implementation(libs.coil.compose.core)
                 implementation(libs.coil.mp)
                 implementation(libs.coil.network.ktor3)
+                implementation(libs.ui.backhandler)
+
+                implementation(libs.jetbrians.material3)
+                implementation(projects.core.ui.date)
             }
         }
 
@@ -99,6 +104,7 @@ kotlin {
                 // Add Android-specific dependencies here. Note that this source set depends on
                 // commonMain by default and will correctly pull the Android artifacts of any KMP
                 // dependencies declared in commonMain.
+                implementation(libs.androidx.activity.compose)
             }
         }
 

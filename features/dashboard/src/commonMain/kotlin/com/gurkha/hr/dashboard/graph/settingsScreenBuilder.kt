@@ -15,8 +15,11 @@ fun NavGraphBuilder.settingsScreenBuilder(
             onBackPressed = {
                 navController.popBackStack()
             },
-            onButtonPressed = {
+            navigateToChangePassword = {
                 navController.navigate(ProfileRoute.ChangePasswordRoute)
+            },
+            navigateToNotificationSettings = {
+
             }
         )
     }

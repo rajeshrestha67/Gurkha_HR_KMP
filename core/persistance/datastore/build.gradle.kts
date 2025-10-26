@@ -73,6 +73,7 @@ kotlin {
                 implementation(libs.kotlinx.serialization.json)
 
                 implementation(projects.core.crypto)
+                implementation(projects.core.model)
             }
         }
 

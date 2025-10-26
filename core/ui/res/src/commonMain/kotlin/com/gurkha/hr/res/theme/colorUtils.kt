@@ -17,6 +17,12 @@ val ColorScheme.imageBackgroundColor: Color
             light = Color.Black,
             dark = Color(0xFF212121)
         )
+val ColorScheme.lightGreenColor: Color
+    @Composable get() =
+        extendedColor(
+            light = Color(0xFF4CAF50),
+            dark = Color(0xFF90EE90)
+        )
 val ColorScheme.primaryTextColor: Color
     @Composable get() =
         extendedColor(
@@ -58,15 +64,11 @@ val ColorScheme.highLightColor: Color
         light = Color.White.copy(alpha = 0.7f),
         dark = Color.White.copy(alpha = 0.7f)
     )
-val ColorScheme.logOutButtonColor: Color
-    @Composable get() = extendedColor(
-        light = Color.Red,
-        dark = Color.Gray
-    )
+
 val ColorScheme.logOutTextColor: Color
     @Composable get() = extendedColor(
-        light = Color.White,
-        dark = Color.Black
+        light = Color(0xFFC62828),
+        dark = Color(0xFFE53935)
     )
 val ColorScheme.lightRedColor: Color
     @Composable get() = extendedColor(
@@ -77,8 +79,8 @@ val ColorScheme.lightRedColor: Color
 
 val ColorScheme.darkPrimaryTextColor: Color
     @Composable get() = extendedColor(
-        light = Color.Black,
-        dark = Color.Black
+        light = Color(0xFF555975),
+        dark = Color(0xFFF2F2F2)
     )
 
 val ColorScheme.leaveBalanceBorder: Color
@@ -115,6 +117,49 @@ val ColorScheme.disabledTextFieldBorderColor: Color
     @Composable get() = extendedColor(
         light = Color(0xFFCCCCCC),
         dark = Color(0xFF444444)
+    )
+
+val ColorScheme.chatBackgroundColor: Color
+    @Composable get() = extendedColor(
+        light = Color(0xFFFAFAFA),
+        dark = Color(0xFF121212)
+    )
+
+val ColorScheme.inComingBubbleColor: Color
+    @Composable get() = extendedColor(
+        light = Color(0x604B662C),
+        dark = Color(0x60B1D18A)
+    )
+
+
+val ColorScheme.outGoingBubbleColor: Color
+    @Composable get() = extendedColor(
+        light = Color(0xFFDDDDDD),
+        dark = Color(0xFF3A3A3A)
+    )
+val ColorScheme.holidayBlueColor: Color
+    @Composable get() = extendedColor(
+        light = Color(0xFF03A9F4),
+        dark = Color(0xFF2196F3)
+
+    )
+val ColorScheme.inComingTextColor: Color
+    @Composable get() = extendedColor(
+        light = Color(0xFF111111),
+        dark = Color(0xFFE0E0E0)
+    )
+
+
+val ColorScheme.chatSecondaryTextColor: Color
+    @Composable get() = extendedColor(
+        light = Color(0xFF757575),
+        dark = Color(0xFFAAAAAA)
+    )
+
+val ColorScheme.attendanceHoliday: Color
+    @Composable get() = extendedColor(
+        light = Color(0xFFFFA000),
+        dark = Color(0xFFBF6F00)
     )
 
 @Composable

@@ -81,6 +81,10 @@ kotlin {
                 implementation(compose.components.resources)
                 implementation(compose.runtime)
                 implementation(compose.foundation)
+                implementation(projects.core.ui.res)
+                implementation(projects.core.logger)
+
+                implementation(libs.kotlinx.datetime)
             }
         }
 

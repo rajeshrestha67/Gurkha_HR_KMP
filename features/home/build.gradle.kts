@@ -76,9 +76,12 @@ kotlin {
                 implementation(compose.materialIconsExtended)
 
                 implementation(projects.core.domain)
+                implementation(projects.core.model)
                 implementation(projects.core.networkHelper)
                 implementation(projects.core.ui.res)
                 implementation(projects.core.ui.components)
+                implementation(projects.core.ui.date)
+                implementation(projects.core.logger)
 
                 implementation(libs.coil.compose)
                 implementation(libs.coil.compose.core)
@@ -87,7 +90,7 @@ kotlin {
 
                 implementation(libs.kotlinx.datetime)
 
-
+                implementation(libs.kotlinx.serialization.json)
             }
         }
 

@@ -1,14 +1,15 @@
 package com.gurkha.hr.data.login
 
 import com.gurkha.hr.domain.auth.login.repository.UserRemoteRepository
+import com.gurkha.hr.logger.AppLogger
 import com.gurkha.hr.networkhelper.BaseUrl
-import com.gurkha.hr.networkhelper.DataError
 import com.gurkha.hr.networkhelper.ERPResult
 import com.gurkha.hr.networkhelper.EndPoint
 import com.gurkha.hr.networkhelper.post
 import com.gurkha.hr.networkhelper.safeCall
 import com.gurkha.model.auth.login.LoginRequestDto
 import com.gurkha.model.auth.login.LoginResponseDto
+import com.gurkha.model.network.DataError
 import io.ktor.client.HttpClient
 import io.ktor.client.request.setBody
 
@@ -19,13 +20,20 @@ class KtorUserRemoteRepository(
         username: String,
         password: String
     ): ERPResult<LoginResponseDto, DataError> {
+        val request = LoginRequestDto(username, password)
+        AppLogger.i(TAG, "login: api request $request")
         return safeCall {
             httpClient.post(
                 baseUrl = BaseUrl.Generic,
                 endPoint = EndPoint.LOGIN_END_POINT
             ) {
-                setBody(LoginRequestDto(username, password))
+                setBody(request)
             }
         }
+    }
+
+    companion object {
+        private const val TAG = "KtorUserRemoteRepository"
+
     }
 }

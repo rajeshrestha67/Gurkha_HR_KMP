@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "820563193977",
+    "project_id": "gurkha-hr",
+    "storage_bucket": "gurkha-hr.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:820563193977:android:d44f9639f9e55c0f70e4a8",
+        "android_client_info": {
+          "package_name": "com.gurkha.hr"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDkhFv76-7OC5V28dncu6GLC-bZjNm1B0U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

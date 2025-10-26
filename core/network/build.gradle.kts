@@ -74,6 +74,9 @@ kotlin {
                 implementation(libs.ktor.client.core)
                 implementation(libs.ktor.client.logging)
                 implementation(libs.ktor.serialization.kotlinx.json)
+                implementation(projects.core.model)
+                implementation(projects.core.logger)
+                implementation(libs.kmp.socketio)
             }
         }
 
@@ -89,6 +92,8 @@ kotlin {
                 // commonMain by default and will correctly pull the Android artifacts of any KMP
                 // dependencies declared in commonMain.
                 implementation(libs.ktor.client.okhttp)
+//                implementation("io.socket:socket.io-client:2.1.2")
+//                implementation("dev.icerock.moko:socket-io-android:0.6.0")
             }
 
         }

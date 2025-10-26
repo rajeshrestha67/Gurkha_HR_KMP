@@ -52,4 +52,5 @@ class AuthModule {
             passwordValidateUseCase = passwordValidateUseCase,
             updateFirstTimeCheckUseCase = updateFirstTimeCheckUseCase
         )
+
 }
