@@ -28,5 +28,6 @@ object EndPoint {
     const val REPORT_END_POINT = "api/attendance/employee/summary"
     const val UPCOMING_EVENT_END_POINT = "api/importantEvents/upcoming"
     const val TOTAL_NOTIFICATION_COUNT_END_POINT = "api/notifications/get-total"
+    const val TOTAL_UNREAD_NOTIFICATION_COUNT_END_POINT = "api/notifications/check-unread"
     const val ALL_NOTIFICATION_END_POINT = "api/notifications/get-by-limit/12?offset=0"
 }

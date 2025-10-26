@@ -19,6 +19,7 @@ import com.gurkha.hr.domain.attendance.attendanceReport.usecase.AttendanceUseCas
 import com.gurkha.hr.domain.notification.notificationCount.useCase.NotificationCountUseCase
 import com.gurkha.hr.domain.notification.notificationData.repository.NotificationRemoteRepository
 import com.gurkha.hr.domain.notification.notificationData.useCase.NotificationUseCase
+import com.gurkha.hr.domain.notification.unSeenNotificationCount.useCase.UnseenNotificationUseCase
 import com.gurkha.hr.domain.upComingBirthday.repository.UpComingBirthdayRemoteRepository
 import com.gurkha.hr.domain.upComingBirthday.usecase.UpComingBirthdayUseCase
 import com.gurkha.hr.domain.upComingEvent.repository.EventRemoteRepository
@@ -88,6 +89,14 @@ class HomeScreenModule {
         notificationCountDataRepository = notificationCountDataRepository
     )
 
+    @Factory
+    fun unSeenNotificationCountUseCase(
+        notificationRemoteRepository: NotificationRemoteRepository
+    ): UnseenNotificationUseCase = UnseenNotificationUseCase(
+        notificationRemoteRepository = notificationRemoteRepository
+    )
+
+
     @Factory(binds = [UserDataRepository::class])
     fun userDataRepository(
         userDataDataStore: UserDataDataStore
@@ -130,8 +139,8 @@ class HomeScreenModule {
         upComingWorkAnniversaryUseCase: UpComingWorkAnniversaryUseCase,
         calendarModel: CalendarModel,
         eventUseCase: EventUseCase,
-        notificationUseCase: NotificationUseCase,
-        notificationCountUseCase: NotificationCountUseCase
+        notificationCountUseCase: NotificationCountUseCase,
+        unseenNotificationUseCase: UnseenNotificationUseCase
     ): HomeScreenViewModel = HomeScreenViewModel(
         attendanceUseCase = attendanceUseCase,
         userDetailUseCase = userDetailUseCase,
@@ -140,7 +149,7 @@ class HomeScreenModule {
         calendarModel = calendarModel,
         eventUseCase = eventUseCase,
         notificationCountUseCase = notificationCountUseCase,
-        notificationUseCase = notificationUseCase
+        unseenNotificationUseCase = unseenNotificationUseCase
     )
 
     @KoinViewModel

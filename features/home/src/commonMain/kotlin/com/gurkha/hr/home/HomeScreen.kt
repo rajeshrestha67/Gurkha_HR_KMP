@@ -159,7 +159,7 @@ fun HomeScreen(
                             Badge(
                                 contentColor = MaterialTheme.colorScheme.onError
                             ) {
-                                Text(text = state.totalNotificationCount.toString())
+                                Text(text = state.totalUnSeenNotification.toString())
                             }
                         }
                     ) {
@@ -175,7 +175,7 @@ fun HomeScreen(
             modifier = Modifier.fillMaxSize().padding(paddingValues),
             state = state,
             onAction = viewModel::onAction,
-            onViewAllClick=onViewAllClick
+            onViewAllClick = onViewAllClick
         )
     }
 }
@@ -742,12 +742,14 @@ fun AttendanceItemContent(
     item: RequestItem, modifier: Modifier = Modifier, onClick: () -> Unit
 ) {
     Column(
-        modifier = modifier.border(
-            width = 1.dp,
-            shape = MaterialTheme.shapes.medium,
-            color = MaterialTheme.colorScheme.highLightColor
-        ).clickable(onClick = onClick)
-            .background(MaterialTheme.colorScheme.highLightColor, MaterialTheme.shapes.medium),
+        modifier = modifier
+            .clip(shape = MaterialTheme.shapes.medium)
+            .background(MaterialTheme.colorScheme.highLightColor)
+            .border(
+                width = 1.dp,
+                shape = MaterialTheme.shapes.medium,
+                color = MaterialTheme.colorScheme.highLightColor
+            ).clickable(onClick = onClick),
         verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.Start
     ) {
         Row(
@@ -804,7 +806,6 @@ fun LazyListScope.eventSection(
         item(key = "event list") {
             when {
                 state.isEventLoading -> {
-
                     Row(
                         modifier = Modifier.fillMaxWidth()
                             .padding(horizontal = MaterialTheme.dimens.small3),

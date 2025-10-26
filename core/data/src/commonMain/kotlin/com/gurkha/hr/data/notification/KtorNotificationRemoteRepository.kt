@@ -9,6 +9,7 @@ import com.gurkha.hr.networkhelper.safeCall
 import com.gurkha.model.network.DataError
 import com.gurkha.model.notification.notificationCount.NotificationCountResponseDto
 import com.gurkha.model.notification.notificationData.NotificationsResponseDto
+import com.gurkha.model.notification.unSeenNotificationCount.UnSeenNotificationCountDto
 import io.ktor.client.HttpClient
 
 class KtorNotificationRemoteRepository(
@@ -28,6 +29,15 @@ class KtorNotificationRemoteRepository(
             httpClient.get(
                 baseUrl = BaseUrl.Generic,
                 endPoint = EndPoint.ALL_NOTIFICATION_END_POINT
+            )
+        }
+    }
+
+    override suspend fun getAllUnseenNotification(): ERPResult<UnSeenNotificationCountDto, DataError> {
+        return safeCall {
+            httpClient.get(
+                baseUrl = BaseUrl.Generic,
+                endPoint = EndPoint.TOTAL_UNREAD_NOTIFICATION_COUNT_END_POINT
             )
         }
     }

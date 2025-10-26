@@ -18,23 +18,9 @@ class NotificationCountUseCase(
 ) {
 
     suspend operator fun invoke(force: Boolean = false): ERPResult<NotificationCountData, DataError> {
-        val localCount = notificationCountDataRepository.notificationDataFlow.firstOrNull()
-        return (if (localCount == null || force) {
-            fetchFromRemote(localCount)
-        } else {
-            ERPResult.Success(localCount.toDetail())
-        })
+        return notificationRemoteRepository.getNotificationCount().map {
+            it.toData()
+        }
     }
 
-    private suspend fun fetchFromRemote(localCount: NotificationTotalCountData?): ERPResult<NotificationCountData, DataError> {
-        return notificationRemoteRepository.getNotificationCount()
-            .map { it.toData() }
-            .onSuccess { remoteCount ->
-                notificationCountDataRepository.updateNotificationData(
-                    localCount?.copy(
-                        count = remoteCount.count
-                    ) ?: NotificationTotalCountData()
-                )
-            }
-    }
 }

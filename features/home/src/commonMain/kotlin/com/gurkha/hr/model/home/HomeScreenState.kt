@@ -45,7 +45,7 @@ data class HomeScreenState(
     val totalNotificationCount : Int = 0 ,
     val isNotificationCountLoading : Boolean = false,
 
-    val totalSeenNotification : Int = 0,
+    val totalUnSeenNotification : Int = 0,
 )
 
 data class RequestItem(
