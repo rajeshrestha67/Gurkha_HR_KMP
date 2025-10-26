@@ -61,6 +61,8 @@ import gurkhahr.core.ui.res.generated.resources.description
 import gurkhahr.core.ui.res.generated.resources.do_you_really_want_to_logout
 import gurkhahr.core.ui.res.generated.resources.document
 import gurkhahr.core.ui.res.generated.resources.early_out
+import gurkhahr.core.ui.res.generated.resources.edit
+import gurkhahr.core.ui.res.generated.resources.edit_notes
 import gurkhahr.core.ui.res.generated.resources.email
 import gurkhahr.core.ui.res.generated.resources.emergency_contact
 import gurkhahr.core.ui.res.generated.resources.end_date
@@ -107,6 +109,8 @@ import gurkhahr.core.ui.res.generated.resources.leave_cancelled
 import gurkhahr.core.ui.res.generated.resources.leave_duration
 import gurkhahr.core.ui.res.generated.resources.leave_pending
 import gurkhahr.core.ui.res.generated.resources.leave_processing
+import gurkhahr.core.ui.res.generated.resources.leave_req_accepted
+import gurkhahr.core.ui.res.generated.resources.leave_req_rejected
 import gurkhahr.core.ui.res.generated.resources.leave_request
 import gurkhahr.core.ui.res.generated.resources.leave_request_form
 import gurkhahr.core.ui.res.generated.resources.leave_summary
@@ -137,10 +141,8 @@ import gurkhahr.core.ui.res.generated.resources.no_assets_available
 import gurkhahr.core.ui.res.generated.resources.no_data_found
 import gurkhahr.core.ui.res.generated.resources.note
 import gurkhahr.core.ui.res.generated.resources.notes
-import gurkhahr.core.ui.res.generated.resources.notifications
-import gurkhahr.core.ui.res.generated.resources.leave_req_accepted
-import gurkhahr.core.ui.res.generated.resources.leave_req_rejected
 import gurkhahr.core.ui.res.generated.resources.notification
+import gurkhahr.core.ui.res.generated.resources.notifications
 import gurkhahr.core.ui.res.generated.resources.numbers
 import gurkhahr.core.ui.res.generated.resources.ok
 import gurkhahr.core.ui.res.generated.resources.on_time
@@ -192,8 +194,6 @@ import gurkhahr.core.ui.res.generated.resources.today
 import gurkhahr.core.ui.res.generated.resources.total_absent_days
 import gurkhahr.core.ui.res.generated.resources.total_days
 import gurkhahr.core.ui.res.generated.resources.total_leave
-import gurkhahr.core.ui.res.generated.resources.total_leave
-import gurkhahr.core.ui.res.generated.resources.two
 import gurkhahr.core.ui.res.generated.resources.total_leave_taken
 import gurkhahr.core.ui.res.generated.resources.total_present_days
 import gurkhahr.core.ui.res.generated.resources.total_worked_days
@@ -382,6 +382,7 @@ object SharedRes {
         val location = Res.string.location
 
         val edit = Res.string.edit
+
         val delete = Res.string.delete
 
         val delete_confirmation = Res.string.delete_confirmation

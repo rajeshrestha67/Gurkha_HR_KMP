@@ -41,16 +41,14 @@ data class HomeScreenState(
     val showSwipeView: Boolean = true,
     val todayAttendance: AttendanceData? = null,
     val swipeText: StringResource = SharedRes.Strings.swipeToCheckIn,
-    val todayBS: CalendarDate,
-    val selectedDay: Int = 1,
 
-    val isEventLoading : Boolean = false,
-    val upComingEvent : List<EventData> = emptyList(),
+    val isEventLoading: Boolean = false,
+    val upComingEvent: List<EventData> = emptyList(),
 
-    val totalNotificationCount : Int = 0 ,
-    val isNotificationCountLoading : Boolean = false,
+    val totalNotificationCount: Int = 0,
+    val isNotificationCountLoading: Boolean = false,
 
-    val totalUnSeenNotification : Int = 0,
+    val totalUnSeenNotification: Int = 0,
 )
 
 data class RequestItem(

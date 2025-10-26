@@ -97,7 +97,7 @@ fun HomeScreen(
     topAppBarScrollBehavior: TopAppBarScrollBehavior,
     onChatClick: () -> Unit,
     onNotificationClick: () -> Unit,
-    onViewAllClick: (String?,String) -> Unit
+    onViewAllClick: (String?, String) -> Unit
 ) {
     val viewModel: HomeScreenViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -192,7 +192,7 @@ fun HomeScreenContent(
     modifier: Modifier = Modifier,
     state: HomeScreenState,
     onAction: (HomeScreenActions) -> Unit,
-    onViewAllClick: (String?,String) -> Unit,
+    onViewAllClick: (String?, String) -> Unit,
     birthdayTitle: String,
     anniversaryTitle: String
 ) {
@@ -308,7 +308,8 @@ fun HomeScreenContent(
             SwipeToDismissBox(
                 text = stringResource(state.swipeText),
                 onDismissed = {
-                    onAction(HomeScreenActions.SwipeToDismiss)
+                    //onAction(HomeScreenActions.SwipeToDismiss)
+                    openCamera()
                 }
             )
         }
@@ -318,7 +319,7 @@ fun HomeScreenContent(
 
 fun LazyListScope.anniversarySection(
     state: HomeScreenState,
-    onViewAllClick: (String?,String) -> Unit,
+    onViewAllClick: (String?, String) -> Unit,
     anniversaryTitle: String
 ) {
     val data = Json.encodeToString<List<ViewAllUi>>(state.upComingWorkAnniversary.toUi())
@@ -327,7 +328,7 @@ fun LazyListScope.anniversarySection(
         TitleBar(
             modifier = Modifier.fillMaxWidth()
                 .padding(start = MaterialTheme.dimens.small3, end = MaterialTheme.dimens.small1),
-            onViewAll = { onViewAllClick(data,title) },
+            onViewAll = { onViewAllClick(data, title) },
             title = SharedRes.Strings.work_anniversaries,
             subTitle = SharedRes.Strings.view_all
         )
@@ -388,7 +389,7 @@ fun LazyListScope.birthDaySection(
         TitleBar(
             modifier = Modifier.fillMaxWidth()
                 .padding(start = MaterialTheme.dimens.small3, end = MaterialTheme.dimens.small1),
-            onViewAll = { onViewAllClick(dataToSend,title) },
+            onViewAll = { onViewAllClick(dataToSend, title) },
             title = SharedRes.Strings.upcoming_birthday,
             subTitle = SharedRes.Strings.view_all
         )

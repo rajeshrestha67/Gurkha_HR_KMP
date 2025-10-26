@@ -5,14 +5,12 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -29,16 +27,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gurkha.hr.components.ProfilePicture
+import com.gurkha.hr.components.dimens
 import com.gurkha.hr.domain.notification.notificationData.model.NotificationData
 import com.gurkha.hr.model.notification.NotificationState
 import com.gurkha.hr.res.theme.borderColor
 import com.gurkha.hr.res.theme.darkPrimaryTextColor
-import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.imageBackgroundColor
 import com.gurkha.hr.res.theme.primaryTextColor
 import org.koin.compose.viewmodel.koinViewModel
@@ -102,12 +99,12 @@ fun NotificationScreenContent(
                 )
             }
 
-            itemsIndexed(notification){index, item->
+            itemsIndexed(notification) { index, item ->
                 NotificationBox(item = item)
                 HorizontalDivider(
                     modifier = Modifier.padding(horizontal = MaterialTheme.dimens.small2)
                 )
-                if(index == notification.lastIndex  && !state.isNotificationLoading){
+                if (index == notification.lastIndex && !state.isNotificationLoading) {
                     println("lastIndex_reached_fetchMore")
                 }
             }

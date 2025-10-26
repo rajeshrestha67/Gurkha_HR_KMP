@@ -228,9 +228,15 @@ fun DashboardScreenContent(
             homeScreenBuilder(
                 navController = navController,
                 topAppBarScrollBehavior = topScrollBehavior,
-                onViewAllClick={ eventsJson,title->
+                onChatClick = onChatClick,
+                onViewAllClick = { eventsJson, title ->
                     eventsJson?.let {
-                        navController.navigate(HomeRoute.ViewAllRoute(json = eventsJson, title= title))
+                        navController.navigate(
+                            HomeRoute.ViewAllRoute(
+                                json = eventsJson,
+                                title = title
+                            )
+                        )
                     }
                 }
             )
