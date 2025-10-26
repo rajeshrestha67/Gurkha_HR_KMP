@@ -212,9 +212,7 @@ fun MediaSelectorModalBottomSheet(
                         contentScale = ContentScale.FillWidth,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .background(Color.Red)
                             .clip(MaterialTheme.shapes.extraSmall)
-                            .background(Color.Blue)
                             .aspectRatio(9f / 16f)
                             .clickable { onImageReceived(uri) }
                     )

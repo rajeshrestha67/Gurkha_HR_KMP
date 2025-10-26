@@ -2,11 +2,17 @@ package com.gurkha.hr.components.media
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.ExportObjCClass
 import kotlinx.cinterop.ObjCObjectVar
+import kotlinx.cinterop.alloc
+import kotlinx.cinterop.memScoped
+import kotlinx.cinterop.ptr
+import kotlinx.cinterop.value
 import platform.Foundation.NSDocumentDirectory
 import platform.Foundation.NSError
+import platform.Foundation.NSFileManager
 import platform.Foundation.NSSearchPathForDirectoriesInDomains
 import platform.Foundation.NSURL
 import platform.Foundation.NSUserDomainMask
@@ -84,7 +90,7 @@ class PickerDelegate(
 ) : NSObject(), PHPickerViewControllerDelegateProtocol {
 
     // 👇 EXACT selector match for Objective-C bridging
-    @OptIn(ExperimentalForeignApi::class)
+    @OptIn(ExperimentalForeignApi::class, BetaInteropApi::class)
     override fun picker(picker: PHPickerViewController, didFinishPicking: List<*>) {
         picker.dismissViewControllerAnimated(true, null)
 
@@ -108,38 +114,41 @@ class PickerDelegate(
                         onError(Throwable(error.localizedDescription))
                         return@loadFileRepresentationForTypeIdentifier
                     }
-                    url?.let { tmpUrl ->
-                        val docDir = NSSearchPathForDirectoriesInDomains(
-                            NSDocumentDirectory, NSUserDomainMask, true
-                        ).first() as String
-                        val destUrl = NSURL.fileURLWithPath(docDir)
-                            .URLByAppendingPathComponent(tmpUrl.lastPathComponent!!)
+                    memScoped {
+                        url?.let { tmpUrl ->
+                            val docDir = NSSearchPathForDirectoriesInDomains(
+                                NSDocumentDirectory, NSUserDomainMask, true
+                            ).first() as String
+                            val destUrl = NSURL.fileURLWithPath(docDir)
+                                .URLByAppendingPathComponent(tmpUrl.lastPathComponent!!)
 
-                        destUrl?.let {
-                            try {
-                                val errorPtr = alloc<ObjCObjectVar<NSError?>>()
-                                val success =
-                                    fileManager.copyItemAtURL(tmpUrl, destUrl, errorPtr.ptr)
+                            destUrl?.let {
+                                try {
+                                    val errorPtr = alloc<ObjCObjectVar<NSError?>>()
+                                    val success =
+                                        fileManager.copyItemAtURL(tmpUrl, destUrl, errorPtr.ptr)
 
 
-                                if (!success) {
-                                    val nsError = errorPtr.pointed.value
-                                    onError(
-                                        Throwable(
-                                            nsError?.localizedDescription ?: "Unknown copy error"
+                                    if (!success) {
+                                        val nsError = errorPtr.value
+                                        onError(
+                                            Throwable(
+                                                nsError?.localizedDescription
+                                                    ?: "Unknown copy error"
+                                            )
                                         )
-                                    )
-                                } else {
-                                    dispatch_async(dispatch_get_main_queue()) {
-                                        uris.add(destUrl.absoluteString ?: "")
-                                        if (uris.size == total) onPicked(uris)
+                                    } else {
+                                        dispatch_async(dispatch_get_main_queue()) {
+                                            uris.add(destUrl.absoluteString ?: "")
+                                            if (uris.size == total) onPicked(uris)
+                                        }
                                     }
+                                } catch (e: Exception) {
+                                    onError(Throwable(e.message))
                                 }
-                            } catch (e: Exception) {
-                                onError(Throwable(e.message))
                             }
-                        }
 
+                        }
                     }
                 }
             }
