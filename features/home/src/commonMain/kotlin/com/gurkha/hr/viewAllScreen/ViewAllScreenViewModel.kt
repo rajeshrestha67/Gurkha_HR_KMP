@@ -31,6 +31,14 @@ class ViewAllScreenViewModel : ViewModel() {
                     )
                 }
             }
+            is ViewAllScreenAction.OnTitleUpdate->{
+                val title = Json.decodeFromString<String>(action.title)
+                _state.update {
+                    it.copy(
+                        title = title
+                    )
+                }
+            }
         }
     }
 }

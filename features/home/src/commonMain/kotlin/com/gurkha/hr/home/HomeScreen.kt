@@ -95,10 +95,12 @@ fun HomeScreen(
     topAppBarScrollBehavior: TopAppBarScrollBehavior,
     onChatClick: () -> Unit,
     onNotificationClick: () -> Unit,
-    onViewAllClick: (String?) -> Unit
+    onViewAllClick: (String?,String) -> Unit
 ) {
     val viewModel: HomeScreenViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val anniversaryTitle = stringResource(SharedRes.Strings.work_anniversaries)
+    val birthdayTitle = stringResource(SharedRes.Strings.upcoming_birthday)
 
 
     Scaffold(
@@ -175,7 +177,9 @@ fun HomeScreen(
             modifier = Modifier.fillMaxSize().padding(paddingValues),
             state = state,
             onAction = viewModel::onAction,
-            onViewAllClick = onViewAllClick
+            onViewAllClick = onViewAllClick,
+            birthdayTitle = birthdayTitle,
+            anniversaryTitle = anniversaryTitle
         )
     }
 }
@@ -186,7 +190,9 @@ fun HomeScreenContent(
     modifier: Modifier = Modifier,
     state: HomeScreenState,
     onAction: (HomeScreenActions) -> Unit,
-    onViewAllClick: (String?) -> Unit
+    onViewAllClick: (String?,String) -> Unit,
+    birthdayTitle: String,
+    anniversaryTitle: String
 ) {
 
     val (showNotification, onChangeNotification) = rememberSaveable {
@@ -259,13 +265,15 @@ fun HomeScreenContent(
             //birthday section
             birthDaySection(
                 state = state,
-                onViewAllClick = onViewAllClick
+                onViewAllClick = onViewAllClick,
+                birthdayTitle = birthdayTitle
             )
 
             // anniversary Section
             anniversarySection(
                 state = state,
-                onViewAllClick = onViewAllClick
+                onViewAllClick = onViewAllClick,
+                anniversaryTitle = anniversaryTitle
             )
 
             // attendance title
@@ -291,14 +299,16 @@ fun HomeScreenContent(
 
 fun LazyListScope.anniversarySection(
     state: HomeScreenState,
-    onViewAllClick: (String?) -> Unit
+    onViewAllClick: (String?,String) -> Unit,
+    anniversaryTitle: String
 ) {
     val data = Json.encodeToString<List<ViewAllUi>>(state.upComingWorkAnniversary.toUi())
+    val title = Json.encodeToString<String>(anniversaryTitle)
     item(key = "anniversary title") {
         TitleBar(
             modifier = Modifier.fillMaxWidth()
                 .padding(start = MaterialTheme.dimens.small3, end = MaterialTheme.dimens.small1),
-            onViewAll = { onViewAllClick(data) },
+            onViewAll = { onViewAllClick(data,title) },
             title = SharedRes.Strings.work_anniversaries,
             subTitle = SharedRes.Strings.view_all
         )
@@ -350,14 +360,16 @@ fun LazyListScope.anniversarySection(
 
 fun LazyListScope.birthDaySection(
     state: HomeScreenState,
-    onViewAllClick: (String?) -> Unit
+    onViewAllClick: (String?, String) -> Unit,
+    birthdayTitle: String
 ) {
     val dataToSend = Json.encodeToString<List<ViewAllUi>>(state.upComingBirthday.toUi())
+    val title = Json.encodeToString<String>(birthdayTitle)
     item(key = "birthday") {
         TitleBar(
             modifier = Modifier.fillMaxWidth()
                 .padding(start = MaterialTheme.dimens.small3, end = MaterialTheme.dimens.small1),
-            onViewAll = { onViewAllClick(dataToSend) },
+            onViewAll = { onViewAllClick(dataToSend,title) },
             title = SharedRes.Strings.upcoming_birthday,
             subTitle = SharedRes.Strings.view_all
         )

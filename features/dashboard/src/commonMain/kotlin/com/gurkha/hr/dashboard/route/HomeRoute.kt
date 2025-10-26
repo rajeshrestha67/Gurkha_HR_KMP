@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 sealed interface HomeRoute {
     @Serializable
-    data class ViewAllRoute(val json : String): HomeRoute
+    data class ViewAllRoute(val json : String, val title : String): HomeRoute
 
     @Serializable
     data object NotificationRoute: HomeRoute

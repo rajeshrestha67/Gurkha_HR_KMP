@@ -17,7 +17,7 @@ import com.gurkha.hr.viewAllScreen.ViewAllScreen
 fun NavGraphBuilder.homeScreenBuilder(
     navController: NavHostController,
     topAppBarScrollBehavior: TopAppBarScrollBehavior,
-    onViewAllClick: (String?) -> Unit
+    onViewAllClick: (String?, String) -> Unit
 ) {
 
     composable<DashboardRoute.HomeRoute> {
@@ -27,23 +27,25 @@ fun NavGraphBuilder.homeScreenBuilder(
                 navController.navigate(ChatRoute.ChatList)
             },
             onViewAllClick = onViewAllClick,
-            onNotificationClick={
+            onNotificationClick = {
                 navController.navigate(route = HomeRoute.NotificationRoute)
             }
         )
     }
 
-    composable<HomeRoute.ViewAllRoute>{
-        val json : String? = it.toRoute<HomeRoute.ViewAllRoute>().json
+    composable<HomeRoute.ViewAllRoute> {
+        val json: String? = it.toRoute<HomeRoute.ViewAllRoute>().json
+        val title: String? = it.toRoute<HomeRoute.ViewAllRoute>().title
         ViewAllScreen(
             json = json,
+            title = title,
             onBackClicked = {
                 navController.popBackStack()
             }
         )
     }
 
-        composable<HomeRoute.NotificationRoute>{
+    composable<HomeRoute.NotificationRoute> {
         Notification(
             onBackClicked = {
                 navController.popBackStack()
