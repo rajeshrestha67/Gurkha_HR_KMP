@@ -40,6 +40,7 @@ import com.gurkha.hr.dashboard.model.DashboardScreenAction
 import com.gurkha.hr.dashboard.model.DashboardScreenState
 import com.gurkha.hr.dashboard.route.AttendanceRoute
 import com.gurkha.hr.dashboard.route.DashboardRoute
+import com.gurkha.hr.dashboard.route.HomeRoute
 import com.gurkha.hr.dashboard.route.LeaveRoute
 import com.gurkha.hr.dashboard.route.NoteRoute
 import com.gurkha.hr.logger.AppLogger
@@ -227,7 +228,11 @@ fun DashboardScreenContent(
             homeScreenBuilder(
                 navController = navController,
                 topAppBarScrollBehavior = topScrollBehavior,
-                onChatClick = onChatClick
+                onViewAllClick={ eventsJson,title->
+                    eventsJson?.let {
+                        navController.navigate(HomeRoute.ViewAllRoute(json = eventsJson, title= title))
+                    }
+                }
             )
             profileScreenBuilder(
                 onLogout = onLogout,

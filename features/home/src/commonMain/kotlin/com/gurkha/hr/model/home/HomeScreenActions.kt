@@ -1,5 +1,4 @@
-package com.gurkha.hr.home.model
-
+package com.gurkha.hr.model.home
 
 sealed interface HomeScreenActions {
     data object OnCheckInClicked : HomeScreenActions
@@ -13,5 +12,6 @@ sealed interface HomeScreenActions {
     data class OnDateSelected(val day: Int) : HomeScreenActions
 
     data object SwipeToDismiss : HomeScreenActions
+
 
 }

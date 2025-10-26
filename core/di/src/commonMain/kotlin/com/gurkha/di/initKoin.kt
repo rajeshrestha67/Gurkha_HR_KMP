@@ -36,6 +36,7 @@ fun initKoin(config: KoinAppDeclaration? = null) {
             NotificationModule().module,
             AppModule().module,
             SettingsModule().module
+
         )
     }
 }

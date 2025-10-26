@@ -57,6 +57,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.gurkha.hr.components.dimens
+import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.prompts.PromptModalBottomSheet
 import com.gurkha.hr.components.prompts.PromptType
 import com.gurkha.hr.components.shimmer.ShimmerView
@@ -92,7 +93,7 @@ fun NoteScreen(
         }
     }
     LaunchedEffect(Unit) {
-        viewModel.successChannel.collect {
+        viewModel.errorChannel.collect {
             messageToShow = it
             showErrorDialogue = true
         }

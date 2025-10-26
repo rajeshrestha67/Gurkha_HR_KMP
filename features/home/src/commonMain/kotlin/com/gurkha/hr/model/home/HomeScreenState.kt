@@ -1,4 +1,4 @@
-package com.gurkha.hr.home.model
+package com.gurkha.hr.model.home
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.EditCalendar
@@ -11,6 +11,7 @@ import com.gurkha.hr.date.data.CalendarDay
 import com.gurkha.hr.domain.attendance.attendanceReport.model.AttendanceData
 import com.gurkha.hr.domain.attendance.attendanceReport.model.AttendanceStatus
 import com.gurkha.hr.domain.upComingBirthday.model.UpComingBirthdayData
+import com.gurkha.hr.domain.upComingEvent.model.EventData
 import com.gurkha.hr.domain.upComingWorkAnniversaries.model.UpComingWorkAnniversaryData
 import com.gurkha.hr.res.SharedRes
 import org.jetbrains.compose.resources.StringResource
@@ -40,6 +41,16 @@ data class HomeScreenState(
     val showSwipeView: Boolean = true,
     val todayAttendance: AttendanceData? = null,
     val swipeText: StringResource = SharedRes.Strings.swipeToCheckIn,
+    val todayBS: CalendarDate,
+    val selectedDay: Int = 1,
+
+    val isEventLoading : Boolean = false,
+    val upComingEvent : List<EventData> = emptyList(),
+
+    val totalNotificationCount : Int = 0 ,
+    val isNotificationCountLoading : Boolean = false,
+
+    val totalUnSeenNotification : Int = 0,
 )
 
 data class RequestItem(
@@ -82,7 +93,7 @@ enum class RequestType(
             RequestType.typeMap[typeName.key] ?: CheckIn
 
         val list: List<RequestType>
-            get() = RequestType.entries.toList().map { it }
+            get() = entries.toList().map { it }
     }
 
 }

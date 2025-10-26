@@ -26,6 +26,7 @@ data class Dimens(
     val promptDialogSize: Dp = 0.dp,
     val swipeToDismissHeight: Dp = 0.dp,
     val heightForOptionBox: Dp = 0.dp,
+    val eventWidth: Dp = 0.dp,
 )
 
 
@@ -50,5 +51,6 @@ val CompactDimens = Dimens(
     reasonTextField = 80.dp,
     promptDialogSize = 120.dp,
     swipeToDismissHeight = 72.dp,
-    heightForOptionBox = 100.dp
+    heightForOptionBox = 100.dp,
+    eventWidth= 200.dp
 )

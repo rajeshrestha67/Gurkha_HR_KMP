@@ -32,6 +32,8 @@ import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -64,14 +66,18 @@ import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.extractInitials
 import com.gurkha.hr.components.media.rememberCameraLauncher
 import com.gurkha.hr.components.media.rememberGalleryLauncher
+import com.gurkha.hr.components.noRippleClickable
 import com.gurkha.hr.components.shimmer.ShimmerView
 import com.gurkha.hr.components.swipeToDismiss.SwipeToDismissBox
 import com.gurkha.hr.date.data.CalendarDate
 import com.gurkha.hr.date.data.CalendarDay
-import com.gurkha.hr.home.model.AttendanceHistoryItemUI
-import com.gurkha.hr.home.model.HomeScreenActions
-import com.gurkha.hr.home.model.HomeScreenState
-import com.gurkha.hr.home.model.RequestItem
+import com.gurkha.hr.domain.upComingBirthday.mapper.toUi
+import com.gurkha.hr.domain.upComingEvent.model.EventData
+import com.gurkha.hr.domain.upComingWorkAnniversaries.mapper.toUi
+import com.gurkha.hr.model.home.AttendanceHistoryItemUI
+import com.gurkha.hr.model.home.HomeScreenActions
+import com.gurkha.hr.model.home.HomeScreenState
+import com.gurkha.hr.model.home.RequestItem
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.borderColor
 import com.gurkha.hr.res.theme.darkPrimaryTextColor
@@ -79,6 +85,8 @@ import com.gurkha.hr.res.theme.highLightColor
 import com.gurkha.hr.res.theme.imageBackgroundColor
 import com.gurkha.hr.res.theme.linkColor
 import com.gurkha.hr.res.theme.primaryTextColor
+import com.gurkha.model.upComingBirthday.ui.ViewAllUi
+import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -88,20 +96,25 @@ import org.koin.compose.viewmodel.koinViewModel
 fun HomeScreen(
     topAppBarScrollBehavior: TopAppBarScrollBehavior,
     onChatClick: () -> Unit,
-    onNotificationClick: () -> Unit
+    onNotificationClick: () -> Unit,
+    onViewAllClick: (String?,String) -> Unit
 ) {
     val viewModel: HomeScreenViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val anniversaryTitle = stringResource(SharedRes.Strings.work_anniversaries)
+    val birthdayTitle = stringResource(SharedRes.Strings.upcoming_birthday)
 
 
     Scaffold(
         contentWindowInsets = WindowInsets(),
-        modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
+        modifier = Modifier
+            .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
             .fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth(),
                 windowInsets = WindowInsets(),
                 title = {
                     Row(
@@ -142,7 +155,18 @@ fun HomeScreen(
                             contentDescription = "chat"
                         )
                     }
-                    IconButton(onClick = onNotificationClick) {
+                    BadgedBox(
+                        modifier = Modifier
+                            .noRippleClickable(onClick = onNotificationClick)
+                            .padding(horizontal = MaterialTheme.dimens.small3),
+                        badge = {
+                            Badge(
+                                contentColor = MaterialTheme.colorScheme.onError
+                            ) {
+                                Text(text = state.totalUnSeenNotification.toString())
+                            }
+                        }
+                    ) {
                         Icon(
                             imageVector = Icons.Filled.Notifications,
                             contentDescription = "notification icon"
@@ -154,7 +178,10 @@ fun HomeScreen(
         HomeScreenContent(
             modifier = Modifier.fillMaxSize().padding(paddingValues),
             state = state,
-            onAction = viewModel::onAction
+            onAction = viewModel::onAction,
+            onViewAllClick = onViewAllClick,
+            birthdayTitle = birthdayTitle,
+            anniversaryTitle = anniversaryTitle
         )
     }
 }
@@ -164,7 +191,10 @@ fun HomeScreen(
 fun HomeScreenContent(
     modifier: Modifier = Modifier,
     state: HomeScreenState,
-    onAction: (HomeScreenActions) -> Unit
+    onAction: (HomeScreenActions) -> Unit,
+    onViewAllClick: (String?,String) -> Unit,
+    birthdayTitle: String,
+    anniversaryTitle: String
 ) {
     val openCamera = rememberCameraLauncher(
         onImageCaptured = { uri ->
@@ -244,14 +274,23 @@ fun HomeScreenContent(
             // request section
             requestSection(state = state)
 
+            // event section
+            eventSection(
+                state = state,
+            )
+
             //birthday section
             birthDaySection(
-                state = state
+                state = state,
+                onViewAllClick = onViewAllClick,
+                birthdayTitle = birthdayTitle
             )
 
             // anniversary Section
             anniversarySection(
-                state = state
+                state = state,
+                onViewAllClick = onViewAllClick,
+                anniversaryTitle = anniversaryTitle
             )
 
             // attendance title
@@ -278,13 +317,17 @@ fun HomeScreenContent(
 
 
 fun LazyListScope.anniversarySection(
-    state: HomeScreenState
+    state: HomeScreenState,
+    onViewAllClick: (String?,String) -> Unit,
+    anniversaryTitle: String
 ) {
+    val data = Json.encodeToString<List<ViewAllUi>>(state.upComingWorkAnniversary.toUi())
+    val title = Json.encodeToString<String>(anniversaryTitle)
     item(key = "anniversary title") {
         TitleBar(
             modifier = Modifier.fillMaxWidth()
                 .padding(start = MaterialTheme.dimens.small3, end = MaterialTheme.dimens.small1),
-            onViewAll = {},
+            onViewAll = { onViewAllClick(data,title) },
             title = SharedRes.Strings.work_anniversaries,
             subTitle = SharedRes.Strings.view_all
         )
@@ -316,14 +359,11 @@ fun LazyListScope.anniversarySection(
                     modifier = Modifier.fillMaxWidth(),
                     contentPadding = PaddingValues(horizontal = MaterialTheme.dimens.small3),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = state.upComingWorkAnniversary.size.let { size ->
-                        if (size > 2) Arrangement.spacedBy(MaterialTheme.dimens.medium3)
-                        else Arrangement.SpaceBetween
-                    }
+                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
 
                 ) {
                     items(state.upComingWorkAnniversary) { item ->
-                        EventCard(
+                        UpComingCard(
                             fullName = item.fullName,
                             imageUrl = item.imageUrl,
                             date = item.joinedDate,
@@ -338,13 +378,17 @@ fun LazyListScope.anniversarySection(
 
 
 fun LazyListScope.birthDaySection(
-    state: HomeScreenState
+    state: HomeScreenState,
+    onViewAllClick: (String?, String) -> Unit,
+    birthdayTitle: String
 ) {
+    val dataToSend = Json.encodeToString<List<ViewAllUi>>(state.upComingBirthday.toUi())
+    val title = Json.encodeToString<String>(birthdayTitle)
     item(key = "birthday") {
         TitleBar(
             modifier = Modifier.fillMaxWidth()
                 .padding(start = MaterialTheme.dimens.small3, end = MaterialTheme.dimens.small1),
-            onViewAll = {},
+            onViewAll = { onViewAllClick(dataToSend,title) },
             title = SharedRes.Strings.upcoming_birthday,
             subTitle = SharedRes.Strings.view_all
         )
@@ -374,14 +418,10 @@ fun LazyListScope.birthDaySection(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                     contentPadding = PaddingValues(horizontal = MaterialTheme.dimens.small3),
-                    horizontalArrangement = state.upComingBirthday.size.let { size ->
-                        if (size > 2) Arrangement.spacedBy(MaterialTheme.dimens.medium3)
-                        else Arrangement.SpaceBetween
-                    }
-
+                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
                 ) {
                     items(state.upComingBirthday) { item ->
-                        EventCard(
+                        UpComingCard(
                             fullName = item.fullName,
                             imageUrl = item.imageUrl,
                             date = item.dateOfBirth,
@@ -733,12 +773,14 @@ fun AttendanceItemContent(
     item: RequestItem, modifier: Modifier = Modifier, onClick: () -> Unit
 ) {
     Column(
-        modifier = modifier.border(
-            width = 1.dp,
-            shape = MaterialTheme.shapes.medium,
-            color = MaterialTheme.colorScheme.highLightColor
-        ).clickable(onClick = onClick)
-            .background(MaterialTheme.colorScheme.highLightColor, MaterialTheme.shapes.medium),
+        modifier = modifier
+            .clip(shape = MaterialTheme.shapes.medium)
+            .background(MaterialTheme.colorScheme.highLightColor)
+            .border(
+                width = 1.dp,
+                shape = MaterialTheme.shapes.medium,
+                color = MaterialTheme.colorScheme.highLightColor
+            ).clickable(onClick = onClick),
         verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.Start
     ) {
         Row(
@@ -777,24 +819,86 @@ fun AttendanceItemContent(
     }
 }
 
+fun LazyListScope.eventSection(
+    state: HomeScreenState,
+) {
+    if (state.upComingEvent.isNotEmpty()) {
+        item(key = "event title") {
+            TitleBar(
+                modifier = Modifier.fillMaxWidth()
+                    .padding(
+                        start = MaterialTheme.dimens.small3,
+                        end = MaterialTheme.dimens.small1
+                    ),
+                onViewAll = {},
+                title = SharedRes.Strings.upcoming_events,
+            )
+        }
+        item(key = "event list") {
+            when {
+                state.isEventLoading -> {
+                    Row(
+                        modifier = Modifier.fillMaxWidth()
+                            .padding(horizontal = MaterialTheme.dimens.small3),
+                        horizontalArrangement = Arrangement.spacedBy(
+                            MaterialTheme.dimens.small2, alignment = Alignment.Start
+                        )
+                    ) {
+                        repeat(2) {
+                            ShimmerView(
+                                modifier = Modifier.size(MaterialTheme.dimens.bottomBar)
+                                    .clip(MaterialTheme.shapes.small)
+                            )
+                        }
+                    }
+
+                }
+
+                else -> {
+                    LazyRow(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentPadding = PaddingValues(horizontal = MaterialTheme.dimens.small3),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = state.upComingWorkAnniversary.size.let { size ->
+                            if (size > 2) Arrangement.spacedBy(MaterialTheme.dimens.medium3)
+                            else Arrangement.SpaceBetween
+                        }
+
+                    ) {
+                        items(state.upComingEvent) { item ->
+                            EventCard(
+                                item = item
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 
 @Composable
-fun EventCard(
+fun UpComingCard(
     imageUrl: String,
     fullName: String,
     designationName: String,
     date: String,
 ) {
     Column(
-        modifier = Modifier.widthIn(min = 150.dp)
-//            .border(
-//                width = 1.dp,
-//                color = MaterialTheme.colorScheme.borderColor,
-//                shape = RoundedCornerShape(MaterialTheme.dimens.small2)
-//            )
-            .padding(
-                MaterialTheme.dimens.small2
+        modifier = Modifier.widthIn(min = MaterialTheme.dimens.eventWidth)
+            .clip(shape = MaterialTheme.shapes.small)
+            .background(
+                MaterialTheme.colorScheme.primary.copy(
+                    alpha = 0.1f
+                )
             )
+            .padding(
+                vertical = MaterialTheme.dimens.small2,
+                horizontal = MaterialTheme.dimens.small3
+            ),
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small1),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -805,18 +909,12 @@ fun EventCard(
                 imageUrl = imageUrl,
                 employeeName = fullName,
                 nameInitials = fullName.extractInitials(),
-                size = MaterialTheme.dimens.medium2,
+                size = MaterialTheme.dimens.medium3,
                 shape = CircleShape,
                 background = MaterialTheme.colorScheme.imageBackgroundColor,
                 borderWidth = 0.dp,
                 borderColor = Color.Transparent,
                 ratio = 1f
-            )
-
-            Text(
-                text = "", style = MaterialTheme.typography.titleSmall.copy(
-                    color = MaterialTheme.colorScheme.primaryTextColor
-                )
             )
         }
         Text(text = fullName, style = MaterialTheme.typography.titleMedium)
@@ -859,5 +957,47 @@ fun TitleBar(
                 )
             }
         }
+    }
+}
+
+
+@Composable
+fun EventCard(
+    item: EventData
+) {
+    Column(
+        modifier = Modifier
+            .widthIn(min = 150.dp)
+            .clip(shape = MaterialTheme.shapes.small)
+            .background(
+                MaterialTheme.colorScheme.primary.copy(
+                    alpha = 0.1f
+                )
+            )
+            .padding(
+                vertical = MaterialTheme.dimens.small2,
+                horizontal = MaterialTheme.dimens.small3
+            ),
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small1)
+
+    ) {
+        Text(
+            text = item.name, style = MaterialTheme.typography.titleMedium.copy(
+                color = MaterialTheme.colorScheme.darkPrimaryTextColor
+            )
+        )
+
+        Text(
+            text = "${item.fromDateBs} to ${item.toDateBs}",
+            style = MaterialTheme.typography.titleSmall.copy(
+                color = MaterialTheme.colorScheme.primaryTextColor
+            )
+        )
+
+        Text(
+            text = item.description, style = MaterialTheme.typography.titleSmall.copy(
+                color = MaterialTheme.colorScheme.darkPrimaryTextColor
+            )
+        )
     }
 }
