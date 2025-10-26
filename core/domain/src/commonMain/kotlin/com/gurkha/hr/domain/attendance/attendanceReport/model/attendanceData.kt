@@ -7,8 +7,8 @@ import com.gurkha.hr.res.theme.attendanceHoliday
 
 data class AttendanceData(
     val workingHrs: String,
-    val clockInTime: String,
-    val clockOutTime: String,
+    val clockInTime: String? = null,
+    val clockOutTime: String? = null,
     val date: String,
     val day: String,
     val status: AttendanceStatus,

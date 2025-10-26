@@ -11,6 +11,7 @@ fun initKoin(config: KoinAppDeclaration? = null) {
         config?.invoke(this)
         modules(
             NetworkModule().module,
+            NotificationModule().module,
             AuthModule().module,
             PlatformModule().module,
             DataStoreModule().module,
@@ -33,7 +34,6 @@ fun initKoin(config: KoinAppDeclaration? = null) {
             ReportScreenModule().module,
             NoteScreenModule().module,
             UploadImageModule().module,
-            NotificationModule().module,
             AppModule().module,
             SettingsModule().module
 

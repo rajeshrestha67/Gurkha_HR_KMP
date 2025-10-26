@@ -1,5 +1,6 @@
 package com.gurkha.di
 
+import com.gurkha.hr.components.permissions.ProgressNotification
 import com.gurkha.hr.data.attendance.KtorAttendanceRemoteRepository
 import com.gurkha.hr.data.notification.KtorNotificationRemoteRepository
 import com.gurkha.hr.data.upComingBirthday.KtorUpComingBirthdayRemoteRepository
@@ -16,6 +17,7 @@ import com.gurkha.hr.date.data.model.CalendarModel
 import com.gurkha.hr.date.data.model.CalendarModelImpl
 import com.gurkha.hr.domain.attendance.attendanceReport.repository.AttendanceRemoteRepository
 import com.gurkha.hr.domain.attendance.attendanceReport.usecase.AttendanceUseCase
+import com.gurkha.hr.domain.attendance.doAttendance.useCase.DoAttendanceUseCase
 import com.gurkha.hr.domain.notification.notificationCount.useCase.NotificationCountUseCase
 import com.gurkha.hr.domain.notification.notificationData.repository.NotificationRemoteRepository
 import com.gurkha.hr.domain.notification.notificationData.useCase.NotificationUseCase
@@ -26,6 +28,7 @@ import com.gurkha.hr.domain.upComingEvent.repository.EventRemoteRepository
 import com.gurkha.hr.domain.upComingEvent.useCase.EventUseCase
 import com.gurkha.hr.domain.upComingWorkAnniversaries.repository.UpComingWorkAnniversaryRemoteRepository
 import com.gurkha.hr.domain.upComingWorkAnniversaries.useCase.UpComingWorkAnniversaryUseCase
+import com.gurkha.hr.domain.uploadImage.UploadImageUseCase
 import com.gurkha.hr.domain.userDetail.repository.UserDetailRemoteRepository
 import com.gurkha.hr.domain.userDetail.usecase.FetchUserDetailUseCase
 import com.gurkha.hr.home.HomeScreenViewModel
@@ -131,6 +134,15 @@ class HomeScreenModule {
     fun upComingWorkAnniversaryUseCase(upComingWorkAnniversaryRemoteRepository: UpComingWorkAnniversaryRemoteRepository): UpComingWorkAnniversaryUseCase =
         UpComingWorkAnniversaryUseCase(upComingWorkAnniversaryRemoteRepository)
 
+    @Factory
+    fun doAttendanceUseCase(
+        attendanceRemoteRepository: AttendanceRemoteRepository
+    ): DoAttendanceUseCase=DoAttendanceUseCase(
+        attendanceRemoteRepository = attendanceRemoteRepository
+    )
+
+    @Factory
+
     @KoinViewModel
     fun getHomeScreenViewModel(
         attendanceUseCase: AttendanceUseCase,
@@ -140,7 +152,9 @@ class HomeScreenModule {
         calendarModel: CalendarModel,
         eventUseCase: EventUseCase,
         notificationCountUseCase: NotificationCountUseCase,
-        unseenNotificationUseCase: UnseenNotificationUseCase
+        unseenNotificationUseCase: UnseenNotificationUseCase,
+        uploadImageUseCase: UploadImageUseCase,
+        doAttendanceUseCase: DoAttendanceUseCase
     ): HomeScreenViewModel = HomeScreenViewModel(
         attendanceUseCase = attendanceUseCase,
         userDetailUseCase = userDetailUseCase,
@@ -149,7 +163,9 @@ class HomeScreenModule {
         calendarModel = calendarModel,
         eventUseCase = eventUseCase,
         notificationCountUseCase = notificationCountUseCase,
-        unseenNotificationUseCase = unseenNotificationUseCase
+        unseenNotificationUseCase = unseenNotificationUseCase,
+        uploadImageUseCase = uploadImageUseCase,
+        doAttendanceUseCase = doAttendanceUseCase
     )
 
     @KoinViewModel

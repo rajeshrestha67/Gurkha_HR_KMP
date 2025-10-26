@@ -66,7 +66,9 @@ class ProfileScreenViewModel(
                     }
                 }
             }
-        )
+        ).onSuccess { data ->
+            data.a
+        }
     }
 
     private fun fetchUserDetails() = viewModelScope.launch {

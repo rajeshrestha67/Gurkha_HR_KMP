@@ -2,34 +2,43 @@ package com.gurkha.hr.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gurkha.hr.components.permissions.ProgressNotification
 import com.gurkha.hr.date.BSPointer
 import com.gurkha.hr.date.DateConverter
 import com.gurkha.hr.date.Year
 import com.gurkha.hr.date.data.model.CalendarModel
+import com.gurkha.hr.date.data.model.now
 import com.gurkha.hr.domain.attendance.attendanceReport.model.AttendanceData
 import com.gurkha.hr.domain.attendance.attendanceReport.usecase.AttendanceUseCase
+import com.gurkha.hr.domain.attendance.doAttendance.useCase.DoAttendanceUseCase
 import com.gurkha.hr.domain.notification.notificationCount.useCase.NotificationCountUseCase
 import com.gurkha.hr.domain.notification.unSeenNotificationCount.useCase.UnseenNotificationUseCase
 import com.gurkha.hr.domain.upComingBirthday.usecase.UpComingBirthdayUseCase
 import com.gurkha.hr.domain.upComingEvent.useCase.EventUseCase
 import com.gurkha.hr.domain.upComingWorkAnniversaries.useCase.UpComingWorkAnniversaryUseCase
+import com.gurkha.hr.domain.uploadImage.UploadImageUseCase
 import com.gurkha.hr.domain.userDetail.usecase.FetchUserDetailUseCase
+import com.gurkha.hr.logger.AppLogger
 import com.gurkha.hr.model.home.HomeScreenActions
 import com.gurkha.hr.model.home.HomeScreenState
 import com.gurkha.hr.model.home.RequestItem
 import com.gurkha.hr.model.home.RequestType
 import com.gurkha.hr.model.home.toUI
-import com.gurkha.hr.logger.AppLogger
 import com.gurkha.hr.networkhelper.onError
 import com.gurkha.hr.networkhelper.onSuccess
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.model.network.toErrorMessage
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlinx.datetime.LocalDate
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 class HomeScreenViewModel(
     private val attendanceUseCase: AttendanceUseCase,
@@ -38,10 +47,13 @@ class HomeScreenViewModel(
     private val upComingWorkAnniversaryUseCase: UpComingWorkAnniversaryUseCase,
     private val eventUseCase: EventUseCase,
     private val calendarModel: CalendarModel,
-    private val notificationCountUseCase : NotificationCountUseCase,
-    private val unseenNotificationUseCase: UnseenNotificationUseCase
+    private val notificationCountUseCase: NotificationCountUseCase,
+    private val unseenNotificationUseCase: UnseenNotificationUseCase,
+    private val uploadImageUseCase: UploadImageUseCase,
+    private val doAttendanceUseCase: DoAttendanceUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(HomeScreenState())
+    private val notification = ProgressNotification()
     val state = _state
         .onStart {
             fetchCurrentUser()
@@ -51,6 +63,7 @@ class HomeScreenViewModel(
             fetchCalendarValue()
             fetchUpComingEvents()
             getUnseenNotificationCount()
+
         }
         .stateIn(
             scope = viewModelScope,
@@ -80,6 +93,7 @@ class HomeScreenViewModel(
             is HomeScreenActions.OnNotificationClicked -> {
 
             }
+
             is HomeScreenActions.OnSearchedClicked -> TODO()
             is HomeScreenActions.OnDateSelected -> {
                 val attendanceData = state.value.attendanceReport.find { data ->
@@ -97,11 +111,7 @@ class HomeScreenViewModel(
             }
 
             is HomeScreenActions.SwipeToDismiss -> {
-                _state.update {
-                    it.copy(
-                        swipeText = SharedRes.Strings.swipeToCheckOut
-                    )
-                }
+                uploadImage(uri = action.uri)
             }
         }
     }
@@ -110,8 +120,14 @@ class HomeScreenViewModel(
         return map { item ->
             attendanceData?.let {
                 when (item.type) {
-                    RequestType.CheckIn -> item.copy(duration = attendanceData.clockInTime)
-                    RequestType.CheckOut -> item.copy(duration = attendanceData.clockOutTime)
+                    RequestType.CheckIn -> item.copy(
+                        duration = attendanceData.clockInTime ?: _state.value.clockInTime
+                    )
+
+                    RequestType.CheckOut -> item.copy(
+                        duration = attendanceData.clockOutTime ?: _state.value.clockOutTime
+                    )
+
                     else -> item
                 }
             } ?: item
@@ -134,7 +150,7 @@ class HomeScreenViewModel(
         _state.update {
             it.copy(
                 isAttendanceLoading = true,
-                showSwipeView = false
+                showSwipeView = false,
             )
         }
 
@@ -173,6 +189,7 @@ class HomeScreenViewModel(
                     attendanceReport = data,
                     todayAttendance = attendanceData,
                     showSwipeView = !(attendanceData?.isHoliday ?: false),
+
                     attendanceReportHistory = data.filter { mData ->
                         try {
                             val day = getDayFromDate(date = mData.date)?.toInt()
@@ -195,6 +212,8 @@ class HomeScreenViewModel(
                     )
                 )
             }
+            updateSwipeText()
+
         }.onError { error ->
             AppLogger.e(
                 "HomeScreenViewModel",
@@ -229,6 +248,7 @@ class HomeScreenViewModel(
                     levelName = data.levelName,
                     email = data.email,
                     userProfileUrl = data.userProfileUrl,
+                    employeeId = data.employeeId
                 )
             }
         }.onError {
@@ -282,7 +302,7 @@ class HomeScreenViewModel(
         }
     }
 
-    private fun fetchUpComingEvents()=viewModelScope.launch {
+    private fun fetchUpComingEvents() = viewModelScope.launch {
         _state.update {
             it.copy(
                 isEventLoading = true
@@ -306,18 +326,18 @@ class HomeScreenViewModel(
 
     }
 
-    private fun getTotalNotificationCount()=viewModelScope.launch {
+    private fun getTotalNotificationCount() = viewModelScope.launch {
         _state.update {
             it.copy(
                 isNotificationCountLoading = true
             )
         }
-        notificationCountUseCase(force = true).onSuccess {data ->
-           _state.update {
-               it.copy(
-                   totalNotificationCount = data.count
-               )
-           }
+        notificationCountUseCase(force = true).onSuccess { data ->
+            _state.update {
+                it.copy(
+                    totalNotificationCount = data.count
+                )
+            }
 
         }.onError {
             _state.update {
@@ -328,13 +348,13 @@ class HomeScreenViewModel(
         }
     }
 
-    private fun getUnseenNotificationCount()=viewModelScope.launch {
+    private fun getUnseenNotificationCount() = viewModelScope.launch {
         _state.update {
             it.copy(
                 isNotificationCountLoading = true
             )
         }
-        unseenNotificationUseCase().onSuccess {data ->
+        unseenNotificationUseCase().onSuccess { data ->
             _state.update {
                 it.copy(
                     isNotificationCountLoading = false,
@@ -344,6 +364,75 @@ class HomeScreenViewModel(
         }
     }
 
+    private fun updateSwipeText() = viewModelScope.launch {
+        _state.value.todayAttendance?.clockInTime?.let {
+            _state.update {
+                it.copy(
+                    swipeText = SharedRes.Strings.swipeToCheckOut,
+                    isAlreadyClockIn = true
+                )
+            }
+        } ?: _state.update {
+            it.copy(
+                swipeText = SharedRes.Strings.swipeToCheckIn,
+                isAlreadyClockIn = false
+            )
+        }
+    }
 
+    @OptIn(ExperimentalTime::class)
+    private fun uploadImage(
+        uri: String,
+    ) = viewModelScope.launch {
+        _state.update {
+            it.copy(
+                showSwipeView = false
+            )
+        }
+        val imageName = if (_state.value.isAlreadyClockIn) "clockOut" else "clockIn"
 
+        uploadImageUseCase(
+            imageName = "$imageName${Clock.System.now().toEpochMilliseconds()}.jpg",
+            filePath = uri,
+            onProgress = { progress ->
+                viewModelScope.launch {
+                    withContext(Dispatchers.Main.immediate) {
+                        notification.showNotification(
+                            progress = progress
+                        )
+                    }
+                }
+            }
+        ).onSuccess { data ->
+            doAttendance(
+                employeeId = _state.value.employeeId,
+                forDate = LocalDate.now().toString(),
+                imageName = data.imageName.toString()
+            )
+        }
+    }
+
+    private fun doAttendance(
+        employeeId: Int,
+        forDate: String,
+        imageName: String
+    ) = viewModelScope.launch {
+        doAttendanceUseCase(
+            employeeId = employeeId,
+            imageName = imageName,
+            forDate = forDate
+        ).onSuccess {
+            _state.update {
+                it.copy(
+                    showSwipeView = true,
+                )
+            }
+        }.onError {
+            _state.update {
+                it.copy(
+                    showSwipeView = true
+                )
+            }
+        }
+    }
 }
