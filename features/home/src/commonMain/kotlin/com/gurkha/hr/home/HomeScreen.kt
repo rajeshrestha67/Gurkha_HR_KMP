@@ -241,6 +241,7 @@ fun HomeScreenContent(
                 tag = TAG,
                 message = "Permission granted: $permission"
             )
+            println("granted_triggered")
         },
         onDenied = { permission ->
             AppLogger.i(

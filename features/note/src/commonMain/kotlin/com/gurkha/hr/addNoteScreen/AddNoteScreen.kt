@@ -40,7 +40,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -48,6 +52,7 @@ import androidx.navigation.NavHostController
 import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.date.ERPDateTextField
 import com.gurkha.hr.components.dimens
+import com.gurkha.hr.components.hideKeyboardOnTap
 import com.gurkha.hr.components.prompts.PromptModalBottomSheet
 import com.gurkha.hr.components.prompts.PromptType
 import com.gurkha.hr.components.textField.ERPTextField
@@ -151,10 +156,18 @@ fun AddNoteScreen(
     BoxWithConstraints(
         modifier = Modifier.fillMaxSize()
     ) {
+        val focusManager = LocalFocusManager.current
+        val keyboardController = LocalSoftwareKeyboardController.current
+
         Scaffold(
             contentWindowInsets = WindowInsets(0.dp),
             modifier = Modifier
-                .fillMaxSize(),
+                .fillMaxSize()
+                .hideKeyboardOnTap(
+                    focusManager = focusManager,
+                    keyboardController = keyboardController
+                )
+            ,
             containerColor = MaterialTheme.colorScheme.background,
             topBar = {
                 TopAppBar(
