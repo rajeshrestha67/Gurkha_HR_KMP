@@ -107,10 +107,6 @@ fun EditProfileScreenContent(
     val headingList = Title.list.map { stringResource(it.title) }
     Column(
         modifier = modifier
-            .verticalScroll(
-                state = rememberScrollState(),
-                enabled = true
-            )
             .padding(
                 vertical = MaterialTheme.dimens.small2,
                 horizontal = MaterialTheme.dimens.small3
@@ -130,9 +126,9 @@ fun EditProfileScreenContent(
 
                 state.profileSummaryList?.let {
                     PersonalDetailsContent(
-                        state = state.profileSummaryList,
+                        item = state.profileSummaryList,
                         onAction = onAction,
-                        editState = state
+                        state = state
                     )
                 }
             }
@@ -140,26 +136,22 @@ fun EditProfileScreenContent(
             1 -> {
                 state.profileSummaryList?.let {
                     OthersDetailContent(
-                        state = state.profileSummaryList,
+                        item = state.profileSummaryList,
                         onAction = onAction,
-                        stateEditProfile = state
-
+                        state = state
                     )
                 }
             }
         }
-        SubmitButton(
-            onAction = onAction,
-            state = state
-        )
+
 
     }
 }
 
 @Composable
 fun SubmitButton(
-    onAction: (EditProfileViewAction) -> Unit,
-    state: EditProfileScreenState
+    onAction: () -> Unit,
+    isSubmit: Boolean
 ) {
     Column(
         modifier = Modifier
@@ -167,31 +159,29 @@ fun SubmitButton(
             .padding(top = MaterialTheme.dimens.small3),
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2)
     ) {
+        val text = if(isSubmit)stringResource(SharedRes.Strings.submit) else stringResource(SharedRes.Strings.next)
         ERPButton(
             modifier = Modifier.fillMaxWidth(),
-            text = stringResource(SharedRes.Strings.submit),
-            onClick = {
-                onAction(EditProfileViewAction.Submit(employeeId = state.employeeId))
-
-            }
+            text =text,
+            onClick = onAction
         )
     }
 }
 
 @Composable
 fun OthersDetailContent(
-    state: EditProfileUI,
+    item: EditProfileUI,
     onAction: (EditProfileViewAction) -> Unit,
-    stateEditProfile: EditProfileScreenState
+    state: EditProfileScreenState
 ) {
 
     Column(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().verticalScroll(state = rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2)
     ) {
         ERPTextField(
             modifier = Modifier.fillMaxWidth(),
-            text = state.bloodGroup,
+            text = item.bloodGroup,
             label = stringResource(SharedRes.Strings.bloodGroup),
             hint = stringResource(SharedRes.Strings.bloodGroup),
             onValueChange = {
@@ -205,7 +195,7 @@ fun OthersDetailContent(
             )
         ERPTextField(
             modifier = Modifier.fillMaxWidth(),
-            text = state.guardianName,
+            text = item.guardianName,
             label = stringResource(SharedRes.Strings.guardian_name),
             hint = stringResource(SharedRes.Strings.guardian_name),
             onValueChange = {
@@ -219,7 +209,7 @@ fun OthersDetailContent(
             )
         ERPTextField(
             modifier = Modifier.fillMaxWidth(),
-            text = state.guardianPhone,
+            text = item.guardianPhone,
             label = stringResource(SharedRes.Strings.guardian_phone),
             hint = stringResource(SharedRes.Strings.guardian_phone),
             onValueChange = {
@@ -233,7 +223,7 @@ fun OthersDetailContent(
             )
         ERPTextField(
             modifier = Modifier.fillMaxWidth(),
-            text = state.designation,
+            text = item.designation,
             label = stringResource(SharedRes.Strings.labelDesignation),
             hint = stringResource(SharedRes.Strings.labelDesignation),
             onValueChange = {
@@ -246,7 +236,7 @@ fun OthersDetailContent(
         )
         ERPTextField(
             modifier = Modifier.fillMaxWidth(),
-            text = state.levelName,
+            text = item.levelName,
             label = stringResource(SharedRes.Strings.labelLevel),
             hint = stringResource(SharedRes.Strings.labelLevel),
             onValueChange = {
@@ -260,9 +250,9 @@ fun OthersDetailContent(
         DropDownText(
             label = labelContract,
             hint = stringResource(labelContract),
-            selectedValue = stateEditProfile.employeeTypeList.toString(),
+            selectedValue = state.employeeTypeList.toString(),
             error = null,
-            listOfItems = stateEditProfile.itemList,
+            listOfItems = state.itemList,
             itemClicked = {
                 onAction(EditProfileViewAction.EmployeeType(it))
             },
@@ -273,7 +263,7 @@ fun OthersDetailContent(
 
         ERPTextField(
             modifier = Modifier.fillMaxWidth(),
-            text = state.panNumber,
+            text = item.panNumber,
             label = stringResource(SharedRes.Strings.labelPanNumber),
             hint = stringResource(SharedRes.Strings.labelPanNumber),
             onValueChange = {
@@ -287,7 +277,7 @@ fun OthersDetailContent(
             )
         ERPTextField(
             modifier = Modifier.fillMaxWidth(),
-            text = state.pfNumber,
+            text = item.pfNumber,
             label = stringResource(SharedRes.Strings.labelPfNumber),
             hint = stringResource(SharedRes.Strings.labelPfNumber),
             onValueChange = {
@@ -299,22 +289,29 @@ fun OthersDetailContent(
             },
 
             )
+
+        SubmitButton(
+            onAction = {
+                onAction(EditProfileViewAction.Submit(employeeId = state.employeeId))
+            },
+            isSubmit = true
+        )
     }
 }
 
 @Composable
 fun PersonalDetailsContent(
-    state: EditProfileUI,
-    editState: EditProfileScreenState,
+    item: EditProfileUI,
+    state: EditProfileScreenState,
     onAction: (EditProfileViewAction) -> Unit
 ) {
     Column(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().verticalScroll(state = rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2)
     ) {
         ERPTextField(
             modifier = Modifier.fillMaxWidth(),
-            text = state.fullName,
+            text = item.fullName,
             label = stringResource(SharedRes.Strings.username),
             hint = stringResource(SharedRes.Strings.username),
             onValueChange = {
@@ -328,7 +325,7 @@ fun PersonalDetailsContent(
             )
         ERPTextField(
             modifier = Modifier.fillMaxWidth(),
-            text = state.address,
+            text = item.address,
             label = stringResource(SharedRes.Strings.address),
             hint = stringResource(SharedRes.Strings.address),
             onValueChange = {
@@ -341,7 +338,7 @@ fun PersonalDetailsContent(
             )
         ERPTextField(
             modifier = Modifier.fillMaxWidth(),
-            text = state.email,
+            text = item.email,
             label = stringResource(SharedRes.Strings.email),
             hint = stringResource(SharedRes.Strings.email),
             onValueChange = {
@@ -355,7 +352,7 @@ fun PersonalDetailsContent(
             )
         ERPTextField(
             modifier = Modifier.fillMaxWidth(),
-            text = state.phoneNumber,
+            text = item.phoneNumber,
             label = stringResource(SharedRes.Strings.phone),
             hint = stringResource(SharedRes.Strings.phone),
             onValueChange = {
@@ -368,7 +365,7 @@ fun PersonalDetailsContent(
             )
         ERPTextField(
             modifier = Modifier.fillMaxWidth(),
-            text = state.branchName,
+            text = item.branchName,
             label = stringResource(SharedRes.Strings.address),
             hint = stringResource(SharedRes.Strings.address),
             onValueChange = {
@@ -381,7 +378,7 @@ fun PersonalDetailsContent(
             )
         ERPTextField(
             modifier = Modifier.fillMaxWidth(),
-            text = state.employeeId.toString(),
+            text = item.employeeId.toString(),
             label = stringResource(SharedRes.Strings.address),
             hint = stringResource(SharedRes.Strings.address),
             onValueChange = {
@@ -394,7 +391,7 @@ fun PersonalDetailsContent(
             )
         ERPTextField(
             modifier = Modifier.fillMaxWidth(),
-            text = state.maritalStatus,
+            text = item.maritalStatus,
             label = stringResource(SharedRes.Strings.marital_status),
             hint = stringResource(SharedRes.Strings.marital_status),
             onValueChange = {
@@ -407,7 +404,7 @@ fun PersonalDetailsContent(
             )
         ERPTextField(
             modifier = Modifier.fillMaxWidth(),
-            text = state.gender,
+            text = item.gender,
             label = stringResource(SharedRes.Strings.gender),
             hint = stringResource(SharedRes.Strings.gender),
             onValueChange = {
@@ -420,7 +417,7 @@ fun PersonalDetailsContent(
             )
         ERPDateTextField(
             modifier = Modifier.fillMaxWidth(),
-            value = editState.dob,
+            value = state.dob,
             label = stringResource(SharedRes.Strings.date_of_birth),
             hint = stringResource(SharedRes.Strings.date_of_birth),
             rules = FormValidate.requiredValidationRules,
@@ -434,7 +431,7 @@ fun PersonalDetailsContent(
         )
         ERPDateTextField(
             modifier = Modifier.fillMaxWidth(),
-            value = editState.joinDate,
+            value = state.joinDate,
             label = stringResource(SharedRes.Strings.labelJoinedDate),
             hint = stringResource(SharedRes.Strings.labelJoinedDate),
             rules = FormValidate.requiredValidationRules,
@@ -445,6 +442,12 @@ fun PersonalDetailsContent(
                 onAction(EditProfileViewAction.JoinedDate(it))
             }
 
+        )
+        SubmitButton(
+            onAction = {
+                onAction(EditProfileViewAction.OnItemSelected(1))
+            },
+            isSubmit = false
         )
 
     }
