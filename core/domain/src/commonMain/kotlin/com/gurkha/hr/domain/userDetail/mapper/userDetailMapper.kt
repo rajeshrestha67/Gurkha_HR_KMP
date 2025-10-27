@@ -1,5 +1,6 @@
 package com.gurkha.hr.domain.userDetail.mapper
 
+import com.gurkha.hr.components.date.DateData
 import com.gurkha.hr.components.extractInitials
 import com.gurkha.hr.domain.userDetail.model.UserDetailData
 import com.gurkha.hr.domain.userDetail.ui.EditProfileUI
@@ -16,9 +17,9 @@ fun UserDetailResponseDto.toData(): UserDetailData {
         employeeId = detail?.employeeId ?: 0,
         address = detail?.employeeDetails?.address ?: "",
         branchName = detail?.employeeDetails?.user?.branch?.branchName ?: "",
-        dateOfBirth = detail?.employeeDetails?.dateOfBirth ?: "",
+        dateOfBirth = detail?.employeeDetails?.dateOfBirth?.split("T")[0]  ?: "",
         gender = detail?.employeeDetails?.gender ?: "",
-        joinedDate = detail?.employeeDetails?.joinedDate ?: "",
+        joinedDate = detail?.employeeDetails?.joinedDate?.split("T")[0] ?: "",
         nationality = detail?.employeeDetails?.country ?: "",
         maritalStatus = detail?.employeeDetails?.maritalStatus ?: "",
         guardianName = detail?.employeeDetails?.guardianName ?: "",
@@ -107,10 +108,10 @@ fun UserDetailData.toUI(): EditProfileUI{
         employeeId = employeeId,
         branchName = branchName,
         address = address,
-        joinedDate = joinedDate,
+        joinedDate = DateData.fromDisplayAD(joinedDate),
         maritalStatus = maritalStatus,
         gender = gender,
-        dateOfBirth = dateOfBirth,
+        dateOfBirth = DateData.fromDisplayAD(dateOfBirth),
         bloodGroup = bloodGroup,
         guardianName = guardianName,
         guardianPhone = guardianNumber,
@@ -130,9 +131,9 @@ fun EditProfileUI.toDomain(): UserDetailData {
         levelName = levelName,
         employeeId = employeeId,
         address = address,
-        dateOfBirth = dateOfBirth,
+        dateOfBirth = dateOfBirth.displayValueAD,
         gender = gender,
-        joinedDate = joinedDate,
+        joinedDate = joinedDate.displayValueAD,
         nationality = nationality,
         maritalStatus = maritalStatus,
         guardianName = guardianName,

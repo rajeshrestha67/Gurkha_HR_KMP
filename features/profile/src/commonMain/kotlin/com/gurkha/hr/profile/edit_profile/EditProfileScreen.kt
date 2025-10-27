@@ -250,7 +250,7 @@ fun OthersDetailContent(
         DropDownText(
             label = labelContract,
             hint = stringResource(labelContract),
-            selectedValue = state.employeeTypeList.toString(),
+            selectedValue = item.employeeTypes,
             error = null,
             listOfItems = state.itemList,
             itemClicked = {
@@ -417,7 +417,7 @@ fun PersonalDetailsContent(
             )
         ERPDateTextField(
             modifier = Modifier.fillMaxWidth(),
-            value = state.dob,
+            value = state.profileSummaryList?.dateOfBirth,
             label = stringResource(SharedRes.Strings.date_of_birth),
             hint = stringResource(SharedRes.Strings.date_of_birth),
             rules = FormValidate.requiredValidationRules,
@@ -431,7 +431,7 @@ fun PersonalDetailsContent(
         )
         ERPDateTextField(
             modifier = Modifier.fillMaxWidth(),
-            value = state.joinDate,
+            value = state.profileSummaryList?.joinedDate,
             label = stringResource(SharedRes.Strings.labelJoinedDate),
             hint = stringResource(SharedRes.Strings.labelJoinedDate),
             rules = FormValidate.requiredValidationRules,

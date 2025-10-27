@@ -54,6 +54,8 @@ class HomeScreenViewModel(
 ) : ViewModel() {
     private val _state = MutableStateFlow(HomeScreenState())
     private val notification = ProgressNotification()
+
+    @OptIn(ExperimentalTime::class)
     val state = _state
         .onStart {
             fetchCurrentUser()
@@ -436,8 +438,11 @@ class HomeScreenViewModel(
                 )
             }
 
-        }.onError {error ->
-            AppLogger.e("AttendanceViewModel", "Attendance update failed: ${error.toErrorMessage()}")
+        }.onError { error ->
+            AppLogger.e(
+                "AttendanceViewModel",
+                "Attendance update failed: ${error.toErrorMessage()}"
+            )
             _state.update {
                 it.copy(
                     showSwipeView = true

@@ -1,5 +1,7 @@
 package com.gurkha.hr.domain.userDetail.ui
 
+import com.gurkha.hr.components.date.DateData
+
 data class EditProfileUI(
     val email: String = "",
     val phoneNumber: String = "",
@@ -12,9 +14,9 @@ data class EditProfileUI(
     val branchId: Int = 0,
     val levelId: Long= 0,
     val mapId: Int = 0,
-    val joinedDate: String = "",
+    val joinedDate: DateData,
     val address: String = "",
-    val dateOfBirth: String = "",
+    val dateOfBirth: DateData,
     val gender: String = "",
     val nationality: String = "",
     val maritalStatus: String = "",

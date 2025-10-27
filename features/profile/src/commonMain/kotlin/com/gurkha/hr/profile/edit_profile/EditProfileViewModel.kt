@@ -63,7 +63,9 @@ class EditProfileViewModel(
             is EditProfileViewAction.EmployeeType -> {
                 _state.update {
                     it.copy(
-                        employeeTypeList = action.employeeType
+                        profileSummaryList = it.profileSummaryList?.copy(
+                            employeeTypes = action.employeeType.toString()
+                        )
                     )
                 }
             }
@@ -71,10 +73,9 @@ class EditProfileViewModel(
             is EditProfileViewAction.DateOfBirth -> {
                 _state.update {
                     it.copy(
-                        dob = action.date,
-                        dobError = null,
-                        dateOfBirth = state.value.profileSummaryList?.dateOfBirth
-
+                        profileSummaryList = it.profileSummaryList?.copy(
+                            dateOfBirth = action.date
+                        )
                     )
                 }
             }
@@ -82,8 +83,9 @@ class EditProfileViewModel(
             is EditProfileViewAction.JoinedDate -> {
                 _state.update {
                     it.copy(
-                        joinDate = action.date,
-                        joinDateError = null
+                        profileSummaryList = it.profileSummaryList?.copy(
+                            joinedDate = action.date
+                        )
                     )
                 }
             }
@@ -94,7 +96,6 @@ class EditProfileViewModel(
                         profileSummaryList = it.profileSummaryList?.copy(
                             bloodGroup = action.bloodGroup
                         ),
-                        bloodGroup = action.bloodGroup
 
                     )
                 }
@@ -106,7 +107,6 @@ class EditProfileViewModel(
                         profileSummaryList = it.profileSummaryList?.copy(
                             guardianName = action.guardianName
                         ),
-                        guardianName = action.guardianName
                     )
                 }
             }
@@ -117,7 +117,6 @@ class EditProfileViewModel(
                         profileSummaryList = it.profileSummaryList?.copy(
                             guardianPhone = action.guardianPhone
                         ),
-                        guardianNumber = action.guardianPhone
 
                     )
                 }
@@ -129,7 +128,6 @@ class EditProfileViewModel(
                         profileSummaryList = it.profileSummaryList?.copy(
                             pfNumber = action.pfNumber
                         ),
-                        pfNumber = action.pfNumber
 
                     )
                 }
@@ -141,8 +139,6 @@ class EditProfileViewModel(
                         profileSummaryList = it.profileSummaryList?.copy(
                             panNumber = action.panNumber
                         ),
-                        panNumber = action.panNumber
-
                     )
                 }
             }
