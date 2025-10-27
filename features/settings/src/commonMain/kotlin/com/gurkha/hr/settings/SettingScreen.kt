@@ -239,7 +239,7 @@ fun LanguageBottomSheet(
                     vertical = MaterialTheme.dimens.small2,
                     horizontal = MaterialTheme.dimens.small3
                 ),
-                text = stringResource(SharedRes.Strings.appAppearance),
+                text = stringResource(SharedRes.Strings.language),
                 style = MaterialTheme.typography.titleLarge.copy(
                     color = MaterialTheme.colorScheme.primary
                 )
