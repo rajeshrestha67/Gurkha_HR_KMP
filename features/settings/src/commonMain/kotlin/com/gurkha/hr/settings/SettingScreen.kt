@@ -50,8 +50,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun SettingScreen(
     onBackPressed: () -> Unit,
-    navigateToChangePassword: () -> Unit,
-    navigateToNotificationSettings: () -> Unit
+    navigateToChangePassword: () -> Unit
 ) {
     val settingsViewModel = koinViewModel<SettingsViewModel>()
 
@@ -61,7 +60,6 @@ fun SettingScreen(
         onBackPressed = onBackPressed,
         state = state,
         navigateToChangePassword = navigateToChangePassword,
-        navigateToNotificationSettings = navigateToNotificationSettings,
         onAction = settingsViewModel::onAction
     )
 
@@ -72,7 +70,6 @@ fun SettingScreen(
 fun SettingScreenContainer(
     onBackPressed: () -> Unit,
     navigateToChangePassword: () -> Unit,
-    navigateToNotificationSettings: () -> Unit,
     state: SettingsScreenState,
     onAction: (SettingsScreenAction) -> Unit
 ) {
@@ -102,7 +99,6 @@ fun SettingScreenContainer(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues),
-            navigateToNotificationSettings = navigateToNotificationSettings,
             navigateToChangePassword = navigateToChangePassword,
             state = state,
             onAction = onAction
@@ -114,7 +110,6 @@ fun SettingScreenContainer(
 fun SettingScreenContent(
     modifier: Modifier = Modifier,
     navigateToChangePassword: () -> Unit,
-    navigateToNotificationSettings: () -> Unit,
     state: SettingsScreenState,
     onAction: (SettingsScreenAction) -> Unit
 ) {
@@ -151,7 +146,7 @@ fun SettingScreenContent(
                                 }
 
                                 SettingList.Biometric -> {
-                                    navigateToNotificationSettings()
+                                    
                                 }
                             }
                         }

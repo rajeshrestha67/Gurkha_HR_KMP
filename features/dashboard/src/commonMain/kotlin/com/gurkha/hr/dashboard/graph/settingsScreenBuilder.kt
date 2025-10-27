@@ -17,9 +17,6 @@ fun NavGraphBuilder.settingsScreenBuilder(
             },
             navigateToChangePassword = {
                 navController.navigate(ProfileRoute.ChangePasswordRoute)
-            },
-            navigateToNotificationSettings = {
-
             }
         )
     }
