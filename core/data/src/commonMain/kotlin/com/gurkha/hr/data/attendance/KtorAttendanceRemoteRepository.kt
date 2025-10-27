@@ -48,7 +48,9 @@ class KtorAttendanceRemoteRepository(
     override suspend fun fetchAttendanceStatus(
         attendanceStatus: String,
         employeeName: String,
-        isSelf: String
+        isSelf: String,
+        fromDate: String,
+        toDate: String
     ): ERPResult<AttendanceStatusResponseDTO, DataError> {
         return safeCall {
             httpClient.post(
@@ -58,7 +60,10 @@ class KtorAttendanceRemoteRepository(
                 setBody(AttendanceStatusRequestDTO(
                     attendanceStatus,
                     employeeName,
-                    isSelf))
+                    isSelf,
+                    fromDate,
+                    toDate
+                ))
             }
         }
     }

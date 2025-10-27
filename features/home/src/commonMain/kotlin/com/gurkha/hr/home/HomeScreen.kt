@@ -45,6 +45,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -830,50 +831,50 @@ fun LazyListScope.notificationView(
 fun AttendanceItemContent(
     item: RequestItem, modifier: Modifier = Modifier, onClick: () -> Unit
 ) {
-    Column(
-        modifier = modifier
-            .clip(shape = MaterialTheme.shapes.medium)
-            .background(MaterialTheme.colorScheme.highLightColor)
-            .border(
-                width = 1.dp,
-                shape = MaterialTheme.shapes.medium,
-                color = MaterialTheme.colorScheme.highLightColor
-            ).clickable(onClick = onClick),
-        verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.Start
-    ) {
-        Row(
-            modifier = Modifier.padding(
-                horizontal = MaterialTheme.dimens.small3, vertical = MaterialTheme.dimens.small2
-            ),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2)
-        ) {
-            Icon(imageVector = item.type.icon, contentDescription = "arrow right")
-            Text(
-                text = stringResource(item.type.title),
-                style = MaterialTheme.typography.titleMedium
-            )
-        }
-
+    Surface(
+        modifier = modifier.clip(shape = MaterialTheme.shapes.medium),
+        tonalElevation = 4.dp
+    ){
         Column(
-            modifier = Modifier.padding(
-                horizontal = MaterialTheme.dimens.small3, vertical = MaterialTheme.dimens.small2
-            )
+            modifier = modifier
+                .clip(shape = MaterialTheme.shapes.medium)
+                .clickable(onClick = onClick),
+            verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.Start
         ) {
-            Text(
-                text = item.duration, style = MaterialTheme.typography.titleLarge.copy(
-                    color = MaterialTheme.colorScheme.primaryTextColor
+            Row(
+                modifier = Modifier.padding(
+                    horizontal = MaterialTheme.dimens.small3, vertical = MaterialTheme.dimens.small2
+                ),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2)
+            ) {
+                Icon(imageVector = item.type.icon, contentDescription = "arrow right")
+                Text(
+                    text = stringResource(item.type.title),
+                    style = MaterialTheme.typography.titleMedium
                 )
-            )
-            Text(
-                text = stringResource(item.type.status),
-                style = MaterialTheme.typography.titleSmall.copy(
-                    color = MaterialTheme.colorScheme.primaryTextColor
+            }
 
+            Column(
+                modifier = Modifier.padding(
+                    horizontal = MaterialTheme.dimens.small3, vertical = MaterialTheme.dimens.small2
                 )
-            )
+            ) {
+                Text(
+                    text = item.duration, style = MaterialTheme.typography.titleLarge.copy(
+                        color = MaterialTheme.colorScheme.primaryTextColor
+                    )
+                )
+                Text(
+                    text = stringResource(item.type.status),
+                    style = MaterialTheme.typography.titleSmall.copy(
+                        color = MaterialTheme.colorScheme.primaryTextColor
+
+                    )
+                )
+            }
+
         }
-
     }
 }
 

@@ -4,6 +4,7 @@ package com.gurkha.hr.attendance
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gurkha.hr.date.data.model.CalendarModel
+import com.gurkha.hr.date.getMonthStartAndEndDate
 import com.gurkha.hr.domain.attendance.attendanceStatus.model.AttendanceStatusData
 import com.gurkha.hr.domain.attendance.attendanceStatus.useCase.AttendanceStatusUseCase
 import com.gurkha.hr.domain.attendance.attendanceSummary.useCase.AttendanceSummaryUseCase
@@ -36,13 +37,18 @@ class AttendanceViewModel(
     private val _errorChannel = Channel<String>()
     val errorChannel = _errorChannel.receiveAsFlow()
 
+    val datePair = calendarModel.getMonthStartAndEndDate()
+
+
     val state = _state
         .onStart {
             fetchAttendanceSummary()
             fetchAttendance(
                 attendanceStatus = TabItemsEnums.PENDING,
                 employeeName = "",
-                isSelf = "Y"
+                isSelf = "Y",
+                fromDate = datePair.first,
+                toDate = datePair.second
             )
         }
         .stateIn(
@@ -77,7 +83,9 @@ class AttendanceViewModel(
                     fetchAttendance(
                         attendanceStatus = state.value.selectedTab,
                         employeeName = state.value.employeeName,
-                        isSelf = state.value.isSelf
+                        isSelf = state.value.isSelf,
+                        fromDate = datePair.first,
+                        toDate = datePair.second
                     )
                 }
             }
@@ -87,7 +95,9 @@ class AttendanceViewModel(
     private fun fetchAttendance(
         attendanceStatus: TabItemsEnums,
         employeeName: String,
-        isSelf: String
+        isSelf: String,
+        fromDate: String,
+        toDate: String
     ) = viewModelScope.launch {
         _state.update {
             when (attendanceStatus) {
@@ -113,7 +123,9 @@ class AttendanceViewModel(
         attendanceStatusUseCase(
             attendanceStatus = attendanceStatus.value,
             employeeName = employeeName,
-            isSelf = isSelf
+            isSelf = isSelf,
+            fromDate = fromDate,
+            toDate = toDate
         ).onSuccess { data ->
             when (attendanceStatus) {
                 TabItemsEnums.PENDING -> {

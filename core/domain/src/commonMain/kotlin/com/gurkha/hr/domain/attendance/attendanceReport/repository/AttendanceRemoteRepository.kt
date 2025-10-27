@@ -19,7 +19,9 @@ interface AttendanceRemoteRepository {
     suspend fun fetchAttendanceStatus(
         attendanceStatus: String,
         employeeName: String,
-        isSelf: String
+        isSelf: String,
+        fromDate: String,
+        toDate: String
     ): ERPResult<AttendanceStatusResponseDTO, DataError>
 
     suspend fun requestAttendance(
