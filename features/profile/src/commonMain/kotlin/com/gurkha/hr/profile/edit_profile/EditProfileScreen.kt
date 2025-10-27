@@ -1,7 +1,6 @@
 package com.gurkha.hr.profile.edit_profile
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -12,8 +11,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -25,17 +22,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.date.ERPDateTextField
 import com.gurkha.hr.components.date.FutureAndTodayDate
+import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.textField.DropDownText
 import com.gurkha.hr.components.textField.ERPTextField
 import com.gurkha.hr.components.textField.FormValidate
@@ -45,10 +39,8 @@ import com.gurkha.hr.profile.model.edit_profile_screen.EditProfileViewAction
 import com.gurkha.hr.profile.model.edit_profile_screen.Title
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.SharedRes.Strings.labelContract
-import com.gurkha.hr.res.theme.dimens
 import com.gurkha.hr.res.theme.primaryTextColor
 import com.gurkha.hr.res.theme.veryLightGray
-import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -213,7 +205,7 @@ fun OthersDetailContent(
             )
         ERPTextField(
             modifier = Modifier.fillMaxWidth(),
-            text =state.guardianName ,
+            text = state.guardianName,
             label = stringResource(SharedRes.Strings.guardian_name),
             hint = stringResource(SharedRes.Strings.guardian_name),
             onValueChange = {
@@ -227,7 +219,7 @@ fun OthersDetailContent(
             )
         ERPTextField(
             modifier = Modifier.fillMaxWidth(),
-            text = state.guardianPhone ,
+            text = state.guardianPhone,
             label = stringResource(SharedRes.Strings.guardian_phone),
             hint = stringResource(SharedRes.Strings.guardian_phone),
             onValueChange = {

@@ -47,10 +47,15 @@ actual fun rememberRequestPermission(
     return remember {
         {
             coroutineScope.launch {
-                val notGranted = permissions.filter {
-                    ContextCompat.checkSelfPermission(context, it) !=
-                            PackageManager.PERMISSION_GRANTED
+                val alreadyGranted = permissions.filter {
+                    ContextCompat.checkSelfPermission(
+                        context,
+                        it
+                    ) == PackageManager.PERMISSION_GRANTED
                 }
+                val notGranted = permissions.filterNot(alreadyGranted::contains)
+
+                alreadyGranted.forEach(onGranted)
 
                 if (notGranted.isEmpty()) {
                     onAllGranted()

@@ -32,7 +32,6 @@ import gurkhahr.core.ui.res.generated.resources.attendance_request
 import gurkhahr.core.ui.res.generated.resources.attendance_request_form
 import gurkhahr.core.ui.res.generated.resources.attendance_summary
 import gurkhahr.core.ui.res.generated.resources.bachelor
-import gurkhahr.core.ui.res.generated.resources.blood_group
 import gurkhahr.core.ui.res.generated.resources.biometric
 import gurkhahr.core.ui.res.generated.resources.blood_group
 import gurkhahr.core.ui.res.generated.resources.bs
@@ -160,6 +159,7 @@ import gurkhahr.core.ui.res.generated.resources.numbers
 import gurkhahr.core.ui.res.generated.resources.ok
 import gurkhahr.core.ui.res.generated.resources.on_time
 import gurkhahr.core.ui.res.generated.resources.one
+import gurkhahr.core.ui.res.generated.resources.others
 import gurkhahr.core.ui.res.generated.resources.outline_logout_24
 import gurkhahr.core.ui.res.generated.resources.password
 import gurkhahr.core.ui.res.generated.resources.password_does_not_match
