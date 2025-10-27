@@ -23,7 +23,9 @@ interface LeaveRemoteRepository {
     ): ERPResult<LeaveRequestResponseDto, DataError>
 
     suspend fun fetchLeaveReport(
-        leaveStatus: String
+        leaveStatus: String,
+        fromDate: String,
+        toDate: String
     ): ERPResult<LeaveReportResponseDto, DataError>
 
 

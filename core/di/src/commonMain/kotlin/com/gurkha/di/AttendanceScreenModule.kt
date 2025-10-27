@@ -4,6 +4,7 @@ import com.gurkha.hr.attendance.AttendanceViewModel
 import com.gurkha.hr.attendanceRequestScreen.AttendanceRequestViewModel
 import com.gurkha.hr.data.attendance.KtorAttendanceRemoteRepository
 import com.gurkha.hr.data.leaveRequest.KtorLeaveRequestRemoteRepository
+import com.gurkha.hr.date.data.model.CalendarModel
 import com.gurkha.hr.domain.attendance.attendanceReport.repository.AttendanceRemoteRepository
 import com.gurkha.hr.domain.attendance.attendanceRequest.useCase.AttendanceRequestUseCase
 import com.gurkha.hr.domain.attendance.attendanceStatus.useCase.AttendanceStatusUseCase
@@ -56,10 +57,12 @@ class AttendanceScreenModule {
     @KoinViewModel
     fun getAttendanceViewModel(
         attendanceStatusUseCase: AttendanceStatusUseCase,
-        attendanceSummaryUseCase: AttendanceSummaryUseCase
+        attendanceSummaryUseCase: AttendanceSummaryUseCase,
+        calendarModel: CalendarModel,
     ): AttendanceViewModel = AttendanceViewModel(
         attendanceStatusUseCase = attendanceStatusUseCase,
-        attendanceSummaryUseCase = attendanceSummaryUseCase
+        attendanceSummaryUseCase = attendanceSummaryUseCase,
+        calendarModel= calendarModel,
     )
 
     @KoinViewModel

@@ -306,11 +306,11 @@ fun TimeAndAttendanceDetails(
         ) {
             RowText(
                 name = SharedRes.Strings.clockIn,
-                value = item.clockInTime
+                value = item.clockInTime ?: "--:--"
             )
             RowText(
                 name = SharedRes.Strings.clockOut,
-                value = item.clockOutTime
+                value = item.clockOutTime ?: "--:--"
             )
             RowText(
                 name = SharedRes.Strings.status,

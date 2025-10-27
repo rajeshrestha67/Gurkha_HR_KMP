@@ -39,7 +39,9 @@ import kotlinx.serialization.Serializable
 data class AttendanceStatusRequestDTO(
     val attendanceStatus: String,
     val employeeName: String,
-    val isSelf: String
+    val isSelf: String,
+    val fromDate: String,
+    val toDate: String
 )
 
 @Serializable

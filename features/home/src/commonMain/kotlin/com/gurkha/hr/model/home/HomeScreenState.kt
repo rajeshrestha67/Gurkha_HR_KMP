@@ -29,6 +29,7 @@ data class HomeScreenState(
     val isAttendanceLoading: Boolean = false,
     val isBirthDayLoading: Boolean = false,
     val isAnniversaryLoading: Boolean = false,
+    val employeeId: Int = 0,
 
     val attendanceReport: List<AttendanceData> = listOf(),
     val attendanceReportHistory: List<AttendanceHistoryItemUI> = listOf(),
@@ -49,6 +50,10 @@ data class HomeScreenState(
     val isNotificationCountLoading: Boolean = false,
 
     val totalUnSeenNotification: Int = 0,
+
+    val isAlreadyClockIn: Boolean = false,
+    val clockInTime: String = "--:--",
+    val clockOutTime: String = "--:--",
 )
 
 data class RequestItem(
@@ -130,8 +135,8 @@ suspend fun AttendanceData.toUI(): AttendanceHistoryItemUI {
         }
     }
     return AttendanceHistoryItemUI(
-        clockInTime = clockInTime,
-        clockOutTime = clockOutTime,
+        clockInTime = clockInTime ?: "--:--",
+        clockOutTime = clockOutTime ?: "--:--",
         date = "$date ($day)",
         status = status,
         statusClips = chips,

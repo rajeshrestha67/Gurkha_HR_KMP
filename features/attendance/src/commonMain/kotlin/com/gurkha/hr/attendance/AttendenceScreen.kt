@@ -27,6 +27,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -297,120 +298,128 @@ fun LazyListScope.attendanceResult(
     }
 }
 
+
 @Composable
 fun LazyItemScope.ResultBox(
     item: AttendanceStatusData
 ) {
-    Column(
+    Surface(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(
-                vertical = MaterialTheme.dimens.small1
-            )
-            .clip(MaterialTheme.shapes.medium)
-            .background(MaterialTheme.colorScheme.highLightColor)
-            .padding(MaterialTheme.dimens.small2)
-            .animateItem(
-                tween(300),
-                tween(500)
-            )
+            .fillMaxWidth(),
+        shape = MaterialTheme.shapes.medium,
+        tonalElevation = 4.dp,
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth()
-        )
-        {
-            Text(
-                text = stringResource(SharedRes.Strings.date),
-                style = MaterialTheme.typography.titleSmall.copy(
-                    color = MaterialTheme.colorScheme.darkPrimaryTextColor
-                )
-            )
-            Text(
-                text = item.requestedDate,
-                style = MaterialTheme.typography.titleSmall.copy(
-                    color = MaterialTheme.colorScheme.primaryTextColor
-                )
-            )
-        }
-
-        HorizontalDivider(modifier = Modifier.height(MaterialTheme.dimens.extraSmall))
-
-        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = MaterialTheme.dimens.small2),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        )
-        {
-            Column {
-                Text(
-                    text = "Clock In",
-                    style = MaterialTheme.typography.titleSmall.copy(
-                        color = MaterialTheme.colorScheme.darkPrimaryTextColor
-                    )
+                .padding(
+                    vertical = MaterialTheme.dimens.small1
                 )
-                Text(
-                    text = item.clockInTime,
-                    style = MaterialTheme.typography.titleSmall.copy(
-                        color = MaterialTheme.colorScheme.primaryTextColor
-                    )
+                .clip(MaterialTheme.shapes.medium)
+                .background(MaterialTheme.colorScheme.highLightColor)
+                .padding(MaterialTheme.dimens.small2)
+                .animateItem(
+                    tween(300),
+                    tween(500)
                 )
-            }
-
-            Column {
-                Text(
-                    text = "Clock Out",
-                    style = MaterialTheme.typography.titleSmall.copy(
-                        color = MaterialTheme.colorScheme.darkPrimaryTextColor
-                    )
-                )
-                Text(
-                    text = item.clockOutTime,
-                    style = MaterialTheme.typography.titleSmall.copy(
-                        color = MaterialTheme.colorScheme.primaryTextColor
-                    )
-                )
-            }
-
-            Column {
-                Text(
-                    text = stringResource(SharedRes.Strings.approver),
-                    style = MaterialTheme.typography.titleSmall.copy(
-                        color = MaterialTheme.colorScheme.darkPrimaryTextColor
-                    )
-                )
-                Text(
-                    text = item.assignedTo,
-                    style = MaterialTheme.typography.titleSmall.copy(
-                        color = MaterialTheme.colorScheme.primaryTextColor
-                    )
-                )
-            }
-        }
-
-        HorizontalDivider(modifier = Modifier.height(MaterialTheme.dimens.extraSmall))
-
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = MaterialTheme.dimens.small2)
-        )
-        {
-            Text(
-                text = stringResource(SharedRes.Strings.reason),
-                style = MaterialTheme.typography.titleSmall.copy(
-                    color = MaterialTheme.colorScheme.darkPrimaryTextColor
-                )
+        ) {
+            Column(
+                modifier = Modifier.fillMaxWidth()
             )
-            Text(
-                text = item.requestRemarks,
-                maxLines = 3,
-                style = MaterialTheme.typography.titleSmall.copy(
-                    color = MaterialTheme.colorScheme.primaryTextColor
+            {
+                Text(
+                    text = stringResource(SharedRes.Strings.date),
+                    style = MaterialTheme.typography.titleSmall.copy(
+                        color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                    )
                 )
-            )
-        }
+                Text(
+                    text = item.requestedDate,
+                    style = MaterialTheme.typography.titleSmall.copy(
+                        color = MaterialTheme.colorScheme.primaryTextColor
+                    )
+                )
+            }
 
+            HorizontalDivider(modifier = Modifier.height(MaterialTheme.dimens.extraSmall))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = MaterialTheme.dimens.small2),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            )
+            {
+                Column {
+                    Text(
+                        text = "Clock In",
+                        style = MaterialTheme.typography.titleSmall.copy(
+                            color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                        )
+                    )
+                    Text(
+                        text = item.clockInTime,
+                        style = MaterialTheme.typography.titleSmall.copy(
+                            color = MaterialTheme.colorScheme.primaryTextColor
+                        )
+                    )
+                }
+
+                Column {
+                    Text(
+                        text = "Clock Out",
+                        style = MaterialTheme.typography.titleSmall.copy(
+                            color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                        )
+                    )
+                    Text(
+                        text = item.clockOutTime,
+                        style = MaterialTheme.typography.titleSmall.copy(
+                            color = MaterialTheme.colorScheme.primaryTextColor
+                        )
+                    )
+                }
+
+                Column {
+                    Text(
+                        text = stringResource(SharedRes.Strings.approver),
+                        style = MaterialTheme.typography.titleSmall.copy(
+                            color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                        )
+                    )
+                    Text(
+                        text = item.assignedTo,
+                        style = MaterialTheme.typography.titleSmall.copy(
+                            color = MaterialTheme.colorScheme.primaryTextColor
+                        )
+                    )
+                }
+            }
+
+            HorizontalDivider(modifier = Modifier.height(MaterialTheme.dimens.extraSmall))
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = MaterialTheme.dimens.small2)
+            )
+            {
+                Text(
+                    text = stringResource(SharedRes.Strings.reason),
+                    style = MaterialTheme.typography.titleSmall.copy(
+                        color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                    )
+                )
+                Text(
+                    text = item.requestRemarks,
+                    maxLines = 3,
+                    style = MaterialTheme.typography.titleSmall.copy(
+                        color = MaterialTheme.colorScheme.primaryTextColor
+                    )
+                )
+            }
+
+        }
     }
 }

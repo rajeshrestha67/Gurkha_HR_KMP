@@ -66,8 +66,11 @@ class KtorLeaveRequestRemoteRepository(
         }
     }
 
+
     override suspend fun fetchLeaveReport(
-        leaveStatus: String
+        leaveStatus: String,
+        fromDate: String,
+        toDate: String
     ): ERPResult<LeaveReportResponseDto, DataError> {
         return safeCall {
             httpClient.post(
@@ -76,7 +79,9 @@ class KtorLeaveRequestRemoteRepository(
             ) {
                 setBody(
                     LeaveReportRequestDto(
-                        leaveStatus = leaveStatus
+                        fromDate = fromDate,
+                        leaveStatus = leaveStatus,
+                        toDate = toDate
                     )
                 )
             }

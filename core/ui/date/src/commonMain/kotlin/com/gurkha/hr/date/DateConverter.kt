@@ -1,5 +1,6 @@
 package com.gurkha.hr.date
 
+import com.gurkha.hr.date.data.model.CalendarModel
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.daysUntil
@@ -108,4 +109,27 @@ data class DateHolder(
             this.year.compareTo(other.year)
         }
     }
+}
+
+fun CalendarModel.getMonthStartAndEndDate(): Pair<String, String> {
+    val todayDays =
+        BSPointer.getNumOfDaysInMonth(
+            Year.ofValue(this.today.year),
+            this.today.month
+        )
+    val fromDate = DateConverter.bsToAd(
+        year = this.today.year,
+        month = this.today.month,
+        day = 1
+    ).run {
+        "$year-$month-$day"
+    }
+    val toDate = DateConverter.bsToAd(
+        year = this.today.year,
+        month = this.today.month,
+        day = todayDays
+    ).run {
+        "$year-$month-$day"
+    }
+    return Pair(fromDate, toDate)
 }

@@ -1,5 +1,6 @@
 package com.gurkha.di
 
+import com.gurkha.hr.components.permissions.ProgressNotification
 import com.gurkha.hr.data.userDetail.KtorUserDetailRemoteRepository
 import com.gurkha.hr.datastore.user_data.local.UserDataDataStore
 import com.gurkha.hr.datastore.user_data.repository.LocalUserDataRepository
@@ -50,9 +51,9 @@ class ProfileScreenModule {
     @KoinViewModel
     fun getProfileScreenViewModel(
         userDetailUseCase: FetchUserDetailUseCase,
-        uploadImageUseCase: UploadImageUseCase
+        uploadImageUseCase: UploadImageUseCase,
     ): ProfileScreenViewModel = ProfileScreenViewModel(
         userDetailUseCase = userDetailUseCase,
-        uploadImageUseCase = uploadImageUseCase
+        uploadImageUseCase = uploadImageUseCase,
     )
 }

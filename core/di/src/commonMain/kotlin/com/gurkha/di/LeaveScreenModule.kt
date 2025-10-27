@@ -2,6 +2,7 @@ package com.gurkha.di
 
 import com.gurkha.hr.data.attendance.KtorAttendanceRemoteRepository
 import com.gurkha.hr.data.leaveRequest.KtorLeaveRequestRemoteRepository
+import com.gurkha.hr.date.data.model.CalendarModel
 import com.gurkha.hr.domain.attendance.attendanceReport.repository.AttendanceRemoteRepository
 import com.gurkha.hr.domain.attendance.attendanceStatus.useCase.AttendanceStatusUseCase
 import com.gurkha.hr.domain.form.RequiredValidationUseCase
@@ -63,10 +64,12 @@ class LeaveScreenModule {
     fun getLeaveScreenViewModel(
 
         leaveReportUseCase: LeaveReportUseCase,
-        leaveSummaryUseCase : LeaveSummaryUseCase
+        leaveSummaryUseCase : LeaveSummaryUseCase,
+        calendarModel: CalendarModel,
     ): LeaveScreenViewModel = LeaveScreenViewModel(
         leaveReportUseCase = leaveReportUseCase,
-        leaveSummaryUseCase = leaveSummaryUseCase
+        leaveSummaryUseCase = leaveSummaryUseCase,
+        calendarModel = calendarModel
     )
 
     @KoinViewModel

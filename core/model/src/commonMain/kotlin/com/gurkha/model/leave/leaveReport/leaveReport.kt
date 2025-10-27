@@ -4,7 +4,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class LeaveReportRequestDto(
-    val leaveStatus: String
+    val fromDate: String,
+    val leaveStatus: String,
+    val toDate: String
 )
 
 @Serializable

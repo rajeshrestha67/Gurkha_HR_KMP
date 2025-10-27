@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -32,6 +33,7 @@ import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.DropdownMenu
@@ -41,12 +43,16 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarScrollBehavior
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -58,8 +64,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.gurkha.hr.components.PlatformMessage
 import com.gurkha.hr.components.ProfilePicture
 import com.gurkha.hr.components.date.horizontalCalendar.HorizontalCalendar
 import com.gurkha.hr.components.dimens
@@ -67,13 +75,19 @@ import com.gurkha.hr.components.extractInitials
 import com.gurkha.hr.components.media.rememberCameraLauncher
 import com.gurkha.hr.components.media.rememberGalleryLauncher
 import com.gurkha.hr.components.noRippleClickable
+import com.gurkha.hr.components.permissions.CAMERA_PERMISSION
+import com.gurkha.hr.components.permissions.GALLERY_PERMISSION
+import com.gurkha.hr.components.permissions.navigateToSettings
+import com.gurkha.hr.components.permissions.rememberRequestPermission
 import com.gurkha.hr.components.shimmer.ShimmerView
 import com.gurkha.hr.components.swipeToDismiss.SwipeToDismissBox
 import com.gurkha.hr.date.data.CalendarDate
 import com.gurkha.hr.date.data.CalendarDay
+import com.gurkha.hr.date.data.model.now
 import com.gurkha.hr.domain.upComingBirthday.mapper.toUi
 import com.gurkha.hr.domain.upComingEvent.model.EventData
 import com.gurkha.hr.domain.upComingWorkAnniversaries.mapper.toUi
+import com.gurkha.hr.logger.AppLogger
 import com.gurkha.hr.model.home.AttendanceHistoryItemUI
 import com.gurkha.hr.model.home.HomeScreenActions
 import com.gurkha.hr.model.home.HomeScreenState
@@ -86,10 +100,17 @@ import com.gurkha.hr.res.theme.imageBackgroundColor
 import com.gurkha.hr.res.theme.linkColor
 import com.gurkha.hr.res.theme.primaryTextColor
 import com.gurkha.model.upComingBirthday.ui.ViewAllUi
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalTime
 import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
+
+const val TAG = "Home Screen"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -186,7 +207,7 @@ fun HomeScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
 fun HomeScreenContent(
     modifier: Modifier = Modifier,
@@ -196,20 +217,51 @@ fun HomeScreenContent(
     birthdayTitle: String,
     anniversaryTitle: String
 ) {
+    var showModal by remember {mutableStateOf(false)}
+
     val openCamera = rememberCameraLauncher(
         onImageCaptured = { uri ->
-            println("✅ Captured image: $uri")
+            onAction(HomeScreenActions.SwipeToDismiss(uri = uri))
         },
         onError = { e ->
             println("❌ Error: ${e.message}")
         }
     )
-    val openGallery = rememberGalleryLauncher(
-        onImageSelected = { uri ->
-            println("✅ Captured image: $uri")
+
+    val platformMessage: PlatformMessage = koinInject()
+    val onPermission = rememberRequestPermission(
+        permissions = listOf(
+            CAMERA_PERMISSION
+        ),
+        onGranted = { permission ->
+            if (permission == CAMERA_PERMISSION){
+                openCamera()
+            }
+            AppLogger.i(
+                tag = TAG,
+                message = "Permission granted: $permission"
+            )
+            println("granted_triggered")
         },
-        onError = { e ->
-            println("❌ Error: ${e.message}")
+        onDenied = { permission ->
+            AppLogger.i(
+                tag = TAG,
+                message = "Permission denied: $permission"
+            )
+            platformMessage.showToast(message = "Permission denied: $permission")
+        },
+        onPermanentlyDenied = { permission ->
+            AppLogger.i(
+                tag = TAG,
+                message = "Permission denied permanent: $permission"
+            )
+            showModal = true
+        },
+        onAllGranted = {
+            AppLogger.i(
+                tag = TAG,
+                message = "All Permission granted"
+            )
         }
     )
     val (showNotification, onChangeNotification) = rememberSaveable {
@@ -299,6 +351,13 @@ fun HomeScreenContent(
             )
 
         }
+        if(showModal){
+            PermanentPermissionShow(
+                onDismiss = {
+                    showModal = false
+                }
+            )
+        }
         AnimatedVisibility(
             visible = shouldShowSwipeToDismiss,
             enter = slideInVertically(initialOffsetY = { it }) + fadeIn(),
@@ -308,8 +367,8 @@ fun HomeScreenContent(
             SwipeToDismissBox(
                 text = stringResource(state.swipeText),
                 onDismissed = {
-                    //onAction(HomeScreenActions.SwipeToDismiss)
-                    openCamera()
+                    onPermission()
+//                    openCamera()
                 }
             )
         }
@@ -773,50 +832,50 @@ fun LazyListScope.notificationView(
 fun AttendanceItemContent(
     item: RequestItem, modifier: Modifier = Modifier, onClick: () -> Unit
 ) {
-    Column(
-        modifier = modifier
-            .clip(shape = MaterialTheme.shapes.medium)
-            .background(MaterialTheme.colorScheme.highLightColor)
-            .border(
-                width = 1.dp,
-                shape = MaterialTheme.shapes.medium,
-                color = MaterialTheme.colorScheme.highLightColor
-            ).clickable(onClick = onClick),
-        verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.Start
-    ) {
-        Row(
-            modifier = Modifier.padding(
-                horizontal = MaterialTheme.dimens.small3, vertical = MaterialTheme.dimens.small2
-            ),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2)
-        ) {
-            Icon(imageVector = item.type.icon, contentDescription = "arrow right")
-            Text(
-                text = stringResource(item.type.title),
-                style = MaterialTheme.typography.titleMedium
-            )
-        }
-
+    Surface(
+        modifier = modifier.clip(shape = MaterialTheme.shapes.medium),
+        tonalElevation = 4.dp
+    ){
         Column(
-            modifier = Modifier.padding(
-                horizontal = MaterialTheme.dimens.small3, vertical = MaterialTheme.dimens.small2
-            )
+            modifier = modifier
+                .clip(shape = MaterialTheme.shapes.medium)
+                .clickable(onClick = onClick),
+            verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.Start
         ) {
-            Text(
-                text = item.duration, style = MaterialTheme.typography.titleLarge.copy(
-                    color = MaterialTheme.colorScheme.primaryTextColor
+            Row(
+                modifier = Modifier.padding(
+                    horizontal = MaterialTheme.dimens.small3, vertical = MaterialTheme.dimens.small2
+                ),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2)
+            ) {
+                Icon(imageVector = item.type.icon, contentDescription = "arrow right")
+                Text(
+                    text = stringResource(item.type.title),
+                    style = MaterialTheme.typography.titleMedium
                 )
-            )
-            Text(
-                text = stringResource(item.type.status),
-                style = MaterialTheme.typography.titleSmall.copy(
-                    color = MaterialTheme.colorScheme.primaryTextColor
+            }
 
+            Column(
+                modifier = Modifier.padding(
+                    horizontal = MaterialTheme.dimens.small3, vertical = MaterialTheme.dimens.small2
                 )
-            )
+            ) {
+                Text(
+                    text = item.duration, style = MaterialTheme.typography.titleLarge.copy(
+                        color = MaterialTheme.colorScheme.primaryTextColor
+                    )
+                )
+                Text(
+                    text = stringResource(item.type.status),
+                    style = MaterialTheme.typography.titleSmall.copy(
+                        color = MaterialTheme.colorScheme.primaryTextColor
+
+                    )
+                )
+            }
+
         }
-
     }
 }
 
@@ -1001,4 +1060,44 @@ fun EventCard(
             )
         )
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun PermanentPermissionShow(
+    onDismiss:()-> Unit
+){
+    val navigateToSettings = navigateToSettings()
+    ModalBottomSheet(
+        onDismissRequest = { onDismiss() },
+        sheetState = rememberModalBottomSheetState(),
+        content = {
+            Column(
+                modifier = Modifier.fillMaxWidth().height(MaterialTheme.dimens.chartHeight),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                TextButton(
+                    onClick = {
+                        onDismiss()
+                        navigateToSettings()
+                    }
+                ) {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
+                    ){
+                        Text(
+                            text = "Allow Permission In Setting",
+                            style = MaterialTheme.typography.bodyLarge.copy(
+                                color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                            ),
+                            textAlign = TextAlign.Center
+                        )
+                        Icon(Icons.Filled.Settings, contentDescription = "go to setting")
+                    }
+                }
+            }
+        }
+
+    )
 }

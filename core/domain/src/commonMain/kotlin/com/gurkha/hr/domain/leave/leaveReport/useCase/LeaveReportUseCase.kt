@@ -11,9 +11,13 @@ class LeaveReportUseCase(
     private val leaveRemoteRepository: LeaveRemoteRepository
 ) {
     suspend operator fun invoke(
-        leaveStatus: String
+        leaveStatus: String,
+        fromDate: String,
+        toDate: String
     ): ERPResult<List<LeaveReportData>, DataError> {
         return leaveRemoteRepository.fetchLeaveReport(
+            fromDate = fromDate,
+            toDate = toDate,
             leaveStatus = leaveStatus
         ).map {
             it.toData()

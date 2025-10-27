@@ -14,6 +14,8 @@ import com.gurkha.model.attendance.attendanceRequest.AttendanceRequestResponseDt
 import com.gurkha.model.attendance.attendanceStatus.AttendanceStatusRequestDTO
 import com.gurkha.model.attendance.attendanceStatus.AttendanceStatusResponseDTO
 import com.gurkha.model.attendance.attendanceSummary.AttendanceSummaryResponseDto
+import com.gurkha.model.attendance.doAttendance.DoAttendanceRequestDto
+import com.gurkha.model.attendance.doAttendance.DoAttendanceResponseDto
 import com.gurkha.model.network.DataError
 import io.ktor.client.HttpClient
 import io.ktor.client.request.setBody
@@ -46,7 +48,9 @@ class KtorAttendanceRemoteRepository(
     override suspend fun fetchAttendanceStatus(
         attendanceStatus: String,
         employeeName: String,
-        isSelf: String
+        isSelf: String,
+        fromDate: String,
+        toDate: String
     ): ERPResult<AttendanceStatusResponseDTO, DataError> {
         return safeCall {
             httpClient.post(
@@ -56,7 +60,10 @@ class KtorAttendanceRemoteRepository(
                 setBody(AttendanceStatusRequestDTO(
                     attendanceStatus,
                     employeeName,
-                    isSelf))
+                    isSelf,
+                    fromDate,
+                    toDate
+                ))
             }
         }
     }
@@ -90,6 +97,21 @@ class KtorAttendanceRemoteRepository(
                 baseUrl = BaseUrl.Generic,
                 endPoint = EndPoint.ATTENDANCE_SUMMARY_END_POINT
             )
+        }
+    }
+
+    override suspend fun doAttendance(
+        employeeId: Int,
+        imageName: String,
+        forDate: String
+    ): ERPResult<DoAttendanceResponseDto, DataError> {
+        return safeCall {
+            httpClient.post(
+                baseUrl = BaseUrl.Generic,
+                endPoint = EndPoint.DO_ATTENDANCE_END_POINT
+            ){
+                setBody(DoAttendanceRequestDto(employeeId = employeeId, imageName = imageName, forDate = forDate))
+            }
         }
     }
 }
