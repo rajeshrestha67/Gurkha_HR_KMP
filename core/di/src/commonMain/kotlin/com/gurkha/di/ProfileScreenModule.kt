@@ -7,6 +7,7 @@ import com.gurkha.hr.datastore.user_data.repository.UserDataRepository
 import com.gurkha.hr.domain.uploadImage.UploadImageUseCase
 import com.gurkha.hr.domain.userDetail.repository.UserDetailRemoteRepository
 import com.gurkha.hr.domain.userDetail.usecase.FetchUserDetailUseCase
+import com.gurkha.hr.domain.userDetail.usecase.UpdateUserDetailUseCase
 import com.gurkha.hr.profile.profile_screen.ProfileScreenViewModel
 import io.ktor.client.HttpClient
 import org.koin.android.annotation.KoinViewModel
@@ -36,6 +37,14 @@ class ProfileScreenModule {
         FetchUserDetailUseCase(
             userDetailRemoteRepository, userDataRepository = userDataRepository
         )
+
+    @Factory
+    fun updateUserDetailUseCase(
+        userDetailRemoteRepository: UserDetailRemoteRepository
+    ): UpdateUserDetailUseCase=UpdateUserDetailUseCase(
+        userDetailRemoteRepository= userDetailRemoteRepository
+    )
+
 
 
     @KoinViewModel

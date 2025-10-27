@@ -1,9 +1,6 @@
-package com.gurkha.model.user_data
+package com.gurkha.hr.domain.userDetail.ui
 
-import kotlinx.serialization.Serializable
-
-@Serializable
-data class UserData(
+data class EditProfileUI(
     val email: String = "",
     val phoneNumber: String = "",
     val imageUrl: String = "",
@@ -45,6 +42,4 @@ data class UserData(
     val profileId: Int = 0,
     val slcDocument: String = "",
     val userProfileUrl: String = ""
-
-
 )

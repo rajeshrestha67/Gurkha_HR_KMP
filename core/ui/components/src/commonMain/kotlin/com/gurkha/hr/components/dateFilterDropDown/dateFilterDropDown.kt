@@ -54,7 +54,7 @@ fun DateFilterDropdown(
                     )
                 },
                 label = SharedRes.Strings.month,
-                hint = SharedRes.Strings.month,
+                hint = stringResource(SharedRes.Strings.month),
                 selectedValue = selectedMonth,
                 error = monthError,
                 onError = { message ->
@@ -76,7 +76,7 @@ fun DateFilterDropdown(
                     )
                 },
                 label = SharedRes.Strings.year,
-                hint = SharedRes.Strings.year,
+                hint = stringResource(SharedRes.Strings.year),
                 selectedValue = selectedYear,
                 error = yearError,
                 onError = { message ->

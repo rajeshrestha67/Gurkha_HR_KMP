@@ -14,6 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -24,6 +25,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -47,18 +51,21 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun ProfileInfoScreen(
-    onBackPressed: () -> Unit
-
+    onBackPressed: () -> Unit,
+    onGotoEditProfile: () -> Unit,
 ) {
 
     val viewModel: ProfileInfoScreenViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
+
     ProfileInfoScreenContainer(
         onBackPressed = onBackPressed,
         state = state,
-        onAction = viewModel::action
+        onAction = viewModel::action,
+        onGotoEditProfile = onGotoEditProfile
     )
 
 }
@@ -67,6 +74,7 @@ fun ProfileInfoScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileInfoScreenContainer(
+    onGotoEditProfile: () -> Unit,
     onBackPressed: () -> Unit,
     state: ProfileInfoScreenState,
     onAction: (ProfileInfoViewAction) -> Unit,
@@ -91,6 +99,15 @@ fun ProfileInfoScreenContainer(
                     }
                 },
                 actions = {
+                    IconButton(
+                        onClick = onGotoEditProfile
+                    ){
+
+                        Icon(
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = "Edit Button"
+                        )
+                    }
 
                 }
 
@@ -114,7 +131,6 @@ fun ProfileInfoContainer(
     onAction: (ProfileInfoViewAction) -> Unit
 ) {
     //val infoList = InfoList.list.map { stringResource(it.title) }
-//    var selectedTab by remember { mutableStateOf(0) }
 
     LazyColumn(
         modifier = modifier,
@@ -125,7 +141,8 @@ fun ProfileInfoContainer(
     ) {
         item {
             ProfileCard(
-                state = state
+                state = state,
+
             )
         }
         stickyHeader {
@@ -192,6 +209,7 @@ fun ProfileInfoContainer(
 @Composable
 fun ProfileCard(
     state: ProfileInfoScreenState,
+
 ) {
 
     Row(

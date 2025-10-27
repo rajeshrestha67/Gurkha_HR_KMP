@@ -7,10 +7,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -85,10 +88,11 @@ fun DocumentScreenContainer(
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2),
-        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2),
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3),
+        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3),
         contentPadding = PaddingValues(
-            MaterialTheme.dimens.small2
+            horizontal = MaterialTheme.dimens.small3,
+            vertical = MaterialTheme.dimens.small2
         )
     ) {
         items(
@@ -115,25 +119,24 @@ fun DocumentItemRow(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .height(
-                135.dp
-            )
             .border(
                 width = 0.5.dp,
                 color = MaterialTheme.colorScheme.borderColor,
                 shape = MaterialTheme.shapes.medium
             )
             .clickable { onClick() }
-            .padding(MaterialTheme.dimens.small2),
+            .padding(MaterialTheme.dimens.small3),
 
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceBetween
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2)
     ) {
         Text(
+            modifier = Modifier.fillMaxWidth(),
             text = text,
             style = MaterialTheme.typography.titleMedium.copy(
                 color = MaterialTheme.colorScheme.primaryTextColor
             ),
+            textAlign = TextAlign.Center
         )
         Icon(
             imageVector = Icons.Filled.CloudUpload,

@@ -270,7 +270,7 @@ fun LeaveRequestScreenForm(
         //        assignee
         DropDownText(
             label = SharedRes.Strings.assignee,
-            hint = SharedRes.Strings.select_assignee,
+            hint = stringResource(SharedRes.Strings.select_assignee),
             rules = FormValidate.requiredValidationRules,
             isFetching = state.isAssigneeLoading,
             isFetchingError = state.isAssigneeFetchingError,
@@ -291,7 +291,7 @@ fun LeaveRequestScreenForm(
 //        leave duration
         DropDownText(
             label = SharedRes.Strings.leave_duration,
-            hint = SharedRes.Strings.select_leave_duration,
+            hint = stringResource(SharedRes.Strings.select_leave_duration),
             rules = FormValidate.requiredValidationRules,
             listOfItems = state.leaveDurationList,
             selectedValue = state.leaveDuration?.name ?: "",
@@ -305,7 +305,7 @@ fun LeaveRequestScreenForm(
 //        leave type
         DropDownText(
             label = SharedRes.Strings.leaveType,
-            hint = SharedRes.Strings.selectLeaveType,
+            hint = stringResource(SharedRes.Strings.selectLeaveType),
             rules = FormValidate.requiredValidationRules,
             isFetching = state.isLeaveTypeLoading,
             isFetchingError = state.isLeaveTypeFetchingError,
