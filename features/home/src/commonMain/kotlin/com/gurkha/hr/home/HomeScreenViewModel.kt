@@ -422,12 +422,22 @@ class HomeScreenViewModel(
             imageName = imageName,
             forDate = forDate
         ).onSuccess {
-            _state.update {
-                it.copy(
+            AppLogger.d("AttendanceViewModel", "Attendance update success")
+            _state.update { current ->
+                val updatedAttendance = if (current.isAlreadyClockIn) {
+                    current.todayAttendance?.copy(clockOutTime = forDate)
+                } else {
+                    current.todayAttendance?.copy(clockInTime = forDate)
+                }
+
+                current.copy(
                     showSwipeView = true,
+                    todayAttendance = updatedAttendance,
                 )
             }
-        }.onError {
+
+        }.onError {error ->
+            AppLogger.e("AttendanceViewModel", "Attendance update failed: ${error.toErrorMessage()}")
             _state.update {
                 it.copy(
                     showSwipeView = true

@@ -365,8 +365,8 @@ fun HomeScreenContent(
             SwipeToDismissBox(
                 text = stringResource(state.swipeText),
                 onDismissed = {
-//                    onPermission()
-                    openCamera()
+                    onPermission()
+//                    openCamera()
                 }
             )
         }

@@ -3,6 +3,7 @@ package com.gurkha.hr.attendance
 //import com.gurkha.hr.domain.attendance.attendanceRequest.useCase.AttendanceRequestUseCase
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gurkha.hr.date.data.model.CalendarModel
 import com.gurkha.hr.domain.attendance.attendanceStatus.model.AttendanceStatusData
 import com.gurkha.hr.domain.attendance.attendanceStatus.useCase.AttendanceStatusUseCase
 import com.gurkha.hr.domain.attendance.attendanceSummary.useCase.AttendanceSummaryUseCase
@@ -24,7 +25,8 @@ import kotlinx.serialization.json.Json
 
 class AttendanceViewModel(
     private val attendanceStatusUseCase: AttendanceStatusUseCase,
-    private val attendanceSummaryUseCase: AttendanceSummaryUseCase
+    private val attendanceSummaryUseCase: AttendanceSummaryUseCase,
+    private val calendarModel: CalendarModel,
 ) : ViewModel() {
     private val _state = MutableStateFlow(AttendanceScreenState())
 

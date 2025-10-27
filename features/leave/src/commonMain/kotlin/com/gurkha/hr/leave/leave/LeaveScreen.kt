@@ -284,7 +284,8 @@ fun LazyListScope.leaveResults(
                 item {
                     Box(
                         modifier = Modifier
-                            .fillMaxSize()
+                            .fillMaxSize(),
+                        contentAlignment = Alignment.Center
                     ) {
                         Text(text = stringResource(SharedRes.Strings.no_data_found))
                     }
