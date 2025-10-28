@@ -51,7 +51,6 @@ data class HomeScreenState(
 
     val totalUnSeenNotification: Int = 0,
 
-    val isAlreadyClockIn: Boolean = false,
     val clockInTime: String = "--:--",
     val clockOutTime: String = "--:--",
 )

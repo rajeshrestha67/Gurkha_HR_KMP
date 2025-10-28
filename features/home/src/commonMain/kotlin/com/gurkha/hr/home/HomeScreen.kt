@@ -362,7 +362,6 @@ fun HomeScreenContent(
                 text = stringResource(state.swipeText),
                 onDismissed = {
                     onPermission()
-//                    openCamera()
                 }
             )
         }

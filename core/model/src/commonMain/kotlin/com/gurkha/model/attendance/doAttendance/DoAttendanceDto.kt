@@ -11,8 +11,8 @@ data class DoAttendanceRequestDto(
 
 @Serializable
 data class DoAttendanceResponseDto(
-    val success: Boolean,
-    val message: String,
-    val detail: String,
-    val status: String
+    val success: Boolean? = null,
+    val message: String ? = null,
+    val detail: String ?= null,
+    val status: String? = null
 )
