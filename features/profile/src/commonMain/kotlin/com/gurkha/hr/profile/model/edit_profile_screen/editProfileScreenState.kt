@@ -12,6 +12,8 @@ data class EditProfileScreenState(
 
     val isSubmitSuccess: Boolean = false,
     val joinDateError: StringResource? = null,
+
+    val isUpdating: Boolean = false
 )
 
 

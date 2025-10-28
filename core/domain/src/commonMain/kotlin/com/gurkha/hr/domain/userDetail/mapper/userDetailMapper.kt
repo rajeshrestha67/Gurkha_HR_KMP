@@ -3,7 +3,10 @@ package com.gurkha.hr.domain.userDetail.mapper
 import com.gurkha.hr.components.date.DateData
 import com.gurkha.hr.components.extractInitials
 import com.gurkha.hr.domain.userDetail.model.UserDetailData
+import com.gurkha.hr.domain.userDetail.model.UserUpdateData
 import com.gurkha.hr.domain.userDetail.ui.EditProfileUI
+import com.gurkha.model.userDetail.UpdateProfileResponseDto
+import com.gurkha.model.userDetail.UpdateRequestUserDto
 import com.gurkha.model.userDetail.UserDetailResponseDto
 import com.gurkha.model.user_data.UserData
 
@@ -108,10 +111,10 @@ fun UserDetailData.toUI(): EditProfileUI{
         employeeId = employeeId,
         branchName = branchName,
         address = address,
-        joinedDate = DateData.fromDisplayAD(joinedDate),
+        joinedDate = if(joinedDate.isNotBlank())DateData.fromDisplayAD(joinedDate )else null,
         maritalStatus = maritalStatus,
         gender = gender,
-        dateOfBirth = DateData.fromDisplayAD(dateOfBirth),
+        dateOfBirth = if(dateOfBirth.isNotBlank())DateData.fromDisplayAD(dateOfBirth ) else null,
         bloodGroup = bloodGroup,
         guardianName = guardianName,
         guardianPhone = guardianNumber,
@@ -123,48 +126,22 @@ fun UserDetailData.toUI(): EditProfileUI{
     )
 }
 
-fun EditProfileUI.toDomain(): UserDetailData {
-    return UserDetailData(
-        email = email,
-        phoneNumber = phoneNumber,
-        fullName = fullName,
-        levelName = levelName,
-        employeeId = employeeId,
-        address = address,
-        dateOfBirth = dateOfBirth.displayValueAD,
-        gender = gender,
-        joinedDate = joinedDate.displayValueAD,
-        nationality = nationality,
-        maritalStatus = maritalStatus,
+fun EditProfileUI.toDomain(): UpdateRequestUserDto {
+    return UpdateRequestUserDto(
+        joinedDate = joinedDate?.displayValueAD,
+        id = employeeId,
+        startDate = dateOfBirth?.displayValueAD,
         guardianName = guardianName,
         guardianNumber = guardianPhone,
-        initials = initials,
-        isCompleteProfile = isCompleteProfile,
         bloodGroup = bloodGroup,
-        designation = designation,
         employeeType = employeeTypes,
         panNumber = panNumber,
         pfNumber = pfNumber,
-        branchName = branchName,
-        bachelorImage =bachelorImage ,
-        branchId = branchId,
-        citizenshipBackImage = citizenshipBackImage,
-        citizenshipFrontImage = citizenshipFrontImage,
-        departmentId = departmentId,
-        designationId = designationId,
-        enableImageAttendance = enableImageAttendance,
-        enableManualAttendance = enableManualAttendance,
-        experienceDocuments = experienceDocuments,
-        imageUrl = imageUrl,
-        levelId = levelId,
-        mapId = mapId,
-        masterImage =masterImage,
-        nationalId = nationalId,
-        panImage = panImage,
-        password = password,
-        plusTwoImage = plusTwoImage,
-        profileId =  profileId,
-        slcDocument = slcDocument,
-        userProfileUrl = userProfileUrl,
+    )
+}
+
+fun UpdateProfileResponseDto.toData(): UserUpdateData{
+    return UserUpdateData(
+        message = message ?: ""
     )
 }

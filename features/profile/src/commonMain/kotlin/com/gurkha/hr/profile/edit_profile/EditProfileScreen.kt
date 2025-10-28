@@ -21,7 +21,11 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -30,6 +34,8 @@ import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.date.ERPDateTextField
 import com.gurkha.hr.components.date.FutureAndTodayDate
 import com.gurkha.hr.components.dimens
+import com.gurkha.hr.components.prompts.PromptModalBottomSheet
+import com.gurkha.hr.components.prompts.PromptType
 import com.gurkha.hr.components.textField.DropDownText
 import com.gurkha.hr.components.textField.ERPTextField
 import com.gurkha.hr.components.textField.FormValidate
@@ -51,10 +57,31 @@ fun EditProfileScreen(
     val viewModel: EditProfileViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
+    var showSuccessModal by remember { mutableStateOf(false) }
+    var showErrorModal by remember { mutableStateOf(false) }
+    var messageToShow by remember { mutableStateOf("") }
+
+    LaunchedEffect(Unit){
+        viewModel.successChannel.collect {
+            showSuccessModal = true
+            messageToShow = it
+        }
+    }
+
+    LaunchedEffect(Unit){
+        viewModel.errorChannel.collect {
+            showErrorModal = true
+            messageToShow = it
+        }
+    }
+
     EditProfileScreenContainer(
         onBackPressed = onBackPressed,
         state = state,
-        onAction = viewModel::onAction
+        onAction = viewModel::onAction,
+        showSuccessModal = showSuccessModal,
+        showErrorModal = showErrorModal,
+        messageToShow = messageToShow,
     )
 
 }
@@ -62,6 +89,9 @@ fun EditProfileScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditProfileScreenContainer(
+    showSuccessModal: Boolean,
+    showErrorModal: Boolean,
+    messageToShow: String,
     onBackPressed: () -> Unit,
     onAction: (EditProfileViewAction) -> Unit,
     state: EditProfileScreenState
@@ -94,15 +124,23 @@ fun EditProfileScreenContainer(
                 .padding(paddingValues),
             state = state,
             onAction = onAction,
+            showErrorModal = showErrorModal,
+            showSuccessModal = showSuccessModal,
+            messageToShow = messageToShow,
+            onBackPressed = onBackPressed
         )
     }
 }
 
 @Composable
 fun EditProfileScreenContent(
+    showSuccessModal: Boolean,
+    showErrorModal: Boolean,
+    messageToShow: String,
     modifier: Modifier = Modifier,
     state: EditProfileScreenState,
-    onAction: (EditProfileViewAction) -> Unit
+    onAction: (EditProfileViewAction) -> Unit,
+    onBackPressed: () -> Unit
 ) {
     val headingList = Title.list.map { stringResource(it.title) }
     Column(
@@ -142,6 +180,21 @@ fun EditProfileScreenContent(
                     )
                 }
             }
+        }
+
+        if(showSuccessModal){
+            PromptModalBottomSheet(
+                text = messageToShow,
+                onBackPressed = onBackPressed
+            )
+        }
+
+        if(showErrorModal){
+            PromptModalBottomSheet(
+                text = messageToShow,
+                promptType = PromptType.FAILED,
+                onBackPressed = onBackPressed
+            )
         }
 
 
@@ -263,7 +316,7 @@ fun OthersDetailContent(
 
         ERPTextField(
             modifier = Modifier.fillMaxWidth(),
-            text = item.panNumber,
+            text = state.profileSummaryList?.panNumber ?: "",
             label = stringResource(SharedRes.Strings.labelPanNumber),
             hint = stringResource(SharedRes.Strings.labelPanNumber),
             onValueChange = {
@@ -366,8 +419,8 @@ fun PersonalDetailsContent(
         ERPTextField(
             modifier = Modifier.fillMaxWidth(),
             text = item.branchName,
-            label = stringResource(SharedRes.Strings.address),
-            hint = stringResource(SharedRes.Strings.address),
+            label = stringResource(SharedRes.Strings.branch),
+            hint = stringResource(SharedRes.Strings.branch),
             onValueChange = {
             },
             maxLength = 100,
@@ -379,8 +432,8 @@ fun PersonalDetailsContent(
         ERPTextField(
             modifier = Modifier.fillMaxWidth(),
             text = item.employeeId.toString(),
-            label = stringResource(SharedRes.Strings.address),
-            hint = stringResource(SharedRes.Strings.address),
+            label = stringResource(SharedRes.Strings.userId),
+            hint = stringResource(SharedRes.Strings.userId),
             onValueChange = {
             },
             maxLength = 100,

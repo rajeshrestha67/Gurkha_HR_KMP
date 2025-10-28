@@ -3,12 +3,14 @@ package com.gurkha.hr.domain.userDetail.repository
 import com.gurkha.hr.domain.userDetail.model.UserDetailData
 import com.gurkha.hr.networkhelper.ERPResult
 import com.gurkha.model.network.DataError
+import com.gurkha.model.userDetail.UpdateProfileResponseDto
+import com.gurkha.model.userDetail.UpdateRequestUserDto
 import com.gurkha.model.userDetail.UserDetailResponseDto
 
 interface UserDetailRemoteRepository {
     suspend fun fetchUserDetail(): ERPResult<UserDetailResponseDto, DataError>
     suspend fun userDataUpdate(
-        data: UserDetailData
-    ): ERPResult<UserDetailResponseDto, DataError>
+        data: UpdateRequestUserDto
+    ): ERPResult<UpdateProfileResponseDto, DataError>
 }
 

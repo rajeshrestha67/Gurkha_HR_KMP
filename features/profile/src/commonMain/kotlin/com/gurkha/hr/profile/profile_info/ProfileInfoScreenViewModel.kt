@@ -65,7 +65,7 @@ class ProfileInfoScreenViewModel(
                         employeeId = userDetail.employeeId,
                         branchName = userDetail.branchName,
                         address = userDetail.address,
-                        joinedDate = userDetail.joinedDate,
+                        joinedDate = userDetail.joinedDate ?: "",
                         contactInfo = listOf(
                             ProfileInfo(
                                 name = SharedRes.Strings.email,
@@ -83,7 +83,7 @@ class ProfileInfoScreenViewModel(
                         personalDetails = listOf(
                             ProfileInfo(
                                 name = SharedRes.Strings.date_of_birth,
-                                value = userDetail.dateOfBirth
+                                value = userDetail.dateOfBirth ?: ""
                             ),
                             ProfileInfo(
                                 name = SharedRes.Strings.gender,

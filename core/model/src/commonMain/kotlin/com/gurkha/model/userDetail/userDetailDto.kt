@@ -144,40 +144,36 @@ data class BranchDto(
 
 @Serializable
 data class UpdateRequestUserDto(
-    val address: String,
-    val bachelorImage: String?,
-    val bloodGroup: String,
-    val branchId: Int,
-    val citizenshipBackImage: String?,
-    val citizenshipFrontImage: String?,
-    val dateOfBirth: String,
-    val departmentId: Int,
-    val designation: String,
-    val designationId: Int,
-    val email: String,
-    val employeeType: String,
-    val enableImageAttendance: String,
-    val enableManualAttendance: String,
-    val experienceDocuments: String?,
-    val fullName: String,
-    val gender: String,
-    val guardianName: String,
-    val guardianNumber: String,
-    val imageUrl: String?,
-    val joinedDate: String,
-    val level: String,
-    val levelId: Long,
-    val mapId: Int?,
-    val maritalStatus: String,
-    val masterImage: String?,
-    val nationalId: String?,
-    val panImage: String?,
-    val panNumber: String,
-    val password: String,
-    val pfNumber: String,
-    val phoneNumber: String,
-    val plusTwoImage: String?,
-    val profileId: Int,
-    val slcDocument: String?
+    val id: Int? = null,
+    val joinedDate: String? = null,
+    val startDate: String? = null,
+    val bloodGroup: String? = null,
+    val guardianName: String? = null,
+    val guardianNumber: String? = null,
+    val employeeType: String? = null,
+    val panNumber: String? = null,
+    val pfNumber: String? = null
 )
+
+@Serializable
+data class UpdateProfileResponseDto(
+    val status: String? = null,
+    val message: String? = null,
+    val detail: Detail? = null,
+    val success: Boolean? = null
+)
+@Serializable
+data class Detail(
+        val id: Int? = null,
+        val joinedDate: String? = null,
+        val startDate: String? = null,
+        val bloodGroup: String? = null,
+        val guardianName: String? = null,
+        val guardianNumber: String? = null,
+        val employeeType: String? = null,
+        val panNumber: String? = null,
+        val pfNumber: String? = null
+)
+
+
 
