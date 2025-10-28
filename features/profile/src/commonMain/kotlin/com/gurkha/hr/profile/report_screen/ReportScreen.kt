@@ -28,6 +28,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -110,13 +111,21 @@ fun ReportScreenContainer(
             )
         }
     ) { paddingValues ->
-        ReportScreenContent(
+        PullToRefreshBox(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues),
-            showFilter = showFilter,
-            state = state,
-            onAction = onAction
+            isRefreshing = state.isRefreshing,
+            onRefresh = {onAction(ReportScreenViewAction.OnRefresh)},
+            content = {
+                ReportScreenContent(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    showFilter = showFilter,
+                    state = state,
+                    onAction = onAction
+                )
+            }
         )
     }
 }

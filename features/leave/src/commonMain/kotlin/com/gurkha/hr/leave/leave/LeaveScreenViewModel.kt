@@ -90,6 +90,10 @@ class LeaveScreenViewModel(
                     )
                 }
             }
+
+            is LeaveScreenAction.OnRefresh ->{
+                refresh()
+            }
         }
     }
 
@@ -255,6 +259,25 @@ class LeaveScreenViewModel(
             )
         }
 
+    }
+
+    private fun refresh()=viewModelScope.launch {
+        _state.update {
+            it.copy(
+                isRefreshing = true
+            )
+        }
+        fetchLeaveSummary()
+        fetchLeaveReport(
+            fromDate = datePair.first,
+            toDate = datePair.second,
+            leaveStatus = LeaveStatusEnum.PENDING,
+        )
+        _state.update {
+            it.copy(
+                isRefreshing = false
+            )
+        }
     }
 
 }

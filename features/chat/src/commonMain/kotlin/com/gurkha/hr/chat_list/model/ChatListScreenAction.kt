@@ -8,4 +8,5 @@ sealed interface ChatListScreenAction {
     data class SearchQueryChanged(val query: String) : ChatListScreenAction
 
     data class ItemClick(val chatItem: ChatItem) : ChatListScreenAction
+    data object OnRefresh: ChatListScreenAction
 }

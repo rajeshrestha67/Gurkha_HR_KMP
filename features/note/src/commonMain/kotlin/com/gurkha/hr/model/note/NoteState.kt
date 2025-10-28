@@ -10,5 +10,6 @@ data class NoteState(
     val isDeletingData : Boolean = false,
     val selectedId : Int? = null,
     val isUpdate : Boolean = false,
-    val noteItemToEdit : AddedNoteDataUi? = null
+    val noteItemToEdit : AddedNoteDataUi? = null,
+    val isRefreshing : Boolean = false
 )

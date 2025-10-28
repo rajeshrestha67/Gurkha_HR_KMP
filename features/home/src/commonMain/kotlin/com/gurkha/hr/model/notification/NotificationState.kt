@@ -6,4 +6,5 @@ data class NotificationState(
     val notifications : List<NotificationData> = emptyList(),
     val notificationGrouped : Map<String,List<NotificationData>> = emptyMap(),
     val isNotificationLoading : Boolean = false,
+    val isRefreshing: Boolean = false
 )

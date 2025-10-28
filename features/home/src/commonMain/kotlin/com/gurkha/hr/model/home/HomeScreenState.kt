@@ -51,8 +51,7 @@ data class HomeScreenState(
 
     val totalUnSeenNotification: Int = 0,
 
-    val clockInTime: String = "--:--",
-    val clockOutTime: String = "--:--",
+    val isRefreshing : Boolean = false
 )
 
 data class RequestItem(

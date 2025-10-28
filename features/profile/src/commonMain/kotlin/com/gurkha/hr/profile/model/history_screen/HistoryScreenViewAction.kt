@@ -10,5 +10,6 @@ interface HistoryScreenViewAction {
     data class YearPickerError(val error: StringResource?): HistoryScreenViewAction
     data class MonthPickerError(val error: StringResource?): HistoryScreenViewAction
     data class Submit(val employeeId: Int?) : HistoryScreenViewAction
-    
+
+    data object OnRefresh : HistoryScreenViewAction
 }

@@ -21,7 +21,9 @@ data class HistoryState(
     val employeeId: Int? = null,
 
     val endYearError: StringResource? = null,
-    val endMonthError: StringResource? = null
+    val endMonthError: StringResource? = null,
+
+    val isRefreshing: Boolean = false
 )
 
 data class HistoryDataUI(

@@ -15,6 +15,8 @@ data class ReportScreenState(
     val endYearError: StringResource? = null,
     val endMonthError: StringResource? = null,
 
+    val isRefreshing: Boolean = false,
+
     val reportListItems: List<ReportItems> = listOf<ReportItems>(
         ReportItems(
             title = SharedRes.Strings.totalDays,

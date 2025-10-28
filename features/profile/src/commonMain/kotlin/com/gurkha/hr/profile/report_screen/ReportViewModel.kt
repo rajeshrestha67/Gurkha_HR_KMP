@@ -152,6 +152,10 @@ class ReportViewModel(
                 }
                 submit()
             }
+
+            is ReportScreenViewAction.OnRefresh -> {
+                refresh()
+            }
         }
     }
 
@@ -178,5 +182,20 @@ class ReportViewModel(
             }
         }
         onFetchData()
+    }
+
+    private fun refresh() = viewModelScope.launch {
+        _state.update {
+            it.copy(
+                isRefreshing = true
+            )
+        }
+        onFetchData()
+
+        _state.update {
+            it.copy(
+                isRefreshing = false
+            )
+        }
     }
 }

@@ -30,6 +30,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -112,12 +114,22 @@ fun AttendanceScreenMain(
             }
         },
     ) { contentPadding ->
-        AttendanceContent(
+        PullToRefreshBox(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(contentPadding),
-            state = state,
-            onAction = onAction
+            isRefreshing = state.isRefreshing,
+            onRefresh = {
+                onAction(AttendanceAction.OnRefresh)
+            },
+            content = {
+                AttendanceContent(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    state = state,
+                    onAction = onAction
+                )
+            }
         )
     }
 }

@@ -84,6 +84,10 @@ class TimeAndAttendanceViewModel(
                 ) }
                 submit()
             }
+
+            TimeAndAttendanceViewAction.OnRefresh -> {
+                refresh()
+            }
         }
     }
 
@@ -132,5 +136,18 @@ class TimeAndAttendanceViewModel(
             attendanceStatus = attendanceStatus
         )
 
+    }
+    private fun refresh()=viewModelScope.launch {
+        _state.update {
+            it.copy(
+                isRefreshing = true
+            )
+        }
+        onFetchData()
+        _state.update {
+            it.copy(
+                isRefreshing = false
+            )
+        }
     }
 }

@@ -26,6 +26,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -96,13 +97,21 @@ fun HistoryScreen(
             )
         }
     ) { paddingValues ->
-        HistoryScreenContainer(
+        PullToRefreshBox(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues),
-            state = state,
-            showFilter = showFilter,
-            onAction = viewModel::onAction
+            isRefreshing = state.isRefreshing,
+            onRefresh = {viewModel.onAction(HistoryScreenViewAction.OnRefresh)},
+            content = {
+                HistoryScreenContainer(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    state = state,
+                    showFilter = showFilter,
+                    onAction = viewModel::onAction
+                )
+            }
         )
     }
 }

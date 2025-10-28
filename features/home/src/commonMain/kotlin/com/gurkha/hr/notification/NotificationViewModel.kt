@@ -3,6 +3,7 @@ package com.gurkha.hr.notification
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gurkha.hr.domain.notification.notificationData.useCase.NotificationUseCase
+import com.gurkha.hr.model.notification.NotificationAction
 import com.gurkha.hr.networkhelper.onError
 import com.gurkha.hr.networkhelper.onSuccess
 import com.gurkha.hr.model.notification.NotificationState
@@ -28,6 +29,14 @@ class NotificationViewModel(
             initialValue = NotificationState()
         )
 
+    fun onAction(action: NotificationAction){
+        when (action){
+            is NotificationAction.OnRefresh->{
+                refresh()
+            }
+        }
+    }
+
     private fun getAllNotifications() = viewModelScope.launch {
         _state.update {
             it.copy(
@@ -49,6 +58,20 @@ class NotificationViewModel(
                     isNotificationLoading = false
                 )
             }
+        }
+    }
+
+    private fun refresh()=viewModelScope.launch {
+        _state.update {
+            it.copy(
+                isRefreshing = true
+            )
+        }
+        getAllNotifications()
+        _state.update {
+            it.copy(
+                isRefreshing = false
+            )
         }
     }
 }

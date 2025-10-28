@@ -15,11 +15,9 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
@@ -45,13 +43,12 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarScrollBehavior
-import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -191,13 +188,22 @@ fun HomeScreen(
                 }, scrollBehavior = topAppBarScrollBehavior
             )
         }) { paddingValues ->
-        HomeScreenContent(
+        PullToRefreshBox(
             modifier = Modifier.fillMaxSize().padding(paddingValues),
-            state = state,
-            onAction = viewModel::onAction,
-            onViewAllClick = onViewAllClick,
-            birthdayTitle = birthdayTitle,
-            anniversaryTitle = anniversaryTitle
+            isRefreshing = state.isRefreshing,
+            onRefresh = {
+                viewModel.onAction(HomeScreenActions.OnRefresh)
+            },
+            content = {
+                HomeScreenContent(
+                    modifier = Modifier.fillMaxSize(),
+                    state = state,
+                    onAction = viewModel::onAction,
+                    onViewAllClick = onViewAllClick,
+                    birthdayTitle = birthdayTitle,
+                    anniversaryTitle = anniversaryTitle
+                )
+            }
         )
     }
 }
@@ -419,7 +425,6 @@ fun LazyListScope.anniversarySection(
                         UpComingCard(
                             fullName = item.fullName,
                             imageUrl = item.imageUrl,
-                            date = item.joinedDate,
                             designationName = item.designationName
                         )
                     }
@@ -477,7 +482,6 @@ fun LazyListScope.birthDaySection(
                         UpComingCard(
                             fullName = item.fullName,
                             imageUrl = item.imageUrl,
-                            date = item.dateOfBirth,
                             designationName = item.designationName
                         )
                     }
@@ -936,7 +940,6 @@ fun UpComingCard(
     imageUrl: String,
     fullName: String,
     designationName: String,
-    date: String,
 ) {
     Column(
         modifier = Modifier.widthIn(min = MaterialTheme.dimens.eventWidth)
@@ -1069,7 +1072,10 @@ fun PermanentPermissionShow(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(MaterialTheme.dimens.chartHeight)
-                    .padding(horizontal = MaterialTheme.dimens.small3, vertical = MaterialTheme.dimens.medium2),
+                    .padding(
+                        horizontal = MaterialTheme.dimens.small3,
+                        vertical = MaterialTheme.dimens.medium2
+                    ),
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {

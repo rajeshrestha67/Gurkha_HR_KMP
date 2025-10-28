@@ -30,6 +30,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -106,14 +107,22 @@ fun TimeAndAttendanceScreen(
             )
         }
     ) { paddingValues ->
-        TimeAndAttendanceScreenContainer(
+        PullToRefreshBox(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues),
-            state = state,
-            showFilter = showFilter,
-            onAction = viewModel::onAction
+            isRefreshing = state.isRefreshing,
+            onRefresh = {},
+            content = {
+                TimeAndAttendanceScreenContainer(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    state = state,
+                    showFilter = showFilter,
+                    onAction = viewModel::onAction
 
+                )
+            }
         )
 
 

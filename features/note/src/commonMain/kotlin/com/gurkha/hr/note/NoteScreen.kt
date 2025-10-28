@@ -43,6 +43,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -158,20 +159,29 @@ fun NoteScreen(
                     Icon(Icons.Filled.Add, contentDescription = "Add")
                 })
             }) { contentPadding ->
-            NoteScreenContent(
+            PullToRefreshBox(
                 modifier = Modifier.padding(contentPadding),
-                state = state,
-                onAction = viewModel::onAction,
-                onGoToAddNotesScreen = onGoToAddNotesScreen,
-                onGoToDetailNotesScreen = onGoToDetailNotesScreen,
-                showSuccessDialogue = showSuccessDialogue,
-                showErrorDialogue = showErrorDialogue,
-                messageToShow = messageToShow,
-                onCloseSuccessDialogue = {
-                    showSuccessDialogue = false
+                isRefreshing = state.isRefreshing,
+                onRefresh = {
+                    viewModel.onAction(NoteAction.OnRefresh)
                 },
-                onCloseErrorDialogue = {
-                    showSuccessDialogue = false
+                content = {
+                    NoteScreenContent(
+                        modifier = Modifier,
+                        state = state,
+                        onAction = viewModel::onAction,
+                        onGoToAddNotesScreen = onGoToAddNotesScreen,
+                        onGoToDetailNotesScreen = onGoToDetailNotesScreen,
+                        showSuccessDialogue = showSuccessDialogue,
+                        showErrorDialogue = showErrorDialogue,
+                        messageToShow = messageToShow,
+                        onCloseSuccessDialogue = {
+                            showSuccessDialogue = false
+                        },
+                        onCloseErrorDialogue = {
+                            showSuccessDialogue = false
+                        }
+                    )
                 }
             )
         }

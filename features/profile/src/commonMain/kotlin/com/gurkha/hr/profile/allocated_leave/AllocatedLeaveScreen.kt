@@ -23,6 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -32,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gurkha.hr.components.dimens
 import com.gurkha.hr.profile.model.allocated_leave_Screen.AllocatedLeaveState
+import com.gurkha.hr.profile.model.allocated_leave_Screen.AllocatedLeaveViewAction
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.darkPrimaryTextColor
 import com.gurkha.hr.res.theme.highLightColor
@@ -75,14 +77,22 @@ fun AllocatedLeaveScreen(
             )
         }
     ) { paddingValues ->
-        AllocatedLeaveScreenContainer(
+        PullToRefreshBox(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues),
-            state = state
+            isRefreshing = state.isRefreshing,
+            onRefresh = {
+                viewModel.onAction(AllocatedLeaveViewAction.OnRefresh)
+            },
+            content = {
+                AllocatedLeaveScreenContainer(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    state = state
+                )
+            }
         )
-
-
     }
 
 }

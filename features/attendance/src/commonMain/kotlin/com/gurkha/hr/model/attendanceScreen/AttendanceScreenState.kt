@@ -52,7 +52,9 @@ data class AttendanceScreenState(
             color = Color(0xFFEF9A9A),
             backGroundColor = Color(0xFFFFEBEE)
         ),
-    )
+    ),
+
+    val isRefreshing : Boolean = false
 )
 
 data class AttendanceItem(

@@ -23,6 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -114,12 +115,22 @@ fun ProfileInfoScreenContainer(
             )
         }
     ) { paddingValues ->
-        ProfileInfoContainer(
+        PullToRefreshBox(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues),
-            state = state,
-            onAction = onAction
+            isRefreshing = state.isRefreshing,
+            onRefresh = {
+                onAction(ProfileInfoViewAction.OnRefresh)
+            },
+            content = {
+                ProfileInfoContainer(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    state = state,
+                    onAction = onAction
+                )
+            }
         )
     }
 }

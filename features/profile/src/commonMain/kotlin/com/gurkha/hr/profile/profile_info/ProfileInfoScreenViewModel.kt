@@ -41,6 +41,9 @@ class ProfileInfoScreenViewModel(
                     )
                 }
             }
+            is ProfileInfoViewAction.OnRefresh->{
+                refresh()
+            }
         }
     }
 
@@ -114,6 +117,21 @@ class ProfileInfoScreenViewModel(
                     )
                 }
             }
+    }
+
+    private fun refresh()=viewModelScope.launch {
+        _state.update {
+            it.copy(
+                isRefreshing = true
+            )
+        }
+        fetchUserDetails()
+
+        _state.update {
+            it.copy(
+                isRefreshing = false
+            )
+        }
     }
 
 
