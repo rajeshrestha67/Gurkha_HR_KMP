@@ -11,7 +11,7 @@ import platform.Foundation.NSURL
 import platform.Foundation.timeIntervalSince1970
 import platform.Foundation.writeToURL
 import platform.UIKit.UIImage
-import platform.UIKit.UIImagePNGRepresentation
+import platform.UIKit.UIImageJPEGRepresentation
 import platform.UIKit.UIImagePickerController
 import platform.UIKit.UIImagePickerControllerDelegateProtocol
 import platform.UIKit.UIImagePickerControllerOriginalImage
@@ -26,13 +26,14 @@ actual fun rememberCameraLauncher(
     onError: (Throwable) -> Unit
 ): () -> Unit {
     val viewController = LocalUIViewController.current
+    val delegate = remember { ImagePickerDelegate(onImageCaptured, onError) }
 
     return remember {
         {
             val picker = UIImagePickerController().apply {
                 sourceType =
                     UIImagePickerControllerSourceType.UIImagePickerControllerSourceTypeCamera
-                delegate = ImagePickerDelegate(onImageCaptured, onError)
+                this.delegate = delegate
             }
             viewController.presentViewController(picker, true, null)
         }
@@ -52,12 +53,18 @@ private class ImagePickerDelegate(
     ) {
         val image = didFinishPickingMediaWithInfo[UIImagePickerControllerOriginalImage] as? UIImage
         if (image != null) {
-            val imageData = UIImagePNGRepresentation(image)
+            val imageData = UIImageJPEGRepresentation(image, 0.8)
             val filePath =
-                NSTemporaryDirectory() + "/captured_${NSDate().timeIntervalSince1970}.png"
+                NSTemporaryDirectory() + "/captured_${NSDate().timeIntervalSince1970}.jpg"
             val fileUrl = NSURL.fileURLWithPath(filePath)
-            imageData?.writeToURL(fileUrl, true)
-            fileUrl.absoluteString?.let { onCaptured(it) }
+            val success = imageData?.writeToURL(fileUrl, true) ?: false
+
+            if (success) {
+                fileUrl.path?.let { onCaptured(it) }
+            } else {
+                onError(Exception("Failed to write image to temp file"))
+            }
+
         } else {
             onError(Exception("No image found"))
         }

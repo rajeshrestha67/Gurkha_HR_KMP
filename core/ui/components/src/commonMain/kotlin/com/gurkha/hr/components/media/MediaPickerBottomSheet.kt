@@ -53,7 +53,6 @@ fun MediaSelectorModalBottomSheet(
     var galleryImages by remember { mutableStateOf<List<String>>(emptyList()) }
     val loadGallery = rememberGalleryLoader(
         onLoaded = {
-            println("images $it")
             galleryImages = it
         }, onError = {
             AppLogger.e(

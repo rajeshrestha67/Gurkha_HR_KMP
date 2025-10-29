@@ -1,5 +1,7 @@
 package com.gurkha.hr.networkhelper
 
+import androidx.compose.ui.text.intl.Locale
+import androidx.compose.ui.text.toLowerCase
 import com.gurkha.hr.datastore.token.repository.TokenRepository
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.onUpload
@@ -12,8 +14,6 @@ import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
-import io.ktor.client.request.setBody
-import io.ktor.client.request.put
 import io.ktor.client.request.url
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType
@@ -33,6 +33,7 @@ suspend inline fun HttpClient.post(
         endPoint = endPoint, block = block
     )
 }
+
 suspend inline fun HttpClient.put(
     baseUrl: BaseUrl = BaseUrl.Generic,
     endPoint: String, block: HttpRequestBuilder.() -> Unit = {}
@@ -67,9 +68,9 @@ suspend inline fun HttpClient.delete(
 suspend inline fun HttpClient.uploadImage(
     baseUrl: BaseUrl = BaseUrl.Generic,
     endPoint: String,
+    uri: String,
     fileName: String,
     fileBytes: ByteArray,
-    contentType: ContentType = ContentType.Image.JPEG,
     crossinline block: HttpRequestBuilder.() -> Unit = {},
     crossinline onProgress: (Int) -> Unit
 ): HttpResponse {
@@ -77,12 +78,20 @@ suspend inline fun HttpClient.uploadImage(
         baseUrl = baseUrl,
         endPoint = endPoint
     ) {
+        val contentType =
+            (if (fileName.endsWith(".png")) ContentType.Image.PNG else ContentType.Image.JPEG)
+
+        val extension = if (uri.toLowerCase(Locale.current).contains("png")) ".png" else ".jpg"
+        val updatedFileName = "$fileName${extension}"
         setBody(
             MultiPartFormDataContent(
                 formData {
                     append("files", fileBytes, Headers.build {
-                        append(HttpHeaders.ContentType, contentType.toString())
-                        append(HttpHeaders.ContentDisposition, "filename=\"$fileName\"")
+                        append(
+                            HttpHeaders.ContentType,
+                            contentType.toString()
+                        )
+                        append(HttpHeaders.ContentDisposition, "filename=\"$updatedFileName\"")
                     })
                 }
             )
