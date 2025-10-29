@@ -34,12 +34,14 @@ import com.gurkha.hr.components.ProfilePicture
 import com.gurkha.hr.components.dimens
 import com.gurkha.hr.model.viewAll.ViewAllScreenAction
 import com.gurkha.hr.model.viewAll.ViewAllScreenState
+import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.borderColor
 import com.gurkha.hr.res.theme.darkPrimaryTextColor
 import com.gurkha.hr.res.theme.imageBackgroundColor
 import com.gurkha.hr.res.theme.primaryTextColor
 import com.gurkha.hr.res.theme.veryLightGray
 import com.gurkha.model.upComingBirthday.ui.ViewAllUi
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -164,7 +166,12 @@ fun ResultBox(
                 )
 
                 Text(
-                    "Branch : ${item.branchName}", style = MaterialTheme.typography.titleSmall.copy(
+                    "${stringResource(SharedRes.Strings.branch)} : ${item.branchName}", style = MaterialTheme.typography.titleSmall.copy(
+                        color = MaterialTheme.colorScheme.primaryTextColor
+                    )
+                )
+                Text(
+                    "Date : ${item.date}", style = MaterialTheme.typography.titleSmall.copy(
                         color = MaterialTheme.colorScheme.primaryTextColor
                     )
                 )

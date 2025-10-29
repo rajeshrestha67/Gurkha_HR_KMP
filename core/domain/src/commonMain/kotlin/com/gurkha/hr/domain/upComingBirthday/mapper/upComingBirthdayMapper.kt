@@ -28,7 +28,8 @@ fun List<UpComingBirthdayData>.toUi(): List<ViewAllUi> {
             designationName = it.designationName,
             branchName = it.branchName,
             imageUrl = it.imageUrl,
-            initials = it.initials
+            initials = it.initials,
+            date = it.dateOfBirth
         )
     }
 }

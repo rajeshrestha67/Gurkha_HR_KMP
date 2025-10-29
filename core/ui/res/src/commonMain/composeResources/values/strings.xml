@@ -191,7 +191,7 @@
     <string name="pending">Pending</string>
     <string name="approved">Approved</string>
     <string name="cancelled">Cancelled</string>
-    <string name="upcoming_birthday">Upcoming Birthday</string>
+    <string name="upcoming_birthday"> Birthday</string>
     <string name="work_anniversaries">Work Anniversaries</string>
     <string name="my_attendance">My Attendance</string>
     <string name="profile">Profile Info</string>

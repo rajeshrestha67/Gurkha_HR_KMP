@@ -482,7 +482,7 @@ fun LazyListScope.birthDaySection(
                         UpComingCard(
                             fullName = item.fullName,
                             imageUrl = item.imageUrl,
-                            designationName = item.designationName
+                            designationName = item.designationName,
                         )
                     }
                 }
