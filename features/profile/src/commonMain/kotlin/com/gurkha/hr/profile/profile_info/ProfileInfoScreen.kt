@@ -153,7 +153,6 @@ fun ProfileInfoContainer(
         item {
             ProfileCard(
                 state = state,
-
             )
         }
         stickyHeader {
