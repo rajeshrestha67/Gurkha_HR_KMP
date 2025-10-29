@@ -51,7 +51,8 @@ class FetchUserDetailUseCase(
                         guardianName = userDetail.guardianName,
                         guardianPhone = userDetail.guardianNumber,
                         pfNumber = userDetail.pfNumber,
-                        panNumber = userDetail.panNumber
+                        panNumber = userDetail.panNumber,
+                        isCompleteProfile = userDetail.isCompleteProfile
                     ) ?: UserData()
                 )
             }

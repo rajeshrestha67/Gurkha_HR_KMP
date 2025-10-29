@@ -41,6 +41,6 @@ data class UserDetailData(
     val userProfileUrl: String,
     val nationality: String,
     val initials: String,
-    val isCompleteProfile: String,
+    val isCompleteProfile: Boolean,
 
 )

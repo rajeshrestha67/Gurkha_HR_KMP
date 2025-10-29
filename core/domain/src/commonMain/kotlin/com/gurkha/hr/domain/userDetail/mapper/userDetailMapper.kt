@@ -28,7 +28,7 @@ fun UserDetailResponseDto.toData(): UserDetailData {
         guardianName = detail?.employeeDetails?.guardianName ?: "",
         guardianNumber = detail?.employeeDetails?.guardianNumber ?: "",
         initials = detail?.fullName?.extractInitials() ?: "",
-        isCompleteProfile = detail?.isCompleteProfile ?: ",",
+        isCompleteProfile = if(detail?.isCompleteProfile == "Y") true else false,
         bloodGroup = detail?.employeeDetails?.bloodGroup ?: "",
         designation = detail?.designation ?: "",
         panNumber = detail?.employeeDetails?.panNumber ?: "",

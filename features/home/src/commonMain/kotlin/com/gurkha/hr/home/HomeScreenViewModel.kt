@@ -263,7 +263,7 @@ class HomeScreenViewModel(
                     email = data.email,
                     userProfileUrl = data.userProfileUrl,
                     employeeId = data.employeeId,
-                    isProfileComplete = if(data.isCompleteProfile == "Y") true else false
+                    isProfileComplete = data.isCompleteProfile
                 )
             }
         }.onError { error ->
