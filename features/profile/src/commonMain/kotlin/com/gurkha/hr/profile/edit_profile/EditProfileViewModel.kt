@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gurkha.hr.domain.form.RequiredValidationUseCase
 import com.gurkha.hr.domain.userDetail.mapper.toDomain
+import com.gurkha.hr.domain.userDetail.mapper.toLocal
 import com.gurkha.hr.domain.userDetail.mapper.toUI
 import com.gurkha.hr.domain.userDetail.usecase.FetchUserDetailUseCase
 import com.gurkha.hr.domain.userDetail.usecase.UpdateUserDetailUseCase
@@ -25,6 +26,7 @@ class EditProfileViewModel(
     private val requiredValidationUseCase: RequiredValidationUseCase,
     private val fetchUserDetailUseCase: FetchUserDetailUseCase,
     private val updateUserDetailUseCase: UpdateUserDetailUseCase,
+
 ) : ViewModel() {
     private val _state = MutableStateFlow(EditProfileScreenState())
 
@@ -51,7 +53,6 @@ class EditProfileViewModel(
 
         fetchUserDetailUseCase()
             .onSuccess { userDetail ->
-                println("ProfileInfoData $userDetail")
                 _state.update {
                     it.copy(
                         isLoading = false,
@@ -109,7 +110,7 @@ class EditProfileViewModel(
                             bloodGroup = action.bloodGroup
                         ),
 
-                    )
+                        )
                 }
             }
 
@@ -130,7 +131,7 @@ class EditProfileViewModel(
                             guardianPhone = action.guardianPhone
                         ),
 
-                    )
+                        )
                 }
             }
 
@@ -141,7 +142,7 @@ class EditProfileViewModel(
                             pfNumber = action.pfNumber
                         ),
 
-                    )
+                        )
                 }
             }
 
@@ -169,25 +170,33 @@ class EditProfileViewModel(
     private fun submit(
 
     ) = viewModelScope.launch {
-        val data = state.value.profileSummaryList!!.toDomain()
-        state.value.profileSummaryList?.let {
+        _state.update {
+            it.copy(
+                isUpdating = true
+            )
+        }
+        state.value.profileSummaryList?.toDomain()?.let { domain ->
+
             updateUserDetailUseCase(
-                data = data
-            ).onSuccess {data ->
-                _successChannel.send(data.message)
+                data = domain
+            ).onSuccess { data ->
                 _state.update {
                     it.copy(
-                        isUpdating = true
+                        isUpdating = false
                     )
                 }
+                _successChannel.send(data.message)
             }.onError { error ->
-                _errorChannel.send(error.toErrorMessage())
                 _state.update {
                     it.copy(
                         isUpdating = false,
                     )
                 }
+                _errorChannel.send(error.toErrorMessage())
             }
+
+        }
+        state.value.profileSummaryList?.let {
 
         }
 

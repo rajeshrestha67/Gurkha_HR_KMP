@@ -21,4 +21,6 @@ data class EditProfileUI(
     val employeeTypes: String ,
     val panNumber: String ,
     val pfNumber: String ,
+    val imageUrl: String? = "",
+    val initials: String? = "",
 )

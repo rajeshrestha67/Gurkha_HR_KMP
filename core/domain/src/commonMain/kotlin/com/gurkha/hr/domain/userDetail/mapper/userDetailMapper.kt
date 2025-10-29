@@ -121,7 +121,9 @@ fun UserDetailData.toUI(): EditProfileUI{
         designation = designation,
         employeeTypes = employeeType,
         panNumber = panNumber,
-        pfNumber = pfNumber
+        pfNumber = pfNumber,
+    initials = initials,
+        imageUrl = imageUrl
 
     )
 }
@@ -143,5 +145,31 @@ fun EditProfileUI.toDomain(): UpdateRequestUserDto {
 fun UpdateProfileResponseDto.toData(): UserUpdateData{
     return UserUpdateData(
         message = message ?: ""
+    )
+}
+
+fun EditProfileUI.toLocal(): UserData {
+    return UserData(
+        email = email,
+        phoneNumber = phoneNumber,
+        fullName = fullName,
+        levelName = levelName,
+        employeeId = employeeId,
+        branchName = branchName,
+        joinedDate = joinedDate?.displayValueAD ?: "",
+        address = address,
+        dateOfBirth = dateOfBirth?.displayValueAD ?: "",
+        gender = gender,
+        maritalStatus = maritalStatus,
+        guardianName = guardianName,
+        guardianPhone = guardianPhone,
+        bloodGroup = bloodGroup,
+        designation = designation,
+        employeeTypes = employeeTypes,
+        panNumber = panNumber,
+        pfNumber = pfNumber,
+        imageUrl = imageUrl ?: "",
+        initials = initials ?:"",
+
     )
 }

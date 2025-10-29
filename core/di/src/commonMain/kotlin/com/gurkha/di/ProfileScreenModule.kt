@@ -41,9 +41,11 @@ class ProfileScreenModule {
 
     @Factory
     fun updateUserDetailUseCase(
-        userDetailRemoteRepository: UserDetailRemoteRepository
+        userDetailRemoteRepository: UserDetailRemoteRepository,
+        userDataRepository : UserDataRepository
     ): UpdateUserDetailUseCase=UpdateUserDetailUseCase(
-        userDetailRemoteRepository= userDetailRemoteRepository
+        userDetailRemoteRepository = userDetailRemoteRepository,
+        userDataRepository = userDataRepository
     )
 
 

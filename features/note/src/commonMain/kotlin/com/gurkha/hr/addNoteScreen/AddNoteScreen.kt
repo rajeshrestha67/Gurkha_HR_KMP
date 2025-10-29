@@ -53,6 +53,7 @@ import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.date.ERPDateTextField
 import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.hideKeyboardOnTap
+import com.gurkha.hr.components.loadingScreen.LoadingScreen
 import com.gurkha.hr.components.prompts.PromptModalBottomSheet
 import com.gurkha.hr.components.prompts.PromptType
 import com.gurkha.hr.components.textField.ERPTextField
@@ -153,72 +154,61 @@ fun AddNoteScreen(
         }
     }
 
-    BoxWithConstraints(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        val focusManager = LocalFocusManager.current
-        val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
 
-        Scaffold(
-            contentWindowInsets = WindowInsets(0.dp),
-            modifier = Modifier
-                .fillMaxSize()
-                .hideKeyboardOnTap(
-                    focusManager = focusManager,
-                    keyboardController = keyboardController
-                )
-            ,
-            containerColor = MaterialTheme.colorScheme.background,
-            topBar = {
-                TopAppBar(
-                    modifier = Modifier,
-                    windowInsets = WindowInsets(0.dp),
-                    title = {
-                        if (state.isEdit) {
-                            Text(text = stringResource(SharedRes.Strings.edit_notes))
-                        } else {
-                            Text(text = stringResource(SharedRes.Strings.add_notes))
-                        }
-                    },
-                    navigationIcon = {
-                        IconButton(
-                            onClick = onBackClicked,
-                            content = {
-                                Icon(
-                                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                    contentDescription = ""
-                                )
-                            }
-                        )
+    Scaffold(
+        contentWindowInsets = WindowInsets(0.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .hideKeyboardOnTap(
+                focusManager = focusManager,
+                keyboardController = keyboardController
+            )
+        ,
+        containerColor = MaterialTheme.colorScheme.background,
+        topBar = {
+            TopAppBar(
+                modifier = Modifier,
+                windowInsets = WindowInsets(0.dp),
+                title = {
+                    if (state.isEdit) {
+                        Text(text = stringResource(SharedRes.Strings.edit_notes))
+                    } else {
+                        Text(text = stringResource(SharedRes.Strings.add_notes))
                     }
-                )
-            }
-        ) { contentPadding ->
-            AddNoteScreenContent(
-                modifier = Modifier
-                    .padding(contentPadding),
-                state = state,
-                onAction = viewModel::onAction,
-                showErrorDialogue = showErrorDialogue,
-                messageToShow = messageToShow,
-                showSuccessDialogue = showSuccessDialogue,
-                onBackClicked = onBackClicked,
-                onSendData = {
-                    sendData = true
+                },
+                navigationIcon = {
+                    IconButton(
+                        onClick = onBackClicked,
+                        content = {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = ""
+                            )
+                        }
+                    )
                 }
             )
         }
+    ) { contentPadding ->
+
         if (state.isAdding || state.isUpdating) {
-            Box(
-                modifier = Modifier.fillMaxSize().background(color = Color(0x80000000)),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(MaterialTheme.dimens.medium3),
-                    color = MaterialTheme.colorScheme.secondaryContainer
-                )
-            }
+            LoadingScreen()
         }
+        AddNoteScreenContent(
+            modifier = Modifier
+                .padding(contentPadding),
+            state = state,
+            onAction = viewModel::onAction,
+            showErrorDialogue = showErrorDialogue,
+            messageToShow = messageToShow,
+            showSuccessDialogue = showSuccessDialogue,
+            onBackClicked = onBackClicked,
+            onSendData = {
+                sendData = true
+            }
+        )
     }
 
 

@@ -42,14 +42,16 @@ class FetchUserDetailUseCase(
                         levelName = userDetail.levelName,
                         employeeId = userDetail.employeeId,
                         branchName = userDetail.branchName,
-                        joinedDate = userDetail.joinedDate ?: "" ,
+                        joinedDate = userDetail.joinedDate  ,
                         address = userDetail.address,
-                        dateOfBirth = userDetail.dateOfBirth ?: "",
+                        dateOfBirth = userDetail.dateOfBirth ,
                         gender = userDetail.gender,
                         nationality = userDetail.nationality,
                         maritalStatus = userDetail.maritalStatus,
                         guardianName = userDetail.guardianName,
-                        guardianPhone = userDetail.guardianNumber
+                        guardianPhone = userDetail.guardianNumber,
+                        pfNumber = userDetail.pfNumber,
+                        panNumber = userDetail.panNumber
                     ) ?: UserData()
                 )
             }
