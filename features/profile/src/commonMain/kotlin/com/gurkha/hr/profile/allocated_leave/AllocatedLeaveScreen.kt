@@ -2,17 +2,22 @@ package com.gurkha.hr.profile.allocated_leave
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -21,6 +26,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -29,6 +35,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gurkha.hr.components.dimens
@@ -47,8 +55,6 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun AllocatedLeaveScreen(
     onBackPressed: () -> Unit,
-
-
     ) {
     val viewModel: AllocatedLeaveScreenViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -104,52 +110,26 @@ fun AllocatedLeaveScreenContainer(
 
     ) {
 
-    LazyVerticalGrid(
+    LazyColumn (
         modifier = modifier,
-        columns = GridCells.Fixed(2),
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2),
-        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2),
         contentPadding = PaddingValues(
             horizontal = MaterialTheme.dimens.small3
         )
     ) {
-        stickyHeader(key = "summary leave header") {
-            HeaderSection(
-                text = SharedRes.Strings.leaveSummary
-            )
-        }
-
-        items(
-            state.leaveSummaryList, key = { it.toString() },
-            itemContent = { item ->
-                LeaveTypeBox(
+        items(state.leaveSummaryList){item->
+            LeaveTypeBox(
                     title = item.leaveType,
                     totalDays = item.totalDays.toInt(),
                     leaveTaken = item.leaveTaken.toInt(),
                     remainingLeave = item.remainingLeave.toInt()
 
                 )
-            },
-        )
+        }
     }
 
 }
 
-
-@Composable
-fun HeaderSection(text: StringResource) {
-
-    Text(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(
-                MaterialTheme.dimens.small2
-            ),
-        text = stringResource(text),
-        style = MaterialTheme.typography.titleLarge
-
-    )
-}
 
 @Composable
 fun LeaveTypeBox(
@@ -160,73 +140,78 @@ fun LeaveTypeBox(
 ) {
     Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .clip(MaterialTheme.shapes.medium)
-            .background(MaterialTheme.colorScheme.highLightColor),
-        verticalArrangement = Arrangement.spacedBy(
-            MaterialTheme.dimens.small2,
-            alignment = Alignment.CenterVertically
-        ),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
     ) {
-
-        // to avoid parent vertical alignment padding
-        Column(
-            modifier = Modifier.fillMaxWidth().padding(MaterialTheme.dimens.small1)
-                .align(Alignment.CenterHorizontally)
-        ) {
-            Text(
-                modifier = Modifier.padding(MaterialTheme.dimens.small1),
-                text = title,
-                style = MaterialTheme.typography.titleMedium.copy(
-                    color = MaterialTheme.colorScheme.darkPrimaryTextColor
-                )
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleMedium.copy(
+                color = MaterialTheme.colorScheme.primary
             )
-            HorizontalDivider(
-                modifier = Modifier.height(MaterialTheme.dimens.extraSmall)
+        )
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
+        ){
+            LeaveInfoRow(
+                modifier = Modifier.weight(1f),
+                name = SharedRes.Strings.totalDays,
+                value = totalDays.toString()
+            )
+            LeaveInfoRow(
+                modifier = Modifier.weight(1f),
+                name = SharedRes.Strings.leaveTaken,
+                value = leaveTaken.toString()
+            )
+            LeaveInfoRow(
+                modifier = Modifier.weight(1f),
+                name = SharedRes.Strings.remainingLeave,
+                value = remainingLeave.toString()
             )
         }
-
-        LeaveInfoRow(
-            name = SharedRes.Strings.totalDays,
-            value = totalDays.toString()
-        )
-        LeaveInfoRow(
-            name = SharedRes.Strings.leaveTaken,
-            value = leaveTaken.toString()
-        )
-        LeaveInfoRow(
-            name = SharedRes.Strings.remainingLeave,
-            value = remainingLeave.toString()
-
-        )
     }
 }
 
 @Composable
 private fun LeaveInfoRow(
     name: StringResource,
-    value: String
+    value: String,
+    modifier: Modifier = Modifier
 ) {
-    Row(
-        modifier = Modifier
+    Surface(
+        modifier = modifier
             .fillMaxWidth()
-            .padding(MaterialTheme.dimens.small1),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+            .aspectRatio(1f)
+            .clip(MaterialTheme.shapes.small),
+        tonalElevation = 4.dp
     ) {
-        Text(
-            modifier = Modifier.align(Alignment.CenterVertically),
-            text = stringResource(name),
-            style = MaterialTheme.typography.titleSmall.copy(
-                color = MaterialTheme.colorScheme.secondaryTextColor
+        Column(
+            modifier = modifier
+                .padding(MaterialTheme.dimens.small1),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                modifier = Modifier.padding(vertical = MaterialTheme.dimens.small1),
+                textAlign = TextAlign.Center,
+                text = stringResource(name),
+                style = MaterialTheme.typography.titleSmall.copy(
+                    color = MaterialTheme.colorScheme.secondaryTextColor
+                )
             )
-        )
-        Text(
-            text = value,
-            style = MaterialTheme.typography.titleSmall.copy(
-                color = MaterialTheme.colorScheme.primaryTextColor
+            Box(
+                modifier = Modifier.weight(1f),
             )
-        )
+            Text(
+                textAlign = TextAlign.Center,
+                text = value,
+                style = MaterialTheme.typography.titleLarge.copy(
+                    color = MaterialTheme.colorScheme.primaryTextColor
+                )
+            )
+            Box(
+                modifier = Modifier.weight(1f),
+            )
+        }
     }
 }
