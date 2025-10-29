@@ -1,7 +1,5 @@
 package com.gurkha.hr.leave.leaveRequestPage
 
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,14 +9,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,9 +28,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
@@ -45,6 +39,7 @@ import com.gurkha.hr.components.date.ERPDateTextField
 import com.gurkha.hr.components.date.FutureAndTodayDate
 import com.gurkha.hr.components.date.RangeSelectableDates
 import com.gurkha.hr.components.dimens
+import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.components.hideKeyboardOnTap
 import com.gurkha.hr.components.isKeyboardVisible
 import com.gurkha.hr.components.loadingScreen.LoadingScreen
@@ -56,7 +51,6 @@ import com.gurkha.hr.components.textField.FormValidate
 import com.gurkha.hr.leave.model.leave_request.LeaveRequestScreenAction
 import com.gurkha.hr.leave.model.leave_request.LeaveRequestScreenState
 import com.gurkha.hr.res.SharedRes
-import com.gurkha.hr.res.theme.primaryTextColor
 import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -155,8 +149,7 @@ fun LeaveRequestPageContent(
             .hideKeyboardOnTap(
                 focusManager = focusManager,
                 keyboardController = keyboardController
-            )
-        ,
+            ),
         containerColor = MaterialTheme.colorScheme.background,
         contentWindowInsets = WindowInsets(),
         topBar = {
@@ -183,7 +176,7 @@ fun LeaveRequestPageContent(
                     Text(
                         text = stringResource(SharedRes.Strings.leave_request_form),
                         style = MaterialTheme.typography.titleLarge.copy(
-                            color = MaterialTheme.colorScheme.primaryTextColor
+                            color = MaterialTheme.erpColors.primaryTextColor
                         )
                     )
                 }

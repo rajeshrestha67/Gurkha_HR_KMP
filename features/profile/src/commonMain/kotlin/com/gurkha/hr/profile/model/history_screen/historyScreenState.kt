@@ -4,12 +4,8 @@ package com.gurkha.hr.profile.model.history_screen
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.domain.history.model.HistoryData
-import com.gurkha.hr.profile.model.profile_screen.AccountList
-import com.gurkha.hr.profile.model.profile_screen.AccountList.TermsAndServices
-import com.gurkha.hr.res.theme.holidayBlueColor
-import com.gurkha.hr.res.theme.lightGreenColor
-import com.gurkha.hr.res.theme.lightRedColor
 import org.jetbrains.compose.resources.StringResource
 
 data class HistoryState(
@@ -45,7 +41,7 @@ data class HistoryDataUI(
     val attendanceTextColor: AttendanceTextColor
 )
 
-fun HistoryData.toUI():HistoryDataUI{
+fun HistoryData.toUI(): HistoryDataUI {
     return HistoryDataUI(
         date = date,
         day = day,
@@ -65,17 +61,19 @@ fun HistoryData.toUI():HistoryDataUI{
         attendanceTextColor = AttendanceTextColor.get(attendanceStatus)
     )
 }
-enum class AttendanceTextColor(val value: String){
+
+enum class AttendanceTextColor(val value: String) {
 
     Present("P"),
     Absent("A"),
     Holiday("H");
 
-    companion object{
+    companion object {
         private val typeMap =
             enumValues<AttendanceTextColor>().associateBy { it.value }
 
-        fun get(typeName: String): AttendanceTextColor = AttendanceTextColor.typeMap[typeName] ?: Present
+        fun get(typeName: String): AttendanceTextColor =
+            AttendanceTextColor.typeMap[typeName] ?: Present
 
         val list: List<AttendanceTextColor>
             get() = AttendanceTextColor.entries.toList().map { it }
@@ -83,10 +81,10 @@ enum class AttendanceTextColor(val value: String){
 
     val textColor: Color
         @Composable get() =
-             when(this){
-                Present -> MaterialTheme.colorScheme.lightGreenColor
-                Absent -> MaterialTheme.colorScheme.lightRedColor
-                Holiday -> MaterialTheme.colorScheme.holidayBlueColor
+            when (this) {
+                Present -> MaterialTheme.erpColors.lightGreenColor
+                Absent -> MaterialTheme.erpColors.lightRedColor
+                Holiday -> MaterialTheme.erpColors.holidayBlueColor
             }
 
 

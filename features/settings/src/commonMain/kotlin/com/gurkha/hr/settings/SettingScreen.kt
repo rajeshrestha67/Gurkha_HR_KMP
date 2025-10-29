@@ -36,10 +36,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gurkha.hr.components.ColumnItemRow
 import com.gurkha.hr.components.dimens
+import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.EPRLanguage
 import com.gurkha.hr.res.theme.ThemeMode
-import com.gurkha.hr.res.theme.primaryTextColor
 import com.gurkha.hr.settings.model.settings.SettingList
 import com.gurkha.hr.settings.model.settings.SettingsScreenAction
 import com.gurkha.hr.settings.model.settings.SettingsScreenState
@@ -146,7 +146,7 @@ fun SettingScreenContent(
                                 }
 
                                 SettingList.Biometric -> {
-                                    
+
                                 }
                             }
                         }
@@ -259,7 +259,7 @@ fun LanguageBottomSheet(
                             modifier = Modifier.padding(vertical = MaterialTheme.dimens.small2),
                             text = stringResource(theme.displayName),
                             style = MaterialTheme.typography.titleMedium.copy(
-                                color = MaterialTheme.colorScheme.primaryTextColor
+                                color = MaterialTheme.erpColors.primaryTextColor
                             )
                         )
                         HorizontalDivider(
@@ -328,7 +328,7 @@ fun ThemeBottomSheet(
                             modifier = Modifier.padding(vertical = MaterialTheme.dimens.small2),
                             text = stringResource(theme.title),
                             style = MaterialTheme.typography.titleMedium.copy(
-                                color = MaterialTheme.colorScheme.primaryTextColor
+                                color = MaterialTheme.erpColors.primaryTextColor
                             )
                         )
                         HorizontalDivider(

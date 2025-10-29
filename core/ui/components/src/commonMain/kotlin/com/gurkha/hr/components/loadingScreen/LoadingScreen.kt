@@ -11,15 +11,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.gurkha.hr.components.dimens
-import com.gurkha.hr.res.theme.primaryTextColor
+import com.gurkha.hr.components.erpColors
 
 @Composable
 fun LoadingScreen(
     modifier: Modifier = Modifier,
-    backgroundColor: Color = MaterialTheme.colorScheme.primaryTextColor.copy(
+    backgroundColor: Color = MaterialTheme.erpColors.primaryTextColor.copy(
         alpha = 0.3f
     )
-){
+) {
     Box(
         modifier = modifier.fillMaxSize().background(backgroundColor),
         contentAlignment = Alignment.Center

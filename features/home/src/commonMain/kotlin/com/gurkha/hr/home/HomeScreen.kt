@@ -69,6 +69,7 @@ import com.gurkha.hr.components.PlatformMessage
 import com.gurkha.hr.components.ProfilePicture
 import com.gurkha.hr.components.date.horizontalCalendar.HorizontalCalendar
 import com.gurkha.hr.components.dimens
+import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.components.extractInitials
 import com.gurkha.hr.components.media.rememberCameraLauncher
 import com.gurkha.hr.components.noRippleClickable
@@ -88,12 +89,6 @@ import com.gurkha.hr.model.home.HomeScreenActions
 import com.gurkha.hr.model.home.HomeScreenState
 import com.gurkha.hr.model.home.RequestItem
 import com.gurkha.hr.res.SharedRes
-import com.gurkha.hr.res.theme.borderColor
-import com.gurkha.hr.res.theme.darkPrimaryTextColor
-import com.gurkha.hr.res.theme.highLightColor
-import com.gurkha.hr.res.theme.imageBackgroundColor
-import com.gurkha.hr.res.theme.linkColor
-import com.gurkha.hr.res.theme.primaryTextColor
 import com.gurkha.model.upComingBirthday.ui.ViewAllUi
 import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.StringResource
@@ -139,9 +134,9 @@ fun HomeScreen(
                             nameInitials = state.initials,
                             size = MaterialTheme.dimens.medium3,
                             shape = CircleShape,
-                            background = MaterialTheme.colorScheme.imageBackgroundColor,
+                            background = MaterialTheme.erpColors.imageBackgroundColor,
                             borderWidth = 0.5.dp,
-                            borderColor = MaterialTheme.colorScheme.borderColor,
+                            borderColor = MaterialTheme.colorScheme.outline,
                             ratio = 1f
                         )
 
@@ -151,12 +146,12 @@ fun HomeScreen(
                         ) {
                             Text(
                                 style = MaterialTheme.typography.titleMedium.copy(
-                                    color = MaterialTheme.colorScheme.primaryTextColor
+                                    color = MaterialTheme.erpColors.primaryTextColor
                                 ), text = state.fullName
                             )
                             Text(
                                 style = MaterialTheme.typography.titleSmall.copy(
-                                    color = MaterialTheme.colorScheme.primaryTextColor
+                                    color = MaterialTheme.erpColors.primaryTextColor
                                 ), text = state.levelName
                             )
                         }
@@ -538,7 +533,7 @@ private fun AttendanceHistoryItem(
                 horizontal = MaterialTheme.dimens.small3
             )
             .background(
-                MaterialTheme.colorScheme.highLightColor,
+                MaterialTheme.erpColors.highLightColor,
                 shape = MaterialTheme.shapes.medium
             )
     ) {
@@ -569,7 +564,7 @@ private fun AttendanceHistoryItem(
                             Text(
                                 text = stringResource(SharedRes.Strings.attendanceRequest),
                                 style = MaterialTheme.typography.bodyMedium.copy(
-                                    color = MaterialTheme.colorScheme.primaryTextColor
+                                    color = MaterialTheme.erpColors.primaryTextColor
                                 )
                             )
                         },
@@ -597,13 +592,13 @@ private fun AttendanceHistoryItem(
                     Text(
                         text = stringResource(SharedRes.Strings.date),
                         style = MaterialTheme.typography.titleSmall.copy(
-                            color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                            color = MaterialTheme.erpColors.darkPrimaryTextColor
                         )
                     )
                     Text(
                         text = item.date,
                         style = MaterialTheme.typography.bodySmall.copy(
-                            color = MaterialTheme.colorScheme.primaryTextColor
+                            color = MaterialTheme.erpColors.primaryTextColor
                         )
                     )
                 }
@@ -636,12 +631,12 @@ private fun AttendanceHistoryItem(
                     Text(
                         text = stringResource(SharedRes.Strings.clockIn),
                         style = MaterialTheme.typography.titleSmall.copy(
-                            color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                            color = MaterialTheme.erpColors.darkPrimaryTextColor
                         )
                     )
                     Text(
                         text = item.clockInTime, style = MaterialTheme.typography.bodySmall.copy(
-                            color = MaterialTheme.colorScheme.primaryTextColor
+                            color = MaterialTheme.erpColors.primaryTextColor
                         )
                     )
                 }
@@ -652,12 +647,12 @@ private fun AttendanceHistoryItem(
                     Text(
                         text = stringResource(SharedRes.Strings.clockOut),
                         style = MaterialTheme.typography.titleSmall.copy(
-                            color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                            color = MaterialTheme.erpColors.darkPrimaryTextColor
                         )
                     )
                     Text(
                         text = item.clockOutTime, style = MaterialTheme.typography.bodySmall.copy(
-                            color = MaterialTheme.colorScheme.primaryTextColor
+                            color = MaterialTheme.erpColors.primaryTextColor
                         )
                     )
                 }
@@ -668,7 +663,7 @@ private fun AttendanceHistoryItem(
                     Text(
                         text = stringResource(SharedRes.Strings.status),
                         style = MaterialTheme.typography.titleSmall.copy(
-                            color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                            color = MaterialTheme.erpColors.darkPrimaryTextColor
                         )
                     )
                     Row(
@@ -686,12 +681,12 @@ private fun AttendanceHistoryItem(
                                 modifier = Modifier
                                     .border(
                                         width = 1.dp,
-                                        color = MaterialTheme.colorScheme.borderColor,
+                                        color = MaterialTheme.colorScheme.outline,
                                         shape = MaterialTheme.shapes.small
                                     ).padding(MaterialTheme.dimens.small1),
                                 text = item.statusClips[it],
                                 style = MaterialTheme.typography.bodySmall.copy(
-                                    color = MaterialTheme.colorScheme.primaryTextColor
+                                    color = MaterialTheme.erpColors.primaryTextColor
                                 )
                             )
 
@@ -860,13 +855,13 @@ fun AttendanceItemContent(
             ) {
                 Text(
                     text = item.duration, style = MaterialTheme.typography.titleLarge.copy(
-                        color = MaterialTheme.colorScheme.primaryTextColor
+                        color = MaterialTheme.erpColors.primaryTextColor
                     )
                 )
                 Text(
                     text = stringResource(item.type.status),
                     style = MaterialTheme.typography.titleSmall.copy(
-                        color = MaterialTheme.colorScheme.primaryTextColor
+                        color = MaterialTheme.erpColors.primaryTextColor
 
                     )
                 )
@@ -967,7 +962,7 @@ fun UpComingCard(
                 nameInitials = fullName.extractInitials(),
                 size = MaterialTheme.dimens.medium3,
                 shape = CircleShape,
-                background = MaterialTheme.colorScheme.imageBackgroundColor,
+                background = MaterialTheme.erpColors.imageBackgroundColor,
                 borderWidth = 0.dp,
                 borderColor = Color.Transparent,
                 ratio = 1f
@@ -976,7 +971,7 @@ fun UpComingCard(
         Text(text = fullName, style = MaterialTheme.typography.titleMedium)
         Text(
             text = designationName, style = MaterialTheme.typography.titleSmall.copy(
-                color = MaterialTheme.colorScheme.primaryTextColor
+                color = MaterialTheme.erpColors.primaryTextColor
             )
         )
     }
@@ -1008,7 +1003,7 @@ fun TitleBar(
                 Text(
                     text = stringResource(subTitle),
                     style = MaterialTheme.typography.titleSmall.copy(
-                        color = MaterialTheme.colorScheme.linkColor
+                        color = MaterialTheme.erpColors.linkColor
                     )
                 )
             }
@@ -1039,20 +1034,20 @@ fun EventCard(
     ) {
         Text(
             text = item.name, style = MaterialTheme.typography.titleMedium.copy(
-                color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                color = MaterialTheme.erpColors.darkPrimaryTextColor
             )
         )
 
         Text(
             text = "${item.fromDateBs} to ${item.toDateBs}",
             style = MaterialTheme.typography.titleSmall.copy(
-                color = MaterialTheme.colorScheme.primaryTextColor
+                color = MaterialTheme.erpColors.primaryTextColor
             )
         )
 
         Text(
             text = item.description, style = MaterialTheme.typography.titleSmall.copy(
-                color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                color = MaterialTheme.erpColors.darkPrimaryTextColor
             )
         )
     }
@@ -1082,7 +1077,7 @@ fun PermanentPermissionShow(
                 Text(
                     text = "Allow Permission In Setting",
                     style = MaterialTheme.typography.bodyLarge.copy(
-                        color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                        color = MaterialTheme.erpColors.darkPrimaryTextColor
                     ),
                     textAlign = TextAlign.Center
                 )

@@ -1,6 +1,5 @@
 package com.gurkha.hr.profile.edit_profile
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -9,14 +8,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,7 +28,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -41,8 +36,8 @@ import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.date.ERPDateTextField
 import com.gurkha.hr.components.date.FutureAndTodayDate
 import com.gurkha.hr.components.dimens
+import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.components.loadingScreen.LoadingScreen
-import com.gurkha.hr.components.noRippleClickable
 import com.gurkha.hr.components.prompts.PromptModalBottomSheet
 import com.gurkha.hr.components.prompts.PromptType
 import com.gurkha.hr.components.textField.DropDownText
@@ -54,8 +49,6 @@ import com.gurkha.hr.profile.model.edit_profile_screen.EditProfileViewAction
 import com.gurkha.hr.profile.model.edit_profile_screen.Title
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.SharedRes.Strings.labelContract
-import com.gurkha.hr.res.theme.primaryTextColor
-import com.gurkha.hr.res.theme.veryLightGray
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -70,14 +63,14 @@ fun EditProfileScreen(
     var showErrorModal by remember { mutableStateOf(false) }
     var messageToShow by remember { mutableStateOf("") }
 
-    LaunchedEffect(Unit){
+    LaunchedEffect(Unit) {
         viewModel.successChannel.collect {
             showSuccessModal = true
             messageToShow = it
         }
     }
 
-    LaunchedEffect(Unit){
+    LaunchedEffect(Unit) {
         viewModel.errorChannel.collect {
             showErrorModal = true
             messageToShow = it
@@ -133,18 +126,19 @@ fun EditProfileScreenContainer(
         ) {
             if (state.isUpdating) {
                 LoadingScreen(
-                    modifier = Modifier.fillMaxSize().padding(paddingValues).clickable(onClick = {}),
+                    modifier = Modifier.fillMaxSize().padding(paddingValues)
+                        .clickable(onClick = {}),
                 )
             }
             EditProfileScreenContent(
-                    modifier = Modifier
-                        .fillMaxSize().padding(paddingValues),
-            state = state,
-            onAction = onAction,
-            showErrorModal = showErrorModal,
-            showSuccessModal = showSuccessModal,
-            messageToShow = messageToShow,
-            onBackPressed = onBackPressed
+                modifier = Modifier
+                    .fillMaxSize().padding(paddingValues),
+                state = state,
+                onAction = onAction,
+                showErrorModal = showErrorModal,
+                showSuccessModal = showSuccessModal,
+                messageToShow = messageToShow,
+                onBackPressed = onBackPressed
             )
         }
     }
@@ -200,14 +194,14 @@ fun EditProfileScreenContent(
             }
         }
 
-        if(showSuccessModal){
+        if (showSuccessModal) {
             PromptModalBottomSheet(
                 text = messageToShow,
                 onBackPressed = onBackPressed
             )
         }
 
-        if(showErrorModal){
+        if (showErrorModal) {
             PromptModalBottomSheet(
                 text = messageToShow,
                 promptType = PromptType.FAILED,
@@ -230,10 +224,11 @@ fun SubmitButton(
             .padding(top = MaterialTheme.dimens.small3),
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2)
     ) {
-        val text = if(isSubmit)stringResource(SharedRes.Strings.submit) else stringResource(SharedRes.Strings.next)
+        val text =
+            if (isSubmit) stringResource(SharedRes.Strings.submit) else stringResource(SharedRes.Strings.next)
         ERPButton(
             modifier = Modifier.fillMaxWidth(),
-            text =text,
+            text = text,
             onClick = onAction
         )
     }
@@ -545,12 +540,12 @@ fun EditProfileTabRow(
             val backgroundColor = if (isSelected) {
                 MaterialTheme.colorScheme.primaryContainer
             } else {
-                MaterialTheme.colorScheme.veryLightGray
+                MaterialTheme.erpColors.veryLightGray
             }
             val textColor = if (isSelected) {
                 MaterialTheme.colorScheme.onBackground
             } else {
-                MaterialTheme.colorScheme.primaryTextColor
+                MaterialTheme.erpColors.primaryTextColor
             }
 
             Tab(

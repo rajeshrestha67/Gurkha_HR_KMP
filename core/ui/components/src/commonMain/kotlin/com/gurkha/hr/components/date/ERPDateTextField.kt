@@ -31,12 +31,11 @@ import androidx.compose.ui.Modifier
 import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.date.ui.CalendarContent
 import com.gurkha.hr.components.dimens
+import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.components.textField.ERPTextField
 import com.gurkha.hr.components.textField.Rule
 import com.gurkha.hr.date.data.CalendarDate
 import com.gurkha.hr.res.SharedRes
-import com.gurkha.hr.res.theme.disabledTextFieldBorderColor
-import com.gurkha.hr.res.theme.primaryTextColor
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.number
 import kotlinx.datetime.toLocalDateTime
@@ -104,7 +103,7 @@ fun ERPDateTextField(
                                         if (displayInAd) SharedRes.Strings.ad else SharedRes.Strings.bs
                                 ),
                                 style = MaterialTheme.typography.bodyLarge.copy(
-                                    color = MaterialTheme.colorScheme.primaryTextColor.copy(
+                                    color = MaterialTheme.erpColors.primaryTextColor.copy(
                                         alpha = if (enabled) 1f else 0.5f
                                     )
                                 )
@@ -114,7 +113,7 @@ fun ERPDateTextField(
                     Icon(
                         imageVector = Icons.Filled.CalendarMonth,
                         contentDescription = "date",
-                        tint = if (enabled) MaterialTheme.colorScheme.primaryTextColor else MaterialTheme.colorScheme.disabledTextFieldBorderColor
+                        tint = if (enabled) MaterialTheme.erpColors.primaryTextColor else MaterialTheme.erpColors.disabledTextFieldBorderColor
                     )
                 }
 

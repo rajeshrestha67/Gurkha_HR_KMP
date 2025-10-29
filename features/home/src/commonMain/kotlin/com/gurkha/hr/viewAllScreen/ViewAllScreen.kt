@@ -1,6 +1,5 @@
 package com.gurkha.hr.viewAllScreen
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -32,13 +31,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gurkha.hr.components.ProfilePicture
 import com.gurkha.hr.components.dimens
+import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.model.viewAll.ViewAllScreenAction
 import com.gurkha.hr.model.viewAll.ViewAllScreenState
-import com.gurkha.hr.res.theme.borderColor
-import com.gurkha.hr.res.theme.darkPrimaryTextColor
-import com.gurkha.hr.res.theme.imageBackgroundColor
-import com.gurkha.hr.res.theme.primaryTextColor
-import com.gurkha.hr.res.theme.veryLightGray
 import com.gurkha.model.upComingBirthday.ui.ViewAllUi
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -126,7 +121,7 @@ fun ResultBox(
             .clip(shape = MaterialTheme.shapes.small),
         tonalElevation = 4.dp,
 
-    ){
+        ) {
         Row(
             modifier = Modifier.fillMaxWidth()
                 .clip(shape = MaterialTheme.shapes.small)
@@ -140,9 +135,9 @@ fun ResultBox(
                 nameInitials = item.initials,
                 size = MaterialTheme.dimens.large,
                 shape = CircleShape,
-                background = MaterialTheme.colorScheme.imageBackgroundColor,
+                background = MaterialTheme.erpColors.imageBackgroundColor,
                 borderWidth = 0.5.dp,
-                borderColor = MaterialTheme.colorScheme.borderColor,
+                borderColor = MaterialTheme.colorScheme.outline,
                 ratio = 1f
             )
             Column(
@@ -152,20 +147,20 @@ fun ResultBox(
 
                 Text(
                     text = item.fullName, style = MaterialTheme.typography.titleMedium.copy(
-                        color = MaterialTheme.colorScheme.primaryTextColor
+                        color = MaterialTheme.erpColors.primaryTextColor
                     )
                 )
 
                 Text(
                     text = "Designation : ${item.designationName}",
                     style = MaterialTheme.typography.titleSmall.copy(
-                        color = MaterialTheme.colorScheme.primaryTextColor
+                        color = MaterialTheme.erpColors.primaryTextColor
                     )
                 )
 
                 Text(
                     "Branch : ${item.branchName}", style = MaterialTheme.typography.titleSmall.copy(
-                        color = MaterialTheme.colorScheme.primaryTextColor
+                        color = MaterialTheme.erpColors.primaryTextColor
                     )
                 )
 

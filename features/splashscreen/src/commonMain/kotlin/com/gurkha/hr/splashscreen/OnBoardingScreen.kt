@@ -34,8 +34,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.dimens
+import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.res.SharedRes
-import com.gurkha.hr.res.theme.primaryTextColor
 import com.gurkha.hr.splashscreen.model.Indicator
 import com.gurkha.hr.splashscreen.model.OnBoardingAction
 import com.gurkha.hr.splashscreen.model.OnBoardingScreenState
@@ -152,7 +152,7 @@ fun OnBoardingScreenContainer(
                         Text(
                             text = state.screens[item].description,
                             style = MaterialTheme.typography.labelMedium.copy(
-                                color = MaterialTheme.colorScheme.primaryTextColor,
+                                color = MaterialTheme.erpColors.primaryTextColor,
                                 fontSize = 12.sp,
                                 textAlign = TextAlign.Center
 

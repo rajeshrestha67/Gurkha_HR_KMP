@@ -13,8 +13,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import com.gurkha.hr.components.date.RecommendedSizeForAccessibility
+import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.res.SharedRes
-import com.gurkha.hr.res.theme.primaryTextColor
 import org.jetbrains.compose.resources.stringArrayResource
 
 
@@ -43,7 +43,7 @@ fun WeekDays() {
                 Text(
                     text = name,
                     modifier = Modifier,
-                    color = if (index == 6) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primaryTextColor,
+                    color = if (index == 6) MaterialTheme.colorScheme.error else MaterialTheme.erpColors.primaryTextColor,
                     style = MaterialTheme.typography.titleSmall,
                     textAlign = TextAlign.Center
                 )

@@ -25,7 +25,7 @@ import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.gurkha.hr.components.shimmer.ShimmerView
-import com.gurkha.hr.res.theme.primaryTextColor
+
 
 @Composable
 fun ProfilePicture(
@@ -173,7 +173,7 @@ private fun ProfilePictureInitialsText(
             modifier = Modifier.align(Alignment.Center),
             text = nameInitials,
             style = MaterialTheme.typography.titleLarge.copy(
-                color = MaterialTheme.colorScheme.primaryTextColor
+                color = MaterialTheme.erpColors.primaryTextColor
             )
         )
     }

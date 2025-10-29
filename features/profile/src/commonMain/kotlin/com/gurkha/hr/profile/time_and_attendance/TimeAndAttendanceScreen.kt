@@ -49,16 +49,13 @@ import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.date.ERPDateTextField
 import com.gurkha.hr.components.date.FutureAndTodayDate
 import com.gurkha.hr.components.dimens
+import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.components.shimmer.ShimmerView
 import com.gurkha.hr.components.textField.FormValidate
 import com.gurkha.hr.domain.attendance.attendanceReport.model.AttendanceData
 import com.gurkha.hr.profile.model.time_and_attendance_screen.TimeAndAttendanceState
 import com.gurkha.hr.profile.model.time_and_attendance_screen.TimeAndAttendanceViewAction
 import com.gurkha.hr.res.SharedRes
-import com.gurkha.hr.res.theme.darkPrimaryTextColor
-import com.gurkha.hr.res.theme.highLightColor
-import com.gurkha.hr.res.theme.primaryTextColor
-import com.gurkha.hr.res.theme.secondaryTextColor
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -217,7 +214,7 @@ fun TimeAndAttendanceDetails(
                 bottom = MaterialTheme.dimens.small1,
             )
             .clip(MaterialTheme.shapes.medium)
-            .background(MaterialTheme.colorScheme.highLightColor)
+            .background(MaterialTheme.erpColors.highLightColor)
             .padding(
                 start = MaterialTheme.dimens.small1,
                 top = MaterialTheme.dimens.small2,
@@ -238,7 +235,7 @@ fun TimeAndAttendanceDetails(
                 Text(
                     text = stringResource(SharedRes.Strings.date),
                     style = MaterialTheme.typography.titleMedium.copy(
-                        color = MaterialTheme.colorScheme.primaryTextColor
+                        color = MaterialTheme.erpColors.primaryTextColor
                     )
                 )
                 Text(
@@ -246,7 +243,7 @@ fun TimeAndAttendanceDetails(
                         item.day.lowercase().replaceFirstChar { it.uppercase() }
                     })",
                     style = MaterialTheme.typography.bodyMedium.copy(
-                        color = MaterialTheme.colorScheme.secondaryTextColor
+                        color = MaterialTheme.erpColors.secondaryTextColor
                     )
                 )
             }
@@ -265,7 +262,7 @@ fun TimeAndAttendanceDetails(
                             Text(
                                 text = stringResource(SharedRes.Strings.clockIn),
                                 style = MaterialTheme.typography.bodyMedium.copy(
-                                    color = MaterialTheme.colorScheme.primaryTextColor
+                                    color = MaterialTheme.erpColors.primaryTextColor
                                 )
                             )
                         },
@@ -278,7 +275,7 @@ fun TimeAndAttendanceDetails(
                             Text(
                                 text = stringResource(SharedRes.Strings.clockOut),
                                 style = MaterialTheme.typography.bodyMedium.copy(
-                                    color = MaterialTheme.colorScheme.primaryTextColor
+                                    color = MaterialTheme.erpColors.primaryTextColor
                                 )
                             )
                         },
@@ -336,7 +333,7 @@ fun TimeAndAttendanceDetails(
 fun RowScope.RowText(
     name: StringResource,
     value: String,
-    textColor: Color = MaterialTheme.colorScheme.darkPrimaryTextColor
+    textColor: Color = MaterialTheme.erpColors.darkPrimaryTextColor
 
 ) {
     Column(
@@ -347,7 +344,7 @@ fun RowScope.RowText(
             modifier = Modifier.fillMaxWidth(),
             text = stringResource(name),
             style = MaterialTheme.typography.titleSmall.copy(
-                color = MaterialTheme.colorScheme.primaryTextColor,
+                color = MaterialTheme.erpColors.primaryTextColor,
                 fontWeight = FontWeight.SemiBold
             ),
             textAlign = TextAlign.Start

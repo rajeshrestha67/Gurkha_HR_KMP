@@ -32,13 +32,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gurkha.hr.components.dimens
+import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.profile.model.allocated_leave_Screen.AllocatedLeaveState
 import com.gurkha.hr.profile.model.allocated_leave_Screen.AllocatedLeaveViewAction
 import com.gurkha.hr.res.SharedRes
-import com.gurkha.hr.res.theme.darkPrimaryTextColor
-import com.gurkha.hr.res.theme.highLightColor
-import com.gurkha.hr.res.theme.primaryTextColor
-import com.gurkha.hr.res.theme.secondaryTextColor
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -162,7 +159,7 @@ fun LeaveTypeBox(
         modifier = Modifier
             .fillMaxWidth()
             .clip(MaterialTheme.shapes.medium)
-            .background(MaterialTheme.colorScheme.highLightColor),
+            .background(MaterialTheme.erpColors.highLightColor),
         verticalArrangement = Arrangement.spacedBy(
             MaterialTheme.dimens.small2,
             alignment = Alignment.CenterVertically
@@ -179,7 +176,7 @@ fun LeaveTypeBox(
                 modifier = Modifier.padding(MaterialTheme.dimens.small1),
                 text = title,
                 style = MaterialTheme.typography.titleMedium.copy(
-                    color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                    color = MaterialTheme.erpColors.darkPrimaryTextColor
                 )
             )
             HorizontalDivider(
@@ -219,13 +216,13 @@ private fun LeaveInfoRow(
             modifier = Modifier.align(Alignment.CenterVertically),
             text = stringResource(name),
             style = MaterialTheme.typography.titleSmall.copy(
-                color = MaterialTheme.colorScheme.secondaryTextColor
+                color = MaterialTheme.erpColors.secondaryTextColor
             )
         )
         Text(
             text = value,
             style = MaterialTheme.typography.titleSmall.copy(
-                color = MaterialTheme.colorScheme.primaryTextColor
+                color = MaterialTheme.erpColors.primaryTextColor
             )
         )
     }

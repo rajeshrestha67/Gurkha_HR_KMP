@@ -21,9 +21,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.dimens
+import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.res.SharedRes
-import com.gurkha.hr.res.theme.disabledTextFieldBorderColor
-import com.gurkha.hr.res.theme.primaryTextColor
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -67,7 +66,7 @@ fun ERPTimeTestField(
                 Icon(
                     imageVector = Icons.Filled.LockClock,
                     contentDescription = "date",
-                    tint = if (enabled) MaterialTheme.colorScheme.primaryTextColor else MaterialTheme.colorScheme.disabledTextFieldBorderColor
+                    tint = if (enabled) MaterialTheme.erpColors.primaryTextColor else MaterialTheme.erpColors.disabledTextFieldBorderColor
                 )
             },
             readOnly = true,

@@ -58,7 +58,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.gurkha.hr.components.dimens
-import com.gurkha.hr.components.ERPButton
+import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.components.prompts.PromptModalBottomSheet
 import com.gurkha.hr.components.prompts.PromptType
 import com.gurkha.hr.components.shimmer.ShimmerView
@@ -67,8 +67,6 @@ import com.gurkha.hr.domain.note.allNotes.model.toUi
 import com.gurkha.hr.model.note.NoteAction
 import com.gurkha.hr.model.note.NoteState
 import com.gurkha.hr.res.SharedRes
-import com.gurkha.hr.res.theme.darkPrimaryTextColor
-import com.gurkha.hr.res.theme.primaryTextColor
 import com.gurkha.model.note.ui.NoteDataUi
 import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.stringResource
@@ -265,7 +263,7 @@ fun NoteScreenContent(
                 Text(
                     text = stringResource(SharedRes.Strings.no_data_found),
                     style = MaterialTheme.typography.titleLarge.copy(
-                        color = MaterialTheme.colorScheme.primaryTextColor
+                        color = MaterialTheme.erpColors.primaryTextColor
                     )
                 )
             }
@@ -329,7 +327,7 @@ fun ResultBox(
                         modifier = Modifier.padding(end = MaterialTheme.dimens.small3),
                         text = item.title,
                         style = MaterialTheme.typography.titleMedium.copy(
-                            color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                            color = MaterialTheme.erpColors.darkPrimaryTextColor
                         )
                     )
                 }
@@ -338,7 +336,7 @@ fun ResultBox(
                     text = item.description,
                     maxLines = 7,
                     style = MaterialTheme.typography.labelMedium.copy(
-                        color = MaterialTheme.colorScheme.primaryTextColor
+                        color = MaterialTheme.erpColors.primaryTextColor
                     )
                 )
             }

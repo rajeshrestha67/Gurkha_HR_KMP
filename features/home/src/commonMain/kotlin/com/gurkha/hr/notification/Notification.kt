@@ -34,14 +34,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gurkha.hr.components.ProfilePicture
 import com.gurkha.hr.components.dimens
+import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.components.shimmer.ShimmerView
 import com.gurkha.hr.domain.notification.notificationData.model.NotificationData
 import com.gurkha.hr.model.notification.NotificationAction
 import com.gurkha.hr.model.notification.NotificationState
-import com.gurkha.hr.res.theme.borderColor
-import com.gurkha.hr.res.theme.darkPrimaryTextColor
-import com.gurkha.hr.res.theme.imageBackgroundColor
-import com.gurkha.hr.res.theme.primaryTextColor
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -114,7 +111,7 @@ fun NotificationScreenContent(
                     Text(
                         modifier = Modifier.padding(horizontal = MaterialTheme.dimens.small3),
                         text = date, style = MaterialTheme.typography.labelMedium.copy(
-                            color = MaterialTheme.colorScheme.primaryTextColor
+                            color = MaterialTheme.erpColors.primaryTextColor
                         )
                     )
                 }
@@ -162,9 +159,9 @@ fun NotificationBox(
                 nameInitials = item.initials,
                 size = MaterialTheme.dimens.large,
                 shape = CircleShape,
-                background = MaterialTheme.colorScheme.imageBackgroundColor,
+                background = MaterialTheme.erpColors.imageBackgroundColor,
                 borderWidth = 0.5.dp,
-                borderColor = MaterialTheme.colorScheme.borderColor,
+                borderColor = MaterialTheme.colorScheme.outline,
                 ratio = 1f
             )
             Column(
@@ -174,13 +171,13 @@ fun NotificationBox(
                 Text(
                     text = "${item.actionField} ${item.actionType}",
                     style = MaterialTheme.typography.titleSmall.copy(
-                        color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                        color = MaterialTheme.erpColors.darkPrimaryTextColor
                     )
                 )
                 Text(
                     "Your ${item.actionField} request has been ${item.actionType}ed by : ${item.actionPerformerName}",
                     style = MaterialTheme.typography.titleSmall.copy(
-                        color = MaterialTheme.colorScheme.primaryTextColor
+                        color = MaterialTheme.erpColors.primaryTextColor
                     )
                 )
 
@@ -191,7 +188,7 @@ fun NotificationBox(
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.End,
             text = item.actionTime, style = MaterialTheme.typography.titleSmall.copy(
-                color = MaterialTheme.colorScheme.primaryTextColor
+                color = MaterialTheme.erpColors.primaryTextColor
             )
         )
     }

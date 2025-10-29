@@ -34,11 +34,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.gurkha.hr.components.dimens
+import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.profile.model.document_screen.DocumentList
 import com.gurkha.hr.res.SharedRes
-import com.gurkha.hr.res.theme.borderColor
-import com.gurkha.hr.res.theme.primaryTextColor
-import com.gurkha.hr.res.theme.secondaryTextColor
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -125,7 +123,7 @@ fun DocumentItemRow(
             .fillMaxSize()
             .border(
                 width = 0.5.dp,
-                color = MaterialTheme.colorScheme.borderColor,
+                color = MaterialTheme.colorScheme.outline,
                 shape = MaterialTheme.shapes.medium
             )
             .clickable { onClick() }
@@ -138,7 +136,7 @@ fun DocumentItemRow(
             modifier = Modifier.fillMaxWidth(),
             text = text,
             style = MaterialTheme.typography.titleMedium.copy(
-                color = MaterialTheme.colorScheme.primaryTextColor
+                color = MaterialTheme.erpColors.primaryTextColor
             ),
             textAlign = TextAlign.Center
         )
@@ -146,14 +144,14 @@ fun DocumentItemRow(
             imageVector = Icons.Filled.CloudUpload,
             contentDescription = "upload",
             modifier = Modifier.size(MaterialTheme.dimens.medium1),
-            tint = MaterialTheme.colorScheme.secondaryTextColor
+            tint = MaterialTheme.erpColors.secondaryTextColor
         )
         Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
         Text(
             text = uploadText,
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.bodyMedium.copy(
-                color = MaterialTheme.colorScheme.secondaryTextColor,
+                color = MaterialTheme.erpColors.secondaryTextColor,
             ),
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,

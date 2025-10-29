@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.gurkha.hr.components.dimens
+import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.components.shimmer.ShimmerView
 import com.gurkha.hr.components.tabbar.ERPTabView
 import com.gurkha.hr.domain.leave.leaveReport.model.LeaveReportData
@@ -51,9 +52,6 @@ import com.gurkha.hr.leave.model.leave.LeaveItem
 import com.gurkha.hr.leave.model.leave.LeaveScreenAction
 import com.gurkha.hr.leave.model.leave.LeaveScreenState
 import com.gurkha.hr.res.SharedRes
-import com.gurkha.hr.res.theme.darkPrimaryTextColor
-import com.gurkha.hr.res.theme.highLightColor
-import com.gurkha.hr.res.theme.primaryTextColor
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -94,7 +92,7 @@ fun LeaveScreen(
                     Text(
                         text = stringResource(SharedRes.Strings.all_leaves),
                         style = MaterialTheme.typography.titleLarge.copy(
-                            color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                            color = MaterialTheme.erpColors.darkPrimaryTextColor
                         )
                     )
                 }
@@ -224,12 +222,12 @@ fun LeaveBox(
         Text(
             text = stringResource(item.title),
             style = MaterialTheme.typography.titleMedium.copy(
-                color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                color = MaterialTheme.erpColors.darkPrimaryTextColor
             )
         )
         Text(
             text = item.days.toString(), style = MaterialTheme.typography.titleMedium.copy(
-                color = MaterialTheme.colorScheme.primaryTextColor
+                color = MaterialTheme.erpColors.primaryTextColor
             )
         )
     }
@@ -315,12 +313,11 @@ fun LazyItemScope.ResultBox(
 ) {
     Surface(
         modifier = Modifier
-            .fillMaxWidth()
-        ,
+            .fillMaxWidth(),
         shape = MaterialTheme.shapes.medium,
         tonalElevation = 4.dp,
 
-    ){
+        ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -343,13 +340,13 @@ fun LazyItemScope.ResultBox(
                 Text(
                     text = stringResource(SharedRes.Strings.date),
                     style = MaterialTheme.typography.titleSmall.copy(
-                        color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                        color = MaterialTheme.erpColors.darkPrimaryTextColor
                     )
                 )
                 Text(
                     text = "From : ${item.startDate}   To : ${item.endDate}",
                     style = MaterialTheme.typography.titleSmall.copy(
-                        color = MaterialTheme.colorScheme.primaryTextColor
+                        color = MaterialTheme.erpColors.primaryTextColor
                     )
                 )
             }
@@ -368,13 +365,13 @@ fun LazyItemScope.ResultBox(
                     Text(
                         text = stringResource(SharedRes.Strings.applyDays),
                         style = MaterialTheme.typography.titleSmall.copy(
-                            color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                            color = MaterialTheme.erpColors.darkPrimaryTextColor
                         )
                     )
                     Text(
                         text = item.totalDays.toString(),
                         style = MaterialTheme.typography.titleSmall.copy(
-                            color = MaterialTheme.colorScheme.primaryTextColor
+                            color = MaterialTheme.erpColors.primaryTextColor
                         )
                     )
                 }
@@ -383,12 +380,12 @@ fun LazyItemScope.ResultBox(
                     Text(
                         text = stringResource(SharedRes.Strings.approver),
                         style = MaterialTheme.typography.titleSmall.copy(
-                            color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                            color = MaterialTheme.erpColors.darkPrimaryTextColor
                         )
                     )
                     Text(
                         text = item.assigneeName, style = MaterialTheme.typography.titleSmall.copy(
-                            color = MaterialTheme.colorScheme.primaryTextColor
+                            color = MaterialTheme.erpColors.primaryTextColor
                         )
                     )
                 }
@@ -397,13 +394,13 @@ fun LazyItemScope.ResultBox(
                     Text(
                         text = stringResource(SharedRes.Strings.leaveType),
                         style = MaterialTheme.typography.titleSmall.copy(
-                            color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                            color = MaterialTheme.erpColors.darkPrimaryTextColor
                         )
                     )
                     Text(
                         text = item.leaveType,
                         style = MaterialTheme.typography.titleSmall.copy(
-                            color = MaterialTheme.colorScheme.primaryTextColor
+                            color = MaterialTheme.erpColors.primaryTextColor
                         )
                     )
                 }
@@ -420,14 +417,14 @@ fun LazyItemScope.ResultBox(
                 Text(
                     text = stringResource(SharedRes.Strings.reason),
                     style = MaterialTheme.typography.titleSmall.copy(
-                        color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                        color = MaterialTheme.erpColors.darkPrimaryTextColor
                     )
                 )
                 Text(
                     text = item.reason,
                     maxLines = 3,
                     style = MaterialTheme.typography.titleSmall.copy(
-                        color = MaterialTheme.colorScheme.primaryTextColor
+                        color = MaterialTheme.erpColors.primaryTextColor
                     )
                 )
             }

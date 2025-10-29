@@ -7,13 +7,16 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.staticCompositionLocalOf
 import com.gurkha.hr.components.locale.LocalAppLocale
 import com.gurkha.hr.components.locale.erpAppLocale
 import com.gurkha.hr.res.theme.AppTypography
 import com.gurkha.hr.res.theme.CompactDimens
+import com.gurkha.hr.res.theme.ERPColorPalette
 import com.gurkha.hr.res.theme.ThemeMode
 import com.gurkha.hr.res.theme.backgroundDark
 import com.gurkha.hr.res.theme.backgroundLight
+import com.gurkha.hr.res.theme.darkERPPalette
 import com.gurkha.hr.res.theme.errorContainerDark
 import com.gurkha.hr.res.theme.errorContainerLight
 import com.gurkha.hr.res.theme.errorDark
@@ -24,6 +27,7 @@ import com.gurkha.hr.res.theme.inversePrimaryDark
 import com.gurkha.hr.res.theme.inversePrimaryLight
 import com.gurkha.hr.res.theme.inverseSurfaceDark
 import com.gurkha.hr.res.theme.inverseSurfaceLight
+import com.gurkha.hr.res.theme.lightERPPalette
 import com.gurkha.hr.res.theme.onBackgroundDark
 import com.gurkha.hr.res.theme.onBackgroundLight
 import com.gurkha.hr.res.theme.onErrorContainerDark
@@ -175,6 +179,7 @@ fun AppTheme(
     }
 
     val colorScheme = if (darkTheme) darkScheme else lightScheme
+    val erpColorsPalette = if (darkTheme) darkERPPalette else lightERPPalette
 
     ChangeStatusBarColor(
         darkIcons = !darkTheme
@@ -182,6 +187,7 @@ fun AppTheme(
 
     CompositionLocalProvider(
         LocalAppDimens provides CompactDimens,
+        LocalERPColorsPalette provides erpColorsPalette,
         LocalAppLocale provides erpAppLocale,
     ) {
 
@@ -193,9 +199,14 @@ fun AppTheme(
     }
 }
 
+val LocalERPColorsPalette = staticCompositionLocalOf { ERPColorPalette() }
 val MaterialTheme.dimens
     @Composable get() = LocalAppDimens.current
 
 val LocalAppDimens = compositionLocalOf {
     CompactDimens
 }
+
+
+val MaterialTheme.erpColors
+    @Composable get() = LocalERPColorsPalette.current
