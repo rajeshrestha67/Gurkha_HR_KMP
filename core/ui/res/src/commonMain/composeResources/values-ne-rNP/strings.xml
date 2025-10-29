@@ -280,6 +280,8 @@
 
     <string name="branch">शाखा</string>
     <string name="userId">प्रयोगकर्ता ID</string>
+
+    <string name="designation">पदनाम</string>
     
     <string-array name="months">
         <item>बैशाख</item>

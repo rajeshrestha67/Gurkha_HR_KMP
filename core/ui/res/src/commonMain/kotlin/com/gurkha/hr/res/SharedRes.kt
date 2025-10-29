@@ -60,6 +60,7 @@ import gurkhahr.core.ui.res.generated.resources.date_of_birth
 import gurkhahr.core.ui.res.generated.resources.delete
 import gurkhahr.core.ui.res.generated.resources.delete_confirmation
 import gurkhahr.core.ui.res.generated.resources.description
+import gurkhahr.core.ui.res.generated.resources.designation
 import gurkhahr.core.ui.res.generated.resources.do_you_really_want_to_logout
 import gurkhahr.core.ui.res.generated.resources.document
 import gurkhahr.core.ui.res.generated.resources.early_out
@@ -536,5 +537,7 @@ object SharedRes {
         val branch = Res.string.branch
 
         val userId = Res.string.userId
+
+        val designation = Res.string.designation
     }
 }

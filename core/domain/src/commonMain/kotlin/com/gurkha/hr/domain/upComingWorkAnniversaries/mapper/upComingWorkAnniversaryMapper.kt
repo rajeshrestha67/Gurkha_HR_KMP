@@ -13,7 +13,7 @@ fun UpComingWorkAnniversaryDetailDto.toData(): List<UpComingWorkAnniversaryData>
             designationName = it.designationName ?: "",
             imageUrl = it.imageUrl ?: "",
             branchName = it.branchName ?: "",
-            joinedDate = it.joinedDate ?: "",
+            joinedDate =  it.joinedDate?.split("T")[0] ?: "" ,
             initials = it.fullName?.extractInitials() ?: ""
         )
     } ?: emptyList()

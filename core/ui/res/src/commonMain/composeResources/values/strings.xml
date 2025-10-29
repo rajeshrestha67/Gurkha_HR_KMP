@@ -277,6 +277,8 @@
     <string name="branch">Branch</string>
     <string name="userId">User Id</string>
 
+    <string name="designation">Designation</string>
+
 
     <string-array name="months">
         <item>Baisakh</item>

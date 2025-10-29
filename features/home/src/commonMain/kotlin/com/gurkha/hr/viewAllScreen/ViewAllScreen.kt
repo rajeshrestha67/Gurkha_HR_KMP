@@ -159,7 +159,7 @@ fun ResultBox(
                 )
 
                 Text(
-                    text = "Designation : ${item.designationName}",
+                    text = "${stringResource(SharedRes.Strings.designation)} : ${item.designationName}",
                     style = MaterialTheme.typography.titleSmall.copy(
                         color = MaterialTheme.colorScheme.primaryTextColor
                     )
@@ -171,7 +171,7 @@ fun ResultBox(
                     )
                 )
                 Text(
-                    "Date : ${item.date}", style = MaterialTheme.typography.titleSmall.copy(
+                    "${stringResource(SharedRes.Strings.date)} : ${item.date}", style = MaterialTheme.typography.titleSmall.copy(
                         color = MaterialTheme.colorScheme.primaryTextColor
                     )
                 )
