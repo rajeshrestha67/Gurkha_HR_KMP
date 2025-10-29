@@ -74,6 +74,10 @@ class ChatListViewModel(
                     Json.encodeToString(chatUserData)
                 )
             }
+
+            is ChatListScreenAction.OnRefresh -> {
+                refresh()
+            }
         }
     }
 
@@ -100,6 +104,20 @@ class ChatListViewModel(
             _state.update {
                 it.copy(isLoading = false, error = error.toErrorMessage())
             }
+        }
+    }
+
+    private fun refresh()=viewModelScope.launch {
+        _state.update {
+            it.copy(
+                isRefreshing = true
+            )
+        }
+        fetchChatList()
+        _state.update {
+            it.copy(
+                isRefreshing = false
+            )
         }
     }
 }

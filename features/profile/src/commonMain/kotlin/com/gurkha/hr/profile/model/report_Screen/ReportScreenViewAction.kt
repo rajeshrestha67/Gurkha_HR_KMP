@@ -10,4 +10,6 @@ interface ReportScreenViewAction {
     data class YearFieldError(val error: StringResource?) : ReportScreenViewAction
     data class MonthFieldError(val error: StringResource?) : ReportScreenViewAction
     data class Submit(val employeeId: Int?) : ReportScreenViewAction
+    data object OnRefresh: ReportScreenViewAction
+
 }

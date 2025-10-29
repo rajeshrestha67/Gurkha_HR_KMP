@@ -7,5 +7,6 @@ interface NoteAction {
     data class OnDeleteIdSelected(val id:Int): NoteAction
 
     data class OnDeleteNoteFromState(val id: Int): NoteAction
+    data object OnRefresh: NoteAction
 
 }

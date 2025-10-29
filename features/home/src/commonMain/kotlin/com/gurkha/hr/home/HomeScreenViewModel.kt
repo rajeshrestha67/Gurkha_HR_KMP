@@ -1,11 +1,14 @@
 package com.gurkha.hr.home
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gurkha.hr.components.permissions.ProgressNotification
 import com.gurkha.hr.date.BSPointer
 import com.gurkha.hr.date.DateConverter
 import com.gurkha.hr.date.Year
+import com.gurkha.hr.date.data.DateUtils
 import com.gurkha.hr.date.data.model.CalendarModel
 import com.gurkha.hr.date.data.model.now
 import com.gurkha.hr.domain.attendance.attendanceReport.model.AttendanceData
@@ -40,6 +43,7 @@ import kotlinx.datetime.LocalDate
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
+
 class HomeScreenViewModel(
     private val attendanceUseCase: AttendanceUseCase,
     private val userDetailUseCase: FetchUserDetailUseCase,
@@ -54,6 +58,10 @@ class HomeScreenViewModel(
 ) : ViewModel() {
     private val _state = MutableStateFlow(HomeScreenState())
     private val notification = ProgressNotification()
+
+    private var isAlreadyClockIn: MutableState<Boolean> = mutableStateOf(false)
+
+    @OptIn(ExperimentalTime::class)
     val state = _state
         .onStart {
             fetchCurrentUser()
@@ -63,7 +71,6 @@ class HomeScreenViewModel(
             fetchCalendarValue()
             fetchUpComingEvents()
             getUnseenNotificationCount()
-
         }
         .stateIn(
             scope = viewModelScope,
@@ -113,6 +120,10 @@ class HomeScreenViewModel(
             is HomeScreenActions.SwipeToDismiss -> {
                 uploadImage(uri = action.uri)
             }
+
+            HomeScreenActions.OnRefresh -> {
+                reFresh()
+            }
         }
     }
 
@@ -121,11 +132,11 @@ class HomeScreenViewModel(
             attendanceData?.let {
                 when (item.type) {
                     RequestType.CheckIn -> item.copy(
-                        duration = attendanceData.clockInTime ?: _state.value.clockInTime
+                        duration = attendanceData.clockInTime ?: "--:--"
                     )
 
                     RequestType.CheckOut -> item.copy(
-                        duration = attendanceData.clockOutTime ?: _state.value.clockOutTime
+                        duration = attendanceData.clockOutTime ?: "--:--"
                     )
 
                     else -> item
@@ -178,6 +189,7 @@ class HomeScreenViewModel(
             fromDate = fromDate,
             toDate = toDate
         ).onSuccess { data ->
+            AppLogger.d(tag = TAG, "Attendance Fetch  success")
 
             val attendanceData = data.find { data ->
                 val day = getDayFromDate(date = data.date)?.toInt()
@@ -199,7 +211,7 @@ class HomeScreenViewModel(
                             } ?: false
                         } catch (_: Exception) {
                             AppLogger.e(
-                                "HomeScreenViewModel",
+                                tag = TAG,
                                 "fetchAttendance date filter: ${mData.date}"
                             )
                             false
@@ -216,7 +228,7 @@ class HomeScreenViewModel(
 
         }.onError { error ->
             AppLogger.e(
-                "HomeScreenViewModel",
+                TAG,
                 "fetchAttendance date filter: ${error.toErrorMessage()}"
             )
             _state.update {
@@ -240,6 +252,8 @@ class HomeScreenViewModel(
             )
         }
         userDetailUseCase(true).onSuccess { data ->
+            AppLogger.d(tag = TAG, "CurrentUser Fetch  success")
+
             _state.update {
                 it.copy(
                     isProfileLoading = false,
@@ -251,7 +265,11 @@ class HomeScreenViewModel(
                     employeeId = data.employeeId
                 )
             }
-        }.onError {
+        }.onError {error ->
+            AppLogger.e(
+                tag = TAG,
+                "Fetching Current User failed: ${error.toErrorMessage()}"
+            )
             _state.update {
                 it.copy(
                     isProfileLoading = false
@@ -266,13 +284,19 @@ class HomeScreenViewModel(
             it.copy(isBirthDayLoading = true)
         }
         upComingBirthdayUseCase().onSuccess { data ->
+            AppLogger.d(tag = TAG, "Upcoming Birthday Fetch  success")
+
             _state.update {
                 it.copy(
                     isBirthDayLoading = false,
                     upComingBirthday = data
                 )
             }
-        }.onError {
+        }.onError {error ->
+            AppLogger.e(
+                tag = TAG,
+                "Fetching Upcoming Birthday failed: ${error.toErrorMessage()}"
+            )
             _state.update {
                 it.copy(isBirthDayLoading = false)
             }
@@ -287,13 +311,19 @@ class HomeScreenViewModel(
             )
         }
         upComingWorkAnniversaryUseCase().onSuccess { data ->
+            AppLogger.d(tag = TAG, "Upcoming Anniversary Fetch  success")
+
             _state.update {
                 it.copy(
                     isAnniversaryLoading = false,
                     upComingWorkAnniversary = data
                 )
             }
-        }.onError {
+        }.onError {error ->
+            AppLogger.e(
+                tag = TAG,
+                "Fetching Upcoming Anniversary  failed: ${error.toErrorMessage()}"
+            )
             _state.update {
                 it.copy(
                     isAnniversaryLoading = false
@@ -310,13 +340,19 @@ class HomeScreenViewModel(
         }
 
         eventUseCase().onSuccess { data ->
+            AppLogger.d(tag = TAG, "Upcoming Events Fetch  success")
+
             _state.update {
                 it.copy(
                     isEventLoading = false,
                     upComingEvent = data
                 )
             }
-        }.onError {
+        }.onError {error ->
+            AppLogger.e(
+                tag = TAG,
+                "Fetching Upcoming Events failed: ${error.toErrorMessage()}"
+            )
             _state.update {
                 it.copy(
                     isEventLoading = false
@@ -333,18 +369,25 @@ class HomeScreenViewModel(
             )
         }
         notificationCountUseCase(force = true).onSuccess { data ->
+            AppLogger.d(tag = TAG, "Total Notification count fetch  success")
+
             _state.update {
                 it.copy(
                     totalNotificationCount = data.count
                 )
             }
 
-        }.onError {
+        }.onError {error ->
+            AppLogger.e(
+                tag = TAG,
+                "Get Total Notification failed: ${error.toErrorMessage()}"
+            )
             _state.update {
                 it.copy(
                     isNotificationCountLoading = false
                 )
             }
+
         }
     }
 
@@ -355,27 +398,34 @@ class HomeScreenViewModel(
             )
         }
         unseenNotificationUseCase().onSuccess { data ->
+            AppLogger.d(tag = TAG, "Unseen Notification fetch  success")
+
             _state.update {
                 it.copy(
                     isNotificationCountLoading = false,
                     totalUnSeenNotification = data.count
                 )
             }
+        }.onError {error ->
+            AppLogger.e(
+                tag = TAG,
+                "Unseen Notification fetch failed: ${error.toErrorMessage()}"
+            )
         }
     }
 
     private fun updateSwipeText() = viewModelScope.launch {
         _state.value.todayAttendance?.clockInTime?.let {
             _state.update {
+                isAlreadyClockIn.value = true
                 it.copy(
                     swipeText = SharedRes.Strings.swipeToCheckOut,
-                    isAlreadyClockIn = true
                 )
             }
         } ?: _state.update {
+            isAlreadyClockIn.value = false
             it.copy(
                 swipeText = SharedRes.Strings.swipeToCheckIn,
-                isAlreadyClockIn = false
             )
         }
     }
@@ -389,10 +439,10 @@ class HomeScreenViewModel(
                 showSwipeView = false
             )
         }
-        val imageName = if (_state.value.isAlreadyClockIn) "clockOut" else "clockIn"
+        val imageName = if (isAlreadyClockIn.value) "clockOut" else "clockIn"
 
         uploadImageUseCase(
-            imageName = "$imageName${Clock.System.now().toEpochMilliseconds()}.jpg",
+            imageName = "$imageName${Clock.System.now().toEpochMilliseconds()}",
             filePath = uri,
             onProgress = { progress ->
                 viewModelScope.launch {
@@ -404,10 +454,17 @@ class HomeScreenViewModel(
                 }
             }
         ).onSuccess { data ->
+            AppLogger.d(tag = TAG, "Image Upload success")
+
             doAttendance(
                 employeeId = _state.value.employeeId,
                 forDate = LocalDate.now().toString(),
                 imageName = data.imageName.toString()
+            )
+        }.onError {error ->
+            AppLogger.e(
+                tag = TAG,
+                "Image Upload failed: ${error.toErrorMessage()}"
             )
         }
     }
@@ -417,32 +474,73 @@ class HomeScreenViewModel(
         forDate: String,
         imageName: String
     ) = viewModelScope.launch {
+//        get the time when the the attendance use case was triggered
+        val currentTime = DateUtils.getCurrentTime()
         doAttendanceUseCase(
             employeeId = employeeId,
             imageName = imageName,
             forDate = forDate
         ).onSuccess {
-            AppLogger.d("AttendanceViewModel", "Attendance update success")
-            _state.update { current ->
-                val updatedAttendance = if (current.isAlreadyClockIn) {
-                    current.todayAttendance?.copy(clockOutTime = forDate)
-                } else {
-                    current.todayAttendance?.copy(clockInTime = forDate)
-                }
+            AppLogger.d(tag = TAG, "Attendance update success")
 
-                current.copy(
-                    showSwipeView = true,
-                    todayAttendance = updatedAttendance,
-                )
+            _state.update {
+                if(isAlreadyClockIn.value){
+                    it.copy(
+                        showSwipeView = true,
+                        requests = it.requests.updateDuration(
+                            attendanceData = it.todayAttendance?.copy(
+                                clockOutTime = currentTime
+                            )
+                        )
+
+                    )
+                }else{
+                    it.copy(
+                        showSwipeView = true,
+                        requests = it.requests.updateDuration(
+                            attendanceData = it.todayAttendance?.copy(
+                                clockInTime = currentTime
+                            )
+                        )
+                    )
+                }
             }
 
-        }.onError {error ->
-            AppLogger.e("AttendanceViewModel", "Attendance update failed: ${error.toErrorMessage()}")
+
+        }.onError { error ->
+            AppLogger.e(
+                tag = TAG,
+                "Attendance update failed: ${error.toErrorMessage()}"
+            )
             _state.update {
                 it.copy(
                     showSwipeView = true
                 )
             }
+        }
+    }
+    companion object {
+        private const val TAG = "HomeScreenViewModel"
+    }
+
+    private fun reFresh()=viewModelScope.launch {
+        _state.update {
+            it.copy(
+                isRefreshing = true
+            )
+        }
+        fetchCurrentUser()
+        fetchUpComingBirthday()
+        fetchUpComingWorkAnniversary()
+        fetchAttendance()
+        fetchCalendarValue()
+        fetchUpComingEvents()
+        getUnseenNotificationCount()
+
+        _state.update {
+            it.copy(
+                isRefreshing = false
+            )
         }
     }
 }

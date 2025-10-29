@@ -89,6 +89,9 @@ class AttendanceViewModel(
                     )
                 }
             }
+            is AttendanceAction.OnRefresh->{
+                refresh()
+            }
         }
     }
 
@@ -273,6 +276,27 @@ class AttendanceViewModel(
                     }
                 )
             }
+        }
+    }
+
+    private fun refresh()=viewModelScope.launch {
+        _state.update {
+            it.copy(
+                isRefreshing = true
+            )
+        }
+        fetchAttendanceSummary()
+        fetchAttendance(
+            attendanceStatus = TabItemsEnums.PENDING,
+            employeeName = "",
+            isSelf = "Y",
+            fromDate = datePair.first,
+            toDate = datePair.second
+        )
+        _state.update {
+            it.copy(
+                isRefreshing = false
+            )
         }
     }
 }

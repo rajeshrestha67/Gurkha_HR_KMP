@@ -1,6 +1,7 @@
 package com.gurkha.hr.leave.leaveRequestPage
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -46,6 +47,7 @@ import com.gurkha.hr.components.date.RangeSelectableDates
 import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.hideKeyboardOnTap
 import com.gurkha.hr.components.isKeyboardVisible
+import com.gurkha.hr.components.loadingScreen.LoadingScreen
 import com.gurkha.hr.components.prompts.PromptModalBottomSheet
 import com.gurkha.hr.components.prompts.PromptType
 import com.gurkha.hr.components.textField.DropDownText
@@ -189,20 +191,11 @@ fun LeaveRequestPageContent(
         },
     ) { paddingValues ->
 
-        AnimatedContent(
+        Box(
             modifier = Modifier.fillMaxSize().padding(paddingValues).imePadding(),
-            targetState = state.isRequestingLeave
-        ) { isLoading ->
-            if (isLoading) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(MaterialTheme.dimens.medium3),
-                        color = MaterialTheme.colorScheme.secondaryContainer
-                    )
-                }
+        ) {
+            if (state.isRequestingLeave) {
+                LoadingScreen()
             } else {
                 LeaveRequestScreenForm(
                     modifier = Modifier.fillMaxSize(),

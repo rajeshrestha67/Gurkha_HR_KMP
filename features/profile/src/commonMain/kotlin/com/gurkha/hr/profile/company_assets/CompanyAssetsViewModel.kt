@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.gurkha.hr.domain.companyAssets.usecase.CompanyAssetsUseCase
 import com.gurkha.hr.networkhelper.onSuccess
 import com.gurkha.hr.profile.model.companyAssets.CompanyAssetsState
+import com.gurkha.hr.profile.model.companyAssets.CompanyAssetsViewAction
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
@@ -26,6 +27,14 @@ class CompanyAssetsViewModel(
             initialValue = CompanyAssetsState()
         )
 
+    fun onAction(action: CompanyAssetsViewAction){
+        when(action){
+            CompanyAssetsViewAction.OnRefresh -> {
+                refresh()
+            }
+        }
+    }
+
     private fun onFetchData() = viewModelScope.launch {
         _state.update { it.copy(isLoading = true) }
         companyAssetsUseCase().onSuccess { data ->
@@ -36,6 +45,19 @@ class CompanyAssetsViewModel(
                 )
             }
         }
+    }
 
+    private fun refresh()=viewModelScope.launch {
+        _state.update {
+            it.copy(
+                isRefreshing = true
+            )
+        }
+        onFetchData()
+        _state.update {
+            it.copy(
+                isRefreshing = false
+            )
+        }
     }
 }

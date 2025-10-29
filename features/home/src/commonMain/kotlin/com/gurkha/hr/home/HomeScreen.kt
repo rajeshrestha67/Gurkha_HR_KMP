@@ -32,7 +32,6 @@ import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.DropdownMenu
@@ -49,7 +48,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarScrollBehavior
-import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -65,6 +64,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.PlatformMessage
 import com.gurkha.hr.components.ProfilePicture
 import com.gurkha.hr.components.date.horizontalCalendar.HorizontalCalendar
@@ -188,13 +188,22 @@ fun HomeScreen(
                 }, scrollBehavior = topAppBarScrollBehavior
             )
         }) { paddingValues ->
-        HomeScreenContent(
+        PullToRefreshBox(
             modifier = Modifier.fillMaxSize().padding(paddingValues),
-            state = state,
-            onAction = viewModel::onAction,
-            onViewAllClick = onViewAllClick,
-            birthdayTitle = birthdayTitle,
-            anniversaryTitle = anniversaryTitle
+            isRefreshing = state.isRefreshing,
+            onRefresh = {
+                viewModel.onAction(HomeScreenActions.OnRefresh)
+            },
+            content = {
+                HomeScreenContent(
+                    modifier = Modifier.fillMaxSize(),
+                    state = state,
+                    onAction = viewModel::onAction,
+                    onViewAllClick = onViewAllClick,
+                    birthdayTitle = birthdayTitle,
+                    anniversaryTitle = anniversaryTitle
+                )
+            }
         )
     }
 }
@@ -209,7 +218,7 @@ fun HomeScreenContent(
     birthdayTitle: String,
     anniversaryTitle: String
 ) {
-    var showModal by remember { mutableStateOf(false) }
+    var showPermissionModal by remember { mutableStateOf(false) }
 
     val openCamera = rememberCameraLauncher(
         onImageCaptured = { uri ->
@@ -246,7 +255,7 @@ fun HomeScreenContent(
                 tag = TAG,
                 message = "Permission denied permanent: $permission"
             )
-            showModal = true
+            showPermissionModal = true
         },
         onAllGranted = {
             AppLogger.i(
@@ -342,10 +351,10 @@ fun HomeScreenContent(
             )
 
         }
-        if (showModal) {
+        if (showPermissionModal) {
             PermanentPermissionShow(
                 onDismiss = {
-                    showModal = false
+                    showPermissionModal = false
                 }
             )
         }
@@ -359,7 +368,6 @@ fun HomeScreenContent(
                 text = stringResource(state.swipeText),
                 onDismissed = {
                     onPermission()
-//                    openCamera()
                 }
             )
         }
@@ -417,7 +425,6 @@ fun LazyListScope.anniversarySection(
                         UpComingCard(
                             fullName = item.fullName,
                             imageUrl = item.imageUrl,
-                            date = item.joinedDate,
                             designationName = item.designationName
                         )
                     }
@@ -475,7 +482,6 @@ fun LazyListScope.birthDaySection(
                         UpComingCard(
                             fullName = item.fullName,
                             imageUrl = item.imageUrl,
-                            date = item.dateOfBirth,
                             designationName = item.designationName
                         )
                     }
@@ -934,7 +940,6 @@ fun UpComingCard(
     imageUrl: String,
     fullName: String,
     designationName: String,
-    date: String,
 ) {
     Column(
         modifier = Modifier.widthIn(min = MaterialTheme.dimens.eventWidth)
@@ -1060,33 +1065,36 @@ fun PermanentPermissionShow(
 ) {
     val navigateToSettings = navigateToSettings()
     ModalBottomSheet(
+        modifier = Modifier.fillMaxWidth(),
         onDismissRequest = { onDismiss() },
-        sheetState = rememberModalBottomSheetState(),
         content = {
             Column(
-                modifier = Modifier.fillMaxWidth().height(MaterialTheme.dimens.chartHeight),
-                verticalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(MaterialTheme.dimens.chartHeight)
+                    .padding(
+                        horizontal = MaterialTheme.dimens.small3,
+                        vertical = MaterialTheme.dimens.medium2
+                    ),
+                verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                TextButton(
+                Text(
+                    text = "Allow Permission In Setting",
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                    ),
+                    textAlign = TextAlign.Center
+                )
+
+                ERPButton(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = "Go To Setting",
                     onClick = {
-                        onDismiss()
                         navigateToSettings()
+                        onDismiss()
                     }
-                ) {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
-                    ) {
-                        Text(
-                            text = "Allow Permission In Setting",
-                            style = MaterialTheme.typography.bodyLarge.copy(
-                                color = MaterialTheme.colorScheme.darkPrimaryTextColor
-                            ),
-                            textAlign = TextAlign.Center
-                        )
-                        Icon(Icons.Filled.Settings, contentDescription = "go to setting")
-                    }
-                }
+                )
             }
         }
 

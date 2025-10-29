@@ -4,15 +4,20 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gurkha.hr.domain.form.RequiredValidationUseCase
 import com.gurkha.hr.domain.userDetail.mapper.toDomain
+import com.gurkha.hr.domain.userDetail.mapper.toLocal
 import com.gurkha.hr.domain.userDetail.mapper.toUI
 import com.gurkha.hr.domain.userDetail.usecase.FetchUserDetailUseCase
 import com.gurkha.hr.domain.userDetail.usecase.UpdateUserDetailUseCase
+import com.gurkha.hr.networkhelper.onError
 import com.gurkha.hr.networkhelper.onSuccess
 import com.gurkha.hr.profile.model.edit_profile_screen.EditProfileScreenState
 import com.gurkha.hr.profile.model.edit_profile_screen.EditProfileViewAction
+import com.gurkha.model.network.toErrorMessage
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -21,8 +26,17 @@ class EditProfileViewModel(
     private val requiredValidationUseCase: RequiredValidationUseCase,
     private val fetchUserDetailUseCase: FetchUserDetailUseCase,
     private val updateUserDetailUseCase: UpdateUserDetailUseCase,
+
 ) : ViewModel() {
     private val _state = MutableStateFlow(EditProfileScreenState())
+
+    private val _successChannel = Channel<String>()
+    val successChannel = _successChannel.receiveAsFlow()
+
+    private val _errorChannel = Channel<String>()
+    val errorChannel = _errorChannel.receiveAsFlow()
+
+
     val state = _state
         .onStart {
             onFetchData()
@@ -39,7 +53,6 @@ class EditProfileViewModel(
 
         fetchUserDetailUseCase()
             .onSuccess { userDetail ->
-                println("ProfileInfoData $userDetail")
                 _state.update {
                     it.copy(
                         isLoading = false,
@@ -63,7 +76,9 @@ class EditProfileViewModel(
             is EditProfileViewAction.EmployeeType -> {
                 _state.update {
                     it.copy(
-                        employeeTypeList = action.employeeType
+                        profileSummaryList = it.profileSummaryList?.copy(
+                            employeeTypes = action.employeeType.toString()
+                        )
                     )
                 }
             }
@@ -71,10 +86,9 @@ class EditProfileViewModel(
             is EditProfileViewAction.DateOfBirth -> {
                 _state.update {
                     it.copy(
-                        dob = action.date,
-                        dobError = null,
-                        dateOfBirth = state.value.profileSummaryList?.dateOfBirth
-
+                        profileSummaryList = it.profileSummaryList?.copy(
+                            dateOfBirth = action.date
+                        )
                     )
                 }
             }
@@ -82,8 +96,9 @@ class EditProfileViewModel(
             is EditProfileViewAction.JoinedDate -> {
                 _state.update {
                     it.copy(
-                        joinDate = action.date,
-                        joinDateError = null
+                        profileSummaryList = it.profileSummaryList?.copy(
+                            joinedDate = action.date
+                        )
                     )
                 }
             }
@@ -94,9 +109,8 @@ class EditProfileViewModel(
                         profileSummaryList = it.profileSummaryList?.copy(
                             bloodGroup = action.bloodGroup
                         ),
-                        bloodGroup = action.bloodGroup
 
-                    )
+                        )
                 }
             }
 
@@ -106,7 +120,6 @@ class EditProfileViewModel(
                         profileSummaryList = it.profileSummaryList?.copy(
                             guardianName = action.guardianName
                         ),
-                        guardianName = action.guardianName
                     )
                 }
             }
@@ -117,9 +130,8 @@ class EditProfileViewModel(
                         profileSummaryList = it.profileSummaryList?.copy(
                             guardianPhone = action.guardianPhone
                         ),
-                        guardianNumber = action.guardianPhone
 
-                    )
+                        )
                 }
             }
 
@@ -129,9 +141,8 @@ class EditProfileViewModel(
                         profileSummaryList = it.profileSummaryList?.copy(
                             pfNumber = action.pfNumber
                         ),
-                        pfNumber = action.pfNumber
 
-                    )
+                        )
                 }
             }
 
@@ -141,8 +152,6 @@ class EditProfileViewModel(
                         profileSummaryList = it.profileSummaryList?.copy(
                             panNumber = action.panNumber
                         ),
-                        panNumber = action.panNumber
-
                     )
                 }
             }
@@ -161,20 +170,34 @@ class EditProfileViewModel(
     private fun submit(
 
     ) = viewModelScope.launch {
-        println("Unsuccess")
-        state.value.profileSummaryList?.let {
-            println("Unsuccess2")
-            updateUserDetailUseCase(
-                data = state.value.profileSummaryList!!.toDomain()
-            ).onSuccess {
+        _state.update {
+            it.copy(
+                isUpdating = true
+            )
+        }
+        state.value.profileSummaryList?.toDomain()?.let { domain ->
 
+            updateUserDetailUseCase(
+                data = domain
+            ).onSuccess { data ->
+                _state.update {
+                    it.copy(
+                        isUpdating = false
+                    )
+                }
+                _successChannel.send(data.message)
+            }.onError { error ->
+                _state.update {
+                    it.copy(
+                        isUpdating = false,
+                    )
+                }
+                _errorChannel.send(error.toErrorMessage())
             }
-            _state.update {
-                it.copy(
-                    isLoading = false,
-                    isSubmitSuccess = true
-                )
-            }
+
+        }
+        state.value.profileSummaryList?.let {
+
         }
 
     }

@@ -19,6 +19,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -120,49 +121,55 @@ fun ViewAllScreenContent(
 fun ResultBox(
     item: ViewAllUi
 ) {
-    Row(
+    Surface(
         modifier = Modifier.fillMaxWidth()
-            .clip(shape = MaterialTheme.shapes.small)
-            .background(MaterialTheme.colorScheme.veryLightGray)
-            .padding(all = MaterialTheme.dimens.small2),
-        verticalAlignment = Alignment.Top,
-        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
-    ) {
-        ProfilePicture(
-            imageUrl = item.imageUrl,
-            employeeName = item.fullName,
-            nameInitials = item.initials,
-            size = MaterialTheme.dimens.large,
-            shape = CircleShape,
-            background = MaterialTheme.colorScheme.imageBackgroundColor,
-            borderWidth = 0.5.dp,
-            borderColor = MaterialTheme.colorScheme.borderColor,
-            ratio = 1f
-        )
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.Center,
+            .clip(shape = MaterialTheme.shapes.small),
+        tonalElevation = 4.dp,
+
+    ){
+        Row(
+            modifier = Modifier.fillMaxWidth()
+                .clip(shape = MaterialTheme.shapes.small)
+                .padding(all = MaterialTheme.dimens.small2),
+            verticalAlignment = Alignment.Top,
+            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
         ) {
-
-            Text(
-                text = item.fullName, style = MaterialTheme.typography.titleMedium.copy(
-                    color = MaterialTheme.colorScheme.darkPrimaryTextColor
-                )
+            ProfilePicture(
+                imageUrl = item.imageUrl,
+                employeeName = item.fullName,
+                nameInitials = item.initials,
+                size = MaterialTheme.dimens.large,
+                shape = CircleShape,
+                background = MaterialTheme.colorScheme.imageBackgroundColor,
+                borderWidth = 0.5.dp,
+                borderColor = MaterialTheme.colorScheme.borderColor,
+                ratio = 1f
             )
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.Center,
+            ) {
 
-            Text(
-                text = "Designation : ${item.designationName}",
-                style = MaterialTheme.typography.titleSmall.copy(
-                    color = MaterialTheme.colorScheme.primaryTextColor
+                Text(
+                    text = item.fullName, style = MaterialTheme.typography.titleMedium.copy(
+                        color = MaterialTheme.colorScheme.primaryTextColor
+                    )
                 )
-            )
 
-            Text(
-                "Branch : ${item.branchName}", style = MaterialTheme.typography.titleSmall.copy(
-                    color = MaterialTheme.colorScheme.primaryTextColor
+                Text(
+                    text = "Designation : ${item.designationName}",
+                    style = MaterialTheme.typography.titleSmall.copy(
+                        color = MaterialTheme.colorScheme.primaryTextColor
+                    )
                 )
-            )
 
+                Text(
+                    "Branch : ${item.branchName}", style = MaterialTheme.typography.titleSmall.copy(
+                        color = MaterialTheme.colorScheme.primaryTextColor
+                    )
+                )
+
+            }
         }
     }
 }

@@ -1,8 +1,12 @@
 package com.gurkha.hr.domain.userDetail.mapper
 
+import com.gurkha.hr.components.date.DateData
 import com.gurkha.hr.components.extractInitials
 import com.gurkha.hr.domain.userDetail.model.UserDetailData
+import com.gurkha.hr.domain.userDetail.model.UserUpdateData
 import com.gurkha.hr.domain.userDetail.ui.EditProfileUI
+import com.gurkha.model.userDetail.UpdateProfileResponseDto
+import com.gurkha.model.userDetail.UpdateRequestUserDto
 import com.gurkha.model.userDetail.UserDetailResponseDto
 import com.gurkha.model.user_data.UserData
 
@@ -16,9 +20,9 @@ fun UserDetailResponseDto.toData(): UserDetailData {
         employeeId = detail?.employeeId ?: 0,
         address = detail?.employeeDetails?.address ?: "",
         branchName = detail?.employeeDetails?.user?.branch?.branchName ?: "",
-        dateOfBirth = detail?.employeeDetails?.dateOfBirth ?: "",
+        dateOfBirth = detail?.employeeDetails?.dateOfBirth?.split("T")[0]  ?: "",
         gender = detail?.employeeDetails?.gender ?: "",
-        joinedDate = detail?.employeeDetails?.joinedDate ?: "",
+        joinedDate = detail?.employeeDetails?.joinedDate?.split("T")[0] ?: "",
         nationality = detail?.employeeDetails?.country ?: "",
         maritalStatus = detail?.employeeDetails?.maritalStatus ?: "",
         guardianName = detail?.employeeDetails?.guardianName ?: "",
@@ -107,63 +111,65 @@ fun UserDetailData.toUI(): EditProfileUI{
         employeeId = employeeId,
         branchName = branchName,
         address = address,
-        joinedDate = joinedDate,
+        joinedDate = if(joinedDate.isNotBlank())DateData.fromDisplayAD(joinedDate )else null,
         maritalStatus = maritalStatus,
         gender = gender,
-        dateOfBirth = dateOfBirth,
+        dateOfBirth = if(dateOfBirth.isNotBlank())DateData.fromDisplayAD(dateOfBirth ) else null,
         bloodGroup = bloodGroup,
         guardianName = guardianName,
         guardianPhone = guardianNumber,
         designation = designation,
         employeeTypes = employeeType,
         panNumber = panNumber,
-        pfNumber = pfNumber
+        pfNumber = pfNumber,
+    initials = initials,
+        imageUrl = imageUrl
 
     )
 }
 
-fun EditProfileUI.toDomain(): UserDetailData {
-    return UserDetailData(
+fun EditProfileUI.toDomain(): UpdateRequestUserDto {
+    return UpdateRequestUserDto(
+        joinedDate = joinedDate?.displayValueAD,
+        id = employeeId,
+        startDate = dateOfBirth?.displayValueAD,
+        guardianName = guardianName,
+        guardianNumber = guardianPhone,
+        bloodGroup = bloodGroup,
+        employeeType = employeeTypes,
+        panNumber = panNumber,
+        pfNumber = pfNumber,
+    )
+}
+
+fun UpdateProfileResponseDto.toData(): UserUpdateData{
+    return UserUpdateData(
+        message = message ?: ""
+    )
+}
+
+fun EditProfileUI.toLocal(): UserData {
+    return UserData(
         email = email,
         phoneNumber = phoneNumber,
         fullName = fullName,
         levelName = levelName,
         employeeId = employeeId,
+        branchName = branchName,
+        joinedDate = joinedDate?.displayValueAD ?: "",
         address = address,
-        dateOfBirth = dateOfBirth,
+        dateOfBirth = dateOfBirth?.displayValueAD ?: "",
         gender = gender,
-        joinedDate = joinedDate,
-        nationality = nationality,
         maritalStatus = maritalStatus,
         guardianName = guardianName,
-        guardianNumber = guardianPhone,
-        initials = initials,
-        isCompleteProfile = isCompleteProfile,
+        guardianPhone = guardianPhone,
         bloodGroup = bloodGroup,
         designation = designation,
-        employeeType = employeeTypes,
+        employeeTypes = employeeTypes,
         panNumber = panNumber,
         pfNumber = pfNumber,
-        branchName = branchName,
-        bachelorImage =bachelorImage ,
-        branchId = branchId,
-        citizenshipBackImage = citizenshipBackImage,
-        citizenshipFrontImage = citizenshipFrontImage,
-        departmentId = departmentId,
-        designationId = designationId,
-        enableImageAttendance = enableImageAttendance,
-        enableManualAttendance = enableManualAttendance,
-        experienceDocuments = experienceDocuments,
-        imageUrl = imageUrl,
-        levelId = levelId,
-        mapId = mapId,
-        masterImage =masterImage,
-        nationalId = nationalId,
-        panImage = panImage,
-        password = password,
-        plusTwoImage = plusTwoImage,
-        profileId =  profileId,
-        slcDocument = slcDocument,
-        userProfileUrl = userProfileUrl,
+        imageUrl = imageUrl ?: "",
+        initials = initials ?:"",
+
     )
 }

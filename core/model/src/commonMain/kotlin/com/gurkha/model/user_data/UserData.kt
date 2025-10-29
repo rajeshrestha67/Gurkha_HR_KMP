@@ -44,7 +44,5 @@ data class UserData(
     val plusTwoImage: String = "",
     val profileId: Int = 0,
     val slcDocument: String = "",
-    val userProfileUrl: String = ""
-
-
+    val userProfileUrl: String = "",
 )

@@ -33,6 +33,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -108,11 +109,20 @@ fun LeaveScreen(
             )
         },
     ) { contentPadding ->
-        LeaveScreenContent(
+        PullToRefreshBox(
             modifier = Modifier.fillMaxSize().padding(contentPadding),
-            state = state,
-            onAction = viewModel::onAction,
-            leaveListState = leaveListState
+            isRefreshing = state.isRefreshing,
+            onRefresh = {
+                viewModel.onAction(LeaveScreenAction.OnRefresh)
+            },
+            content = {
+                LeaveScreenContent(
+                    modifier = Modifier.fillMaxSize(),
+                    state = state,
+                    onAction = viewModel::onAction,
+                    leaveListState = leaveListState
+                )
+            }
         )
     }
 }

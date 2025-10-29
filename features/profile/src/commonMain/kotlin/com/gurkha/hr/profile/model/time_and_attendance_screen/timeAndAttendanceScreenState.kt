@@ -14,6 +14,8 @@ data class TimeAndAttendanceState(
     val attendanceStatus: String? = null,
 
     val fromDateError: StringResource? = null,
-    val toDateError: StringResource? = null
+    val toDateError: StringResource? = null,
+
+    val isRefreshing: Boolean = false
 
 )

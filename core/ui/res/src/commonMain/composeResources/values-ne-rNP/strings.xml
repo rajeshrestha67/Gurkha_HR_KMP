@@ -277,6 +277,9 @@
     <string name="nepali">नेपाली</string>
 
     <string name="biometric">बायोमेट्रिक</string>
+
+    <string name="branch">शाखा</string>
+    <string name="userId">प्रयोगकर्ता ID</string>
     
     <string-array name="months">
         <item>बैशाख</item>

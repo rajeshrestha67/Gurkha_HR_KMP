@@ -34,6 +34,7 @@ import gurkhahr.core.ui.res.generated.resources.attendance_summary
 import gurkhahr.core.ui.res.generated.resources.bachelor
 import gurkhahr.core.ui.res.generated.resources.biometric
 import gurkhahr.core.ui.res.generated.resources.blood_group
+import gurkhahr.core.ui.res.generated.resources.branch
 import gurkhahr.core.ui.res.generated.resources.bs
 import gurkhahr.core.ui.res.generated.resources.camera
 import gurkhahr.core.ui.res.generated.resources.cancel
@@ -227,6 +228,7 @@ import gurkhahr.core.ui.res.generated.resources.upload_national_id
 import gurkhahr.core.ui.res.generated.resources.upload_plus_two_image
 import gurkhahr.core.ui.res.generated.resources.upload_profile_image
 import gurkhahr.core.ui.res.generated.resources.upload_slc_marksheet
+import gurkhahr.core.ui.res.generated.resources.userId
 import gurkhahr.core.ui.res.generated.resources.username
 import gurkhahr.core.ui.res.generated.resources.view_all
 import gurkhahr.core.ui.res.generated.resources.weeks_days
@@ -530,5 +532,9 @@ object SharedRes {
 
         val english = Res.string.english
         val nepali = Res.string.nepali
+
+        val branch = Res.string.branch
+
+        val userId = Res.string.userId
     }
 }

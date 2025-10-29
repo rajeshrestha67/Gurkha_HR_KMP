@@ -41,6 +41,9 @@ class ProfileInfoScreenViewModel(
                     )
                 }
             }
+            is ProfileInfoViewAction.OnRefresh->{
+                refresh()
+            }
         }
     }
 
@@ -62,7 +65,7 @@ class ProfileInfoScreenViewModel(
                         employeeId = userDetail.employeeId,
                         branchName = userDetail.branchName,
                         address = userDetail.address,
-                        joinedDate = userDetail.joinedDate,
+                        joinedDate = userDetail.joinedDate ?: "",
                         contactInfo = listOf(
                             ProfileInfo(
                                 name = SharedRes.Strings.email,
@@ -80,7 +83,7 @@ class ProfileInfoScreenViewModel(
                         personalDetails = listOf(
                             ProfileInfo(
                                 name = SharedRes.Strings.date_of_birth,
-                                value = userDetail.dateOfBirth
+                                value = userDetail.dateOfBirth ?: ""
                             ),
                             ProfileInfo(
                                 name = SharedRes.Strings.gender,
@@ -114,6 +117,21 @@ class ProfileInfoScreenViewModel(
                     )
                 }
             }
+    }
+
+    private fun refresh()=viewModelScope.launch {
+        _state.update {
+            it.copy(
+                isRefreshing = true
+            )
+        }
+        fetchUserDetails()
+
+        _state.update {
+            it.copy(
+                isRefreshing = false
+            )
+        }
     }
 
 

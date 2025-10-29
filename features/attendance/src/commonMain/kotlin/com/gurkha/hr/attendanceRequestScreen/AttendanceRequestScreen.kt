@@ -46,6 +46,7 @@ import com.gurkha.hr.components.date.FutureAndTodayDate
 import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.hideKeyboardOnTap
 import com.gurkha.hr.components.isKeyboardVisible
+import com.gurkha.hr.components.loadingScreen.LoadingScreen
 import com.gurkha.hr.components.prompts.PromptModalBottomSheet
 import com.gurkha.hr.components.prompts.PromptType
 import com.gurkha.hr.components.radioButton.RadioGroup
@@ -187,35 +188,25 @@ fun AttendanceRequestScreenContent(
         },
     ) { contentPadding ->
 
-        AnimatedContent(
+        Box(
             modifier = Modifier.fillMaxSize().padding(paddingValues = contentPadding),
-            targetState = state.isRequestingAttendance
-        ) { isLoading ->
-            if (isLoading) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(MaterialTheme.dimens.medium3),
-                        color = MaterialTheme.colorScheme.secondaryContainer
-                    )
-                }
-            } else {
-                AttendanceRequestScreenForm(
+        ) {
+            if (state.isRequestingAttendance) {
+                LoadingScreen()
+            }
+            AttendanceRequestScreenForm(
                     modifier = Modifier
                         .fillMaxSize(),
-                    onAction = onAction,
-                    onBackClicked = onBackPressed,
-                    state = state,
-                    showSuccessDialogue = showSuccessDialogue,
-                    showFailedDialogue = showFailedDialogue,
-                    message = message,
-                    onSendData = {
-                        sendData(true)
-                    }
-                )
+            onAction = onAction,
+            onBackClicked = onBackPressed,
+            state = state,
+            showSuccessDialogue = showSuccessDialogue,
+            showFailedDialogue = showFailedDialogue,
+            message = message,
+            onSendData = {
+                sendData(true)
             }
+            )
         }
 
     }

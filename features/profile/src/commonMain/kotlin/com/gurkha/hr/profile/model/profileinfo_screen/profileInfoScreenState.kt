@@ -20,6 +20,8 @@ data class ProfileInfoScreenState(
     val guardianInfo: List<ProfileInfo> = emptyList(),
     val infoList: List<InfoList> = InfoList.list,
     val isProfileLoading: Boolean = false,
-    val selectedTab: InfoList = InfoList.PersonalInfo
+    val selectedTab: InfoList = InfoList.PersonalInfo,
+
+    val isRefreshing: Boolean = false
 )
 

@@ -29,9 +29,7 @@ class NoteViewModel(
     private val _state = MutableStateFlow(NoteState())
     val state = _state
         .onStart {
-            if (_state.value.noteItem.isEmpty()) {
                 fetchAllNotes()
-            }
         }
         .stateIn(
             scope = viewModelScope,
@@ -177,6 +175,20 @@ class NoteViewModel(
                 )
             }
             _errorChannel.send(error.toErrorMessage())
+        }
+    }
+
+    private fun refresh()=viewModelScope.launch {
+        _state.update {
+            it.copy(
+                isRefreshing = true
+            )
+        }
+        fetchAllNotes()
+        _state.update {
+            it.copy(
+                isRefreshing = false
+            )
         }
     }
 }

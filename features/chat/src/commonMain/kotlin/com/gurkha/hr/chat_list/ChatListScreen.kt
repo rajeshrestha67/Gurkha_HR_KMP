@@ -30,6 +30,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -171,10 +172,17 @@ private fun ChatListScreenContent(
             )
         }
     ) { paddingValues ->
-        ChatListLazyColumn(
+        PullToRefreshBox(
             modifier = Modifier.padding(paddingValues).fillMaxSize(),
-            state = state,
-            onAction = onAction
+            isRefreshing = state.isRefreshing,
+            onRefresh = {onAction(ChatListScreenAction.OnRefresh)},
+            content = {
+                ChatListLazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    state = state,
+                    onAction = onAction
+                )
+            }
         )
     }
 }

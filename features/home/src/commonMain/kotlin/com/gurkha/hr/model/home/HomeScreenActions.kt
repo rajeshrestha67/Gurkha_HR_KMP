@@ -14,6 +14,6 @@ sealed interface HomeScreenActions {
     data class OnDateSelected(val day: Int) : HomeScreenActions
 
     data class SwipeToDismiss(val uri: String) : HomeScreenActions
-
+    data object OnRefresh : HomeScreenActions
 
 }

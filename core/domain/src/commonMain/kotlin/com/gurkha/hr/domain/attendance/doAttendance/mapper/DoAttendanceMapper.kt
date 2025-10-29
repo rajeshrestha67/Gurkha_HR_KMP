@@ -5,6 +5,6 @@ import com.gurkha.model.attendance.doAttendance.DoAttendanceResponseDto
 
 fun DoAttendanceResponseDto.toData(): DoAttendanceData{
     return DoAttendanceData(
-        message =  message
+        message =  message ?: ""
     )
 }

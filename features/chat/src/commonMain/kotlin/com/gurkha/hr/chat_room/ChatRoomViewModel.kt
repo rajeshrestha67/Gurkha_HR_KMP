@@ -88,6 +88,10 @@ class ChatRoomViewModel(
                     sendMessage()
                 }
             }
+
+            ChatRoomScreenAction.OnRefresh -> {
+                refresh()
+            }
         }
     }
 
@@ -234,6 +238,19 @@ class ChatRoomViewModel(
             _state.update {
                 it.copy(isLoading = false)
             }
+        }
+    }
+
+    private fun refresh()=viewModelScope.launch {
+        _state.update {
+            it.copy(
+                isRefreshing = true
+            )
+        }
+        _state.update {
+            it.copy(
+                isRefreshing = false
+            )
         }
     }
 
