@@ -238,6 +238,9 @@ fun DashboardScreenContent(
                             )
                         )
                     }
+                },
+                onGoToFixProfile={
+                    navController.navigate(HomeRoute.EditProfileRoute)
                 }
             )
             profileScreenBuilder(

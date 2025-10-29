@@ -7,7 +7,6 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,7 +28,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Chat
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.Badge
@@ -110,7 +108,8 @@ fun HomeScreen(
     topAppBarScrollBehavior: TopAppBarScrollBehavior,
     onChatClick: () -> Unit,
     onNotificationClick: () -> Unit,
-    onViewAllClick: (String?, String) -> Unit
+    onViewAllClick: (String?, String) -> Unit,
+    onGoToFixProfile: () -> Unit
 ) {
     val viewModel: HomeScreenViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -201,7 +200,8 @@ fun HomeScreen(
                     onAction = viewModel::onAction,
                     onViewAllClick = onViewAllClick,
                     birthdayTitle = birthdayTitle,
-                    anniversaryTitle = anniversaryTitle
+                    anniversaryTitle = anniversaryTitle,
+                    onGoToFixProfile = onGoToFixProfile
                 )
             }
         )
@@ -216,7 +216,8 @@ fun HomeScreenContent(
     onAction: (HomeScreenActions) -> Unit,
     onViewAllClick: (String?, String) -> Unit,
     birthdayTitle: String,
-    anniversaryTitle: String
+    anniversaryTitle: String,
+    onGoToFixProfile: () -> Unit
 ) {
     var showPermissionModal by remember { mutableStateOf(false) }
 
@@ -264,9 +265,6 @@ fun HomeScreenContent(
             )
         }
     )
-    val (showNotification, onChangeNotification) = rememberSaveable {
-        mutableStateOf(true)
-    }
     val mainListState = rememberLazyListState()
 
 
@@ -310,8 +308,8 @@ fun HomeScreenContent(
         ) {
             //    Notification part
             notificationView(
-                showNotification = showNotification,
-                onChangeNotification = onChangeNotification
+                showNotification = !state.isProfileComplete,
+                onGoToFixProfile = onGoToFixProfile
             )
 
             //            calender part
@@ -345,7 +343,7 @@ fun HomeScreenContent(
                 anniversaryTitle = anniversaryTitle
             )
 
-            // attendance title
+            // attendance list
             attendanceSection(
                 state = state
             )
@@ -500,7 +498,6 @@ fun LazyListScope.attendanceSection(
             modifier = Modifier.fillMaxWidth()
                 .padding(start = MaterialTheme.dimens.small3, end = MaterialTheme.dimens.small1),
             title = SharedRes.Strings.attendance,
-            subTitle = SharedRes.Strings.view_all
         )
     }
 
@@ -750,7 +747,6 @@ fun LazyListScope.requestSection(
                         AttendanceItemContent(
                             modifier = Modifier.weight(1f).fillMaxSize(),
                             item = leaveItem,
-                            onClick = {}
                         )
                     }
                 }
@@ -786,7 +782,8 @@ fun LazyListScope.calendarView(
 }
 
 fun LazyListScope.notificationView(
-    showNotification: Boolean, onChangeNotification: (Boolean) -> Unit
+    showNotification: Boolean,
+    onGoToFixProfile: () -> Unit
 ) {
     item(key = "notification") {
         AnimatedVisibility(
@@ -796,7 +793,7 @@ fun LazyListScope.notificationView(
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth().padding(
-                    end = MaterialTheme.dimens.small3, start = MaterialTheme.dimens.small3
+                    end = MaterialTheme.dimens.small3, start = MaterialTheme.dimens.small3,
                 ).background(
                     color = MaterialTheme.colorScheme.error, shape = MaterialTheme.shapes.medium
                 ),
@@ -805,20 +802,27 @@ fun LazyListScope.notificationView(
             ) {
                 Text(
                     modifier = Modifier.padding(
-                        all = MaterialTheme.dimens.small2
-                    ), text = "Notification view", style = MaterialTheme.typography.bodyMedium.copy(
+                        vertical = MaterialTheme.dimens.small3,
+                        horizontal = MaterialTheme.dimens.small2
+                    ),
+                    text = stringResource(SharedRes.Strings.profile_incomplete),
+                    style = MaterialTheme.typography.bodyMedium.copy(
                         color = MaterialTheme.colorScheme.onError
                     )
                 )
-                IconButton(onClick = {
-                    onChangeNotification(!showNotification)
-                }) {
-                    Icon(
-                        imageVector = Icons.Filled.Close,
-                        contentDescription = "close icon",
-                        tint = MaterialTheme.colorScheme.onError
-                    )
-                }
+                TextButton(
+                    onClick = onGoToFixProfile,
+                    content = {
+                        Text(
+                            modifier = Modifier.padding(
+                                all = MaterialTheme.dimens.small2
+                            ),
+                            text = stringResource(SharedRes.Strings.fix_now),
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                color = MaterialTheme.colorScheme.onError
+                            )
+                        )
+                    })
             }
         }
     }
@@ -827,7 +831,7 @@ fun LazyListScope.notificationView(
 //reusable request row
 @Composable
 fun AttendanceItemContent(
-    item: RequestItem, modifier: Modifier = Modifier, onClick: () -> Unit
+    item: RequestItem, modifier: Modifier = Modifier
 ) {
     Surface(
         modifier = modifier.clip(shape = MaterialTheme.shapes.medium),
@@ -835,8 +839,7 @@ fun AttendanceItemContent(
     ) {
         Column(
             modifier = modifier
-                .clip(shape = MaterialTheme.shapes.medium)
-                .clickable(onClick = onClick),
+                .clip(shape = MaterialTheme.shapes.medium),
             verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.Start
         ) {
             Row(

@@ -10,6 +10,7 @@ import com.gurkha.hr.dashboard.route.DashboardRoute
 import com.gurkha.hr.dashboard.route.HomeRoute
 import com.gurkha.hr.home.HomeScreen
 import com.gurkha.hr.notification.Notification
+import com.gurkha.hr.profile.edit_profile.EditProfileScreen
 import com.gurkha.hr.viewAllScreen.ViewAllScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -17,7 +18,8 @@ fun NavGraphBuilder.homeScreenBuilder(
     navController: NavHostController,
     onChatClick: () -> Unit,
     topAppBarScrollBehavior: TopAppBarScrollBehavior,
-    onViewAllClick: (String?, String) -> Unit
+    onViewAllClick: (String?, String) -> Unit,
+    onGoToFixProfile:()-> Unit
 ) {
 
     composable<DashboardRoute.HomeRoute> {
@@ -27,7 +29,8 @@ fun NavGraphBuilder.homeScreenBuilder(
             onViewAllClick = onViewAllClick,
             onNotificationClick = {
                 navController.navigate(route = HomeRoute.NotificationRoute)
-            }
+            },
+            onGoToFixProfile = onGoToFixProfile
         )
     }
 
@@ -46,6 +49,14 @@ fun NavGraphBuilder.homeScreenBuilder(
     composable<HomeRoute.NotificationRoute> {
         Notification(
             onBackClicked = {
+                navController.popBackStack()
+            }
+        )
+    }
+
+    composable<HomeRoute.EditProfileRoute> {
+        EditProfileScreen(
+            onBackPressed = {
                 navController.popBackStack()
             }
         )

@@ -1,6 +1,5 @@
 package com.gurkha.hr.profile.allocated_leave
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,18 +9,12 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -35,7 +28,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -43,8 +35,6 @@ import com.gurkha.hr.components.dimens
 import com.gurkha.hr.profile.model.allocated_leave_Screen.AllocatedLeaveState
 import com.gurkha.hr.profile.model.allocated_leave_Screen.AllocatedLeaveViewAction
 import com.gurkha.hr.res.SharedRes
-import com.gurkha.hr.res.theme.darkPrimaryTextColor
-import com.gurkha.hr.res.theme.highLightColor
 import com.gurkha.hr.res.theme.primaryTextColor
 import com.gurkha.hr.res.theme.secondaryTextColor
 import org.jetbrains.compose.resources.StringResource
@@ -55,7 +45,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun AllocatedLeaveScreen(
     onBackPressed: () -> Unit,
-    ) {
+) {
     val viewModel: AllocatedLeaveScreenViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -107,24 +97,21 @@ fun AllocatedLeaveScreen(
 fun AllocatedLeaveScreenContainer(
     state: AllocatedLeaveState,
     modifier: Modifier = Modifier,
-
-    ) {
-
-    LazyColumn (
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2),
+) {
+    LazyColumn(
+        modifier = modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3),
         contentPadding = PaddingValues(
-            horizontal = MaterialTheme.dimens.small3
+            horizontal = MaterialTheme.dimens.small3,
         )
     ) {
-        items(state.leaveSummaryList){item->
+        items(state.leaveSummaryList) { item ->
             LeaveTypeBox(
-                    title = item.leaveType,
-                    totalDays = item.totalDays.toInt(),
-                    leaveTaken = item.leaveTaken.toInt(),
-                    remainingLeave = item.remainingLeave.toInt()
-
-                )
+                title = item.leaveType,
+                totalDays = item.totalDays.toInt(),
+                leaveTaken = item.leaveTaken.toInt(),
+                remainingLeave = item.remainingLeave.toInt()
+            )
         }
     }
 
@@ -141,7 +128,7 @@ fun LeaveTypeBox(
     Column(
         modifier = Modifier
             .fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2)
     ) {
         Text(
             text = title,
@@ -153,7 +140,7 @@ fun LeaveTypeBox(
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
-        ){
+        ) {
             LeaveInfoRow(
                 modifier = Modifier.weight(1f),
                 name = SharedRes.Strings.totalDays,

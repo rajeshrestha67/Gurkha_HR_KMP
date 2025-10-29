@@ -35,6 +35,8 @@ class UpdateUserDetailUseCase(
                 guardianName = data.guardianName ?: "",
                 guardianPhone = data.guardianNumber ?: "",
                 employeeTypes = data.employeeType ?: "",
+//                temp solution
+                isCompleteProfile = "Y"
             ))
         }
     }

@@ -81,6 +81,7 @@ import gurkhahr.core.ui.res.generated.resources.enter_your_username
 import gurkhahr.core.ui.res.generated.resources.event
 import gurkhahr.core.ui.res.generated.resources.experience_document
 import gurkhahr.core.ui.res.generated.resources.faq
+import gurkhahr.core.ui.res.generated.resources.fix_now
 import gurkhahr.core.ui.res.generated.resources.from_date
 import gurkhahr.core.ui.res.generated.resources.full_day
 import gurkhahr.core.ui.res.generated.resources.gallery
@@ -175,6 +176,7 @@ import gurkhahr.core.ui.res.generated.resources.present
 import gurkhahr.core.ui.res.generated.resources.privacy_policy
 import gurkhahr.core.ui.res.generated.resources.profile
 import gurkhahr.core.ui.res.generated.resources.profile_image
+import gurkhahr.core.ui.res.generated.resources.profile_incomplete
 import gurkhahr.core.ui.res.generated.resources.reason
 import gurkhahr.core.ui.res.generated.resources.remaining_leave
 import gurkhahr.core.ui.res.generated.resources.remarks
@@ -539,5 +541,7 @@ object SharedRes {
         val userId = Res.string.userId
 
         val designation = Res.string.designation
+        val fix_now = Res.string.fix_now
+        val profile_incomplete = Res.string.profile_incomplete
     }
 }

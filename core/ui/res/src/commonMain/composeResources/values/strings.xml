@@ -191,7 +191,7 @@
     <string name="pending">Pending</string>
     <string name="approved">Approved</string>
     <string name="cancelled">Cancelled</string>
-    <string name="upcoming_birthday"> Birthday</string>
+    <string name="upcoming_birthday"> Birthdays</string>
     <string name="work_anniversaries">Work Anniversaries</string>
     <string name="my_attendance">My Attendance</string>
     <string name="profile">Profile Info</string>
@@ -278,6 +278,9 @@
     <string name="userId">User Id</string>
 
     <string name="designation">Designation</string>
+
+    <string name="profile_incomplete">Profile Incomplete</string>
+    <string name="fix_now">Fix Now</string>
 
 
     <string-array name="months">

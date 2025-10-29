@@ -282,6 +282,9 @@
     <string name="userId">प्रयोगकर्ता ID</string>
 
     <string name="designation">पदनाम</string>
+
+    <string name="profile_incomplete">प्रोफाइल अपूर्ण</string>
+    <string name="fix_now">अहिले नै समाधान गर्नुहोस्</string>
     
     <string-array name="months">
         <item>बैशाख</item>

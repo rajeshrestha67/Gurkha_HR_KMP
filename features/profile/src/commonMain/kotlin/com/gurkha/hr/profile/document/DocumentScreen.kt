@@ -72,12 +72,10 @@ fun DocumentScreen(
     ) { paddingValues ->
         PullToRefreshBox(
             modifier = Modifier.padding(paddingValues).fillMaxSize(),
-            isRefreshing = true,
+            isRefreshing = false,
             onRefresh = {},
             content = {
-                DocumentScreenContainer(
-                    modifier = Modifier.padding(paddingValues),
-                )
+                DocumentScreenContainer()
             }
         )
     }
@@ -85,13 +83,12 @@ fun DocumentScreen(
 
 @Composable
 fun DocumentScreenContainer(
-    modifier: Modifier = Modifier,
 ) {
     val documentList = remember { DocumentList.list }
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
-        modifier = modifier,
+        modifier = Modifier,
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3),
         horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3),
         contentPadding = PaddingValues(
