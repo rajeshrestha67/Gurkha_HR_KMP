@@ -2,7 +2,6 @@ package com.gurkha.hr.components.tabbar
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SecondaryTabRow
@@ -40,7 +39,7 @@ fun <T> ERPTabView(
         SecondaryTabRow(
             selectedTabIndex = selectedTabIndex,
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
                 .clip(shape),
             containerColor = MaterialTheme.colorScheme.primary.copy(0.1f),
             contentColor = TabRowDefaults.primaryContentColor,

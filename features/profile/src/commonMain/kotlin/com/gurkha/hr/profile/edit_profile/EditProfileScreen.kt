@@ -8,7 +8,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -40,6 +44,7 @@ import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.components.loadingScreen.LoadingScreen
 import com.gurkha.hr.components.prompts.PromptModalBottomSheet
 import com.gurkha.hr.components.prompts.PromptType
+import com.gurkha.hr.components.tabbar.ERPTabView
 import com.gurkha.hr.components.textField.DropDownText
 import com.gurkha.hr.components.textField.ERPTextField
 import com.gurkha.hr.components.textField.FormValidate
@@ -47,6 +52,9 @@ import com.gurkha.hr.domain.userDetail.ui.EditProfileUI
 import com.gurkha.hr.profile.model.edit_profile_screen.EditProfileScreenState
 import com.gurkha.hr.profile.model.edit_profile_screen.EditProfileViewAction
 import com.gurkha.hr.profile.model.edit_profile_screen.Title
+import com.gurkha.hr.profile.model.profileinfo_screen.InfoList
+import com.gurkha.hr.profile.model.profileinfo_screen.ProfileInfoViewAction
+import com.gurkha.hr.profile.profile_info.ProfileInfoRow
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.SharedRes.Strings.labelContract
 import org.jetbrains.compose.resources.stringResource
@@ -154,59 +162,70 @@ fun EditProfileScreenContent(
     onAction: (EditProfileViewAction) -> Unit,
     onBackPressed: () -> Unit
 ) {
-    val headingList = Title.list.map { stringResource(it.title) }
-    Column(
+    LazyColumn(
         modifier = modifier
+            .fillMaxSize()
             .padding(
                 vertical = MaterialTheme.dimens.small2,
                 horizontal = MaterialTheme.dimens.small3
             )
     ) {
-        EditProfileTabRow(
-            selectedIndex = state.selectedTab,
-            items = headingList,
-            onTabSelected = { index ->
-                onAction(EditProfileViewAction.OnItemSelected(index))
-            }
 
-        )
+        stickyHeader {
+            EditProfileRow(
+                selectedTab = state.selectedTab,
+                items = state.editList,
+                onTabSelected = { index ->
+                    onAction(EditProfileViewAction.OnItemSelected(index))
+                }
+
+            )
+        }
 
         when (state.selectedTab) {
-            0 -> {
+            Title.PersonalDetails  -> {
 
                 state.profileSummaryList?.let {
-                    PersonalDetailsContent(
-                        item = state.profileSummaryList,
-                        onAction = onAction,
-                        state = state
-                    )
+                    item {
+                        PersonalDetailsContent(
+                            item = state.profileSummaryList,
+                            onAction = onAction,
+                            state = state
+                        )
+                    }
                 }
             }
 
-            1 -> {
+            Title.OthersDetails -> {
                 state.profileSummaryList?.let {
-                    OthersDetailContent(
-                        item = state.profileSummaryList,
-                        onAction = onAction,
-                        state = state
-                    )
+                    item {
+                        OthersDetailContent(
+                            item = state.profileSummaryList,
+                            onAction = onAction,
+                            state = state
+                        )
+                    }
                 }
             }
         }
 
         if (showSuccessModal) {
-            PromptModalBottomSheet(
-                text = messageToShow,
-                onBackPressed = onBackPressed
-            )
+            item {
+                PromptModalBottomSheet(
+                    text = messageToShow,
+                    onBackPressed = onBackPressed
+                )
+            }
         }
 
         if (showErrorModal) {
-            PromptModalBottomSheet(
-                text = messageToShow,
-                promptType = PromptType.FAILED,
-                onBackPressed = onBackPressed
-            )
+            item {
+                PromptModalBottomSheet(
+                    text = messageToShow,
+                    promptType = PromptType.FAILED,
+                    onBackPressed = onBackPressed
+                )
+            }
         }
 
 
@@ -242,7 +261,7 @@ fun OthersDetailContent(
 ) {
 
     Column(
-        modifier = Modifier.fillMaxWidth().verticalScroll(state = rememberScrollState()),
+        modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2)
     ) {
         ERPTextField(
@@ -372,7 +391,7 @@ fun PersonalDetailsContent(
     onAction: (EditProfileViewAction) -> Unit
 ) {
     Column(
-        modifier = Modifier.fillMaxWidth().verticalScroll(state = rememberScrollState()),
+        modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2)
     ) {
         ERPTextField(
@@ -511,7 +530,7 @@ fun PersonalDetailsContent(
         )
         SubmitButton(
             onAction = {
-                onAction(EditProfileViewAction.OnItemSelected(1))
+                onAction(EditProfileViewAction.OnItemSelected(Title.OthersDetails))
             },
             isSubmit = false
         )
@@ -522,49 +541,28 @@ fun PersonalDetailsContent(
 }
 
 @Composable
-fun EditProfileTabRow(
-    selectedIndex: Int,
-    items: List<String>,
-    onTabSelected: (Int) -> Unit
+fun EditProfileRow(
+    selectedTab: Title,
+    items: List<Title>,
+    onTabSelected: (Title) -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    TabRow(
-        selectedTabIndex = selectedIndex,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = MaterialTheme.dimens.small1),
-        divider = {},
-        indicator = {},
-    ) {
-        items.forEachIndexed { index, title ->
-            val isSelected = selectedIndex == index
-            val backgroundColor = if (isSelected) {
-                MaterialTheme.colorScheme.primaryContainer
-            } else {
-                MaterialTheme.erpColors.veryLightGray
-            }
-            val textColor = if (isSelected) {
-                MaterialTheme.colorScheme.onBackground
-            } else {
-                MaterialTheme.erpColors.primaryTextColor
-            }
-
-            Tab(
-                modifier = Modifier
-                    .background(backgroundColor),
-                selected = isSelected,
-                onClick = { onTabSelected(index) },
-                text = {
-                    Text(
-                        text = title,
-                        style = MaterialTheme.typography.titleSmall.copy(
-                            color = textColor
-                        ),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
-            )
+    ERPTabView(
+        modifier = modifier.fillMaxWidth().height(MaterialTheme.dimens.large),
+        items = items,
+        selectedTab = selectedTab,
+        shape = MaterialTheme.shapes.medium,
+        onItemSelected = {
+            onTabSelected(it)
         }
+    ) { item, isSelected ->
+        val color =
+            if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onBackground
+        Text(
+            text = stringResource(item.title),
+            style = MaterialTheme.typography.titleSmall.copy(
+                color = color
+            )
+        )
     }
-
 }

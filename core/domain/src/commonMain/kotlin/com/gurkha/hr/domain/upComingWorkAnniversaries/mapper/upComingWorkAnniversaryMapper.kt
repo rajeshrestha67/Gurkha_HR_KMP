@@ -13,7 +13,7 @@ fun UpComingWorkAnniversaryDetailDto.toData(): List<UpComingWorkAnniversaryData>
             designationName = it.designationName ?: "",
             imageUrl = it.imageUrl ?: "",
             branchName = it.branchName ?: "",
-            joinedDate = it.joinedDate ?: "",
+            joinedDate =  it.joinedDate?.split("T")[0] ?: "" ,
             initials = it.fullName?.extractInitials() ?: ""
         )
     } ?: emptyList()
@@ -27,7 +27,8 @@ fun List<UpComingWorkAnniversaryData>.toUi(): List<ViewAllUi> {
             designationName = it.designationName,
             branchName = it.branchName,
             imageUrl = it.imageUrl,
-            initials = it.initials
+            initials = it.initials,
+            date = it.joinedDate
         )
     }
 }

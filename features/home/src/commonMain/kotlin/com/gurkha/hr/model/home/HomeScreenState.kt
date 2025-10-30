@@ -30,6 +30,7 @@ data class HomeScreenState(
     val isBirthDayLoading: Boolean = false,
     val isAnniversaryLoading: Boolean = false,
     val employeeId: Int = 0,
+    val isProfileComplete : Boolean = false,
 
     val attendanceReport: List<AttendanceData> = listOf(),
     val attendanceReportHistory: List<AttendanceHistoryItemUI> = listOf(),

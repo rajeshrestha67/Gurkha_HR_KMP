@@ -262,10 +262,11 @@ class HomeScreenViewModel(
                     levelName = data.levelName,
                     email = data.email,
                     userProfileUrl = data.userProfileUrl,
-                    employeeId = data.employeeId
+                    employeeId = data.employeeId,
+                    isProfileComplete = data.isCompleteProfile
                 )
             }
-        }.onError {error ->
+        }.onError { error ->
             AppLogger.e(
                 tag = TAG,
                 "Fetching Current User failed: ${error.toErrorMessage()}"
@@ -292,7 +293,7 @@ class HomeScreenViewModel(
                     upComingBirthday = data
                 )
             }
-        }.onError {error ->
+        }.onError { error ->
             AppLogger.e(
                 tag = TAG,
                 "Fetching Upcoming Birthday failed: ${error.toErrorMessage()}"
@@ -319,7 +320,7 @@ class HomeScreenViewModel(
                     upComingWorkAnniversary = data
                 )
             }
-        }.onError {error ->
+        }.onError { error ->
             AppLogger.e(
                 tag = TAG,
                 "Fetching Upcoming Anniversary  failed: ${error.toErrorMessage()}"
@@ -348,7 +349,7 @@ class HomeScreenViewModel(
                     upComingEvent = data
                 )
             }
-        }.onError {error ->
+        }.onError { error ->
             AppLogger.e(
                 tag = TAG,
                 "Fetching Upcoming Events failed: ${error.toErrorMessage()}"
@@ -377,7 +378,7 @@ class HomeScreenViewModel(
                 )
             }
 
-        }.onError {error ->
+        }.onError { error ->
             AppLogger.e(
                 tag = TAG,
                 "Get Total Notification failed: ${error.toErrorMessage()}"
@@ -406,7 +407,7 @@ class HomeScreenViewModel(
                     totalUnSeenNotification = data.count
                 )
             }
-        }.onError {error ->
+        }.onError { error ->
             AppLogger.e(
                 tag = TAG,
                 "Unseen Notification fetch failed: ${error.toErrorMessage()}"
@@ -461,7 +462,7 @@ class HomeScreenViewModel(
                 forDate = LocalDate.now().toString(),
                 imageName = data.imageName.toString()
             )
-        }.onError {error ->
+        }.onError { error ->
             AppLogger.e(
                 tag = TAG,
                 "Image Upload failed: ${error.toErrorMessage()}"
@@ -484,7 +485,7 @@ class HomeScreenViewModel(
             AppLogger.d(tag = TAG, "Attendance update success")
 
             _state.update {
-                if(isAlreadyClockIn.value){
+                if (isAlreadyClockIn.value) {
                     it.copy(
                         showSwipeView = true,
                         requests = it.requests.updateDuration(
@@ -494,7 +495,7 @@ class HomeScreenViewModel(
                         )
 
                     )
-                }else{
+                } else {
                     it.copy(
                         showSwipeView = true,
                         requests = it.requests.updateDuration(
@@ -519,11 +520,12 @@ class HomeScreenViewModel(
             }
         }
     }
+
     companion object {
         private const val TAG = "HomeScreenViewModel"
     }
 
-    private fun reFresh()=viewModelScope.launch {
+    private fun reFresh() = viewModelScope.launch {
         _state.update {
             it.copy(
                 isRefreshing = true

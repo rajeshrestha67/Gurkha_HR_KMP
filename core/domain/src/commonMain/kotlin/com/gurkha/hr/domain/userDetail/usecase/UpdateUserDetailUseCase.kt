@@ -26,6 +26,16 @@ class UpdateUserDetailUseCase(
         }.onSuccess {
             val userData = userDataRepository.userDataFlow.firstOrNull() ?: UserData()
 
+            val pfNumberNull = data.pfNumber.isNullOrEmpty()
+            val panNumberNull = data.panNumber.isNullOrEmpty()
+            val joinedDateNull = data.joinedDate.isNullOrEmpty()
+            val dateOfBirthNull = data.startDate.isNullOrEmpty()
+            val bloodGroupNull = data.bloodGroup.isNullOrEmpty()
+            val guardianNameNull = data.guardianName.isNullOrEmpty()
+            val guardianPhoneNull = data.guardianNumber.isNullOrEmpty()
+            val employeeTypesNull = data.employeeType.isNullOrEmpty()
+
+
             userDataRepository.saveUserData(userData.copy(
                 pfNumber = data.pfNumber ?: "",
                 panNumber = data.panNumber ?: "",
@@ -35,6 +45,8 @@ class UpdateUserDetailUseCase(
                 guardianName = data.guardianName ?: "",
                 guardianPhone = data.guardianNumber ?: "",
                 employeeTypes = data.employeeType ?: "",
+                // check if all the data are filled if not don't update the is complete profile
+                isCompleteProfile = pfNumberNull || panNumberNull || joinedDateNull || dateOfBirthNull || bloodGroupNull || guardianNameNull || guardianPhoneNull || employeeTypesNull
             ))
         }
     }

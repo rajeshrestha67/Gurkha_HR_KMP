@@ -28,14 +28,3 @@ data class ProfileInfo(
     val value: String
 )
 
-data class EditProfileData(
-    val fullName: String,
-    val initials: String ,
-    val levelName: String ,
-    val userProfileUrl: String,
-    val phoneNumber: String,
-    val employeeId: Int = 0,
-    val branchName: String,
-    val address: String ,
-    val joinedDate: String ,
-)

@@ -50,7 +50,7 @@
     <string name="leave_summary">Leave Summary</string>
     <string name="leave_type_name">Leave Type\nName</string>
     <string name="leave_taken">Leave Taken</string>">
-    <string name="remaining_leave">Remaining Leave</string>">
+    <string name="remaining_leave">Remaining</string>">
     <string name="edit_profile">Edit Profile</string>">
     <string name="personal">Personal</string>">
     <string name="others">Others</string>">
@@ -191,7 +191,7 @@
     <string name="pending">Pending</string>
     <string name="approved">Approved</string>
     <string name="cancelled">Cancelled</string>
-    <string name="upcoming_birthday">Upcoming Birthday</string>
+    <string name="upcoming_birthday"> Birthdays</string>
     <string name="work_anniversaries">Work Anniversaries</string>
     <string name="my_attendance">My Attendance</string>
     <string name="profile">Profile Info</string>
@@ -276,6 +276,11 @@
 
     <string name="branch">Branch</string>
     <string name="userId">User Id</string>
+
+    <string name="designation">Designation</string>
+
+    <string name="profile_incomplete">Profile Incomplete</string>
+    <string name="fix_now">Fix Now</string>
 
 
     <string-array name="months">

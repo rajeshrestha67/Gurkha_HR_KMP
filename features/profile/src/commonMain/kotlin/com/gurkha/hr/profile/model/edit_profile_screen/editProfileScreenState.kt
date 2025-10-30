@@ -1,10 +1,11 @@
 package com.gurkha.hr.profile.model.edit_profile_screen
 
 import com.gurkha.hr.domain.userDetail.ui.EditProfileUI
+import com.gurkha.hr.profile.model.profileinfo_screen.InfoList
 import org.jetbrains.compose.resources.StringResource
 
 data class EditProfileScreenState(
-    val selectedTab: Int = 0,
+    val selectedTab: Title = Title.PersonalDetails,
     val isLoading: Boolean = false,
     val employeeId: Int = 0,
     val profileSummaryList: EditProfileUI? = null,
@@ -13,7 +14,8 @@ data class EditProfileScreenState(
     val isSubmitSuccess: Boolean = false,
     val joinDateError: StringResource? = null,
 
-    val isUpdating: Boolean = false
+    val isUpdating: Boolean = false,
+    val editList : List<Title> = Title.list
 )
 
 

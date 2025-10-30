@@ -23,7 +23,7 @@ data class UserData(
     val maritalStatus: String = "",
     val guardianName: String = "",
     val guardianPhone: String = "",
-    val isCompleteProfile: String = "",
+    val isCompleteProfile: Boolean = false ,
     val bloodGroup: String = "",
     val designation: String = "",
     val employeeTypes: String = "",

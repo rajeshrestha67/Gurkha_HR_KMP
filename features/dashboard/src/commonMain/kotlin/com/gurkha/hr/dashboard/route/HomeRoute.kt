@@ -10,4 +10,7 @@ sealed interface HomeRoute {
     @Serializable
     data object NotificationRoute: HomeRoute
 
+    @Serializable
+    data object EditProfileRoute: HomeRoute
+
 }
