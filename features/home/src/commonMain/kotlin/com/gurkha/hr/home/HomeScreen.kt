@@ -167,10 +167,12 @@ fun HomeScreen(
                             .noRippleClickable(onClick = onNotificationClick)
                             .padding(horizontal = MaterialTheme.dimens.small3),
                         badge = {
-                            Badge(
-                                contentColor = MaterialTheme.colorScheme.onError
-                            ) {
-                                Text(text = state.totalUnSeenNotification.toString())
+                            if(state.totalUnSeenNotification != 0){
+                                Badge(
+                                    contentColor = MaterialTheme.colorScheme.onError
+                                ) {
+                                    Text(text = state.totalUnSeenNotification.toString())
+                                }
                             }
                         }
                     ) {
@@ -809,9 +811,6 @@ fun LazyListScope.notificationView(
                     onClick = onGoToFixProfile,
                     content = {
                         Text(
-                            modifier = Modifier.padding(
-                                all = MaterialTheme.dimens.small2
-                            ),
                             text = stringResource(SharedRes.Strings.fix_now),
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 color = MaterialTheme.colorScheme.onError
@@ -1078,7 +1077,7 @@ fun PermanentPermissionShow(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
-                    text = "Allow Permission In Setting",
+                    text = stringResource(SharedRes.Strings.allow_permission),
                     style = MaterialTheme.typography.bodyLarge.copy(
                         color = MaterialTheme.erpColors.darkPrimaryTextColor
                     ),
@@ -1087,7 +1086,7 @@ fun PermanentPermissionShow(
 
                 ERPButton(
                     modifier = Modifier.fillMaxWidth(),
-                    text = "Go To Setting",
+                    text = stringResource(SharedRes.Strings.go_to_setting),
                     onClick = {
                         navigateToSettings()
                         onDismiss()

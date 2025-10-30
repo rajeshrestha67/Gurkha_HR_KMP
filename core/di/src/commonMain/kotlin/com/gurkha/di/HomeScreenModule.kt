@@ -15,6 +15,7 @@ import com.gurkha.hr.datastore.user_data.repository.LocalUserDataRepository
 import com.gurkha.hr.datastore.user_data.repository.UserDataRepository
 import com.gurkha.hr.date.data.model.CalendarModel
 import com.gurkha.hr.date.data.model.CalendarModelImpl
+import com.gurkha.hr.domain.attendance.attendanceCountReport.useCase.AttendanceCountReportUseCase
 import com.gurkha.hr.domain.attendance.attendanceReport.repository.AttendanceRemoteRepository
 import com.gurkha.hr.domain.attendance.attendanceReport.usecase.AttendanceUseCase
 import com.gurkha.hr.domain.attendance.doAttendance.useCase.DoAttendanceUseCase
@@ -99,6 +100,14 @@ class HomeScreenModule {
         notificationRemoteRepository = notificationRemoteRepository
     )
 
+    @Factory
+    fun attendanceCountReportUseCase(
+        attendanceRemoteRepository: AttendanceRemoteRepository
+    ): AttendanceCountReportUseCase =
+        AttendanceCountReportUseCase(
+            attendanceRemoteRepository = attendanceRemoteRepository
+        )
+
 
     @Factory(binds = [UserDataRepository::class])
     fun userDataRepository(
@@ -154,7 +163,8 @@ class HomeScreenModule {
         notificationCountUseCase: NotificationCountUseCase,
         unseenNotificationUseCase: UnseenNotificationUseCase,
         uploadImageUseCase: UploadImageUseCase,
-        doAttendanceUseCase: DoAttendanceUseCase
+        doAttendanceUseCase: DoAttendanceUseCase,
+        attendanceCountReportUseCase : AttendanceCountReportUseCase
     ): HomeScreenViewModel = HomeScreenViewModel(
         attendanceUseCase = attendanceUseCase,
         userDetailUseCase = userDetailUseCase,
@@ -165,7 +175,8 @@ class HomeScreenModule {
         notificationCountUseCase = notificationCountUseCase,
         unseenNotificationUseCase = unseenNotificationUseCase,
         uploadImageUseCase = uploadImageUseCase,
-        doAttendanceUseCase = doAttendanceUseCase
+        doAttendanceUseCase = doAttendanceUseCase,
+        attendanceCountReportUseCase = attendanceCountReportUseCase
     )
 
     @KoinViewModel

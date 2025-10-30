@@ -52,7 +52,9 @@ data class HomeScreenState(
 
     val totalUnSeenNotification: Int = 0,
 
-    val isRefreshing : Boolean = false
+    val isRefreshing : Boolean = false,
+
+    val isAttendanceCountLoading : Boolean = false
 )
 
 data class RequestItem(

@@ -11,6 +11,9 @@ import com.gurkha.hr.date.Year
 import com.gurkha.hr.date.data.DateUtils
 import com.gurkha.hr.date.data.model.CalendarModel
 import com.gurkha.hr.date.data.model.now
+import com.gurkha.hr.date.getMonthStartAndEndDate
+import com.gurkha.hr.domain.attendance.attendanceCountReport.model.AttendanceCountReportData
+import com.gurkha.hr.domain.attendance.attendanceCountReport.useCase.AttendanceCountReportUseCase
 import com.gurkha.hr.domain.attendance.attendanceReport.model.AttendanceData
 import com.gurkha.hr.domain.attendance.attendanceReport.usecase.AttendanceUseCase
 import com.gurkha.hr.domain.attendance.doAttendance.useCase.DoAttendanceUseCase
@@ -54,12 +57,16 @@ class HomeScreenViewModel(
     private val notificationCountUseCase: NotificationCountUseCase,
     private val unseenNotificationUseCase: UnseenNotificationUseCase,
     private val uploadImageUseCase: UploadImageUseCase,
-    private val doAttendanceUseCase: DoAttendanceUseCase
+    private val doAttendanceUseCase: DoAttendanceUseCase,
+    private val attendanceCountReportUseCase : AttendanceCountReportUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(HomeScreenState())
     private val notification = ProgressNotification()
 
     private var isAlreadyClockIn: MutableState<Boolean> = mutableStateOf(false)
+
+    val datePair = calendarModel.getMonthStartAndEndDate()
+
 
     @OptIn(ExperimentalTime::class)
     val state = _state
@@ -137,6 +144,24 @@ class HomeScreenViewModel(
 
                     RequestType.CheckOut -> item.copy(
                         duration = attendanceData.clockOutTime ?: "--:--"
+                    )
+
+                    else -> item
+                }
+            } ?: item
+        }
+    }
+
+    private fun List<RequestItem>.updateAttendance(attendanceCountReportData: AttendanceCountReportData?): List<RequestItem> {
+        return map { item ->
+            attendanceCountReportData?.let {
+                when (item.type) {
+                    RequestType.Attendance -> item.copy(
+                        duration = attendanceCountReportData.present.toString()
+                    )
+
+                    RequestType.Leave -> item.copy(
+                        duration = attendanceCountReportData.absent.toString()
                     )
 
                     else -> item
@@ -266,6 +291,9 @@ class HomeScreenViewModel(
                     isProfileComplete = data.isCompleteProfile
                 )
             }
+            //only fetch the total count after the current userdata fetch cause we need the employee id
+            getAttendanceTotalCountReport()
+
         }.onError { error ->
             AppLogger.e(
                 tag = TAG,
@@ -523,6 +551,36 @@ class HomeScreenViewModel(
 
     companion object {
         private const val TAG = "HomeScreenViewModel"
+    }
+
+    private fun getAttendanceTotalCountReport()=viewModelScope.launch {
+        _state.update {
+            it.copy(
+                isAttendanceCountLoading = true
+            )
+        }
+
+        attendanceCountReportUseCase(
+            employeeId = _state.value.employeeId,
+            toDate = datePair.first,
+            fromDate = datePair.second
+        ).onSuccess { data ->
+            AppLogger.d(tag = TAG, "Attendance update success")
+
+            _state.update {
+                it.copy(
+                    isAttendanceCountLoading = false,
+                    requests = it.requests.updateAttendance(
+                        attendanceCountReportData = data
+                    )
+                )
+            }
+        }.onError {error ->
+            AppLogger.e(
+                tag = TAG,
+                "Attendance Count Report Fetch failed: ${error.toErrorMessage()}"
+            )
+        }
     }
 
     private fun reFresh() = viewModelScope.launch {

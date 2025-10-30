@@ -11,6 +11,7 @@ import gurkhahr.core.ui.res.generated.resources.add_notes
 import gurkhahr.core.ui.res.generated.resources.address
 import gurkhahr.core.ui.res.generated.resources.all_leaves
 import gurkhahr.core.ui.res.generated.resources.allocated_leave
+import gurkhahr.core.ui.res.generated.resources.allow_permission
 import gurkhahr.core.ui.res.generated.resources.annual_leave
 import gurkhahr.core.ui.res.generated.resources.app_appearance
 import gurkhahr.core.ui.res.generated.resources.apply_days
@@ -89,6 +90,7 @@ import gurkhahr.core.ui.res.generated.resources.gender
 import gurkhahr.core.ui.res.generated.resources.general
 import gurkhahr.core.ui.res.generated.resources.getStarted
 import gurkhahr.core.ui.res.generated.resources.go_home
+import gurkhahr.core.ui.res.generated.resources.go_to_setting
 import gurkhahr.core.ui.res.generated.resources.guardian_information
 import gurkhahr.core.ui.res.generated.resources.guardian_name
 import gurkhahr.core.ui.res.generated.resources.guardian_phone
@@ -543,5 +545,8 @@ object SharedRes {
         val designation = Res.string.designation
         val fix_now = Res.string.fix_now
         val profile_incomplete = Res.string.profile_incomplete
+
+        val go_to_setting = Res.string.go_to_setting
+        val allow_permission = Res.string.allow_permission
     }
 }

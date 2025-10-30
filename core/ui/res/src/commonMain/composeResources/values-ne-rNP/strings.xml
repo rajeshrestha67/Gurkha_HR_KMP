@@ -285,6 +285,9 @@
 
     <string name="profile_incomplete">प्रोफाइल अपूर्ण</string>
     <string name="fix_now">अहिले नै समाधान गर्नुहोस्</string>
+
+    <string name="allow_permission">सेटिङमा अनुमति दिनुहोस्</string>
+    <string name="go_to_setting">सेटिङमा जानुहोस्</string>
     
     <string-array name="months">
         <item>बैशाख</item>

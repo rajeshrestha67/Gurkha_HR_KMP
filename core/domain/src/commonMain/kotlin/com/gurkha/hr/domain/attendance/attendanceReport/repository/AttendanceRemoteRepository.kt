@@ -1,6 +1,7 @@
 package com.gurkha.hr.domain.attendance.attendanceReport.repository
 
 import com.gurkha.hr.networkhelper.ERPResult
+import com.gurkha.model.attendance.attendanceCountReport.AttendanceCountReportResponseDto
 import com.gurkha.model.attendance.attendanceReport.AttendanceResponseDto
 import com.gurkha.model.attendance.attendanceRequest.AttendanceRequestResponseDto
 import com.gurkha.model.attendance.attendanceStatus.AttendanceStatusResponseDTO
@@ -39,4 +40,10 @@ interface AttendanceRemoteRepository {
         imageName: String,
         forDate: String
     ): ERPResult<DoAttendanceResponseDto, DataError>
+
+    suspend fun attendanceCountReportFetch(
+        employeeId: Int,
+        toDate: String,
+        fromDate: String
+    ): ERPResult<AttendanceCountReportResponseDto, DataError>
 }

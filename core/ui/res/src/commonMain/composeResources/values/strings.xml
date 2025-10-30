@@ -282,6 +282,9 @@
     <string name="profile_incomplete">Profile Incomplete</string>
     <string name="fix_now">Fix Now</string>
 
+    <string name="allow_permission">Allow Permission In Setting</string>
+    <string name="go_to_setting">Go To Setting</string>
+
 
     <string-array name="months">
         <item>Baisakh</item>

@@ -34,4 +34,5 @@ object EndPoint {
     const val TOTAL_UNREAD_NOTIFICATION_COUNT_END_POINT = "api/notifications/check-unread"
     const val ALL_NOTIFICATION_END_POINT = "api/notifications/get-by-limit/12?offset=0"
     const val DO_ATTENDANCE_END_POINT="api/appClockInClockOut"
+    const val ATTENDANCE_COUNT_REPORT_ENT_POINT="api/attendance/total-count"
 }
