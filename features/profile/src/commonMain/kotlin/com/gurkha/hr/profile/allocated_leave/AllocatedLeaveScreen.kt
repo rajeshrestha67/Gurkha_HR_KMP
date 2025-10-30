@@ -37,8 +37,6 @@ import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.profile.model.allocated_leave_Screen.AllocatedLeaveState
 import com.gurkha.hr.profile.model.allocated_leave_Screen.AllocatedLeaveViewAction
 import com.gurkha.hr.res.SharedRes
-import com.gurkha.hr.res.theme.primaryTextColor
-import com.gurkha.hr.res.theme.secondaryTextColor
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -141,7 +139,7 @@ fun LeaveTypeBox(
         Text(
             text = title,
             style = MaterialTheme.typography.titleMedium.copy(
-                color = MaterialTheme.erpColors.primary
+                color = MaterialTheme.colorScheme.primary
             )
         )
 
