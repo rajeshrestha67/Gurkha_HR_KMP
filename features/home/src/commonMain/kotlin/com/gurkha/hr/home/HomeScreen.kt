@@ -167,7 +167,7 @@ fun HomeScreen(
                             .noRippleClickable(onClick = onNotificationClick)
                             .padding(horizontal = MaterialTheme.dimens.small3),
                         badge = {
-                            if(state.totalUnSeenNotification != 0){
+                            if (state.totalUnSeenNotification != 0) {
                                 Badge(
                                     contentColor = MaterialTheme.colorScheme.onError
                                 ) {
@@ -223,6 +223,7 @@ fun HomeScreenContent(
             onAction(HomeScreenActions.SwipeToDismiss(uri = uri))
         },
         onError = { e ->
+            onAction(HomeScreenActions.OnCameraCancel)
             println("❌ Error: ${e.message}")
         }
     )
@@ -525,178 +526,184 @@ private fun AttendanceHistoryItem(
     item: AttendanceHistoryItemUI
 ) {
     var showMore by rememberSaveable { mutableStateOf(false) }
-    Box(
+    Surface(
         modifier = Modifier
             .fillMaxWidth()
             .padding(
                 horizontal = MaterialTheme.dimens.small3
             )
-            .background(
-                MaterialTheme.erpColors.highLightColor,
-                shape = MaterialTheme.shapes.medium
-            )
+            .clip(MaterialTheme.shapes.small)
+        ,
+        tonalElevation = 4.dp
     ) {
-
-        if (!item.isHoliday) {
-            Box(
-                modifier = Modifier.align(Alignment.TopEnd)
-            ) {
-                IconButton(
-                    onClick = {
-                        showMore = true
-                    }
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.MoreVert,
-                        contentDescription = "More Option"
-                    )
-                }
-                DropdownMenu(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    expanded = showMore,
-                    onDismissRequest = {
-                        showMore = false
-                    }
-                ) {
-                    DropdownMenuItem(
-                        text = {
-                            Text(
-                                text = stringResource(SharedRes.Strings.attendanceRequest),
-                                style = MaterialTheme.typography.bodyMedium.copy(
-                                    color = MaterialTheme.erpColors.primaryTextColor
-                                )
-                            )
-                        },
-                        onClick = {
-
-                        }
-                    )
-                }
-            }
-
-        }
-
-
-        Column(
-            modifier = Modifier.fillMaxSize().padding(
-                all = MaterialTheme.dimens.small2
-            )
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
         ) {
 
-            Row {
-
-                Column(
-                    modifier = Modifier.weight(1f)
+            if (!item.isHoliday) {
+                Box(
+                    modifier = Modifier.align(Alignment.TopEnd)
                 ) {
-                    Text(
-                        text = stringResource(SharedRes.Strings.date),
-                        style = MaterialTheme.typography.titleSmall.copy(
-                            color = MaterialTheme.erpColors.darkPrimaryTextColor
-                        )
-                    )
-                    Text(
-                        text = item.date,
-                        style = MaterialTheme.typography.bodySmall.copy(
-                            color = MaterialTheme.erpColors.primaryTextColor
-                        )
-                    )
-                }
-
-                Text(
-                    modifier = Modifier.padding(horizontal = MaterialTheme.dimens.small2).align(
-                        Alignment.CenterVertically
-                    ).padding(end = MaterialTheme.dimens.medium1),
-                    text = item.status.value, style = MaterialTheme.typography.bodyLarge.copy(
-                        color = item.status.color
-                    )
-                )
-            }
-
-
-            HorizontalDivider(
-                modifier = Modifier.padding(vertical = MaterialTheme.dimens.small2)
-                    .height(MaterialTheme.dimens.extraSmall)
-            )
-
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2),
-            ) {
-
-                Column(
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Text(
-                        text = stringResource(SharedRes.Strings.clockIn),
-                        style = MaterialTheme.typography.titleSmall.copy(
-                            color = MaterialTheme.erpColors.darkPrimaryTextColor
-                        )
-                    )
-                    Text(
-                        text = item.clockInTime, style = MaterialTheme.typography.bodySmall.copy(
-                            color = MaterialTheme.erpColors.primaryTextColor
-                        )
-                    )
-                }
-
-                Column(
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Text(
-                        text = stringResource(SharedRes.Strings.clockOut),
-                        style = MaterialTheme.typography.titleSmall.copy(
-                            color = MaterialTheme.erpColors.darkPrimaryTextColor
-                        )
-                    )
-                    Text(
-                        text = item.clockOutTime, style = MaterialTheme.typography.bodySmall.copy(
-                            color = MaterialTheme.erpColors.primaryTextColor
-                        )
-                    )
-                }
-
-                Column(
-                    modifier = Modifier.weight(2f)
-                ) {
-                    Text(
-                        text = stringResource(SharedRes.Strings.status),
-                        style = MaterialTheme.typography.titleSmall.copy(
-                            color = MaterialTheme.erpColors.darkPrimaryTextColor
-                        )
-                    )
-                    Row(
-                        modifier = Modifier
-                            .fillMaxSize().padding(vertical = MaterialTheme.dimens.small1),
-                        verticalAlignment = Alignment.Top,
-                        horizontalArrangement = Arrangement.spacedBy(
-                            space = MaterialTheme.dimens.small1,
-                            alignment = Alignment.Start
-                        )
-                    ) {
-
-                        repeat(item.statusClips.size) {
-                            Text(
-                                modifier = Modifier
-                                    .border(
-                                        width = 1.dp,
-                                        color = MaterialTheme.colorScheme.outline,
-                                        shape = MaterialTheme.shapes.small
-                                    ).padding(MaterialTheme.dimens.small1),
-                                text = item.statusClips[it],
-                                style = MaterialTheme.typography.bodySmall.copy(
-                                    color = MaterialTheme.erpColors.primaryTextColor
-                                )
-                            )
-
+                    IconButton(
+                        onClick = {
+                            showMore = true
                         }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.MoreVert,
+                            contentDescription = "More Option"
+                        )
+                    }
+                    DropdownMenu(
+                        containerColor = MaterialTheme.colorScheme.background,
+                        expanded = showMore,
+                        onDismissRequest = {
+                            showMore = false
+                        }
+                    ) {
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    text = stringResource(SharedRes.Strings.attendanceRequest),
+                                    style = MaterialTheme.typography.bodyMedium.copy(
+                                        color = MaterialTheme.erpColors.primaryTextColor
+                                    )
+                                )
+                            },
+                            onClick = {
 
+                            }
+                        )
                     }
                 }
 
             }
-        }
 
+
+            Column(
+                modifier = Modifier.fillMaxSize().padding(
+                    all = MaterialTheme.dimens.small2
+                )
+            ) {
+
+                Row {
+
+                    Column(
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(
+                            text = stringResource(SharedRes.Strings.date),
+                            style = MaterialTheme.typography.titleSmall.copy(
+                                color = MaterialTheme.erpColors.darkPrimaryTextColor
+                            )
+                        )
+                        Text(
+                            text = item.date,
+                            style = MaterialTheme.typography.bodySmall.copy(
+                                color = MaterialTheme.erpColors.primaryTextColor
+                            )
+                        )
+                    }
+
+                    Text(
+                        modifier = Modifier.padding(horizontal = MaterialTheme.dimens.small2).align(
+                            Alignment.CenterVertically
+                        ).padding(end = MaterialTheme.dimens.medium1),
+                        text = item.status.value, style = MaterialTheme.typography.bodyLarge.copy(
+                            color = item.status.color
+                        )
+                    )
+                }
+
+
+                HorizontalDivider(
+                    modifier = Modifier.padding(vertical = MaterialTheme.dimens.small2)
+                        .height(MaterialTheme.dimens.extraSmall)
+                )
+
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2),
+                ) {
+
+                    Column(
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(
+                            text = stringResource(SharedRes.Strings.clockIn),
+                            style = MaterialTheme.typography.titleSmall.copy(
+                                color = MaterialTheme.erpColors.darkPrimaryTextColor
+                            )
+                        )
+                        Text(
+                            text = item.clockInTime,
+                            style = MaterialTheme.typography.bodySmall.copy(
+                                color = MaterialTheme.erpColors.primaryTextColor
+                            )
+                        )
+                    }
+
+                    Column(
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(
+                            text = stringResource(SharedRes.Strings.clockOut),
+                            style = MaterialTheme.typography.titleSmall.copy(
+                                color = MaterialTheme.erpColors.darkPrimaryTextColor
+                            )
+                        )
+                        Text(
+                            text = item.clockOutTime,
+                            style = MaterialTheme.typography.bodySmall.copy(
+                                color = MaterialTheme.erpColors.primaryTextColor
+                            )
+                        )
+                    }
+
+                    Column(
+                        modifier = Modifier.weight(2f)
+                    ) {
+                        Text(
+                            text = stringResource(SharedRes.Strings.status),
+                            style = MaterialTheme.typography.titleSmall.copy(
+                                color = MaterialTheme.erpColors.darkPrimaryTextColor
+                            )
+                        )
+                        Row(
+                            modifier = Modifier
+                                .fillMaxSize().padding(vertical = MaterialTheme.dimens.small1),
+                            verticalAlignment = Alignment.Top,
+                            horizontalArrangement = Arrangement.spacedBy(
+                                space = MaterialTheme.dimens.small1,
+                                alignment = Alignment.Start
+                            )
+                        ) {
+
+                            repeat(item.statusClips.size) {
+                                Text(
+                                    modifier = Modifier
+                                        .border(
+                                            width = 1.dp,
+                                            color = MaterialTheme.colorScheme.outline,
+                                            shape = MaterialTheme.shapes.small
+                                        ).padding(MaterialTheme.dimens.small1),
+                                    text = item.statusClips[it],
+                                    style = MaterialTheme.typography.bodySmall.copy(
+                                        color = MaterialTheme.erpColors.primaryTextColor
+                                    )
+                                )
+
+                            }
+
+                        }
+                    }
+
+                }
+            }
+
+        }
     }
 
 }

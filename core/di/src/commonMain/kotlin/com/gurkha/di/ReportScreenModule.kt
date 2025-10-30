@@ -2,6 +2,7 @@ package com.gurkha.di
 
 import com.gurkha.hr.data.reportScreen.KtorReportRemoteRepository
 import com.gurkha.hr.datastore.user_data.repository.UserDataRepository
+import com.gurkha.hr.date.data.model.CalendarModel
 import com.gurkha.hr.domain.form.RequiredValidationUseCase
 import com.gurkha.hr.domain.history.useCase.HistoryUseCase
 import com.gurkha.hr.domain.reportScreen.repository.ReportRemoteRepository
@@ -26,11 +27,13 @@ class ReportScreenModule {
     fun getReportViewModel(
         reportUseCase: ReportUseCase,
         requiredValidationUseCase: RequiredValidationUseCase,
-        historyUseCase: HistoryUseCase
+        historyUseCase: HistoryUseCase,
+        calendarModel: CalendarModel
     ): ReportViewModel = ReportViewModel(
         reportUseCase = reportUseCase,
         requiredValidationUseCase = requiredValidationUseCase,
-        historyUseCase = historyUseCase
+        historyUseCase = historyUseCase,
+        calendarModel = calendarModel
     )
 
 }

@@ -28,6 +28,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -64,8 +65,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun TimeAndAttendanceScreen(
     onBackPressed: () -> Unit,
-
-    ) {
+) {
     val viewModel: TimeAndAttendanceViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
     var showFilter by remember { mutableStateOf(false) }
@@ -92,8 +92,7 @@ fun TimeAndAttendanceScreen(
                     IconButton(
                         onClick = {
                             showFilter = !showFilter
-                        }
-                    ) {
+                        }) {
                         Icon(
                             imageVector = if (!showFilter) Icons.Default.FilterAlt else Icons.Default.Close,
                             contentDescription = "Filter Option"
@@ -102,25 +101,22 @@ fun TimeAndAttendanceScreen(
                 }
 
             )
-        }
-    ) { paddingValues ->
+        }) { paddingValues ->
         PullToRefreshBox(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues),
+            modifier = Modifier.fillMaxSize().padding(paddingValues),
             isRefreshing = state.isRefreshing,
-            onRefresh = {},
+            onRefresh = {
+                viewModel.onAction(TimeAndAttendanceViewAction.OnRefresh)
+            },
             content = {
                 TimeAndAttendanceScreenContainer(
-                    modifier = Modifier
-                        .fillMaxSize(),
+                    modifier = Modifier.fillMaxSize(),
                     state = state,
                     showFilter = showFilter,
                     onAction = viewModel::onAction
 
                 )
-            }
-        )
+            })
 
 
     }
@@ -128,11 +124,9 @@ fun TimeAndAttendanceScreen(
 
 @Composable
 fun TimeAndAttendanceScreenContainer(
-    state: TimeAndAttendanceState,
-    showFilter: Boolean,
+    state: TimeAndAttendanceState, showFilter: Boolean,
 
-    modifier: Modifier = Modifier,
-    onAction: (TimeAndAttendanceViewAction) -> Unit
+    modifier: Modifier = Modifier, onAction: (TimeAndAttendanceViewAction) -> Unit
 ) {
 
     val listState = rememberLazyListState()
@@ -142,15 +136,10 @@ fun TimeAndAttendanceScreenContainer(
         }
     }
     LazyColumn(
-        modifier = modifier,
-        state = listState,
-        contentPadding = PaddingValues(
-            horizontal = MaterialTheme.dimens.small3,
-            vertical = MaterialTheme.dimens.small2
-        ),
-        verticalArrangement = Arrangement.spacedBy(
-            MaterialTheme.dimens.small2,
-            alignment = Alignment.Top
+        modifier = modifier, state = listState, contentPadding = PaddingValues(
+            horizontal = MaterialTheme.dimens.small3, vertical = MaterialTheme.dimens.small2
+        ), verticalArrangement = Arrangement.spacedBy(
+            MaterialTheme.dimens.small2, alignment = Alignment.Top
         )
 
     ) {
@@ -165,11 +154,10 @@ fun TimeAndAttendanceScreenContainer(
         }
 
         if (state.isLoading) {
-            items(count = 4) {
+            items(count = 10) {
                 ShimmerView(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(MaterialTheme.dimens.medium3)
+                    modifier = Modifier.fillMaxWidth()
+                        .height(MaterialTheme.dimens.extraLarge)
                         .clip(MaterialTheme.shapes.small)
                 )
 
@@ -181,18 +169,11 @@ fun TimeAndAttendanceScreenContainer(
                 key = { it.toString() },
                 itemContent = { item ->
                     TimeAndAttendanceDetails(
-                        onAction = onAction,
-                        state = state,
-                        item = item
+                        onAction = onAction, state = state, item = item
                     )
-
-
                 })
-
         }
-
     }
-
 }
 
 @Composable
@@ -204,125 +185,112 @@ fun TimeAndAttendanceDetails(
     ) {
 
     var showMore by remember { mutableStateOf(false) }
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(
-                start = MaterialTheme.dimens.small1,
-                end = 0.dp,
-                top = MaterialTheme.dimens.small1,
-                bottom = MaterialTheme.dimens.small1,
-            )
-            .clip(MaterialTheme.shapes.medium)
-            .background(MaterialTheme.erpColors.highLightColor)
-            .padding(
-                start = MaterialTheme.dimens.small1,
-                top = MaterialTheme.dimens.small2,
-                bottom = MaterialTheme.dimens.small2,
-                end = 0.dp,
-            ),
-
-        ) {
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(
-                modifier = Modifier.weight(1f)
+    Surface(
+        modifier = Modifier.fillMaxWidth().padding(
+            start = MaterialTheme.dimens.small1,
+            end = 0.dp,
+            top = MaterialTheme.dimens.small1,
+            bottom = MaterialTheme.dimens.small1,
+        ).clip(MaterialTheme.shapes.medium),
+        tonalElevation = 4.dp
+    ){
+        Column(
+            modifier = Modifier.fillMaxWidth()
+                .padding(
+                    start = MaterialTheme.dimens.small1,
+                    top = MaterialTheme.dimens.small2,
+                    bottom = MaterialTheme.dimens.small2,
+                    end = 0.dp,
+                ),
             ) {
-                Text(
-                    text = stringResource(SharedRes.Strings.date),
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        color = MaterialTheme.erpColors.primaryTextColor
-                    )
-                )
-                Text(
-                    text = "${item.date} (${
-                        item.day.lowercase().replaceFirstChar { it.uppercase() }
-                    })",
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        color = MaterialTheme.erpColors.secondaryTextColor
-                    )
-                )
-            }
 
-            Box {
-                //if (showMore) {
-                DropdownMenu(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    expanded = showMore,
-                    onDismissRequest = {
-                        showMore = false
-                    }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(
+                    modifier = Modifier.weight(1f)
                 ) {
-                    DropdownMenuItem(
-                        text = {
+                    Text(
+                        text = stringResource(SharedRes.Strings.date),
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            color = MaterialTheme.erpColors.primaryTextColor
+                        )
+                    )
+                    Text(
+                        text = "${item.date} (${
+                            item.day.lowercase().replaceFirstChar { it.uppercase() }
+                        })", style = MaterialTheme.typography.bodyMedium.copy(
+                            color = MaterialTheme.erpColors.secondaryTextColor
+                        ))
+                }
+
+                Box {
+                    //if (showMore) {
+                    DropdownMenu(
+                        containerColor = MaterialTheme.colorScheme.background,
+                        expanded = showMore,
+                        onDismissRequest = {
+                            showMore = false
+                        }) {
+                        DropdownMenuItem(text = {
                             Text(
                                 text = stringResource(SharedRes.Strings.clockIn),
                                 style = MaterialTheme.typography.bodyMedium.copy(
                                     color = MaterialTheme.erpColors.primaryTextColor
                                 )
                             )
-                        },
-                        onClick = {
+                        }, onClick = {
 
-                        }
-                    )
-                    DropdownMenuItem(
-                        text = {
+                        })
+                        DropdownMenuItem(text = {
                             Text(
                                 text = stringResource(SharedRes.Strings.clockOut),
                                 style = MaterialTheme.typography.bodyMedium.copy(
                                     color = MaterialTheme.erpColors.primaryTextColor
                                 )
                             )
-                        },
-                        onClick = {
+                        }, onClick = {
 
-                        }
-                    )
-                }
-                //}
-                IconButton(
-                    onClick = {
-                        showMore = true
+                        })
                     }
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.MoreVert,
-                        contentDescription = "More Option"
-                    )
+                    //}
+                    IconButton(
+                        onClick = {
+                            showMore = true
+                        }) {
+                        Icon(
+                            imageVector = Icons.Filled.MoreVert, contentDescription = "More Option"
+                        )
+                    }
                 }
+
             }
 
-        }
 
+            HorizontalDivider(
+                modifier = Modifier.height(MaterialTheme.dimens.extraSmall)
+                    .padding(end = MaterialTheme.dimens.small2)
+            )
 
-        HorizontalDivider(
-            modifier = Modifier.height(MaterialTheme.dimens.extraSmall)
-                .padding(end = MaterialTheme.dimens.small2)
-        )
-
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(end = MaterialTheme.dimens.small2),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            RowText(
-                name = SharedRes.Strings.clockIn,
-                value = item.clockInTime ?: "--:--"
-            )
-            RowText(
-                name = SharedRes.Strings.clockOut,
-                value = item.clockOutTime ?: "--:--"
-            )
-            RowText(
-                name = SharedRes.Strings.status,
-                value = item.status.value,
-                textColor = item.status.color
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(end = MaterialTheme.dimens.small2),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                RowText(
+                    name = SharedRes.Strings.clockIn, value = item.clockInTime ?: "--:--"
+                )
+                RowText(
+                    name = SharedRes.Strings.clockOut, value = item.clockOutTime ?: "--:--"
+                )
+                RowText(
+                    name = SharedRes.Strings.status,
+                    value = item.status.value,
+                    textColor = item.status.color
+                )
+            }
         }
     }
 
@@ -344,8 +312,7 @@ fun RowScope.RowText(
             modifier = Modifier.fillMaxWidth(),
             text = stringResource(name),
             style = MaterialTheme.typography.titleSmall.copy(
-                color = MaterialTheme.erpColors.primaryTextColor,
-                fontWeight = FontWeight.SemiBold
+                color = MaterialTheme.erpColors.primaryTextColor, fontWeight = FontWeight.SemiBold
             ),
             textAlign = TextAlign.Start
         )
@@ -354,7 +321,8 @@ fun RowScope.RowText(
             modifier = Modifier.fillMaxWidth(),
             style = MaterialTheme.typography.bodySmall.copy(
                 color = textColor
-            ), textAlign = TextAlign.Start
+            ),
+            textAlign = TextAlign.Start
 
         )
     }
@@ -366,9 +334,7 @@ fun DateFilter(
     onAction: (TimeAndAttendanceViewAction) -> Unit,
 ) {
     Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(
+        modifier = Modifier.fillMaxWidth().padding(
                 bottom = MaterialTheme.dimens.small3,
                 start = MaterialTheme.dimens.small2,
                 end = MaterialTheme.dimens.small2
@@ -377,9 +343,7 @@ fun DateFilter(
     ) {
 
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = MaterialTheme.dimens.small3),
+            modifier = Modifier.fillMaxWidth().padding(top = MaterialTheme.dimens.small3),
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
         ) {
             ERPDateTextField(
@@ -393,8 +357,7 @@ fun DateFilter(
                 onErrorStateChange = {},
                 onDateSelected = {
                     onAction(TimeAndAttendanceViewAction.fromDate(it))
-                }
-            )
+                })
             ERPDateTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = state.toDate,
@@ -406,8 +369,7 @@ fun DateFilter(
                 onErrorStateChange = {},
                 onDateSelected = {
                     onAction(TimeAndAttendanceViewAction.toDate(it))
-                }
-            )
+                })
 
 
             ERPButton(

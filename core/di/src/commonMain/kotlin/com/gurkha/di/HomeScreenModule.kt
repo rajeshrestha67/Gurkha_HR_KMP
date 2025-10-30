@@ -1,6 +1,5 @@
 package com.gurkha.di
 
-import com.gurkha.hr.components.permissions.ProgressNotification
 import com.gurkha.hr.data.attendance.KtorAttendanceRemoteRepository
 import com.gurkha.hr.data.notification.KtorNotificationRemoteRepository
 import com.gurkha.hr.data.upComingBirthday.KtorUpComingBirthdayRemoteRepository
@@ -87,7 +86,7 @@ class HomeScreenModule {
     @Factory
     fun notificationCountUseCase(
         notificationRemoteRepository: NotificationRemoteRepository,
-        notificationCountDataRepository:NotificationCountDataRepository
+        notificationCountDataRepository: NotificationCountDataRepository
     ): NotificationCountUseCase = NotificationCountUseCase(
         notificationRemoteRepository = notificationRemoteRepository,
         notificationCountDataRepository = notificationCountDataRepository
@@ -102,10 +101,12 @@ class HomeScreenModule {
 
     @Factory
     fun attendanceCountReportUseCase(
-        attendanceRemoteRepository: AttendanceRemoteRepository
+        attendanceRemoteRepository: AttendanceRemoteRepository,
+        userDataRepository: UserDataRepository
     ): AttendanceCountReportUseCase =
         AttendanceCountReportUseCase(
-            attendanceRemoteRepository = attendanceRemoteRepository
+            attendanceRemoteRepository = attendanceRemoteRepository,
+            userDataRepository = userDataRepository
         )
 
 
@@ -119,8 +120,14 @@ class HomeScreenModule {
 
 
     @Factory
-    fun attendanceUseCase(attendanceRemoteRepository: AttendanceRemoteRepository): AttendanceUseCase =
-        AttendanceUseCase(attendanceRemoteRepository)
+    fun attendanceUseCase(
+        attendanceRemoteRepository: AttendanceRemoteRepository,
+        userDataRepository: UserDataRepository
+    ): AttendanceUseCase =
+        AttendanceUseCase(
+            attendanceRemoteRepository = attendanceRemoteRepository,
+            userDataRepository = userDataRepository
+        )
 
     @Factory
     fun eventUseCase(eventRemoteRepository: EventRemoteRepository): EventUseCase =
@@ -145,9 +152,11 @@ class HomeScreenModule {
 
     @Factory
     fun doAttendanceUseCase(
-        attendanceRemoteRepository: AttendanceRemoteRepository
-    ): DoAttendanceUseCase=DoAttendanceUseCase(
-        attendanceRemoteRepository = attendanceRemoteRepository
+        attendanceRemoteRepository: AttendanceRemoteRepository,
+        userDataRepository: UserDataRepository
+    ): DoAttendanceUseCase = DoAttendanceUseCase(
+        attendanceRemoteRepository = attendanceRemoteRepository,
+        userDataRepository = userDataRepository
     )
 
     @Factory
@@ -164,7 +173,7 @@ class HomeScreenModule {
         unseenNotificationUseCase: UnseenNotificationUseCase,
         uploadImageUseCase: UploadImageUseCase,
         doAttendanceUseCase: DoAttendanceUseCase,
-        attendanceCountReportUseCase : AttendanceCountReportUseCase
+        attendanceCountReportUseCase: AttendanceCountReportUseCase
     ): HomeScreenViewModel = HomeScreenViewModel(
         attendanceUseCase = attendanceUseCase,
         userDetailUseCase = userDetailUseCase,
@@ -185,7 +194,7 @@ class HomeScreenModule {
     @KoinViewModel
     fun getNotificationViewModel(
         notificationUseCase: NotificationUseCase
-    ): NotificationViewModel= NotificationViewModel(
+    ): NotificationViewModel = NotificationViewModel(
         notificationUseCase = notificationUseCase
     )
 }

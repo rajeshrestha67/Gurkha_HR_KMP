@@ -92,7 +92,7 @@ fun LeaveScreen(
                 windowInsets = WindowInsets(0.dp),
                 title = {
                     Text(
-                        text = stringResource(SharedRes.Strings.all_leaves),
+                        text = stringResource(SharedRes.Strings.leave_request_form),
                         style = MaterialTheme.typography.titleLarge.copy(
                             color = MaterialTheme.erpColors.darkPrimaryTextColor
                         )
@@ -378,7 +378,9 @@ fun LazyItemScope.ResultBox(
                     )
                 }
 
-                Column {
+                Column(
+                    modifier = Modifier.padding(horizontal = MaterialTheme.dimens.small1),
+                ) {
                     Text(
                         text = stringResource(SharedRes.Strings.approver),
                         style = MaterialTheme.typography.titleSmall.copy(

@@ -31,12 +31,6 @@ class AttendanceViewModel(
 ) : ViewModel() {
     private val _state = MutableStateFlow(AttendanceScreenState())
 
-    private val _successChannel = Channel<String>()
-    val successChannel = _successChannel.receiveAsFlow()
-
-    private val _errorChannel = Channel<String>()
-    val errorChannel = _errorChannel.receiveAsFlow()
-
     val datePair = calendarModel.getMonthStartAndEndDate()
 
 
@@ -246,6 +240,7 @@ class AttendanceViewModel(
         attendanceSummaryUseCase().onSuccess { data ->
             _state.update {
                 it.copy(
+                    isRefreshing = false,
                     isFetchingAttendanceSummary = false,
                     attendanceGridOptions = _state.value.attendanceGridOptions.mapIndexed { index, item ->
                         when (index) {
@@ -293,10 +288,5 @@ class AttendanceViewModel(
             fromDate = datePair.first,
             toDate = datePair.second
         )
-        _state.update {
-            it.copy(
-                isRefreshing = false
-            )
-        }
     }
 }

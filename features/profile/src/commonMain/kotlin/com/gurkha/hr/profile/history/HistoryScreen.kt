@@ -24,6 +24,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -146,7 +147,7 @@ fun HistoryScreenContainer(
             }
         }
         if (state.isLoading) {
-            items(4) {
+            items(10) {
                 Column(
                     verticalArrangement = Arrangement.spacedBy(
                         MaterialTheme.dimens.small2,
@@ -156,7 +157,7 @@ fun HistoryScreenContainer(
                     ShimmerView(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(MaterialTheme.dimens.medium1)
+                            .height(MaterialTheme.dimens.extraLarge)
                             .clip(MaterialTheme.shapes.small)
                     )
                 }
@@ -181,53 +182,58 @@ fun HistoryScreenContent(
     state: HistoryState
 ) {
 
-    Column(
+    Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(MaterialTheme.shapes.medium)
-            .background(MaterialTheme.erpColors.highLightColor)
-            .padding(MaterialTheme.dimens.small2)
-    ) {
-        Row(
+            .clip(MaterialTheme.shapes.medium),
+        tonalElevation = 4.dp
+    ){
+        Column(
             modifier = Modifier
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-
-        )
-        {
-            Column(
+                .fillMaxWidth()
+                .padding(MaterialTheme.dimens.small2)
+        ) {
+            Row(
                 modifier = Modifier
-                    .weight(1f)
-                    .padding(vertical = MaterialTheme.dimens.small2)
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
 
-            ) {
-                Text(
-                    stringResource(SharedRes.Strings.date),
-                    style = MaterialTheme.typography.titleSmall.copy(
-                        color = MaterialTheme.erpColors.darkPrimaryTextColor
+            )
+            {
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(vertical = MaterialTheme.dimens.small2)
+
+                ) {
+                    Text(
+                        stringResource(SharedRes.Strings.date),
+                        style = MaterialTheme.typography.titleSmall.copy(
+                            color = MaterialTheme.erpColors.darkPrimaryTextColor
+                        )
                     )
-                )
 
+                    Text(
+                        text = "${item.date} (${item.day})",
+                        style = MaterialTheme.typography.titleSmall.copy(
+                            color = MaterialTheme.erpColors.primaryTextColor,
+                        )
+                    )
+                }
                 Text(
-                    text = "${item.date} (${item.day})",
-                    style = MaterialTheme.typography.titleSmall.copy(
-                        color = MaterialTheme.erpColors.primaryTextColor,
+                    text = item.attendanceStatus,
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        color = item.attendanceTextColor.textColor
                     )
                 )
             }
-            Text(
-                text = item.attendanceStatus,
-                style = MaterialTheme.typography.titleMedium.copy(
-                    color = item.attendanceTextColor.textColor
-                )
-            )
-        }
-        if (item.isPresent) {
-            HorizontalDivider(modifier = Modifier.height(MaterialTheme.dimens.extraSmall))
-            LowTextContent(item = item)
-        }
+            if (item.isPresent) {
+                HorizontalDivider(modifier = Modifier.height(MaterialTheme.dimens.extraSmall))
+                LowTextContent(item = item)
+            }
 
+        }
     }
 }
 

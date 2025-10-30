@@ -2,27 +2,27 @@
     <string name="welcome">स्वागत छ</string>
     <string name="invalid_email_address">अमान्य इमेल ठेगाना</string>
     <string name="required">आवश्यक छ ।</string>
-    <string name="enter_your_email">आफ्नो इमेल प्रविष्ट गर्नुहोस्</string>
+    <string name="enter_your_email">आफ्नो इमेल प्रविष्ट </string>
     <string name="email">इमेल</string>
     <string name="next">अर्को</string>
-    <string name="getStarted">सुरु गर्नुहोस्</string>
+    <string name="getStarted">सुरु </string>
     <string name="home">गृह</string>
     <string name="leave">छोड्नुहोस्</string>
-    <string name="report">रिपोर्ट गर्नुहोस्</string>
+    <string name="report">रिपोर्ट </string>
     <string name="my_attendance">मेरो उपस्थिति</string>
     <string name="request">अनुरोध</string>
     <string name="attendance">उपस्थिति</string>
     <string name="leave_request">अनुरोध छोड्नुहोस्</string>
-    <string name="leave_request_form">अनुरोध फारम छोड्नुहोस्</string>
-    <string name="upload_profile_image">प्रोफाइल छवि अपलोड गर्नुहोस्</string>
-    <string name="upload_citizenship_front">नागरिकता मोर्चा अपलोड गर्नुहोस्</string>
-    <string name="upload_citizenship_back">नागरिकता फिर्ता अपलोड गर्नुहोस्</string>
-    <string name="upload_national_id">राष्ट्रिय परिचयपत्र अपलोड गर्नुहोस्</string>
-    <string name="upload_slc_marksheet">एसएलसी मार्कसिट अपलोड गर्नुहोस्</string>
-    <string name="upload_plus_two_image">प्लस टु छवि अपलोड गर्नुहोस्</string>
-    <string name="upload_bachelor">स्नातक अपलोड गर्नुहोस्</string>
-    <string name="upload_master">मास्टर अपलोड गर्नुहोस्</string>
-    <string name="upload_experience_document">अनुभव कागजात अपलोड गर्नुहोस्</string>
+    <string name="leave_request_form">अनुरोध फारम </string>
+    <string name="upload_profile_image">प्रोफाइल छवि अपलोड </string>
+    <string name="upload_citizenship_front">नागरिकता मोर्चा अपलोड </string>
+    <string name="upload_citizenship_back">नागरिकता फिर्ता अपलोड </string>
+    <string name="upload_national_id">राष्ट्रिय परिचयपत्र अपलोड </string>
+    <string name="upload_slc_marksheet">एसएलसी मार्कसिट अपलोड </string>
+    <string name="upload_plus_two_image">प्लस टु छवि अपलोड </string>
+    <string name="upload_bachelor">स्नातक अपलोड </string>
+    <string name="upload_master">मास्टर अपलोड </string>
+    <string name="upload_experience_document">अनुभव कागजात अपलोड </string>
     <string name="month">महिना</string>">
     <string name="year">वर्ष</string>">
 
@@ -59,13 +59,13 @@
     <string name="remaining_leave">बाँकी बिदा</string>">
 
     <string name="start_date">सुरुवात मिति</string>
-    <string name="select_start_date">सुरुवात मिति चयन गर्नुहोस्</string>
+    <string name="select_start_date">सुरुवात मिति चयन </string>
     <string name="end_date">अन्त्य मिति</string>
 
     <string name="from_date">मिति देखि</string>
     <string name="to_date">मिति सम्म</string>
 
-    <string name="edit_profile">प्रोफाइल सम्पादन गर्नुहोस्</string>
+    <string name="edit_profile">प्रोफाइल सम्पादन </string>
     <string name="personal">व्यक्तिगत</string>
     <string name="others">अन्य</string>
     <string name="blood_group">रक्त समूह</string>
@@ -84,10 +84,10 @@
 
 
 
-    <string name="select_end_date">अन्त्य मिति चयन गर्नुहोस्</string>
-    <string name="leave_type">बिदाको प्रकार चयन गर्नुहोस्</string>
+    <string name="select_end_date">अन्त्य मिति चयन </string>
+    <string name="leave_type">बिदाको प्रकार चयन </string>
     <string name="reason">कारण</string>
-    <string name="enter_reason">कारण प्रविष्ट गर्नुहोस्</string>
+    <string name="enter_reason">कारण प्रविष्ट </string>
 
     <string name="full_day">पूर्ण दिन</string>
     <string name="half_morning">आधा बिहान</string>
@@ -109,16 +109,16 @@
     <string name="total_present_days">उपस्थित दिनहरू</string>
     <string name="total_absent_days">अनुपस्थित दिनहरू</string>
 
-    <string name="cancel">रद्द गर्नुहोस्</string>">
-    <string name="submit">पेश गर्नुहोस्</string>">
+    <string name="cancel">रद्द </string>">
+    <string name="submit">पेश </string>">
 
     <string name="assignee">तोकिएको व्यक्ति</string>">
-    <string name="select_assignee">तोकिएको व्यक्ति चयन गर्नुहोस्</string>">
+    <string name="select_assignee">तोकिएको व्यक्ति चयन </string>">
 
     <string name="leave_processing">प्रशोधन छोड्नुहोस्</string>">
     <string name="ok">ठीक छ</string>">
 
-    <string name="apply_days">दिनहरू लागू गर्नुहोस्</string>
+    <string name="apply_days">दिनहरू लागू </string>
     <string name="approver">अनुमोदनकर्ता</string>
 
     <string name="missed_attendance">छुटेको\nउपस्थिति</string>
@@ -128,7 +128,7 @@
 
     <string name="no_data_found">कुनै डेटा फेला परेन</string>
 
-    <string name="select_date">मिति चयन गर्नुहोस्</string>
+    <string name="select_date">मिति चयन </string>
     <string name="clock_in_time">घडी भित्रको समय</string>
     <string name="clock_out_time">घडी बाहिरको समय</string>
 
@@ -137,15 +137,15 @@
 
     <string name="notes">नोटहरू</string>
     <string name="add_notes">नोटहरू थप्नुहोस्</string>
-    <string name="edit_notes">नोटहरू सम्पादन गर्नुहोस्</string>
+    <string name="edit_notes">नोटहरू सम्पादन </string>
 
     <string name="note">नोट</string>
     <string name="event">घटना</string>
 
     <string name="title">शीर्षक</string>
-    <string name="enter_title">शीर्षक प्रविष्ट गर्नुहोस्</string>
+    <string name="enter_title">शीर्षक प्रविष्ट </string>
     <string name="is_event">के घटना हो?</string>
-    <string name="enter_description">विवरण प्रविष्ट गर्नुहोस्</string>
+    <string name="enter_description">विवरण प्रविष्ट </string>
 
     <string name="one">१</string>
     <string name="two">२</string>
@@ -154,9 +154,9 @@
     <string name="end_time">अन्त्य समय</string>
     <string name="location">स्थान</string>
 
-    <string name="edit_note">टिप्पणी सम्पादन गर्नुहोस्</string>
+    <string name="edit_note">टिप्पणी सम्पादन </string>
 
-    <string name="edit">सम्पादन गर्नुहोस्</string>
+    <string name="edit">सम्पादन </string>
     <string name="delete">मेटाउनुहोस्</string>
 
     <string name="delete_confirmation">के तपाईं मेटाउन निश्चित हुनुहुन्छ?</string>
@@ -184,11 +184,11 @@
     <string name="terms_and_services">सर्तहरू र सेवाहरू</string>
     <string name="privacy_policy">गोपनीयता नीति</string>
     <string name="faq">FAQ</string>
-    <string name="change_password">पासवर्ड परिवर्तन गर्नुहोस्</string>
+    <string name="change_password">पासवर्ड परिवर्तन </string>
     <string name="current_password">हालको पासवर्ड</string>
     <string name="new_password">नयाँ पासवर्ड</string>
-    <string name="confirm_password">पासवर्ड पुष्टि गर्नुहोस्</string>
-    <string name="confirm">पुष्टि गर्नुहोस्</string>
+    <string name="confirm_password">पासवर्ड पुष्टि </string>
+    <string name="confirm">पुष्टि </string>
     <string name="light_mode">लाइट मोड</string>
     <string name="language">भाषा</string>
     <string name="app_appearance">अनुप्रयोगको उपस्थिति</string>
@@ -212,7 +212,7 @@
     <string name="pending">पेन्डिङ</string>
     <string name="approved">अनुमोदित</string>
     <string name="cancelled">रद्द गरियो</string>
-    <string name="login">लग इन गर्नुहोस्</string>
+    <string name="login">लग इन </string>
     <string name="username">प्रयोगकर्ता नाम</string>
     <string name="upcoming_birthday">जन्मदिन</string>
     <string name="all_leaves">पातहरू</string>
@@ -222,9 +222,9 @@
     <string name="leave_cancelled">रद्द गरिएको\nछोड्नुहोस्</string>
     <string name="work_anniversaries">कार्य वार्षिकोत्सव</string>
     <string name="skip">छोड्नुहोस्</string>
-    <string name="enter_your_username">आफ्नो प्रयोगकर्ता नाम प्रविष्ट गर्नुहोस्</string>
+    <string name="enter_your_username">आफ्नो प्रयोगकर्ता नाम प्रविष्ट </string>
     <string name="password">पासवर्ड</string>
-    <string name="enter_your_password">आफ्नो पासवर्ड प्रविष्ट गर्नुहोस्</string>
+    <string name="enter_your_password">आफ्नो पासवर्ड प्रविष्ट </string>
     <string name="invalid_password_length">पासवर्ड कम्तिमा ६ वर्ण लामो हुनुपर्छ</string>
     <string name="invalid_password_uppercase">कम्तिमा एउटा ठूलो अक्षर हुनुपर्छ</string>
     <string name="invalid_password_lowercase">कम्तिमा एउटा सानो अक्षर हुनुपर्छ</string>
@@ -242,7 +242,7 @@
 
     <string name="chat">बातचीत</string>
     <string name="search_users">प्रयोगकर्ताहरू खोज्नुहोस्</string>
-    <string name="type_here">यहाँ टाइप गर्नुहोस्...</string>
+    <string name="type_here">यहाँ टाइप ...</string>
     <string name="typing">टाइप गर्दै...</string>
     <string name="ad">ई.सं.</string>
     <string name="bs">वि.सं.</string>
@@ -263,8 +263,8 @@
     <string name="total_leave">कुल बिदा</string>
     <string name="working_days">काम गर्ने दिनहरू</string>
 
-    <string name="swipe_to_check_in">चेक इन गर्न स्वाइप गर्नुहोस्</string>
-    <string name="swipe_to_check_out">चेक आउट गर्न स्वाइप गर्नुहोस्</string>
+    <string name="swipe_to_check_in">चेक इन गर्न स्वाइप </string>
+    <string name="swipe_to_check_out">चेक आउट गर्न स्वाइप </string>
     <string name="camera">क्यामेरा</string>
     <string name="gallery">ग्यालरी</string>
     <string name="notifications">सूचनाहरू</string>
@@ -284,7 +284,7 @@
     <string name="designation">पदनाम</string>
 
     <string name="profile_incomplete">प्रोफाइल अपूर्ण</string>
-    <string name="fix_now">अहिले नै समाधान गर्नुहोस्</string>
+    <string name="fix_now">अहिले नै समाधान </string>
 
     <string name="allow_permission">सेटिङमा अनुमति दिनुहोस्</string>
     <string name="go_to_setting">सेटिङमा जानुहोस्</string>

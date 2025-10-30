@@ -60,30 +60,32 @@ class HomeScreenViewModel(
     private val doAttendanceUseCase: DoAttendanceUseCase,
     private val attendanceCountReportUseCase : AttendanceCountReportUseCase
 ) : ViewModel() {
-    private val _state = MutableStateFlow(HomeScreenState())
     private val notification = ProgressNotification()
 
     private var isAlreadyClockIn: MutableState<Boolean> = mutableStateOf(false)
 
     val datePair = calendarModel.getMonthStartAndEndDate()
 
+    private val _state = MutableStateFlow(HomeScreenState())
 
-    @OptIn(ExperimentalTime::class)
+//    @OptIn(ExperimentalTime::class)
     val state = _state
         .onStart {
-            fetchCurrentUser()
+            println("HomeScreenViewModel_onStart")
+            fetchCurrentUser(isRefreshing = false)
             fetchUpComingBirthday()
             fetchUpComingWorkAnniversary()
-            fetchAttendance()
+            fetchAttendance(isRefreshing = false)
             fetchCalendarValue()
             fetchUpComingEvents()
             getUnseenNotificationCount()
+            getAttendanceTotalCountReport()
         }
         .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = HomeScreenState()
-        )
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = HomeScreenState()
+    )
 
     fun onAction(action: HomeScreenActions) {
         when (action) {
@@ -125,11 +127,26 @@ class HomeScreenViewModel(
             }
 
             is HomeScreenActions.SwipeToDismiss -> {
+                _state.update {
+                    it.copy(
+                        showSwipeView = false
+                    )
+                }
                 uploadImage(uri = action.uri)
             }
 
             HomeScreenActions.OnRefresh -> {
-                reFresh()
+                fetchCurrentUser(isRefreshing = true)
+                fetchAttendance(isRefreshing = true)
+
+            }
+
+            HomeScreenActions.OnCameraCancel -> {
+                _state.update {
+                    it.copy(
+                        showSwipeView = false
+                    )
+                }
             }
         }
     }
@@ -145,7 +162,6 @@ class HomeScreenViewModel(
                     RequestType.CheckOut -> item.copy(
                         duration = attendanceData.clockOutTime ?: "--:--"
                     )
-
                     else -> item
                 }
             } ?: item
@@ -182,9 +198,10 @@ class HomeScreenViewModel(
     }
 
     //    fetch the attendance report
-    private fun fetchAttendance() = viewModelScope.launch {
+    private fun fetchAttendance(isRefreshing: Boolean) = viewModelScope.launch {
         _state.update {
             it.copy(
+                isRefreshing = isRefreshing,
                 isAttendanceLoading = true,
                 showSwipeView = false,
             )
@@ -222,6 +239,7 @@ class HomeScreenViewModel(
             }
             _state.update {
                 it.copy(
+                    isRefreshing= false,
                     isAttendanceLoading = false,
                     attendanceReport = data,
                     todayAttendance = attendanceData,
@@ -270,10 +288,11 @@ class HomeScreenViewModel(
     }
 
     //    fetch the current user details
-    private fun fetchCurrentUser() = viewModelScope.launch {
+    private fun fetchCurrentUser(isRefreshing: Boolean) = viewModelScope.launch {
         _state.update {
             it.copy(
-                isProfileLoading = true
+                isProfileLoading = true,
+                isRefreshing = isRefreshing
             )
         }
         userDetailUseCase(true).onSuccess { data ->
@@ -293,8 +312,6 @@ class HomeScreenViewModel(
                 )
             }
             //only fetch the total count after the current userdata fetch cause we need the employee id
-            getAttendanceTotalCountReport()
-
         }.onError { error ->
             AppLogger.e(
                 tag = TAG,
@@ -475,6 +492,10 @@ class HomeScreenViewModel(
             imageName = "$imageName${Clock.System.now().toEpochMilliseconds()}",
             filePath = uri,
             onProgress = { progress ->
+                //when the image is uploading don't show the swipe button
+                _state.update {
+                    it.copy(showSwipeView = false)
+                }
                 viewModelScope.launch {
                     withContext(Dispatchers.Main.immediate) {
                         notification.showNotification(
@@ -487,7 +508,6 @@ class HomeScreenViewModel(
             AppLogger.d(tag = TAG, "Image Upload success")
 
             doAttendance(
-                employeeId = _state.value.employeeId,
                 forDate = LocalDate.now().toString(),
                 imageName = data.imageName.toString()
             )
@@ -500,18 +520,19 @@ class HomeScreenViewModel(
     }
 
     private fun doAttendance(
-        employeeId: Int,
         forDate: String,
         imageName: String
     ) = viewModelScope.launch {
 //        get the time when the the attendance use case was triggered
         val currentTime = DateUtils.getCurrentTime()
         doAttendanceUseCase(
-            employeeId = employeeId,
             imageName = imageName,
             forDate = forDate
         ).onSuccess {
             AppLogger.d(tag = TAG, "Attendance update success")
+
+            //after the success of the one attendance immediately update the text
+            updateSwipeText()
 
             _state.update {
                 if (isAlreadyClockIn.value) {
@@ -522,7 +543,6 @@ class HomeScreenViewModel(
                                 clockOutTime = currentTime
                             )
                         )
-
                     )
                 } else {
                     it.copy(
@@ -535,8 +555,6 @@ class HomeScreenViewModel(
                     )
                 }
             }
-
-
         }.onError { error ->
             AppLogger.e(
                 tag = TAG,
@@ -560,9 +578,7 @@ class HomeScreenViewModel(
                 isAttendanceCountLoading = true
             )
         }
-
         attendanceCountReportUseCase(
-            employeeId = _state.value.employeeId,
             toDate = datePair.first,
             fromDate = datePair.second
         ).onSuccess { data ->
@@ -582,20 +598,5 @@ class HomeScreenViewModel(
                 "Attendance Count Report Fetch failed: ${error.toErrorMessage()}"
             )
         }
-    }
-
-    private fun reFresh() = viewModelScope.launch {
-        _state.update {
-            it.copy(
-                isRefreshing = true
-            )
-        }
-        fetchCurrentUser()
-        fetchUpComingBirthday()
-        fetchUpComingWorkAnniversary()
-        fetchAttendance()
-        fetchCalendarValue()
-        fetchUpComingEvents()
-        getUnseenNotificationCount()
     }
 }
