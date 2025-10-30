@@ -100,13 +100,11 @@ fun DocumentScreenContainer(
             documentList,
             key = { it.toString() },
         ) { item ->
-
             DocumentItemRow(
                 text = stringResource(item.title),
                 uploadText = stringResource(item.uploadText),
                 onClick = {},
-
-                )
+            )
         }
     }
 }
