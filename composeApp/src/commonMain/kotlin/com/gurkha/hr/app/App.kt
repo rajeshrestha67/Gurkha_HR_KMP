@@ -46,7 +46,7 @@ fun App(
 fun AppScreen(isFirstTime: Boolean) {
 
     val navController = rememberNavController()
-    val dashboardNavController = rememberNavController()
+
     key(erpAppLocale) {
         AnimatedNavHost(
             modifier = Modifier.fillMaxSize(),
@@ -57,7 +57,6 @@ fun AppScreen(isFirstTime: Boolean) {
             loginScreenBuilder(navController = navController)
             dashboardScreenBuilder(
                 navController = navController,
-                dashboardNavController = dashboardNavController,
                 onChatClick = {
                     navController.navigate(ChatRoute.ChatList)
                 })

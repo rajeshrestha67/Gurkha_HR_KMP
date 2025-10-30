@@ -23,8 +23,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.gurkha.hr.components.AnimatedNavHost
 import com.gurkha.hr.components.PlatformMessage
 import com.gurkha.hr.components.navigationBar.ERPNavigationBar
@@ -57,7 +57,6 @@ private const val TAG = "DashboardScreen"
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun DashboardScreen(
-    navController: NavHostController,
     onLogout: () -> Unit,
     onChatClick: () -> Unit
 ) {
@@ -65,27 +64,12 @@ fun DashboardScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
 
 
-    var bottomBarState by remember {
-        mutableStateOf(true)
-    }
-
     val showPlatform: PlatformMessage = koinInject()
     LaunchedEffect(Unit) {
         viewModel.action(DashboardScreenAction.OnFetchCurrentUser)
     }
 
-    LaunchedEffect(navController) {
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            bottomBarState = when (destination.route) {
-                DashboardRoute.HomeRoute::class.qualifiedName,
-                DashboardRoute.ProfileRoute::class.qualifiedName,
-                DashboardRoute.AttendanceRoute::class.qualifiedName,
-                DashboardRoute.LeaveRoute::class.qualifiedName,
-                DashboardRoute.NoteRoute::class.qualifiedName -> true // show bottom bar
-                else -> false // hide bottom bar
-            }
-        }
-    }
+
 
 
     LaunchedEffect(Unit) {
@@ -103,9 +87,7 @@ fun DashboardScreen(
 
 
     DashboardScreenContent(
-        bottomBarState = bottomBarState,
         state = state,
-        navController = navController,
         onLogout = onLogout,
         onAction = viewModel::action,
         onChatClick = onChatClick
@@ -116,14 +98,29 @@ fun DashboardScreen(
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun DashboardScreenContent(
-    bottomBarState: Boolean,
     state: DashboardScreenState,
-    navController: NavHostController,
     onChatClick: () -> Unit,
     onLogout: () -> Unit,
     onAction: (DashboardScreenAction) -> Unit
 ) {
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
+
+    var bottomBarState by remember {
+        mutableStateOf(true)
+    }
+    val dashboardNavController = rememberNavController()
+    LaunchedEffect(dashboardNavController) {
+        dashboardNavController.addOnDestinationChangedListener { _, destination, _ ->
+            bottomBarState = when (destination.route) {
+                DashboardRoute.HomeRoute::class.qualifiedName,
+                DashboardRoute.ProfileRoute::class.qualifiedName,
+                DashboardRoute.AttendanceRoute::class.qualifiedName,
+                DashboardRoute.LeaveRoute::class.qualifiedName,
+                DashboardRoute.NoteRoute::class.qualifiedName -> true // show bottom bar
+                else -> false // hide bottom bar
+            }
+        }
+    }
+    val navBackStackEntry by dashboardNavController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
     val onPermission = rememberRequestPermission(
         permissions = listOf(
@@ -171,6 +168,7 @@ fun DashboardScreenContent(
         }
     }
     val topScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
@@ -199,7 +197,7 @@ fun DashboardScreenContent(
                                             item.route
                                         )
                                     )
-                                    navController.navigate(item.route) {
+                                    dashboardNavController.navigate(item.route) {
                                         popUpTo(DashboardRoute.HomeRoute) { inclusive = false }
                                         launchSingleTop = true
                                         restoreState = true
@@ -220,18 +218,19 @@ fun DashboardScreenContent(
 
         }
     ) { paddingValues ->
+
         AnimatedNavHost(
             modifier = Modifier.padding(paddingValues).fillMaxSize(),
-            navController = navController,
+            navController = dashboardNavController,
             startDestination = DashboardRoute.HomeRoute,
         ) {
             homeScreenBuilder(
-                navController = navController,
+                navController = dashboardNavController,
                 topAppBarScrollBehavior = topScrollBehavior,
                 onChatClick = onChatClick,
                 onViewAllClick = { eventsJson, title ->
                     eventsJson?.let {
-                        navController.navigate(
+                        dashboardNavController.navigate(
                             HomeRoute.ViewAllRoute(
                                 json = eventsJson,
                                 title = title
@@ -239,41 +238,41 @@ fun DashboardScreenContent(
                         )
                     }
                 },
-                onGoToFixProfile={
-                    navController.navigate(HomeRoute.EditProfileRoute)
+                onGoToFixProfile = {
+                    dashboardNavController.navigate(HomeRoute.EditProfileRoute)
                 }
             )
             profileScreenBuilder(
                 onLogout = onLogout,
-                navController = navController
+                navController = dashboardNavController
             )
             attendanceScreenBuilder(
-                navController = navController,
+                navController = dashboardNavController,
                 onGoToAttendanceRequestScreen = {
-                    navController.navigate(AttendanceRoute.AttendanceRequestScreen)
+                    dashboardNavController.navigate(AttendanceRoute.AttendanceRequestScreen)
                 }
             )
             leaveScreenBuilder(
-                navController = navController,
+                navController = dashboardNavController,
                 onGoToLeaveRequestPage = {
-                    navController.navigate(LeaveRoute.LeaveRequestPageRoute)
+                    dashboardNavController.navigate(LeaveRoute.LeaveRequestPageRoute)
                 }
             )
 
             noteScreenBuilder(
-                navController = navController,
+                navController = dashboardNavController,
                 onGoToAddNotesScreen = { noteJson ->
-                    navController.navigate(NoteRoute.AddNoteRoute(json = noteJson))
+                    dashboardNavController.navigate(NoteRoute.AddNoteRoute(json = noteJson))
                 },
                 onGoToDetailNotesScreen = { noteJson ->
                     noteJson?.let {
-                        navController.navigate(NoteRoute.DetailNoteRoute(json = noteJson))
+                        dashboardNavController.navigate(NoteRoute.DetailNoteRoute(json = noteJson))
                     }
                 },
             )
 
             settingsScreenBuilder(
-                navController = navController
+                navController = dashboardNavController
             )
         }
     }
