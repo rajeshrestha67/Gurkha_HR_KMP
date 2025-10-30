@@ -26,7 +26,7 @@
     <string name="request">Request</string>
     <string name="all_leaves">Leaves</string>
     <string name="leave_request">Leave Request</string>
-    <string name="leave_request_form">Leave Request Form</string>
+    <string name="leave_request_form">Leave Request</string>
     <string name="upload_profile_image">Upload Profile Image</string>
     <string name="upload_citizenship_front">Upload Citizenship Front</string>
     <string name="upload_citizenship_back">Upload Citizenship Back</string>
@@ -147,7 +147,7 @@
     <string name="clock_out_time">Clock Out Time</string>
 
     <string name="attendance_request">Attendance Request</string>
-    <string name="attendance_request_form">Attendance Request Form</string>
+    <string name="attendance_request_form">Attendance Request</string>
 
     <string name="notes">Notes</string>
     <string name="add_notes">Add Note</string>

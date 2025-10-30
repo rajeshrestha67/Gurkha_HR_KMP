@@ -288,7 +288,8 @@ class HomeScreenViewModel(
                     email = data.email,
                     userProfileUrl = data.userProfileUrl,
                     employeeId = data.employeeId,
-                    isProfileComplete = data.isCompleteProfile
+                    isProfileComplete = data.isCompleteProfile,
+                    isRefreshing = false
                 )
             }
             //only fetch the total count after the current userdata fetch cause we need the employee id
@@ -596,11 +597,5 @@ class HomeScreenViewModel(
         fetchCalendarValue()
         fetchUpComingEvents()
         getUnseenNotificationCount()
-
-        _state.update {
-            it.copy(
-                isRefreshing = false
-            )
-        }
     }
 }

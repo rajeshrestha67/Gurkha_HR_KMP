@@ -48,6 +48,8 @@ import com.gurkha.hr.domain.attendance.attendanceStatus.model.AttendanceStatusDa
 import com.gurkha.hr.model.attendanceScreen.AttendanceAction
 import com.gurkha.hr.model.attendanceScreen.AttendanceItem
 import com.gurkha.hr.model.attendanceScreen.AttendanceScreenState
+import com.gurkha.hr.model.attendanceScreen.backgroundColor
+import com.gurkha.hr.model.attendanceScreen.outlineColor
 import com.gurkha.hr.res.SharedRes
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -98,7 +100,7 @@ fun AttendanceScreenMain(
                 windowInsets = WindowInsets(0.dp),
                 title = {
                     Text(
-                        text = stringResource(SharedRes.Strings.attendance)
+                        text = stringResource(SharedRes.Strings.attendance_request_form)
                     )
                 }
             )
@@ -219,11 +221,11 @@ fun AttendanceBox(
             .fillMaxSize()
             .border(
                 width = 1.dp,
-                color = item.color,
+                color = item.outlineColor,
                 shape = MaterialTheme.shapes.medium
             )
             .clip(shape = MaterialTheme.shapes.medium)
-            .background(item.backGroundColor)
+            .background(item.backgroundColor)
             .heightIn(min = MaterialTheme.dimens.leaveBoxHeight)
             .clickable(onClick = {})
             .padding(MaterialTheme.dimens.small2),
@@ -237,7 +239,7 @@ fun AttendanceBox(
         )
 
         Text(
-            text = item.days.toString(),
+            text = item.days,
             style = MaterialTheme.typography.titleMedium.copy(
                 color = MaterialTheme.erpColors.primaryTextColor
             )
