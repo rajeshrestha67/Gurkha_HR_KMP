@@ -284,6 +284,10 @@
 
     <string name="allow_permission">Allow Permission In Setting</string>
     <string name="go_to_setting">Go To Setting</string>
+    <string name="add_photos">Add Photos</string>
+    <string name="camera_permission_denied">Camera permission denied.</string>
+    <string name="gallery_permission_denied">Gallery permission denied.</string>
+    <string name="to_access_all_photos">To access all photos, change your settings</string>
 
 
     <string-array name="months">

@@ -6,10 +6,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Camera
@@ -17,6 +21,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -32,7 +37,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import coil3.compose.AsyncImage
+import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.components.permissions.CAMERA_PERMISSION
@@ -40,7 +48,9 @@ import com.gurkha.hr.components.permissions.GALLERY_PERMISSION
 import com.gurkha.hr.components.permissions.navigateToSettings
 import com.gurkha.hr.components.permissions.rememberRequestPermission
 import com.gurkha.hr.logger.AppLogger
+import com.gurkha.hr.res.SharedRes
 import com.gurkha.model.network.DataError
+import org.jetbrains.compose.resources.stringResource
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -52,11 +62,12 @@ fun MediaSelectorModalBottomSheet(
 ) {
     var galleryImages by remember { mutableStateOf<List<String>>(emptyList()) }
     val loadGallery = rememberGalleryLoader(
-        onLoaded = {
-            galleryImages = it
-        }, onError = {
+        onLoaded = { newImages ->
+            galleryImages = (galleryImages + newImages).distinct()
+        },
+        onError = {
             AppLogger.e(
-                tag = tag,
+                tag = "GalleryLoader",
                 message = "Error on gallery launcher",
                 error = DataError.LocalError.Custom(it)
             )
@@ -65,11 +76,6 @@ fun MediaSelectorModalBottomSheet(
 
     var isCameraPermissionPermanentDenied by remember { mutableStateOf(false) }
     var isGalleryPermissionPermanentDenied by remember { mutableStateOf(false) }
-
-
-    LaunchedEffect(Unit) {
-        loadGallery()
-    }
 
     val openCamera = rememberCameraLauncher(
         onImageCaptured = { uri ->
@@ -90,13 +96,17 @@ fun MediaSelectorModalBottomSheet(
 
     val onPermission = rememberRequestPermission(
         permissions = listOf(
-            CAMERA_PERMISSION
+            CAMERA_PERMISSION,
+            GALLERY_PERMISSION
         ),
         onGranted = { permission ->
             AppLogger.i(
                 tag = tag,
                 message = "Permission granted: $permission"
             )
+            if (permission == GALLERY_PERMISSION) {
+                loadGallery()
+            }
         },
         onDenied = { permission ->
             AppLogger.i(
@@ -126,6 +136,12 @@ fun MediaSelectorModalBottomSheet(
     LaunchedEffect(Unit) {
         onPermission()
     }
+    LifecycleResumeEffect(Unit) {
+        loadGallery()
+        onPauseOrDispose {
+
+        }
+    }
 
     val sheet = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
@@ -134,7 +150,8 @@ fun MediaSelectorModalBottomSheet(
     val navigateToSettings = navigateToSettings()
     ModalBottomSheet(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .statusBarsPadding(),
         sheetState = sheet,
         onDismissRequest = onDismiss,
         containerColor = MaterialTheme.colorScheme.background
@@ -150,6 +167,47 @@ fun MediaSelectorModalBottomSheet(
                 horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small1),
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small1)
             ) {
+                item(span = {
+                    GridItemSpan(maxLineSpan)
+                }) {
+                    Surface(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = MaterialTheme.dimens.small2),
+                        shape = MaterialTheme.shapes.medium,
+                        tonalElevation = 4.dp
+                    ) {
+                        Column(
+                            modifier = Modifier.fillMaxWidth()
+                                .padding(MaterialTheme.dimens.small2),
+                            verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2)
+                        ) {
+                            Text(
+                                text = stringResource(SharedRes.Strings.toAccessAllPhotos),
+                                style = MaterialTheme.typography.bodyLarge.copy(
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                            )
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
+                            ) {
+                                ERPButton(
+                                    modifier = Modifier.weight(1f),
+                                    text = stringResource(SharedRes.Strings.addPhotos),
+                                    onClick = { }
+                                )
+                                ERPButton(
+                                    modifier = Modifier.weight(1f),
+                                    text = stringResource(SharedRes.Strings.go_to_setting),
+                                    backgroundColor = MaterialTheme.colorScheme.error,
+                                    onClick = navigateToSettings
+                                )
+                            }
+                        }
+
+
+                    }
+                }
                 // Camera preview item
                 item {
                     Box(
@@ -186,7 +244,7 @@ fun MediaSelectorModalBottomSheet(
                                     }
                                 ) {
                                     Text(
-                                        text = "Camera permission denied.",
+                                        text = stringResource(SharedRes.Strings.cameraPermissionDenied),
                                         style = MaterialTheme.typography.bodyMedium.copy(
                                             color = MaterialTheme.colorScheme.onPrimary
                                         ),
@@ -204,7 +262,6 @@ fun MediaSelectorModalBottomSheet(
                 // Gallery items
                 items(galleryImages.size) { index ->
                     val uri = galleryImages[index]
-                    println("uri $uri")
                     AsyncImage(
                         model = uri,
                         contentDescription = null,
@@ -231,7 +288,7 @@ fun MediaSelectorModalBottomSheet(
                     ) {
                         Text(
                             modifier = Modifier.fillMaxWidth(),
-                            text = "Gallery permission denied.",
+                            text = stringResource(SharedRes.Strings.galleryPermissionDenied),
                             textAlign = TextAlign.Center,
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 color = MaterialTheme.erpColors.primaryTextColor
