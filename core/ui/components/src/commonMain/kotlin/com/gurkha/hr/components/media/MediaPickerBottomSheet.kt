@@ -45,6 +45,7 @@ import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.components.permissions.CAMERA_PERMISSION
 import com.gurkha.hr.components.permissions.GALLERY_PERMISSION
+import com.gurkha.hr.components.permissions.GALLERY_PERMISSION_LIMITED
 import com.gurkha.hr.components.permissions.navigateToSettings
 import com.gurkha.hr.components.permissions.rememberRequestPermission
 import com.gurkha.hr.logger.AppLogger
@@ -74,9 +75,25 @@ fun MediaSelectorModalBottomSheet(
         }
     )
 
+    val addPhotos = rememberAddPhotos(
+        onLoaded = { newImages ->
+            galleryImages = (galleryImages + newImages).distinct()
+        },
+        onError = {
+            AppLogger.e(
+                tag = "GalleryLoader",
+                message = "Error on gallery launcher",
+                error = DataError.LocalError.Custom(it)
+            )
+        }
+    )
+
     var isCameraPermissionPermanentDenied by remember { mutableStateOf(false) }
     var isGalleryPermissionPermanentDenied by remember { mutableStateOf(false) }
+    var isGalleryLimitedPermissionPermanentDenied by remember { mutableStateOf(false) }
+    var isPermissionChecked by remember { mutableStateOf(false) }
 
+    var galleryFullAccess by remember { mutableStateOf(true) }
     val openCamera = rememberCameraLauncher(
         onImageCaptured = { uri ->
             onImageReceived(uri)
@@ -97,14 +114,17 @@ fun MediaSelectorModalBottomSheet(
     val onPermission = rememberRequestPermission(
         permissions = listOf(
             CAMERA_PERMISSION,
-            GALLERY_PERMISSION
-        ),
+            GALLERY_PERMISSION,
+            GALLERY_PERMISSION_LIMITED
+        ).filter { it.isNotEmpty() },
         onGranted = { permission ->
             AppLogger.i(
                 tag = tag,
                 message = "Permission granted: $permission"
             )
             if (permission == GALLERY_PERMISSION) {
+                galleryFullAccess = true
+                isPermissionChecked = true
                 loadGallery()
             }
         },
@@ -113,6 +133,10 @@ fun MediaSelectorModalBottomSheet(
                 tag = tag,
                 message = "Permission denied: $permission"
             )
+            if (permission == GALLERY_PERMISSION) {
+                isPermissionChecked = true
+                galleryFullAccess = false
+            }
         },
         onPermanentlyDenied = { permission ->
             AppLogger.i(
@@ -121,8 +145,19 @@ fun MediaSelectorModalBottomSheet(
             )
 
             when (permission) {
-                CAMERA_PERMISSION -> isCameraPermissionPermanentDenied = true
-                GALLERY_PERMISSION -> isGalleryPermissionPermanentDenied = true
+                CAMERA_PERMISSION -> {
+                    isCameraPermissionPermanentDenied = true
+                }
+
+                GALLERY_PERMISSION -> {
+                    isPermissionChecked = true
+                    isGalleryPermissionPermanentDenied = true
+                }
+
+                GALLERY_PERMISSION_LIMITED -> {
+                    isPermissionChecked = true
+                    isGalleryLimitedPermissionPermanentDenied = true
+                }
             }
         },
         onAllGranted = {
@@ -137,7 +172,11 @@ fun MediaSelectorModalBottomSheet(
         onPermission()
     }
     LifecycleResumeEffect(Unit) {
-        loadGallery()
+
+        if (isPermissionChecked) {
+            galleryFullAccess = checkGalleryFullAccess()
+            loadGallery()
+        }
         onPauseOrDispose {
 
         }
@@ -167,45 +206,47 @@ fun MediaSelectorModalBottomSheet(
                 horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small1),
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small1)
             ) {
-                item(span = {
-                    GridItemSpan(maxLineSpan)
-                }) {
-                    Surface(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = MaterialTheme.dimens.small2),
-                        shape = MaterialTheme.shapes.medium,
-                        tonalElevation = 4.dp
-                    ) {
-                        Column(
-                            modifier = Modifier.fillMaxWidth()
-                                .padding(MaterialTheme.dimens.small2),
-                            verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2)
+                if (!galleryFullAccess) {
+                    item(span = {
+                        GridItemSpan(maxLineSpan)
+                    }) {
+                        Surface(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = MaterialTheme.dimens.small2),
+                            shape = MaterialTheme.shapes.medium,
+                            tonalElevation = 4.dp
                         ) {
-                            Text(
-                                text = stringResource(SharedRes.Strings.toAccessAllPhotos),
-                                style = MaterialTheme.typography.bodyLarge.copy(
-                                    color = MaterialTheme.colorScheme.onSurface
-                                )
-                            )
-                            Row(
-                                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
+                            Column(
+                                modifier = Modifier.fillMaxWidth()
+                                    .padding(MaterialTheme.dimens.small2),
+                                verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2)
                             ) {
-                                ERPButton(
-                                    modifier = Modifier.weight(1f),
-                                    text = stringResource(SharedRes.Strings.addPhotos),
-                                    onClick = { }
+                                Text(
+                                    text = stringResource(SharedRes.Strings.toAccessAllPhotos),
+                                    style = MaterialTheme.typography.bodyLarge.copy(
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
                                 )
-                                ERPButton(
-                                    modifier = Modifier.weight(1f),
-                                    text = stringResource(SharedRes.Strings.go_to_setting),
-                                    backgroundColor = MaterialTheme.colorScheme.error,
-                                    onClick = navigateToSettings
-                                )
+                                Row(
+                                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
+                                ) {
+                                    ERPButton(
+                                        modifier = Modifier.weight(1f),
+                                        text = stringResource(SharedRes.Strings.addPhotos),
+                                        onClick = addPhotos
+                                    )
+                                    ERPButton(
+                                        modifier = Modifier.weight(1f),
+                                        text = stringResource(SharedRes.Strings.go_to_setting),
+                                        backgroundColor = MaterialTheme.colorScheme.error,
+                                        onClick = navigateToSettings
+                                    )
+                                }
                             }
+
+
                         }
-
-
                     }
                 }
                 // Camera preview item
@@ -275,7 +316,7 @@ fun MediaSelectorModalBottomSheet(
                 }
 
             }
-            if (isGalleryPermissionPermanentDenied) {
+            if (isGalleryPermissionPermanentDenied && isGalleryLimitedPermissionPermanentDenied) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
