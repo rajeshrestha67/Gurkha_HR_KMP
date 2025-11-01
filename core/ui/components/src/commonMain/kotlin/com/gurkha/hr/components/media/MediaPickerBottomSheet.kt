@@ -85,22 +85,6 @@ fun MediaSelectorModalBottomSheet(
         }
     )
 
-    val addPhotos = rememberAddPhotos(
-        onLoaded = { newImages ->
-            galleryImages = (galleryImages + newImages).distinct()
-        },
-        onError = {
-            AppLogger.e(
-                tag = "GalleryLoader",
-                message = "Error on gallery launcher",
-                error = DataError.LocalError.Custom(it)
-            )
-            it.message?.let { message ->
-                platformMessage.showToast(message)
-            }
-        }
-    )
-
 
     val openCamera = rememberCameraLauncher(
         onImageCaptured = { uri ->
