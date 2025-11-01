@@ -176,6 +176,7 @@ import gurkhahr.core.ui.res.generated.resources.personal
 import gurkhahr.core.ui.res.generated.resources.personal_details
 import gurkhahr.core.ui.res.generated.resources.personal_info
 import gurkhahr.core.ui.res.generated.resources.phone
+import gurkhahr.core.ui.res.generated.resources.photos
 import gurkhahr.core.ui.res.generated.resources.plus_two_image
 import gurkhahr.core.ui.res.generated.resources.present
 import gurkhahr.core.ui.res.generated.resources.privacy_policy
@@ -553,6 +554,7 @@ object SharedRes {
         val go_to_setting = Res.string.go_to_setting
         val allow_permission = Res.string.allow_permission
         val addPhotos = Res.string.add_photos
+        val photos = Res.string.photos
         val toAccessAllPhotos = Res.string.to_access_all_photos
         val cameraPermissionDenied = Res.string.camera_permission_denied
         val galleryPermissionDenied = Res.string.gallery_permission_denied

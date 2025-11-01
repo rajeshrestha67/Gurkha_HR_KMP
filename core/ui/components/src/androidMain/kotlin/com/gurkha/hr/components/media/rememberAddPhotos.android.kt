@@ -12,7 +12,7 @@ actual fun rememberAddPhotos(
     onError: (Throwable) -> Unit
 ): () -> Unit {
     val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickMultipleVisualMedia(50) // up to 50 images
+        contract = ActivityResultContracts.PickMultipleVisualMedia() // up to 50 images
     ) { uris ->
         try {
             onLoaded(uris.map { it.toString() })

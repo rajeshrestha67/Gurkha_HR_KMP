@@ -292,6 +292,7 @@
     <string name="to_access_all_photos">सबै तस्बिरहरू पहुँच गर्न, आफ्नो सेटिङहरू परिवर्तन गर्नुहोस्</string>
     <string name="camera_permission_denied">क्यामेरा अनुमति अस्वीकार गरियो।</string>
     <string name="gallery_permission_denied">ग्यालेरी अनुमति अस्वीकार गरियो।</string>
+    <string name="photos">फोटोहरू</string>
     <string-array name="months">
         <item>बैशाख</item>
         <item>जेठ</item>
