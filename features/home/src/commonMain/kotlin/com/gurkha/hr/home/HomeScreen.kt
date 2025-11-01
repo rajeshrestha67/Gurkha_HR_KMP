@@ -7,7 +7,6 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,7 +28,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Chat
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.Badge
@@ -41,11 +39,14 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarScrollBehavior
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -58,15 +59,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.gurkha.hr.components.ERPButton
+import com.gurkha.hr.components.PlatformMessage
 import com.gurkha.hr.components.ProfilePicture
 import com.gurkha.hr.components.date.horizontalCalendar.HorizontalCalendar
 import com.gurkha.hr.components.dimens
+import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.components.extractInitials
 import com.gurkha.hr.components.media.rememberCameraLauncher
-import com.gurkha.hr.components.media.rememberGalleryLauncher
 import com.gurkha.hr.components.noRippleClickable
+import com.gurkha.hr.components.permissions.CAMERA_PERMISSION
+import com.gurkha.hr.components.permissions.navigateToSettings
+import com.gurkha.hr.components.permissions.rememberRequestPermission
 import com.gurkha.hr.components.shimmer.ShimmerView
 import com.gurkha.hr.components.swipeToDismiss.SwipeToDismissBox
 import com.gurkha.hr.date.data.CalendarDate
@@ -74,22 +81,21 @@ import com.gurkha.hr.date.data.CalendarDay
 import com.gurkha.hr.domain.upComingBirthday.mapper.toUi
 import com.gurkha.hr.domain.upComingEvent.model.EventData
 import com.gurkha.hr.domain.upComingWorkAnniversaries.mapper.toUi
+import com.gurkha.hr.logger.AppLogger
 import com.gurkha.hr.model.home.AttendanceHistoryItemUI
 import com.gurkha.hr.model.home.HomeScreenActions
 import com.gurkha.hr.model.home.HomeScreenState
 import com.gurkha.hr.model.home.RequestItem
 import com.gurkha.hr.res.SharedRes
-import com.gurkha.hr.res.theme.borderColor
-import com.gurkha.hr.res.theme.darkPrimaryTextColor
-import com.gurkha.hr.res.theme.highLightColor
-import com.gurkha.hr.res.theme.imageBackgroundColor
-import com.gurkha.hr.res.theme.linkColor
-import com.gurkha.hr.res.theme.primaryTextColor
 import com.gurkha.model.upComingBirthday.ui.ViewAllUi
 import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
+import kotlin.time.ExperimentalTime
+
+const val TAG = "Home Screen"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -97,7 +103,8 @@ fun HomeScreen(
     topAppBarScrollBehavior: TopAppBarScrollBehavior,
     onChatClick: () -> Unit,
     onNotificationClick: () -> Unit,
-    onViewAllClick: (String?, String) -> Unit
+    onViewAllClick: (String?, String) -> Unit,
+    onGoToFixProfile: () -> Unit
 ) {
     val viewModel: HomeScreenViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -126,9 +133,9 @@ fun HomeScreen(
                             nameInitials = state.initials,
                             size = MaterialTheme.dimens.medium3,
                             shape = CircleShape,
-                            background = MaterialTheme.colorScheme.imageBackgroundColor,
+                            background = MaterialTheme.erpColors.imageBackgroundColor,
                             borderWidth = 0.5.dp,
-                            borderColor = MaterialTheme.colorScheme.borderColor,
+                            borderColor = MaterialTheme.colorScheme.outline,
                             ratio = 1f
                         )
 
@@ -138,12 +145,12 @@ fun HomeScreen(
                         ) {
                             Text(
                                 style = MaterialTheme.typography.titleMedium.copy(
-                                    color = MaterialTheme.colorScheme.primaryTextColor
+                                    color = MaterialTheme.erpColors.primaryTextColor
                                 ), text = state.fullName
                             )
                             Text(
                                 style = MaterialTheme.typography.titleSmall.copy(
-                                    color = MaterialTheme.colorScheme.primaryTextColor
+                                    color = MaterialTheme.erpColors.primaryTextColor
                                 ), text = state.levelName
                             )
                         }
@@ -160,10 +167,12 @@ fun HomeScreen(
                             .noRippleClickable(onClick = onNotificationClick)
                             .padding(horizontal = MaterialTheme.dimens.small3),
                         badge = {
-                            Badge(
-                                contentColor = MaterialTheme.colorScheme.onError
-                            ) {
-                                Text(text = state.totalUnSeenNotification.toString())
+                            if(state.totalUnSeenNotification != 0){
+                                Badge(
+                                    contentColor = MaterialTheme.colorScheme.onError
+                                ) {
+                                    Text(text = state.totalUnSeenNotification.toString())
+                                }
                             }
                         }
                     ) {
@@ -175,18 +184,28 @@ fun HomeScreen(
                 }, scrollBehavior = topAppBarScrollBehavior
             )
         }) { paddingValues ->
-        HomeScreenContent(
+        PullToRefreshBox(
             modifier = Modifier.fillMaxSize().padding(paddingValues),
-            state = state,
-            onAction = viewModel::onAction,
-            onViewAllClick = onViewAllClick,
-            birthdayTitle = birthdayTitle,
-            anniversaryTitle = anniversaryTitle
+            isRefreshing = state.isRefreshing,
+            onRefresh = {
+                viewModel.onAction(HomeScreenActions.OnRefresh)
+            },
+            content = {
+                HomeScreenContent(
+                    modifier = Modifier.fillMaxSize(),
+                    state = state,
+                    onAction = viewModel::onAction,
+                    onViewAllClick = onViewAllClick,
+                    birthdayTitle = birthdayTitle,
+                    anniversaryTitle = anniversaryTitle,
+                    onGoToFixProfile = onGoToFixProfile
+                )
+            }
         )
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
 fun HomeScreenContent(
     modifier: Modifier = Modifier,
@@ -194,27 +213,55 @@ fun HomeScreenContent(
     onAction: (HomeScreenActions) -> Unit,
     onViewAllClick: (String?, String) -> Unit,
     birthdayTitle: String,
-    anniversaryTitle: String
+    anniversaryTitle: String,
+    onGoToFixProfile: () -> Unit
 ) {
+    var showPermissionModal by remember { mutableStateOf(false) }
+
     val openCamera = rememberCameraLauncher(
         onImageCaptured = { uri ->
-            println("✅ Captured image: $uri")
+            onAction(HomeScreenActions.SwipeToDismiss(uri = uri))
         },
         onError = { e ->
             println("❌ Error: ${e.message}")
         }
     )
-    val openGallery = rememberGalleryLauncher(
-        onImageSelected = { uri ->
-            println("✅ Captured image: $uri")
+
+    val platformMessage: PlatformMessage = koinInject()
+    val onPermission = rememberRequestPermission(
+        permissions = listOf(
+            CAMERA_PERMISSION
+        ),
+        onGranted = { permission ->
+            if (permission == CAMERA_PERMISSION) {
+                openCamera()
+            }
+            AppLogger.i(
+                tag = TAG,
+                message = "Permission granted: $permission"
+            )
         },
-        onError = { e ->
-            println("❌ Error: ${e.message}")
+        onDenied = { permission ->
+            AppLogger.i(
+                tag = TAG,
+                message = "Permission denied: $permission"
+            )
+            platformMessage.showToast(message = "Permission denied: $permission")
+        },
+        onPermanentlyDenied = { permission ->
+            AppLogger.i(
+                tag = TAG,
+                message = "Permission denied permanent: $permission"
+            )
+            showPermissionModal = true
+        },
+        onAllGranted = {
+            AppLogger.i(
+                tag = TAG,
+                message = "All Permission granted"
+            )
         }
     )
-    val (showNotification, onChangeNotification) = rememberSaveable {
-        mutableStateOf(true)
-    }
     val mainListState = rememberLazyListState()
 
 
@@ -258,8 +305,8 @@ fun HomeScreenContent(
         ) {
             //    Notification part
             notificationView(
-                showNotification = showNotification,
-                onChangeNotification = onChangeNotification
+                showNotification = !state.isProfileComplete,
+                onGoToFixProfile = onGoToFixProfile
             )
 
             //            calender part
@@ -293,11 +340,18 @@ fun HomeScreenContent(
                 anniversaryTitle = anniversaryTitle
             )
 
-            // attendance title
+            // attendance list
             attendanceSection(
                 state = state
             )
 
+        }
+        if (showPermissionModal) {
+            PermanentPermissionShow(
+                onDismiss = {
+                    showPermissionModal = false
+                }
+            )
         }
         AnimatedVisibility(
             visible = shouldShowSwipeToDismiss,
@@ -308,8 +362,7 @@ fun HomeScreenContent(
             SwipeToDismissBox(
                 text = stringResource(state.swipeText),
                 onDismissed = {
-                    //onAction(HomeScreenActions.SwipeToDismiss)
-                    openCamera()
+                    onPermission()
                 }
             )
         }
@@ -367,7 +420,6 @@ fun LazyListScope.anniversarySection(
                         UpComingCard(
                             fullName = item.fullName,
                             imageUrl = item.imageUrl,
-                            date = item.joinedDate,
                             designationName = item.designationName
                         )
                     }
@@ -425,8 +477,7 @@ fun LazyListScope.birthDaySection(
                         UpComingCard(
                             fullName = item.fullName,
                             imageUrl = item.imageUrl,
-                            date = item.dateOfBirth,
-                            designationName = item.designationName
+                            designationName = item.designationName,
                         )
                     }
                 }
@@ -444,7 +495,6 @@ fun LazyListScope.attendanceSection(
             modifier = Modifier.fillMaxWidth()
                 .padding(start = MaterialTheme.dimens.small3, end = MaterialTheme.dimens.small1),
             title = SharedRes.Strings.attendance,
-            subTitle = SharedRes.Strings.view_all
         )
     }
 
@@ -482,7 +532,7 @@ private fun AttendanceHistoryItem(
                 horizontal = MaterialTheme.dimens.small3
             )
             .background(
-                MaterialTheme.colorScheme.highLightColor,
+                MaterialTheme.erpColors.highLightColor,
                 shape = MaterialTheme.shapes.medium
             )
     ) {
@@ -513,7 +563,7 @@ private fun AttendanceHistoryItem(
                             Text(
                                 text = stringResource(SharedRes.Strings.attendanceRequest),
                                 style = MaterialTheme.typography.bodyMedium.copy(
-                                    color = MaterialTheme.colorScheme.primaryTextColor
+                                    color = MaterialTheme.erpColors.primaryTextColor
                                 )
                             )
                         },
@@ -541,13 +591,13 @@ private fun AttendanceHistoryItem(
                     Text(
                         text = stringResource(SharedRes.Strings.date),
                         style = MaterialTheme.typography.titleSmall.copy(
-                            color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                            color = MaterialTheme.erpColors.darkPrimaryTextColor
                         )
                     )
                     Text(
                         text = item.date,
                         style = MaterialTheme.typography.bodySmall.copy(
-                            color = MaterialTheme.colorScheme.primaryTextColor
+                            color = MaterialTheme.erpColors.primaryTextColor
                         )
                     )
                 }
@@ -580,12 +630,12 @@ private fun AttendanceHistoryItem(
                     Text(
                         text = stringResource(SharedRes.Strings.clockIn),
                         style = MaterialTheme.typography.titleSmall.copy(
-                            color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                            color = MaterialTheme.erpColors.darkPrimaryTextColor
                         )
                     )
                     Text(
                         text = item.clockInTime, style = MaterialTheme.typography.bodySmall.copy(
-                            color = MaterialTheme.colorScheme.primaryTextColor
+                            color = MaterialTheme.erpColors.primaryTextColor
                         )
                     )
                 }
@@ -596,12 +646,12 @@ private fun AttendanceHistoryItem(
                     Text(
                         text = stringResource(SharedRes.Strings.clockOut),
                         style = MaterialTheme.typography.titleSmall.copy(
-                            color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                            color = MaterialTheme.erpColors.darkPrimaryTextColor
                         )
                     )
                     Text(
                         text = item.clockOutTime, style = MaterialTheme.typography.bodySmall.copy(
-                            color = MaterialTheme.colorScheme.primaryTextColor
+                            color = MaterialTheme.erpColors.primaryTextColor
                         )
                     )
                 }
@@ -612,7 +662,7 @@ private fun AttendanceHistoryItem(
                     Text(
                         text = stringResource(SharedRes.Strings.status),
                         style = MaterialTheme.typography.titleSmall.copy(
-                            color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                            color = MaterialTheme.erpColors.darkPrimaryTextColor
                         )
                     )
                     Row(
@@ -630,12 +680,12 @@ private fun AttendanceHistoryItem(
                                 modifier = Modifier
                                     .border(
                                         width = 1.dp,
-                                        color = MaterialTheme.colorScheme.borderColor,
+                                        color = MaterialTheme.colorScheme.outline,
                                         shape = MaterialTheme.shapes.small
                                     ).padding(MaterialTheme.dimens.small1),
                                 text = item.statusClips[it],
                                 style = MaterialTheme.typography.bodySmall.copy(
-                                    color = MaterialTheme.colorScheme.primaryTextColor
+                                    color = MaterialTheme.erpColors.primaryTextColor
                                 )
                             )
 
@@ -694,7 +744,6 @@ fun LazyListScope.requestSection(
                         AttendanceItemContent(
                             modifier = Modifier.weight(1f).fillMaxSize(),
                             item = leaveItem,
-                            onClick = {}
                         )
                     }
                 }
@@ -730,7 +779,8 @@ fun LazyListScope.calendarView(
 }
 
 fun LazyListScope.notificationView(
-    showNotification: Boolean, onChangeNotification: (Boolean) -> Unit
+    showNotification: Boolean,
+    onGoToFixProfile: () -> Unit
 ) {
     item(key = "notification") {
         AnimatedVisibility(
@@ -740,7 +790,7 @@ fun LazyListScope.notificationView(
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth().padding(
-                    end = MaterialTheme.dimens.small3, start = MaterialTheme.dimens.small3
+                    end = MaterialTheme.dimens.small3, start = MaterialTheme.dimens.small3,
                 ).background(
                     color = MaterialTheme.colorScheme.error, shape = MaterialTheme.shapes.medium
                 ),
@@ -749,20 +799,24 @@ fun LazyListScope.notificationView(
             ) {
                 Text(
                     modifier = Modifier.padding(
-                        all = MaterialTheme.dimens.small2
-                    ), text = "Notification view", style = MaterialTheme.typography.bodyMedium.copy(
+                        vertical = MaterialTheme.dimens.small3,
+                        horizontal = MaterialTheme.dimens.small2
+                    ),
+                    text = stringResource(SharedRes.Strings.profile_incomplete),
+                    style = MaterialTheme.typography.bodyMedium.copy(
                         color = MaterialTheme.colorScheme.onError
                     )
                 )
-                IconButton(onClick = {
-                    onChangeNotification(!showNotification)
-                }) {
-                    Icon(
-                        imageVector = Icons.Filled.Close,
-                        contentDescription = "close icon",
-                        tint = MaterialTheme.colorScheme.onError
-                    )
-                }
+                TextButton(
+                    onClick = onGoToFixProfile,
+                    content = {
+                        Text(
+                            text = stringResource(SharedRes.Strings.fix_now),
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                color = MaterialTheme.colorScheme.onError
+                            )
+                        )
+                    })
             }
         }
     }
@@ -771,52 +825,51 @@ fun LazyListScope.notificationView(
 //reusable request row
 @Composable
 fun AttendanceItemContent(
-    item: RequestItem, modifier: Modifier = Modifier, onClick: () -> Unit
+    item: RequestItem, modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier = modifier
-            .clip(shape = MaterialTheme.shapes.medium)
-            .background(MaterialTheme.colorScheme.highLightColor)
-            .border(
-                width = 1.dp,
-                shape = MaterialTheme.shapes.medium,
-                color = MaterialTheme.colorScheme.highLightColor
-            ).clickable(onClick = onClick),
-        verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.Start
+    Surface(
+        modifier = modifier.clip(shape = MaterialTheme.shapes.medium),
+        tonalElevation = 4.dp
     ) {
-        Row(
-            modifier = Modifier.padding(
-                horizontal = MaterialTheme.dimens.small3, vertical = MaterialTheme.dimens.small2
-            ),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2)
-        ) {
-            Icon(imageVector = item.type.icon, contentDescription = "arrow right")
-            Text(
-                text = stringResource(item.type.title),
-                style = MaterialTheme.typography.titleMedium
-            )
-        }
-
         Column(
-            modifier = Modifier.padding(
-                horizontal = MaterialTheme.dimens.small3, vertical = MaterialTheme.dimens.small2
-            )
+            modifier = modifier
+                .clip(shape = MaterialTheme.shapes.medium),
+            verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.Start
         ) {
-            Text(
-                text = item.duration, style = MaterialTheme.typography.titleLarge.copy(
-                    color = MaterialTheme.colorScheme.primaryTextColor
+            Row(
+                modifier = Modifier.padding(
+                    horizontal = MaterialTheme.dimens.small3, vertical = MaterialTheme.dimens.small2
+                ),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2)
+            ) {
+                Icon(imageVector = item.type.icon, contentDescription = "arrow right")
+                Text(
+                    text = stringResource(item.type.title),
+                    style = MaterialTheme.typography.titleMedium
                 )
-            )
-            Text(
-                text = stringResource(item.type.status),
-                style = MaterialTheme.typography.titleSmall.copy(
-                    color = MaterialTheme.colorScheme.primaryTextColor
+            }
 
+            Column(
+                modifier = Modifier.padding(
+                    horizontal = MaterialTheme.dimens.small3, vertical = MaterialTheme.dimens.small2
                 )
-            )
+            ) {
+                Text(
+                    text = item.duration, style = MaterialTheme.typography.titleLarge.copy(
+                        color = MaterialTheme.erpColors.primaryTextColor
+                    )
+                )
+                Text(
+                    text = stringResource(item.type.status),
+                    style = MaterialTheme.typography.titleSmall.copy(
+                        color = MaterialTheme.erpColors.primaryTextColor
+
+                    )
+                )
+            }
+
         }
-
     }
 }
 
@@ -884,7 +937,6 @@ fun UpComingCard(
     imageUrl: String,
     fullName: String,
     designationName: String,
-    date: String,
 ) {
     Column(
         modifier = Modifier.widthIn(min = MaterialTheme.dimens.eventWidth)
@@ -912,7 +964,7 @@ fun UpComingCard(
                 nameInitials = fullName.extractInitials(),
                 size = MaterialTheme.dimens.medium3,
                 shape = CircleShape,
-                background = MaterialTheme.colorScheme.imageBackgroundColor,
+                background = MaterialTheme.erpColors.imageBackgroundColor,
                 borderWidth = 0.dp,
                 borderColor = Color.Transparent,
                 ratio = 1f
@@ -921,7 +973,7 @@ fun UpComingCard(
         Text(text = fullName, style = MaterialTheme.typography.titleMedium)
         Text(
             text = designationName, style = MaterialTheme.typography.titleSmall.copy(
-                color = MaterialTheme.colorScheme.primaryTextColor
+                color = MaterialTheme.erpColors.primaryTextColor
             )
         )
     }
@@ -953,7 +1005,7 @@ fun TitleBar(
                 Text(
                     text = stringResource(subTitle),
                     style = MaterialTheme.typography.titleSmall.copy(
-                        color = MaterialTheme.colorScheme.linkColor
+                        color = MaterialTheme.erpColors.linkColor
                     )
                 )
             }
@@ -984,21 +1036,64 @@ fun EventCard(
     ) {
         Text(
             text = item.name, style = MaterialTheme.typography.titleMedium.copy(
-                color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                color = MaterialTheme.erpColors.darkPrimaryTextColor
             )
         )
 
         Text(
             text = "${item.fromDateBs} to ${item.toDateBs}",
             style = MaterialTheme.typography.titleSmall.copy(
-                color = MaterialTheme.colorScheme.primaryTextColor
+                color = MaterialTheme.erpColors.primaryTextColor
             )
         )
 
         Text(
             text = item.description, style = MaterialTheme.typography.titleSmall.copy(
-                color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                color = MaterialTheme.erpColors.darkPrimaryTextColor
             )
         )
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun PermanentPermissionShow(
+    onDismiss: () -> Unit
+) {
+    val navigateToSettings = navigateToSettings()
+    ModalBottomSheet(
+        modifier = Modifier.fillMaxWidth(),
+        onDismissRequest = { onDismiss() },
+        content = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(MaterialTheme.dimens.chartHeight)
+                    .padding(
+                        horizontal = MaterialTheme.dimens.small3,
+                        vertical = MaterialTheme.dimens.medium2
+                    ),
+                verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Text(
+                    text = stringResource(SharedRes.Strings.allow_permission),
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        color = MaterialTheme.erpColors.darkPrimaryTextColor
+                    ),
+                    textAlign = TextAlign.Center
+                )
+
+                ERPButton(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = stringResource(SharedRes.Strings.go_to_setting),
+                    onClick = {
+                        navigateToSettings()
+                        onDismiss()
+                    }
+                )
+            }
+        }
+
+    )
 }

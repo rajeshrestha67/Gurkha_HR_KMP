@@ -1,168 +1,163 @@
 package com.gurkha.hr.res.theme
 
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.ColorScheme
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
-
-
-@Composable
-fun extendedColor(light: Color, dark: Color): Color {
-    return if (isSystemInDarkTheme()) dark else light
-}
-
-val ColorScheme.imageBackgroundColor: Color
-    @Composable get() =
-        extendedColor(
-            light = Color.Black,
-            dark = Color(0xFF212121)
-        )
-val ColorScheme.lightGreenColor: Color
-    @Composable get() =
-        extendedColor(
-            light = Color(0xFF4CAF50),
-            dark = Color(0xFF90EE90)
-        )
-val ColorScheme.primaryTextColor: Color
-    @Composable get() =
-        extendedColor(
-            light = Color(0xFF646884),
-            dark = Color(0XFFcbcdd9)
-        )
-
-val ColorScheme.secondaryTextColor: Color
-    @Composable get() =
-        extendedColor(
-            light = Color(0xFFa2a5b9),
-            dark = Color(0xFFa2a5b9),
-        )
-val ColorScheme.onBoardingIndicatorSelectedColor: Color
-    @Composable get() = extendedColor(
-        light = Color.Red,
-        dark = Color.Red
-    )
-
-val ColorScheme.borderColor: Color
-    @Composable get() =
-        extendedColor(
-            light = Color.Black.copy(alpha = 0.3f),
-            dark = Color.Black.copy(alpha = 0.7f)
-        )
-val ColorScheme.onBoardingIndicatorUnSelectedColor: Color
-    @Composable get() = extendedColor(
-        light = Color.Gray,
-        dark = Color.Gray
-    )
-
-val ColorScheme.linkColor: Color
-    @Composable get() = extendedColor(
-        light = Color(color = 0xFF0288D1),
-        dark = Color(color = 0xFF0288D1)
-    )
-val ColorScheme.highLightColor: Color
-    @Composable get() = extendedColor(
-        light = Color.White.copy(alpha = 0.7f),
-        dark = Color.White.copy(alpha = 0.7f)
-    )
-
-val ColorScheme.logOutTextColor: Color
-    @Composable get() = extendedColor(
-        light = Color(0xFFC62828),
-        dark = Color(0xFFE53935)
-    )
-val ColorScheme.lightRedColor: Color
-    @Composable get() = extendedColor(
-        light = Color(0xFFEF5350),
-        dark = Color(0xFFF44336)
-    )
-
-
-val ColorScheme.darkPrimaryTextColor: Color
-    @Composable get() = extendedColor(
-        light = Color(0xFF555975),
-        dark = Color(0xFFF2F2F2)
-    )
-
-val ColorScheme.leaveBalanceBorder: Color
-    @Composable get() = extendedColor(
-        light = Color.Blue,
-        dark = Color.Blue
-    )
-
-val ColorScheme.leaveApprovedBorder: Color
-    @Composable get() = extendedColor(
-        light = Color.Yellow,
-        dark = Color.Yellow
-    )
-
-val ColorScheme.leavePendingBorder: Color
-    @Composable get() = extendedColor(
-        light = Color.Green,
-        dark = Color.Green
-    )
-
-val ColorScheme.leaveCancelledBorder: Color
-    @Composable get() = extendedColor(
-        light = Color.Red,
-        dark = Color.Red
-    )
-
-val ColorScheme.veryLightGray: Color
-    @Composable get() = extendedColor(
-        light = Color(0xFFF3F6F4),
-        dark = Color(0xFFF3F6F4),
-    )
-
-val ColorScheme.disabledTextFieldBorderColor: Color
-    @Composable get() = extendedColor(
-        light = Color(0xFFCCCCCC),
-        dark = Color(0xFF444444)
-    )
-
-val ColorScheme.chatBackgroundColor: Color
-    @Composable get() = extendedColor(
-        light = Color(0xFFFAFAFA),
-        dark = Color(0xFF121212)
-    )
-
-val ColorScheme.inComingBubbleColor: Color
-    @Composable get() = extendedColor(
-        light = Color(0x604B662C),
-        dark = Color(0x60B1D18A)
-    )
-
-
-val ColorScheme.outGoingBubbleColor: Color
-    @Composable get() = extendedColor(
-        light = Color(0xFFDDDDDD),
-        dark = Color(0xFF3A3A3A)
-    )
-val ColorScheme.holidayBlueColor: Color
-    @Composable get() = extendedColor(
-        light = Color(0xFF03A9F4),
-        dark = Color(0xFF2196F3)
-
-    )
-val ColorScheme.inComingTextColor: Color
-    @Composable get() = extendedColor(
-        light = Color(0xFF111111),
-        dark = Color(0xFFE0E0E0)
-    )
-
-
-val ColorScheme.chatSecondaryTextColor: Color
-    @Composable get() = extendedColor(
-        light = Color(0xFF757575),
-        dark = Color(0xFFAAAAAA)
-    )
-
-val ColorScheme.attendanceHoliday: Color
-    @Composable get() = extendedColor(
-        light = Color(0xFFFFA000),
-        dark = Color(0xFFBF6F00)
-    )
-
-@Composable
-fun ColorScheme.getOnBoardingIndicatorColor(isSelected: Boolean): Color {
-    return if (isSelected) onBoardingIndicatorSelectedColor else onBoardingIndicatorUnSelectedColor
-}
+//
+//@Composable
+//fun extendedColor(light: Color, dark: Color): Color {
+//    return if (isSystemInDarkTheme()) dark else light
+//}
+//
+//val ColorScheme.imageBackgroundColor: Color
+//    @Composable get() =
+//        extendedColor(
+//            light = Color.Black,
+//            dark = Color(0xFF212121)
+//        )
+//val ColorScheme.lightGreenColor: Color
+//    @Composable get() =
+//        extendedColor(
+//            light = Color(0xFF4CAF50),
+//            dark = Color(0xFF90EE90)
+//        )
+//val ColorScheme.primaryTextColor: Color
+//    @Composable get() =
+//        extendedColor(
+//            light = Color(0xFF646884),
+//            dark = Color(0XFFcbcdd9)
+//        )
+//
+//val ColorScheme.secondaryTextColor: Color
+//    @Composable get() =
+//        extendedColor(
+//            light = Color(0xFFa2a5b9),
+//            dark = Color(0xFFa2a5b9),
+//        )
+//val ColorScheme.onBoardingIndicatorSelectedColor: Color
+//    @Composable get() = extendedColor(
+//        light = Color.Red,
+//        dark = Color.Red
+//    )
+//
+//val ColorScheme.borderColor: Color
+//    @Composable get() =
+//        extendedColor(
+//            light = Color.Black.copy(alpha = 0.3f),
+//            dark = Color.Black.copy(alpha = 0.7f)
+//        )
+//val ColorScheme.onBoardingIndicatorUnSelectedColor: Color
+//    @Composable get() = extendedColor(
+//        light = Color.Gray,
+//        dark = Color.Gray
+//    )
+//
+//val ColorScheme.linkColor: Color
+//    @Composable get() = extendedColor(
+//        light = Color(color = 0xFF0288D1),
+//        dark = Color(color = 0xFF0288D1)
+//    )
+//val ColorScheme.highLightColor: Color
+//    @Composable get() = extendedColor(
+//        light = Color.White.copy(alpha = 0.7f),
+//        dark = Color.White.copy(alpha = 0.7f)
+//    )
+//
+//val ColorScheme.logOutTextColor: Color
+//    @Composable get() = extendedColor(
+//        light = Color(0xFFC62828),
+//        dark = Color(0xFFE53935)
+//    )
+//val ColorScheme.lightRedColor: Color
+//    @Composable get() = extendedColor(
+//        light = Color(0xFFEF5350),
+//        dark = Color(0xFFF44336)
+//    )
+//
+//
+//val ColorScheme.darkPrimaryTextColor: Color
+//    @Composable get() = extendedColor(
+//        light = Color(0xFF555975),
+//        dark = Color(0xFFF2F2F2)
+//    )
+//
+//val ColorScheme.leaveBalanceBorder: Color
+//    @Composable get() = extendedColor(
+//        light = Color.Blue,
+//        dark = Color.Blue
+//    )
+//
+//val ColorScheme.leaveApprovedBorder: Color
+//    @Composable get() = extendedColor(
+//        light = Color.Yellow,
+//        dark = Color.Yellow
+//    )
+//
+//val ColorScheme.leavePendingBorder: Color
+//    @Composable get() = extendedColor(
+//        light = Color.Green,
+//        dark = Color.Green
+//    )
+//
+//val ColorScheme.leaveCancelledBorder: Color
+//    @Composable get() = extendedColor(
+//        light = Color.Red,
+//        dark = Color.Red
+//    )
+//
+//val ColorScheme.veryLightGray: Color
+//    @Composable get() = extendedColor(
+//        light = Color(0xFFF3F6F4),
+//        dark = Color(0xFFF3F6F4),
+//    )
+//
+//val ColorScheme.disabledTextFieldBorderColor: Color
+//    @Composable get() = extendedColor(
+//        light = Color(0xFFCCCCCC),
+//        dark = Color(0xFF444444)
+//    )
+//
+//val ColorScheme.chatBackgroundColor: Color
+//    @Composable get() = extendedColor(
+//        light = Color(0xFFFAFAFA),
+//        dark = Color(0xFF121212)
+//    )
+//
+//val ColorScheme.inComingBubbleColor: Color
+//    @Composable get() = extendedColor(
+//        light = Color(0x604B662C),
+//        dark = Color(0x60B1D18A)
+//    )
+//
+//
+//val ColorScheme.outGoingBubbleColor: Color
+//    @Composable get() = extendedColor(
+//        light = Color(0xFFDDDDDD),
+//        dark = Color(0xFF3A3A3A)
+//    )
+//val ColorScheme.holidayBlueColor: Color
+//    @Composable get() = extendedColor(
+//        light = Color(0xFF03A9F4),
+//        dark = Color(0xFF2196F3)
+//
+//    )
+//val ColorScheme.inComingTextColor: Color
+//    @Composable get() = extendedColor(
+//        light = Color(0xFF111111),
+//        dark = Color(0xFFE0E0E0)
+//    )
+//
+//
+//val ColorScheme.chatSecondaryTextColor: Color
+//    @Composable get() = extendedColor(
+//        light = Color(0xFF757575),
+//        dark = Color(0xFFAAAAAA)
+//    )
+//
+//val ColorScheme.attendanceHoliday: Color
+//    @Composable get() = extendedColor(
+//        light = Color(0xFFFFA000),
+//        dark = Color(0xFFBF6F00)
+//    )
+//
+//@Composable
+//fun ColorScheme.getOnBoardingIndicatorColor(isSelected: Boolean): Color {
+//    return if (isSelected) onBoardingIndicatorSelectedColor else onBoardingIndicatorUnSelectedColor
+//}

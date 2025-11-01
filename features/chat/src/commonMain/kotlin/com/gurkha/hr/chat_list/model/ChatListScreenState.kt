@@ -8,5 +8,6 @@ data class ChatListScreenState(
     val chatListCache: List<ChatItem> = emptyList(),
     val query: String? = null,
     val error: String? = null,
-    val showSearch: Boolean = false
+    val showSearch: Boolean = false,
+    val isRefreshing: Boolean = false
 )

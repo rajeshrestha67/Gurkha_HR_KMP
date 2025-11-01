@@ -90,6 +90,7 @@ kotlin {
 
                 implementation(libs.jetbrians.material3)
                 implementation(projects.core.ui.date)
+                implementation(libs.kotlinx.datetime)
             }
         }
 

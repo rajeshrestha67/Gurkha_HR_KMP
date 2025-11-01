@@ -15,9 +15,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.gurkha.hr.components.date.DaySize
+import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.date.mapNumbers
-import com.gurkha.hr.res.theme.borderColor
-import com.gurkha.hr.res.theme.primaryTextColor
 
 
 @Composable
@@ -45,13 +44,13 @@ fun Day(
     val contentColor = if (today && selected) {
         MaterialTheme.colorScheme.onPrimary
     } else if (today) {
-        MaterialTheme.colorScheme.primaryTextColor
+        MaterialTheme.erpColors.primaryTextColor
     } else if (selected) {
         MaterialTheme.colorScheme.onPrimary
     } else if (isSaturday) {
         MaterialTheme.colorScheme.error
     } else {
-        MaterialTheme.colorScheme.primaryTextColor
+        MaterialTheme.erpColors.primaryTextColor
     }
 
     Surface(
@@ -64,7 +63,7 @@ fun Day(
         border = if (selected || today) {
             BorderStroke(
                 width = 1.dp,
-                color = MaterialTheme.colorScheme.borderColor
+                color = MaterialTheme.colorScheme.outline
             )
         } else {
             null

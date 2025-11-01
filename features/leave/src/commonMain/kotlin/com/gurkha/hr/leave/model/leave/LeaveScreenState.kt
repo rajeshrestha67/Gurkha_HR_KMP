@@ -22,6 +22,8 @@ data class LeaveScreenState(
 
     val isLeaveSummaryLoading: Boolean = false,
 
+    val isRefreshing: Boolean = false,
+
     val leaveItemsList: List<LeaveItem> = listOf(
         LeaveItem(
             title = SharedRes.Strings.leave_balance,

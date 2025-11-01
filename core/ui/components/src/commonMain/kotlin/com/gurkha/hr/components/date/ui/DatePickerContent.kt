@@ -37,12 +37,12 @@ import com.gurkha.hr.components.date.DatePickerHorizontalPadding
 import com.gurkha.hr.components.date.MaxCalendarRows
 import com.gurkha.hr.components.date.RecommendedSizeForAccessibility
 import com.gurkha.hr.components.dimens
+import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.components.noRippleClickable
 import com.gurkha.hr.date.data.CalendarDate
 import com.gurkha.hr.date.data.CalendarMonth
 import com.gurkha.hr.date.data.model.CalendarModel
 import com.gurkha.hr.res.SharedRes
-import com.gurkha.hr.res.theme.primaryTextColor
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringArrayResource
@@ -211,7 +211,7 @@ fun ExpandItem(
             ).wrapContentSize(),
             text = text,
             style = MaterialTheme.typography.bodyLarge.copy(
-                color = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primaryTextColor,
+                color = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.erpColors.primaryTextColor,
                 fontSize = 16.sp
             ),
             textAlign = TextAlign.Center

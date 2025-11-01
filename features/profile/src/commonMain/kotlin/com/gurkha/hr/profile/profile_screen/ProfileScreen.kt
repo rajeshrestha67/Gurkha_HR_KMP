@@ -46,17 +46,13 @@ import com.gurkha.hr.components.ColumnItemRow
 import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.ProfilePicture
 import com.gurkha.hr.components.dimens
+import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.components.media.MediaSelectorModalBottomSheet
 import com.gurkha.hr.profile.model.profile_screen.AccountList
 import com.gurkha.hr.profile.model.profile_screen.GeneralList
 import com.gurkha.hr.profile.model.profile_screen.ProfileScreenState
 import com.gurkha.hr.profile.profile_screen.model.ProfileScreenAction
 import com.gurkha.hr.res.SharedRes
-import com.gurkha.hr.res.theme.borderColor
-import com.gurkha.hr.res.theme.darkPrimaryTextColor
-import com.gurkha.hr.res.theme.imageBackgroundColor
-import com.gurkha.hr.res.theme.logOutTextColor
-import com.gurkha.hr.res.theme.primaryTextColor
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -113,9 +109,9 @@ private fun ProfileScreenContent(
                             nameInitials = state.initials,
                             size = MaterialTheme.dimens.extraLarge,
                             shape = CircleShape,
-                            background = MaterialTheme.colorScheme.imageBackgroundColor,
+                            background = MaterialTheme.erpColors.imageBackgroundColor,
                             borderWidth = 0.5.dp,
-                            borderColor = MaterialTheme.colorScheme.borderColor,
+                            borderColor = MaterialTheme.colorScheme.outline,
                             ratio = 1f,
                             onClick = {
                                 showMediaBottomSheet = true
@@ -128,7 +124,7 @@ private fun ProfileScreenContent(
                         ) {
                             Text(
                                 style = MaterialTheme.typography.titleMedium.copy(
-                                    color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                                    color = MaterialTheme.erpColors.darkPrimaryTextColor
                                 ),
                                 text = state.fullName,
                                 maxLines = 1,
@@ -137,14 +133,14 @@ private fun ProfileScreenContent(
                             )
                             Text(
                                 style = MaterialTheme.typography.bodyMedium.copy(
-                                    color = MaterialTheme.colorScheme.primaryTextColor
+                                    color = MaterialTheme.erpColors.primaryTextColor
                                 ),
                                 maxLines = 1,
                                 text = state.levelName
                             )
                             Text(
                                 style = MaterialTheme.typography.bodyMedium.copy(
-                                    color = MaterialTheme.colorScheme.primaryTextColor
+                                    color = MaterialTheme.erpColors.primaryTextColor
                                 ),
                                 text = state.phoneNumber
                             )
@@ -245,7 +241,7 @@ fun ProfileScreenContainer(
                     .clickable { showDialog = true }
                     .padding(vertical = MaterialTheme.dimens.small3),
                 text = stringResource(SharedRes.Strings.log_out),
-                textColor = MaterialTheme.colorScheme.logOutTextColor,
+                textColor = MaterialTheme.erpColors.logOutTextColor,
                 showDivider = false,
                 endIndicator = {}
             )
@@ -358,7 +354,7 @@ fun LogoutBottomSheet(
                 modifier = Modifier.padding(top = MaterialTheme.dimens.small2),
                 text = stringResource(SharedRes.Strings.are_you_sure),
                 style = MaterialTheme.typography.titleLarge.copy(
-                    color = MaterialTheme.colorScheme.primaryTextColor
+                    color = MaterialTheme.erpColors.primaryTextColor
                 ),
                 textAlign = TextAlign.Center
             )
@@ -366,7 +362,7 @@ fun LogoutBottomSheet(
             Text(
                 text = stringResource(SharedRes.Strings.do_you_really_want_to_logout),
                 style = MaterialTheme.typography.bodyMedium.copy(
-                    color = MaterialTheme.colorScheme.primaryTextColor
+                    color = MaterialTheme.erpColors.primaryTextColor
                 ),
                 textAlign = TextAlign.Center
             )

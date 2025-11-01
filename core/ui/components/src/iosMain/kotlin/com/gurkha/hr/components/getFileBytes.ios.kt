@@ -13,14 +13,14 @@ import platform.Foundation.getBytes
 actual suspend fun getFileBytes(uri: String): ByteArray {
     val url = NSURL.fileURLWithPath(uri)
     val data = NSData.dataWithContentsOfURL(url)
-        ?: NSData()
+        ?: throw Exception("Failed to load data from $uri")
 
     val length = data.length.toInt()
-    val bytes = ByteArray(length)
+    if (length == 0) return ByteArray(0)
 
-    bytes.usePinned {
-        data.getBytes(it.addressOf(0), data.length)
+    return ByteArray(length).apply {
+        usePinned {
+            data.getBytes(it.addressOf(0), length.toULong())
+        }
     }
-
-    return bytes
 }

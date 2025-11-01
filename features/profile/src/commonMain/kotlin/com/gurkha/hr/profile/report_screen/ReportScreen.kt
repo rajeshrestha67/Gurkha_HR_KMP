@@ -28,6 +28,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -42,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gurkha.hr.components.dateFilterDropDown.DateFilterDropdown
 import com.gurkha.hr.components.dimens
+import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.components.shimmer.ShimmerView
 import com.gurkha.hr.components.tabbar.ERPTabView
 import com.gurkha.hr.profile.model.history_screen.HistoryDataUI
@@ -49,7 +51,6 @@ import com.gurkha.hr.profile.model.report_Screen.ReportScreenState
 import com.gurkha.hr.profile.model.report_Screen.ReportScreenViewAction
 import com.gurkha.hr.profile.model.report_Screen.ReportType
 import com.gurkha.hr.res.SharedRes
-import com.gurkha.hr.res.theme.primaryTextColor
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -110,13 +111,21 @@ fun ReportScreenContainer(
             )
         }
     ) { paddingValues ->
-        ReportScreenContent(
+        PullToRefreshBox(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues),
-            showFilter = showFilter,
-            state = state,
-            onAction = onAction
+            isRefreshing = state.isRefreshing,
+            onRefresh = { onAction(ReportScreenViewAction.OnRefresh) },
+            content = {
+                ReportScreenContent(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    showFilter = showFilter,
+                    state = state,
+                    onAction = onAction
+                )
+            }
         )
     }
 }
@@ -235,7 +244,7 @@ fun MonthlyAttendanceItemsBox(
             Text(
                 text = "${item.date} (${item.day})",
                 style = MaterialTheme.typography.titleSmall.copy(
-                    color = MaterialTheme.colorScheme.primaryTextColor
+                    color = MaterialTheme.erpColors.primaryTextColor
                 )
             )
 
@@ -279,13 +288,13 @@ fun InOutText(
         Text(
             text = inOrOut,
             style = MaterialTheme.typography.titleSmall.copy(
-                color = MaterialTheme.colorScheme.primaryTextColor
+                color = MaterialTheme.erpColors.primaryTextColor
             ),
         )
         Text(
             text = inOut,
             style = MaterialTheme.typography.titleSmall.copy(
-                color = MaterialTheme.colorScheme.primaryTextColor
+                color = MaterialTheme.erpColors.primaryTextColor
             ),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
@@ -317,13 +326,13 @@ fun InfoAttendanceItemsBox(
             Text(
                 text = stringResource(name),
                 style = MaterialTheme.typography.titleMedium.copy(
-                    color = MaterialTheme.colorScheme.primaryTextColor
+                    color = MaterialTheme.erpColors.primaryTextColor
                 )
             )
             Text(
                 text = value,
                 style = MaterialTheme.typography.displaySmall.copy(
-                    color = MaterialTheme.colorScheme.primaryTextColor
+                    color = MaterialTheme.erpColors.primaryTextColor
                 )
             )
 

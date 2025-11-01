@@ -38,8 +38,7 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toIntRect
 import androidx.compose.ui.unit.toSize
-import com.gurkha.hr.res.theme.highLightColor
-import com.gurkha.hr.res.theme.primaryTextColor
+import com.gurkha.hr.components.erpColors
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
@@ -76,8 +75,8 @@ fun SmoothLineGraph() {
         val coroutineScope = rememberCoroutineScope()
         val textMeasurer = rememberTextMeasurer()
         val labelTextStyle = MaterialTheme.typography.labelSmall
-        val outLineColor = MaterialTheme.colorScheme.primaryTextColor
-        val highLightColor = MaterialTheme.colorScheme.highLightColor
+        val outLineColor = MaterialTheme.erpColors.primaryTextColor
+        val highLightColor = MaterialTheme.erpColors.highLightColor
         Spacer(
             modifier = Modifier
                 .aspectRatio(3f / 2f)

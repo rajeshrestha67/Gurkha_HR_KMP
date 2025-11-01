@@ -119,6 +119,15 @@ kotlin {
                 // KMP dependencies declared in commonMain.
             }
         }
+        targets.withType<org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget>()
+            .configureEach {
+                binaries.all {
+                    linkerOpts("-framework", "UserNotifications")
+                    linkerOpts("-framework", "Foundation")
+                    linkerOpts("-framework", "UIKit")
+                }
+            }
     }
+
 
 }

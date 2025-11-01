@@ -14,6 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -22,6 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -33,32 +35,33 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gurkha.hr.components.ProfilePicture
 import com.gurkha.hr.components.dimens
+import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.components.tabbar.ERPTabView
 import com.gurkha.hr.profile.model.profileinfo_screen.InfoList
 import com.gurkha.hr.profile.model.profileinfo_screen.ProfileInfo
 import com.gurkha.hr.profile.model.profileinfo_screen.ProfileInfoScreenState
 import com.gurkha.hr.profile.model.profileinfo_screen.ProfileInfoViewAction
 import com.gurkha.hr.res.SharedRes
-import com.gurkha.hr.res.theme.imageBackgroundColor
-import com.gurkha.hr.res.theme.primaryTextColor
-import com.gurkha.hr.res.theme.secondaryTextColor
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun ProfileInfoScreen(
-    onBackPressed: () -> Unit
-
+    onBackPressed: () -> Unit,
+    onGotoEditProfile: () -> Unit,
 ) {
 
     val viewModel: ProfileInfoScreenViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
+
     ProfileInfoScreenContainer(
         onBackPressed = onBackPressed,
         state = state,
-        onAction = viewModel::action
+        onAction = viewModel::action,
+        onGotoEditProfile = onGotoEditProfile
     )
 
 }
@@ -67,6 +70,7 @@ fun ProfileInfoScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileInfoScreenContainer(
+    onGotoEditProfile: () -> Unit,
     onBackPressed: () -> Unit,
     state: ProfileInfoScreenState,
     onAction: (ProfileInfoViewAction) -> Unit,
@@ -91,18 +95,37 @@ fun ProfileInfoScreenContainer(
                     }
                 },
                 actions = {
+                    IconButton(
+                        onClick = onGotoEditProfile
+                    ) {
+
+                        Icon(
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = "Edit Button"
+                        )
+                    }
 
                 }
 
             )
         }
     ) { paddingValues ->
-        ProfileInfoContainer(
+        PullToRefreshBox(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues),
-            state = state,
-            onAction = onAction
+            isRefreshing = state.isRefreshing,
+            onRefresh = {
+                onAction(ProfileInfoViewAction.OnRefresh)
+            },
+            content = {
+                ProfileInfoContainer(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    state = state,
+                    onAction = onAction
+                )
+            }
         )
     }
 }
@@ -114,7 +137,6 @@ fun ProfileInfoContainer(
     onAction: (ProfileInfoViewAction) -> Unit
 ) {
     //val infoList = InfoList.list.map { stringResource(it.title) }
-//    var selectedTab by remember { mutableStateOf(0) }
 
     LazyColumn(
         modifier = modifier,
@@ -125,8 +147,9 @@ fun ProfileInfoContainer(
     ) {
         item {
             ProfileCard(
-                state = state
-            )
+                state = state,
+
+                )
         }
         stickyHeader {
             ProfileInfoRow(
@@ -192,7 +215,8 @@ fun ProfileInfoContainer(
 @Composable
 fun ProfileCard(
     state: ProfileInfoScreenState,
-) {
+
+    ) {
 
     Row(
         modifier = Modifier.padding(bottom = MaterialTheme.dimens.small3),
@@ -205,7 +229,7 @@ fun ProfileCard(
             nameInitials = state.initials,
             size = MaterialTheme.dimens.profileScreenImageSize,
             shape = CircleShape,
-            background = MaterialTheme.colorScheme.imageBackgroundColor,
+            background = MaterialTheme.erpColors.imageBackgroundColor,
             borderWidth = 0.dp,
             borderColor = Color.Transparent,
             ratio = 1f
@@ -223,14 +247,14 @@ fun ProfileCard(
             )
             Text(
                 style = MaterialTheme.typography.titleSmall.copy(
-                    color = MaterialTheme.colorScheme.secondaryTextColor
+                    color = MaterialTheme.erpColors.secondaryTextColor
                 ),
                 maxLines = 1,
                 text = state.levelName
             )
             Text(
                 style = MaterialTheme.typography.titleSmall.copy(
-                    color = MaterialTheme.colorScheme.secondaryTextColor
+                    color = MaterialTheme.erpColors.secondaryTextColor
                 ),
                 text = "Employee Id: ${state.employeeId}"
             )
@@ -359,14 +383,14 @@ private fun InfoItem(
         Text(
             text = stringResource(item.name),
             style = MaterialTheme.typography.bodyLarge.copy(
-                color = MaterialTheme.colorScheme.secondaryTextColor
+                color = MaterialTheme.erpColors.secondaryTextColor
             )
         )
         Text(
             text = item.value,
             style = MaterialTheme.typography.bodyMedium.copy(
                 fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colorScheme.primaryTextColor
+                color = MaterialTheme.erpColors.primaryTextColor
             )
         )
     }

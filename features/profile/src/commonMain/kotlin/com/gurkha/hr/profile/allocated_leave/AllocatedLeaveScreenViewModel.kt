@@ -18,7 +18,6 @@ class AllocatedLeaveScreenViewModel(
 ) : ViewModel() {
     private val _state = MutableStateFlow(AllocatedLeaveState())
     val state = _state
-
         .onStart {
             onFetchData()
         }
@@ -32,6 +31,9 @@ class AllocatedLeaveScreenViewModel(
         when (action) {
             is AllocatedLeaveViewAction.OnFetchData -> {
                 onFetchData()
+            }
+            is AllocatedLeaveViewAction.OnRefresh->{
+                refresh()
             }
         }
 
@@ -50,6 +52,20 @@ class AllocatedLeaveScreenViewModel(
             }
         }
 
+    }
+
+    private fun refresh()=viewModelScope.launch {
+        _state.update {
+            it.copy(
+                isRefreshing = true
+            )
+        }
+        onFetchData()
+        _state.update {
+            it.copy(
+                isRefreshing = false
+            )
+        }
     }
 
 }

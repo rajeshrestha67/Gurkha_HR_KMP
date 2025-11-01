@@ -32,6 +32,7 @@ data class UserDetailDto(
     val enableManualAttendance: String? = null,
     val enableImageAttendance: String? = null,
     val imageUrl: String? = null,
+    val levelId: Long? = null,
     val experienceDocumentsUrl: String? = null,
     val citizenshipFrontImage: String? = null,
     val citizenshipBackImage: String? = null,
@@ -47,7 +48,12 @@ data class UserDetailDto(
     val isCompleteProfile: String? = null,
     val socketPrefix: String? = null,
     val allowAttendanceApproval: String? = null,
-    val editApproveLeave: String? = null
+    val editApproveLeave: String? = null,
+    val designation: String? = null,
+    val departmentId: Int? = null,
+    val designationId: Int? = null,
+    val department: String? = null,
+    val employeeType: String? = null,
 )
 
 @Serializable
@@ -79,7 +85,7 @@ data class EmployeeDetailsDto(
     val active: String? = null,
     val profileId: Int? = null,
     val enableManualAttendance: String? = null,
-    val mapId: String? = null,
+    val mapId: Int? = null,
     val isDetailComplete: String? = null,
     val enableImageAttendance: String? = null,
     val imageUrl: String? = null,
@@ -91,7 +97,9 @@ data class EmployeeDetailsDto(
     val plusTwoImage: String? = null,
     val bachelorImageUrl: String? = null,
     val masterImageUrl: String? = null,
-    val slcDocumentUrl: String? = null
+    val slcDocumentUrl: String? = null,
+
+
 )
 
 @Serializable
@@ -133,4 +141,39 @@ data class BranchDto(
     val targetHolidays: String? = null,
     val isDefaultHoliday: String? = null
 )
+
+@Serializable
+data class UpdateRequestUserDto(
+    val id: Int? = null,
+    val joinedDate: String? = null,
+    val startDate: String? = null,
+    val bloodGroup: String? = null,
+    val guardianName: String? = null,
+    val guardianNumber: String? = null,
+    val employeeType: String? = null,
+    val panNumber: String? = null,
+    val pfNumber: String? = null
+)
+
+@Serializable
+data class UpdateProfileResponseDto(
+    val status: String? = null,
+    val message: String? = null,
+    val detail: Detail? = null,
+    val success: Boolean? = null
+)
+@Serializable
+data class Detail(
+        val id: Int? = null,
+        val joinedDate: String? = null,
+        val startDate: String? = null,
+        val bloodGroup: String? = null,
+        val guardianName: String? = null,
+        val guardianNumber: String? = null,
+        val employeeType: String? = null,
+        val panNumber: String? = null,
+        val pfNumber: String? = null
+)
+
+
 

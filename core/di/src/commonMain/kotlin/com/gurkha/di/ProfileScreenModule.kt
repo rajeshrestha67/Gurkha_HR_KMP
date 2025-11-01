@@ -1,5 +1,6 @@
 package com.gurkha.di
 
+import com.gurkha.hr.components.permissions.ProgressNotification
 import com.gurkha.hr.data.userDetail.KtorUserDetailRemoteRepository
 import com.gurkha.hr.datastore.user_data.local.UserDataDataStore
 import com.gurkha.hr.datastore.user_data.repository.LocalUserDataRepository
@@ -7,6 +8,7 @@ import com.gurkha.hr.datastore.user_data.repository.UserDataRepository
 import com.gurkha.hr.domain.uploadImage.UploadImageUseCase
 import com.gurkha.hr.domain.userDetail.repository.UserDetailRemoteRepository
 import com.gurkha.hr.domain.userDetail.usecase.FetchUserDetailUseCase
+import com.gurkha.hr.domain.userDetail.usecase.UpdateUserDetailUseCase
 import com.gurkha.hr.profile.profile_screen.ProfileScreenViewModel
 import io.ktor.client.HttpClient
 import org.koin.android.annotation.KoinViewModel
@@ -37,13 +39,23 @@ class ProfileScreenModule {
             userDetailRemoteRepository, userDataRepository = userDataRepository
         )
 
+    @Factory
+    fun updateUserDetailUseCase(
+        userDetailRemoteRepository: UserDetailRemoteRepository,
+        userDataRepository : UserDataRepository
+    ): UpdateUserDetailUseCase=UpdateUserDetailUseCase(
+        userDetailRemoteRepository = userDetailRemoteRepository,
+        userDataRepository = userDataRepository
+    )
+
+
 
     @KoinViewModel
     fun getProfileScreenViewModel(
         userDetailUseCase: FetchUserDetailUseCase,
-        uploadImageUseCase: UploadImageUseCase
+        uploadImageUseCase: UploadImageUseCase,
     ): ProfileScreenViewModel = ProfileScreenViewModel(
         userDetailUseCase = userDetailUseCase,
-        uploadImageUseCase = uploadImageUseCase
+        uploadImageUseCase = uploadImageUseCase,
     )
 }

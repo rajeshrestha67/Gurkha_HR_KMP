@@ -65,6 +65,23 @@
     <string name="from_date">मिति देखि</string>
     <string name="to_date">मिति सम्म</string>
 
+    <string name="edit_profile">प्रोफाइल सम्पादन गर्नुहोस्</string>
+    <string name="personal">व्यक्तिगत</string>
+    <string name="others">अन्य</string>
+    <string name="blood_group">रक्त समूह</string>
+
+    <string name="label_designation">पद</string>
+    <string name="label_level">तह</string>
+    <string name="label_employee_type">कर्मचारी प्रकार</string>
+    <string name="label_pan_number">प्यान नम्बर</string>
+    <string name="label_pf_number">पीएफ नम्बर</string>
+    <string name="label_user_id">प्रयोगकर्ता आईडी</string>
+    <string name="label_joined_date">नियुक्ति मिति</string>
+
+    <string name="label_contract">करार</string>
+    <string name="label_probation">परिक्षण अवधि</string>
+    <string name="label_permanent">स्थायी</string>
+
 
     <string name="select_end_date">अन्त्य मिति चयन गर्नुहोस्</string>
     <string name="leave_type">बिदाको प्रकार चयन गर्नुहोस्</string>
@@ -150,9 +167,10 @@
     <string name="notification">सूचनाहरू</string>
 
     <string name="leave_req_accepted">तपाईँको बिदाको अनुरोध स्वीकार गरिएको छ</string>
-    <string name = "leave_req_rejected"> तपाईँको बिदाको अनुरोध </string> द्वारा अस्वीकार गरिएको छ
+    <string name="leave_req_rejected"> तपाईँको बिदाको अनुरोध </string>
+    द्वारा अस्वीकार गरिएको छ
 
-    <string name = "attendance_req_accepted"> तपाईँको उपस्थिति अनुरोध स्वीकार गरिएको छ</string>
+    <string name="attendance_req_accepted"> तपाईँको उपस्थिति अनुरोध स्वीकार गरिएको छ</string>
     <string name="attendance_req_rejected">तपाईँको उपस्थिति अनुरोध अस्वीकार गरिएको छ</string>
 
     <string name="view_all">सबै हेर्नुहोस्</string>
@@ -259,7 +277,22 @@
     <string name="nepali">नेपाली</string>
 
     <string name="biometric">बायोमेट्रिक</string>
-    
+
+    <string name="branch">शाखा</string>
+    <string name="userId">प्रयोगकर्ता ID</string>
+
+    <string name="designation">पदनाम</string>
+
+    <string name="profile_incomplete">प्रोफाइल अपूर्ण</string>
+    <string name="fix_now">अहिले नै समाधान गर्नुहोस्</string>
+
+    <string name="allow_permission">सेटिङमा अनुमति दिनुहोस्</string>
+    <string name="go_to_setting">सेटिङमा जानुहोस्</string>
+    <string name="add_photos">तस्बिरहरू थप्नुहोस्</string>
+    <string name="to_access_all_photos">सबै तस्बिरहरू पहुँच गर्न, आफ्नो सेटिङहरू परिवर्तन गर्नुहोस्</string>
+    <string name="camera_permission_denied">क्यामेरा अनुमति अस्वीकार गरियो।</string>
+    <string name="gallery_permission_denied">ग्यालेरी अनुमति अस्वीकार गरियो।</string>
+    <string name="photos">फोटोहरू</string>
     <string-array name="months">
         <item>बैशाख</item>
         <item>जेठ</item>

@@ -24,6 +24,7 @@ class KtorImageUploadRepository(
                 endPoint = EndPoint.IMAGE_UPLOAD_END_POINT,
                 fileName = imageName,
                 fileBytes = bytes,
+                uri = filePath,
                 onProgress = onProgress
             )
         }

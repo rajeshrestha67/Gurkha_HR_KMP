@@ -14,15 +14,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.gurkha.hr.res.theme.borderColor
-import com.gurkha.hr.res.theme.darkPrimaryTextColor
 
 
 @Composable
 fun ColumnItemRow(
     modifier: Modifier = Modifier,
     text: String,
-    textColor: Color = MaterialTheme.colorScheme.darkPrimaryTextColor,
+    textColor: Color = MaterialTheme.erpColors.darkPrimaryTextColor,
     showDivider: Boolean = true,
     endIndicator: @Composable () -> Unit = {
         Icon(
@@ -52,7 +50,7 @@ fun ColumnItemRow(
             Modifier
                 .fillMaxWidth(),
             thickness = 0.5.dp,
-            color = MaterialTheme.colorScheme.borderColor
+            color = MaterialTheme.colorScheme.outline
         )
     }
 

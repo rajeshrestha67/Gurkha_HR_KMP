@@ -34,10 +34,8 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.Dp
 import com.gurkha.hr.components.dimens
+import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.components.noRippleClickable
-import com.gurkha.hr.res.theme.borderColor
-import com.gurkha.hr.res.theme.disabledTextFieldBorderColor
-import com.gurkha.hr.res.theme.primaryTextColor
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -69,7 +67,7 @@ fun ERPBaseTextField(
     backgroundColor: Color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
     shape: Shape = MaterialTheme.shapes.medium,
     focusedBorderColor: Color = MaterialTheme.colorScheme.primary,
-    unfocusedBorderColor: Color = MaterialTheme.colorScheme.borderColor,
+    unfocusedBorderColor: Color = MaterialTheme.colorScheme.outline,
     onDropDown: (() -> Unit)? = null
 ) {
 
@@ -82,7 +80,7 @@ fun ERPBaseTextField(
                 modifier = Modifier.padding(bottom = MaterialTheme.dimens.small1),
                 text = it,
                 style = MaterialTheme.typography.bodySmall.copy(
-                    color = if (enabled) MaterialTheme.colorScheme.primaryTextColor else MaterialTheme.colorScheme.disabledTextFieldBorderColor
+                    color = if (enabled) MaterialTheme.erpColors.primaryTextColor else MaterialTheme.erpColors.disabledTextFieldBorderColor
                 )
             )
         }
@@ -135,7 +133,7 @@ fun ERPBaseTextField(
             maxLines = maxLines,
             value = textFieldValue,
             textStyle = MaterialTheme.typography.bodySmall.copy(
-                color = MaterialTheme.colorScheme.primaryTextColor
+                color = MaterialTheme.erpColors.primaryTextColor
             ),
             onValueChange = {
                 if (it.text.length <= maxLength) {
@@ -146,9 +144,9 @@ fun ERPBaseTextField(
                 Text(
                     text = hint,
                     style = MaterialTheme.typography.bodySmall.copy(
-                        color = if (enabled) MaterialTheme.colorScheme.primaryTextColor.copy(
+                        color = if (enabled) MaterialTheme.erpColors.primaryTextColor.copy(
                             0.5f
-                        ) else MaterialTheme.colorScheme.disabledTextFieldBorderColor
+                        ) else MaterialTheme.erpColors.disabledTextFieldBorderColor
                     ),
                 )
             },
@@ -158,9 +156,9 @@ fun ERPBaseTextField(
             readOnly = readOnly,
             isError = error != null,
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = if (enabled && onDropDown == null) focusedBorderColor else MaterialTheme.colorScheme.disabledTextFieldBorderColor,
-                unfocusedBorderColor = if (enabled && onDropDown == null) unfocusedBorderColor else MaterialTheme.colorScheme.disabledTextFieldBorderColor,
-                disabledBorderColor = if (enabled && onDropDown != null) unfocusedBorderColor else MaterialTheme.colorScheme.disabledTextFieldBorderColor
+                focusedBorderColor = if (enabled && onDropDown == null) focusedBorderColor else MaterialTheme.erpColors.disabledTextFieldBorderColor,
+                unfocusedBorderColor = if (enabled && onDropDown == null) unfocusedBorderColor else MaterialTheme.erpColors.disabledTextFieldBorderColor,
+                disabledBorderColor = if (enabled && onDropDown != null) unfocusedBorderColor else MaterialTheme.erpColors.disabledTextFieldBorderColor
             )
         )
         AnimatedVisibility(
@@ -208,7 +206,7 @@ fun ERPTextField(
     backgroundColor: Color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
     shape: Shape = MaterialTheme.shapes.medium,
     focusedBorderColor: Color = MaterialTheme.colorScheme.primary,
-    unfocusedBorderColor: Color = MaterialTheme.colorScheme.borderColor,
+    unfocusedBorderColor: Color = MaterialTheme.colorScheme.outline,
     onDropDown: (() -> Unit)? = null
 ) {
     ERPBaseTextField(
@@ -270,7 +268,7 @@ fun ERPTextField(
     backgroundColor: Color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
     shape: Shape = MaterialTheme.shapes.medium,
     focusedBorderColor: Color = MaterialTheme.colorScheme.primary,
-    unfocusedBorderColor: Color = MaterialTheme.colorScheme.borderColor,
+    unfocusedBorderColor: Color = MaterialTheme.colorScheme.outline,
     onDropDown: (() -> Unit)? = null
 ) {
     var textFieldValueState by remember { mutableStateOf(TextFieldValue(text = text)) }

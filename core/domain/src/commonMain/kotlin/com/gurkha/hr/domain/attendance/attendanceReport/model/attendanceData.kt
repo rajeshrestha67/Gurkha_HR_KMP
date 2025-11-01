@@ -3,12 +3,12 @@ package com.gurkha.hr.domain.attendance.attendanceReport.model
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import com.gurkha.hr.res.theme.attendanceHoliday
+import com.gurkha.hr.components.erpColors
 
 data class AttendanceData(
     val workingHrs: String,
-    val clockInTime: String,
-    val clockOutTime: String,
+    val clockInTime: String? = null,
+    val clockOutTime: String? = null,
     val date: String,
     val day: String,
     val status: AttendanceStatus,
@@ -44,7 +44,7 @@ enum class AttendanceStatus(val value: String) {
         @Composable get() = when (this) {
             PRESENT -> MaterialTheme.colorScheme.primary
             ABSENT -> MaterialTheme.colorScheme.error
-            HOLIDAY -> MaterialTheme.colorScheme.attendanceHoliday
+            HOLIDAY -> MaterialTheme.erpColors.attendanceHoliday
             else -> Color.Transparent
         }
 }

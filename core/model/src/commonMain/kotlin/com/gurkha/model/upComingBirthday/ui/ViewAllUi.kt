@@ -8,5 +8,6 @@ data class ViewAllUi(
     val designationName : String,
     val branchName : String,
     val imageUrl : String,
-    val initials : String
+    val initials : String,
+    val date : String
 )

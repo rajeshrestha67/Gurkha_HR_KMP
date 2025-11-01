@@ -11,7 +11,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <!-- For Android 13+ -->
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
-    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED" />
 
     <!-- Backward compatibility for Android 12 and lower -->
     <uses-permission

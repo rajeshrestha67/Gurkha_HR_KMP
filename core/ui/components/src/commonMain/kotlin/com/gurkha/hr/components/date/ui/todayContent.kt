@@ -8,9 +8,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.gurkha.hr.components.ERPButton
+import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.res.SharedRes
-import com.gurkha.hr.res.theme.primaryTextColor
-import com.gurkha.hr.res.theme.secondaryTextColor
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -32,13 +31,13 @@ fun TodayContent(
             Text(
                 text = bsDate,
                 style = MaterialTheme.typography.titleSmall.copy(
-                    color = MaterialTheme.colorScheme.primaryTextColor
+                    color = MaterialTheme.erpColors.primaryTextColor
                 )
             )
             Text(
                 text = adDate,
                 style = MaterialTheme.typography.titleSmall.copy(
-                    color = MaterialTheme.colorScheme.secondaryTextColor
+                    color = MaterialTheme.erpColors.secondaryTextColor
                 )
             )
 

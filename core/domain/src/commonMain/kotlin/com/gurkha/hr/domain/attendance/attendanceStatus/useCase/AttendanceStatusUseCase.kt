@@ -14,12 +14,16 @@ class AttendanceStatusUseCase(
     suspend operator fun invoke(
         attendanceStatus: String,
         employeeName: String,
-        isSelf: String
+        isSelf: String,
+        fromDate: String,
+        toDate: String
     ): ERPResult<List<AttendanceStatusData>, DataError> {
         return attendanceRemoteRepository.fetchAttendanceStatus(
             attendanceStatus,
             employeeName,
-            isSelf
+            isSelf,
+            fromDate,
+            toDate
         ).map {
             it.toData()
         }

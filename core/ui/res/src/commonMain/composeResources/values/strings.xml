@@ -30,7 +30,7 @@
     <string name="upload_profile_image">Upload Profile Image</string>
     <string name="upload_citizenship_front">Upload Citizenship Front</string>
     <string name="upload_citizenship_back">Upload Citizenship Back</string>
-    <string name="upload_national_id">Upload National ID</string>
+    <string name="upload_national_id">Upload National\n ID</string>
     <string name="upload_slc_marksheet">Upload SLC Marksheet</string>
     <string name="upload_plus_two_image">Upload Plus Two Image</string>
     <string name="upload_bachelor">Upload Bachelor Document</string>
@@ -50,8 +50,11 @@
     <string name="leave_summary">Leave Summary</string>
     <string name="leave_type_name">Leave Type\nName</string>
     <string name="leave_taken">Leave Taken</string>">
-    <string name="remaining_leave">Remaining Leave</string>">
-    <string name="month">Month</string>">
+    <string name="remaining_leave">Remaining</string>">
+    <string name="edit_profile">Edit Profile</string>">
+    <string name="personal">Personal</string>">
+    <string name="others">Others</string>">
+    <string name="blood_group">Blood Group</string>">
 
 
     <string name="start_date">Start Date</string>
@@ -96,6 +99,19 @@
     <string name="monthly_attendance">Monthly Attendance</string>">
     <string name="monthly_attendance_report">Monthly Attendance Report</string>">
     <string name="attendance_summary">Attendance Summary</string>">
+    <string name="month">Month</string>">
+
+
+    <string name="label_designation">Designation</string>
+    <string name="label_level">Level</string>
+    <string name="label_employee_type">Employee Type</string>
+    <string name="label_pan_number">PAN Number</string>
+    <string name="label_pf_number">PF Number</string>
+    <string name="label_user_id">User ID</string>
+    <string name="label_joined_date">Joined Date</string>
+    <string name="label_contract">Contract</string>
+    <string name="label_probation">Probation</string>
+    <string name="label_permanent">Permanent</string>
 
 
     <string name="assignee">Assignee</string>">
@@ -175,7 +191,7 @@
     <string name="pending">Pending</string>
     <string name="approved">Approved</string>
     <string name="cancelled">Cancelled</string>
-    <string name="upcoming_birthday">Upcoming Birthday</string>
+    <string name="upcoming_birthday"> Birthdays</string>
     <string name="work_anniversaries">Work Anniversaries</string>
     <string name="my_attendance">My Attendance</string>
     <string name="profile">Profile Info</string>
@@ -257,6 +273,22 @@
     <string name="nepali">Nepali</string>
 
     <string name="biometric">Biometric</string>
+
+    <string name="branch">Branch</string>
+    <string name="userId">User Id</string>
+
+    <string name="designation">Designation</string>
+
+    <string name="profile_incomplete">Profile Incomplete</string>
+    <string name="fix_now">Fix Now</string>
+
+    <string name="allow_permission">Allow Permission In Settings</string>
+    <string name="go_to_setting">Go To Settings</string>
+    <string name="add_photos">Add Photos</string>
+    <string name="photos">Photos</string>
+    <string name="camera_permission_denied">Camera permission denied.</string>
+    <string name="gallery_permission_denied">Gallery permission denied.</string>
+    <string name="to_access_all_photos">To access all photos, change your settings</string>
 
 
     <string-array name="months">

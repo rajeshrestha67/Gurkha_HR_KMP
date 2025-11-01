@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -23,6 +24,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -32,12 +34,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gurkha.hr.components.ProfilePicture
 import com.gurkha.hr.components.dimens
+import com.gurkha.hr.components.erpColors
+import com.gurkha.hr.components.shimmer.ShimmerView
 import com.gurkha.hr.domain.notification.notificationData.model.NotificationData
+import com.gurkha.hr.model.notification.NotificationAction
 import com.gurkha.hr.model.notification.NotificationState
-import com.gurkha.hr.res.theme.borderColor
-import com.gurkha.hr.res.theme.darkPrimaryTextColor
-import com.gurkha.hr.res.theme.imageBackgroundColor
-import com.gurkha.hr.res.theme.primaryTextColor
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -71,11 +72,19 @@ fun Notification(
         },
         containerColor = MaterialTheme.colorScheme.background
     ) { contentPadding ->
-        NotificationScreenContent(
+        PullToRefreshBox(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(contentPadding),
-            state = state
+            isRefreshing = state.isRefreshing,
+            onRefresh = { viewModel.onAction(NotificationAction.OnRefresh) },
+            content = {
+                NotificationScreenContent(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    state = state
+                )
+            }
         )
     }
 }
@@ -89,23 +98,32 @@ fun NotificationScreenContent(
         modifier = modifier.fillMaxWidth(),
 //        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
     ) {
-        state.notificationGrouped.forEach { (date, notification) ->
-            item {
-                Text(
-                    modifier = Modifier.padding(horizontal = MaterialTheme.dimens.small3),
-                    text = date, style = MaterialTheme.typography.labelMedium.copy(
-                        color = MaterialTheme.colorScheme.primaryTextColor
-                    )
+        if (state.isNotificationLoading) {
+            items(5) {
+                ShimmerView(
+                    modifier = Modifier.fillMaxWidth().height(MaterialTheme.dimens.extraLarge)
+                        .padding(vertical = MaterialTheme.dimens.small1)
                 )
             }
+        } else {
+            state.notificationGrouped.forEach { (date, notification) ->
+                item {
+                    Text(
+                        modifier = Modifier.padding(horizontal = MaterialTheme.dimens.small3),
+                        text = date, style = MaterialTheme.typography.labelMedium.copy(
+                            color = MaterialTheme.erpColors.primaryTextColor
+                        )
+                    )
+                }
 
-            itemsIndexed(notification) { index, item ->
-                NotificationBox(item = item)
-                HorizontalDivider(
-                    modifier = Modifier.padding(horizontal = MaterialTheme.dimens.small2)
-                )
-                if (index == notification.lastIndex && !state.isNotificationLoading) {
-                    println("lastIndex_reached_fetchMore")
+                itemsIndexed(notification) { index, item ->
+                    NotificationBox(item = item)
+                    HorizontalDivider(
+                        modifier = Modifier.padding(horizontal = MaterialTheme.dimens.small2)
+                    )
+                    if (index == notification.lastIndex && !state.isNotificationLoading) {
+                        println("lastIndex_reached_fetchMore")
+                    }
                 }
             }
         }
@@ -141,9 +159,9 @@ fun NotificationBox(
                 nameInitials = item.initials,
                 size = MaterialTheme.dimens.large,
                 shape = CircleShape,
-                background = MaterialTheme.colorScheme.imageBackgroundColor,
+                background = MaterialTheme.erpColors.imageBackgroundColor,
                 borderWidth = 0.5.dp,
-                borderColor = MaterialTheme.colorScheme.borderColor,
+                borderColor = MaterialTheme.colorScheme.outline,
                 ratio = 1f
             )
             Column(
@@ -153,13 +171,13 @@ fun NotificationBox(
                 Text(
                     text = "${item.actionField} ${item.actionType}",
                     style = MaterialTheme.typography.titleSmall.copy(
-                        color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                        color = MaterialTheme.erpColors.darkPrimaryTextColor
                     )
                 )
                 Text(
                     "Your ${item.actionField} request has been ${item.actionType}ed by : ${item.actionPerformerName}",
                     style = MaterialTheme.typography.titleSmall.copy(
-                        color = MaterialTheme.colorScheme.primaryTextColor
+                        color = MaterialTheme.erpColors.primaryTextColor
                     )
                 )
 
@@ -170,7 +188,7 @@ fun NotificationBox(
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.End,
             text = item.actionTime, style = MaterialTheme.typography.titleSmall.copy(
-                color = MaterialTheme.colorScheme.primaryTextColor
+                color = MaterialTheme.erpColors.primaryTextColor
             )
         )
     }

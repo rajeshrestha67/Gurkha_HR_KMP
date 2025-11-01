@@ -16,7 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
 import com.gurkha.hr.components.dimens
-import com.gurkha.hr.res.theme.primaryTextColor
+import com.gurkha.hr.components.erpColors
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -37,7 +37,7 @@ fun <T> RadioGroup(
             Text(
                 text = stringResource(it),
                 style = MaterialTheme.typography.bodySmall.copy(
-                    color = MaterialTheme.colorScheme.primaryTextColor
+                    color = MaterialTheme.erpColors.primaryTextColor
                 )
             )
         }

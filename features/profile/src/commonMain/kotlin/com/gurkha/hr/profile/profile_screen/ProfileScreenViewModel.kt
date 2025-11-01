@@ -15,6 +15,8 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 class ProfileScreenViewModel(
     private val userDetailUseCase: FetchUserDetailUseCase,
@@ -36,8 +38,6 @@ class ProfileScreenViewModel(
     fun onAction(action: ProfileScreenAction) {
         when (action) {
             is ProfileScreenAction.OnProfileImageReceived -> {
-
-
                 uploadImage(
                     uri = action.url
                 )
@@ -45,6 +45,7 @@ class ProfileScreenViewModel(
         }
     }
 
+    @OptIn(ExperimentalTime::class)
     private fun uploadImage(uri: String) = viewModelScope.launch {
         _state.update {
             it.copy(
@@ -52,10 +53,11 @@ class ProfileScreenViewModel(
             )
         }
         //notification.preloadImage(uri)
-//        uploadImageUseCase(
-//            filePath = uri,
-//            imageName = "image.jpg",
-//            onProgress = { progress ->
+
+        uploadImageUseCase(
+            filePath = uri,
+            imageName = "image${Clock.System.now().toEpochMilliseconds()}",
+            onProgress = { progress ->
 //                viewModelScope.launch {
 //                    withContext(Dispatchers.Main.immediate) {
 //                        notification.showNotification(
@@ -63,8 +65,10 @@ class ProfileScreenViewModel(
 //                        )
 //                    }
 //                }
-//            }
-//        )
+            }
+        ).onSuccess { data ->
+            data.a
+        }
     }
 
     private fun fetchUserDetails() = viewModelScope.launch {

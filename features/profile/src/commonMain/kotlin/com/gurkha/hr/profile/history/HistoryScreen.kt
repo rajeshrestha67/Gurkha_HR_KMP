@@ -26,6 +26,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -41,16 +42,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gurkha.hr.components.dateFilterDropDown.DateFilterDropdown
 import com.gurkha.hr.components.dimens
+import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.components.shimmer.ShimmerView
 import com.gurkha.hr.profile.model.history_screen.HistoryDataUI
 import com.gurkha.hr.profile.model.history_screen.HistoryScreenViewAction
 import com.gurkha.hr.profile.model.history_screen.HistoryState
 import com.gurkha.hr.res.SharedRes
-import com.gurkha.hr.res.theme.darkPrimaryTextColor
-import com.gurkha.hr.res.theme.highLightColor
-import com.gurkha.hr.res.theme.lightGreenColor
-import com.gurkha.hr.res.theme.lightRedColor
-import com.gurkha.hr.res.theme.primaryTextColor
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -96,13 +93,21 @@ fun HistoryScreen(
             )
         }
     ) { paddingValues ->
-        HistoryScreenContainer(
+        PullToRefreshBox(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues),
-            state = state,
-            showFilter = showFilter,
-            onAction = viewModel::onAction
+            isRefreshing = state.isRefreshing,
+            onRefresh = { viewModel.onAction(HistoryScreenViewAction.OnRefresh) },
+            content = {
+                HistoryScreenContainer(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    state = state,
+                    showFilter = showFilter,
+                    onAction = viewModel::onAction
+                )
+            }
         )
     }
 }
@@ -180,7 +185,7 @@ fun HistoryScreenContent(
         modifier = Modifier
             .fillMaxWidth()
             .clip(MaterialTheme.shapes.medium)
-            .background(MaterialTheme.colorScheme.highLightColor)
+            .background(MaterialTheme.erpColors.highLightColor)
             .padding(MaterialTheme.dimens.small2)
     ) {
         Row(
@@ -200,14 +205,14 @@ fun HistoryScreenContent(
                 Text(
                     stringResource(SharedRes.Strings.date),
                     style = MaterialTheme.typography.titleSmall.copy(
-                        color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                        color = MaterialTheme.erpColors.darkPrimaryTextColor
                     )
                 )
 
                 Text(
                     text = "${item.date} (${item.day})",
                     style = MaterialTheme.typography.titleSmall.copy(
-                        color = MaterialTheme.colorScheme.primaryTextColor,
+                        color = MaterialTheme.erpColors.primaryTextColor,
                     )
                 )
             }
@@ -239,19 +244,19 @@ fun LowTextContent(
     {
         RowInfoText(
             name = stringResource(SharedRes.Strings.clock_in_time),
-            titleTextColor = MaterialTheme.colorScheme.darkPrimaryTextColor,
+            titleTextColor = MaterialTheme.erpColors.darkPrimaryTextColor,
             value = stringResource(SharedRes.Strings.clock_out_time),
         )
         RowInfoText(
             name = item.clockInTime,
-            subTitleTextColor = MaterialTheme.colorScheme.primaryTextColor,
+            subTitleTextColor = MaterialTheme.erpColors.primaryTextColor,
             value = item.clockOutTime,
         )
         if (item.lateInTime.isNotBlank() && item.earlyOutTime.isNotBlank()) {
             RowInfoText(
                 name = "Late: ${item.lateInTime} min",
-                titleTextColor = MaterialTheme.colorScheme.lightRedColor,
-                subTitleTextColor = MaterialTheme.colorScheme.lightGreenColor,
+                titleTextColor = MaterialTheme.erpColors.lightRedColor,
+                subTitleTextColor = MaterialTheme.erpColors.lightGreenColor,
                 value = "Early: ${item.earlyOutTime} min"
             )
         }
@@ -264,7 +269,7 @@ fun LowTextContent(
             modifier = Modifier.padding(top = MaterialTheme.dimens.small2),
             text = stringResource(SharedRes.Strings.leaveRequest),
             style = MaterialTheme.typography.titleSmall.copy(
-                color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                color = MaterialTheme.erpColors.darkPrimaryTextColor
             )
         )
         Column(
@@ -305,7 +310,7 @@ fun LowTextContent(
             modifier = Modifier.padding(top = MaterialTheme.dimens.small2),
             text = stringResource(SharedRes.Strings.attendanceRequest),
             style = MaterialTheme.typography.titleSmall.copy(
-                color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                color = MaterialTheme.erpColors.darkPrimaryTextColor
             )
         )
         Column(
@@ -343,8 +348,8 @@ fun LowTextContent(
 fun RowInfoText(
     name: String,
     value: String,
-    titleTextColor: Color = MaterialTheme.colorScheme.primaryTextColor,
-    subTitleTextColor: Color = MaterialTheme.colorScheme.darkPrimaryTextColor,
+    titleTextColor: Color = MaterialTheme.erpColors.primaryTextColor,
+    subTitleTextColor: Color = MaterialTheme.erpColors.darkPrimaryTextColor,
 ) {
 
     Row(

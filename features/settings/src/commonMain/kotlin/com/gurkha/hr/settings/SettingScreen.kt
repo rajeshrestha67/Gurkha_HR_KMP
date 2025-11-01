@@ -36,10 +36,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gurkha.hr.components.ColumnItemRow
 import com.gurkha.hr.components.dimens
+import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.hr.res.theme.EPRLanguage
 import com.gurkha.hr.res.theme.ThemeMode
-import com.gurkha.hr.res.theme.primaryTextColor
 import com.gurkha.hr.settings.model.settings.SettingList
 import com.gurkha.hr.settings.model.settings.SettingsScreenAction
 import com.gurkha.hr.settings.model.settings.SettingsScreenState
@@ -50,8 +50,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun SettingScreen(
     onBackPressed: () -> Unit,
-    navigateToChangePassword: () -> Unit,
-    navigateToNotificationSettings: () -> Unit
+    navigateToChangePassword: () -> Unit
 ) {
     val settingsViewModel = koinViewModel<SettingsViewModel>()
 
@@ -61,7 +60,6 @@ fun SettingScreen(
         onBackPressed = onBackPressed,
         state = state,
         navigateToChangePassword = navigateToChangePassword,
-        navigateToNotificationSettings = navigateToNotificationSettings,
         onAction = settingsViewModel::onAction
     )
 
@@ -72,7 +70,6 @@ fun SettingScreen(
 fun SettingScreenContainer(
     onBackPressed: () -> Unit,
     navigateToChangePassword: () -> Unit,
-    navigateToNotificationSettings: () -> Unit,
     state: SettingsScreenState,
     onAction: (SettingsScreenAction) -> Unit
 ) {
@@ -102,7 +99,6 @@ fun SettingScreenContainer(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues),
-            navigateToNotificationSettings = navigateToNotificationSettings,
             navigateToChangePassword = navigateToChangePassword,
             state = state,
             onAction = onAction
@@ -114,7 +110,6 @@ fun SettingScreenContainer(
 fun SettingScreenContent(
     modifier: Modifier = Modifier,
     navigateToChangePassword: () -> Unit,
-    navigateToNotificationSettings: () -> Unit,
     state: SettingsScreenState,
     onAction: (SettingsScreenAction) -> Unit
 ) {
@@ -151,7 +146,7 @@ fun SettingScreenContent(
                                 }
 
                                 SettingList.Biometric -> {
-                                    navigateToNotificationSettings()
+
                                 }
                             }
                         }
@@ -239,7 +234,7 @@ fun LanguageBottomSheet(
                     vertical = MaterialTheme.dimens.small2,
                     horizontal = MaterialTheme.dimens.small3
                 ),
-                text = stringResource(SharedRes.Strings.appAppearance),
+                text = stringResource(SharedRes.Strings.language),
                 style = MaterialTheme.typography.titleLarge.copy(
                     color = MaterialTheme.colorScheme.primary
                 )
@@ -264,7 +259,7 @@ fun LanguageBottomSheet(
                             modifier = Modifier.padding(vertical = MaterialTheme.dimens.small2),
                             text = stringResource(theme.displayName),
                             style = MaterialTheme.typography.titleMedium.copy(
-                                color = MaterialTheme.colorScheme.primaryTextColor
+                                color = MaterialTheme.erpColors.primaryTextColor
                             )
                         )
                         HorizontalDivider(
@@ -333,7 +328,7 @@ fun ThemeBottomSheet(
                             modifier = Modifier.padding(vertical = MaterialTheme.dimens.small2),
                             text = stringResource(theme.title),
                             style = MaterialTheme.typography.titleMedium.copy(
-                                color = MaterialTheme.colorScheme.primaryTextColor
+                                color = MaterialTheme.erpColors.primaryTextColor
                             )
                         )
                         HorizontalDivider(

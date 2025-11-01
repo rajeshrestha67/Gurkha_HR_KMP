@@ -7,4 +7,6 @@ sealed interface ChatRoomScreenAction {
 
     data class OnTyping(val isTyping: Boolean) : ChatRoomScreenAction
 
+    data object OnRefresh: ChatRoomScreenAction
+
 }

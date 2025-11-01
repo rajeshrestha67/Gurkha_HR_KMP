@@ -28,4 +28,3 @@ data class ProfileInfo(
     val value: String
 )
 
-

@@ -30,8 +30,10 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -42,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.gurkha.hr.components.dimens
+import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.components.shimmer.ShimmerView
 import com.gurkha.hr.components.tabbar.ERPTabView
 import com.gurkha.hr.domain.leave.leaveReport.model.LeaveReportData
@@ -49,9 +52,6 @@ import com.gurkha.hr.leave.model.leave.LeaveItem
 import com.gurkha.hr.leave.model.leave.LeaveScreenAction
 import com.gurkha.hr.leave.model.leave.LeaveScreenState
 import com.gurkha.hr.res.SharedRes
-import com.gurkha.hr.res.theme.darkPrimaryTextColor
-import com.gurkha.hr.res.theme.highLightColor
-import com.gurkha.hr.res.theme.primaryTextColor
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -92,7 +92,7 @@ fun LeaveScreen(
                     Text(
                         text = stringResource(SharedRes.Strings.all_leaves),
                         style = MaterialTheme.typography.titleLarge.copy(
-                            color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                            color = MaterialTheme.erpColors.darkPrimaryTextColor
                         )
                     )
                 }
@@ -107,11 +107,20 @@ fun LeaveScreen(
             )
         },
     ) { contentPadding ->
-        LeaveScreenContent(
+        PullToRefreshBox(
             modifier = Modifier.fillMaxSize().padding(contentPadding),
-            state = state,
-            onAction = viewModel::onAction,
-            leaveListState = leaveListState
+            isRefreshing = state.isRefreshing,
+            onRefresh = {
+                viewModel.onAction(LeaveScreenAction.OnRefresh)
+            },
+            content = {
+                LeaveScreenContent(
+                    modifier = Modifier.fillMaxSize(),
+                    state = state,
+                    onAction = viewModel::onAction,
+                    leaveListState = leaveListState
+                )
+            }
         )
     }
 }
@@ -213,12 +222,12 @@ fun LeaveBox(
         Text(
             text = stringResource(item.title),
             style = MaterialTheme.typography.titleMedium.copy(
-                color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                color = MaterialTheme.erpColors.darkPrimaryTextColor
             )
         )
         Text(
             text = item.days.toString(), style = MaterialTheme.typography.titleMedium.copy(
-                color = MaterialTheme.colorScheme.primaryTextColor
+                color = MaterialTheme.erpColors.primaryTextColor
             )
         )
     }
@@ -284,7 +293,8 @@ fun LazyListScope.leaveResults(
                 item {
                     Box(
                         modifier = Modifier
-                            .fillMaxSize()
+                            .fillMaxSize(),
+                        contentAlignment = Alignment.Center
                     ) {
                         Text(text = stringResource(SharedRes.Strings.no_data_found))
                     }
@@ -301,118 +311,125 @@ fun LazyListScope.leaveResults(
 fun LazyItemScope.ResultBox(
     item: LeaveReportData
 ) {
-    Column(
+    Surface(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(
-                vertical = MaterialTheme.dimens.small1
-            )
-            .clip(MaterialTheme.shapes.medium)
-            .background(MaterialTheme.colorScheme.highLightColor)
-            .padding(MaterialTheme.dimens.small2)
-            .animateItem(
-                tween(300),
-                tween(500)
-            )
-    ) {
+            .fillMaxWidth(),
+        shape = MaterialTheme.shapes.medium,
+        tonalElevation = 4.dp,
+
+        ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = MaterialTheme.dimens.small2)
-        )
-        {
-            Text(
-                text = stringResource(SharedRes.Strings.date),
-                style = MaterialTheme.typography.titleSmall.copy(
-                    color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                .padding(
+                    vertical = MaterialTheme.dimens.small1
                 )
-            )
-            Text(
-                text = "From : ${item.startDate}   To : ${item.endDate}",
-                style = MaterialTheme.typography.titleSmall.copy(
-                    color = MaterialTheme.colorScheme.primaryTextColor
+                .clip(MaterialTheme.shapes.medium)
+                .padding(MaterialTheme.dimens.small2)
+                .animateItem(
+                    tween(300),
+                    tween(500)
                 )
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = MaterialTheme.dimens.small2)
             )
-        }
-
-        HorizontalDivider(modifier = Modifier.height(MaterialTheme.dimens.extraSmall))
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = MaterialTheme.dimens.small2),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        )
-        {
-            Column {
+            {
                 Text(
-                    text = stringResource(SharedRes.Strings.applyDays),
+                    text = stringResource(SharedRes.Strings.date),
                     style = MaterialTheme.typography.titleSmall.copy(
-                        color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                        color = MaterialTheme.erpColors.darkPrimaryTextColor
                     )
                 )
                 Text(
-                    text = item.totalDays.toString(),
+                    text = "From : ${item.startDate}   To : ${item.endDate}",
                     style = MaterialTheme.typography.titleSmall.copy(
-                        color = MaterialTheme.colorScheme.primaryTextColor
+                        color = MaterialTheme.erpColors.primaryTextColor
                     )
                 )
             }
 
-            Column {
+            HorizontalDivider(modifier = Modifier.height(MaterialTheme.dimens.extraSmall))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = MaterialTheme.dimens.small2),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            )
+            {
+                Column {
+                    Text(
+                        text = stringResource(SharedRes.Strings.applyDays),
+                        style = MaterialTheme.typography.titleSmall.copy(
+                            color = MaterialTheme.erpColors.darkPrimaryTextColor
+                        )
+                    )
+                    Text(
+                        text = item.totalDays.toString(),
+                        style = MaterialTheme.typography.titleSmall.copy(
+                            color = MaterialTheme.erpColors.primaryTextColor
+                        )
+                    )
+                }
+
+                Column {
+                    Text(
+                        text = stringResource(SharedRes.Strings.approver),
+                        style = MaterialTheme.typography.titleSmall.copy(
+                            color = MaterialTheme.erpColors.darkPrimaryTextColor
+                        )
+                    )
+                    Text(
+                        text = item.assigneeName, style = MaterialTheme.typography.titleSmall.copy(
+                            color = MaterialTheme.erpColors.primaryTextColor
+                        )
+                    )
+                }
+
+                Column {
+                    Text(
+                        text = stringResource(SharedRes.Strings.leaveType),
+                        style = MaterialTheme.typography.titleSmall.copy(
+                            color = MaterialTheme.erpColors.darkPrimaryTextColor
+                        )
+                    )
+                    Text(
+                        text = item.leaveType,
+                        style = MaterialTheme.typography.titleSmall.copy(
+                            color = MaterialTheme.erpColors.primaryTextColor
+                        )
+                    )
+                }
+            }
+
+            HorizontalDivider(modifier = Modifier.height(MaterialTheme.dimens.extraSmall))
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = MaterialTheme.dimens.small2)
+            )
+            {
                 Text(
-                    text = stringResource(SharedRes.Strings.approver),
+                    text = stringResource(SharedRes.Strings.reason),
                     style = MaterialTheme.typography.titleSmall.copy(
-                        color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                        color = MaterialTheme.erpColors.darkPrimaryTextColor
                     )
                 )
                 Text(
-                    text = item.assigneeName, style = MaterialTheme.typography.titleSmall.copy(
-                        color = MaterialTheme.colorScheme.primaryTextColor
+                    text = item.reason,
+                    maxLines = 3,
+                    style = MaterialTheme.typography.titleSmall.copy(
+                        color = MaterialTheme.erpColors.primaryTextColor
                     )
                 )
             }
 
-            Column {
-                Text(
-                    text = stringResource(SharedRes.Strings.leaveType),
-                    style = MaterialTheme.typography.titleSmall.copy(
-                        color = MaterialTheme.colorScheme.darkPrimaryTextColor
-                    )
-                )
-                Text(
-                    text = item.leaveType,
-                    style = MaterialTheme.typography.titleSmall.copy(
-                        color = MaterialTheme.colorScheme.primaryTextColor
-                    )
-                )
-            }
         }
-
-        HorizontalDivider(modifier = Modifier.height(MaterialTheme.dimens.extraSmall))
-
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = MaterialTheme.dimens.small2)
-        )
-        {
-            Text(
-                text = stringResource(SharedRes.Strings.reason),
-                style = MaterialTheme.typography.titleSmall.copy(
-                    color = MaterialTheme.colorScheme.darkPrimaryTextColor
-                )
-            )
-            Text(
-                text = item.reason,
-                maxLines = 3,
-                style = MaterialTheme.typography.titleSmall.copy(
-                    color = MaterialTheme.colorScheme.primaryTextColor
-                )
-            )
-        }
-
     }
 }
 

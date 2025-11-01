@@ -31,14 +31,11 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.gurkha.hr.components.dimens
+import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.components.shimmer.ShimmerView
 import com.gurkha.hr.date.data.CalendarDate
 import com.gurkha.hr.date.data.CalendarDay
 import com.gurkha.hr.res.SharedRes
-import com.gurkha.hr.res.theme.borderColor
-import com.gurkha.hr.res.theme.highLightColor
-import com.gurkha.hr.res.theme.linkColor
-import com.gurkha.hr.res.theme.primaryTextColor
 import org.jetbrains.compose.resources.stringArrayResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -96,7 +93,7 @@ fun HorizontalCalendar(
                     Text(
                         text = stringResource(SharedRes.Strings.today),
                         style = MaterialTheme.typography.titleSmall.copy(
-                            color = MaterialTheme.colorScheme.linkColor
+                            color = MaterialTheme.erpColors.linkColor
                         )
                     )
                 }
@@ -154,7 +151,7 @@ fun HorizontalCalendar(
                         val color = if (selectedDay == item.day)
                             MaterialTheme.colorScheme.primary
                         else
-                            MaterialTheme.colorScheme.highLightColor
+                            MaterialTheme.colorScheme.background
 
                         val textColor = if (selectedDay == item.day) {
                             MaterialTheme.colorScheme.onPrimary
@@ -163,12 +160,12 @@ fun HorizontalCalendar(
                         } else if (item.isHoliday) {
                             MaterialTheme.colorScheme.error
                         } else {
-                            MaterialTheme.colorScheme.primaryTextColor
+                            MaterialTheme.colorScheme.onBackground
                         }
 
                         val borderModifier = if (item.day == today.dayOfMonth) Modifier.border(
                             width = 0.5.dp,
-                            color = MaterialTheme.colorScheme.borderColor.copy(
+                            color = MaterialTheme.colorScheme.outline.copy(
                                 alpha = 0.5f
                             ),
                             shape = MaterialTheme.shapes.medium

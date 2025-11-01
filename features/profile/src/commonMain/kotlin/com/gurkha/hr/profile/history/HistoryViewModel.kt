@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gurkha.hr.domain.form.RequiredValidationUseCase
 import com.gurkha.hr.domain.history.useCase.HistoryUseCase
-import com.gurkha.hr.logger.AppLogger
 import com.gurkha.hr.networkhelper.onError
 import com.gurkha.hr.networkhelper.onSuccess
 import com.gurkha.hr.profile.model.history_screen.HistoryScreenViewAction
@@ -16,6 +15,7 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+
 //import kotlinx.serialization.json.Json
 
 class HistoryViewModel(
@@ -25,8 +25,6 @@ class HistoryViewModel(
 ) : ViewModel() {
     private val _state = MutableStateFlow(HistoryState())
     val state = _state
-
-
         .onStart {
             onFetchData()
         }
@@ -109,6 +107,11 @@ class HistoryViewModel(
                 }
                 submit()
             }
+
+            is HistoryScreenViewAction.OnRefresh -> {
+                refresh()
+            }
+
         }
     }
 
@@ -137,5 +140,20 @@ class HistoryViewModel(
         }
         onFetchData(
         )
+    }
+
+    private fun refresh() = viewModelScope.launch {
+        _state.update {
+            it.copy(
+                isRefreshing = true
+            )
+        }
+        onFetchData()
+
+        _state.update {
+            it.copy(
+                isRefreshing = false
+            )
+        }
     }
 }

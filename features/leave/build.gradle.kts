@@ -93,6 +93,8 @@ kotlin {
                 implementation(projects.core.networkHelper)
                 implementation(projects.core.ui.res)
                 implementation(projects.core.ui.components)
+                implementation(projects.core.ui.date)
+
 
                 implementation(libs.coil.compose)
                 implementation(libs.coil.compose.core)

@@ -31,4 +31,6 @@ sealed interface ProfileRoute {
     @Serializable
     data object ReportScreenRoute: ProfileRoute
 
+    @Serializable
+    data object EditProfileRoute: ProfileRoute
 }

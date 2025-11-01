@@ -30,6 +30,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -48,16 +49,13 @@ import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.date.ERPDateTextField
 import com.gurkha.hr.components.date.FutureAndTodayDate
 import com.gurkha.hr.components.dimens
+import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.components.shimmer.ShimmerView
 import com.gurkha.hr.components.textField.FormValidate
 import com.gurkha.hr.domain.attendance.attendanceReport.model.AttendanceData
 import com.gurkha.hr.profile.model.time_and_attendance_screen.TimeAndAttendanceState
 import com.gurkha.hr.profile.model.time_and_attendance_screen.TimeAndAttendanceViewAction
 import com.gurkha.hr.res.SharedRes
-import com.gurkha.hr.res.theme.darkPrimaryTextColor
-import com.gurkha.hr.res.theme.highLightColor
-import com.gurkha.hr.res.theme.primaryTextColor
-import com.gurkha.hr.res.theme.secondaryTextColor
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -106,14 +104,22 @@ fun TimeAndAttendanceScreen(
             )
         }
     ) { paddingValues ->
-        TimeAndAttendanceScreenContainer(
+        PullToRefreshBox(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues),
-            state = state,
-            showFilter = showFilter,
-            onAction = viewModel::onAction
+            isRefreshing = state.isRefreshing,
+            onRefresh = {},
+            content = {
+                TimeAndAttendanceScreenContainer(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    state = state,
+                    showFilter = showFilter,
+                    onAction = viewModel::onAction
 
+                )
+            }
         )
 
 
@@ -208,7 +214,7 @@ fun TimeAndAttendanceDetails(
                 bottom = MaterialTheme.dimens.small1,
             )
             .clip(MaterialTheme.shapes.medium)
-            .background(MaterialTheme.colorScheme.highLightColor)
+            .background(MaterialTheme.erpColors.highLightColor)
             .padding(
                 start = MaterialTheme.dimens.small1,
                 top = MaterialTheme.dimens.small2,
@@ -229,7 +235,7 @@ fun TimeAndAttendanceDetails(
                 Text(
                     text = stringResource(SharedRes.Strings.date),
                     style = MaterialTheme.typography.titleMedium.copy(
-                        color = MaterialTheme.colorScheme.primaryTextColor
+                        color = MaterialTheme.erpColors.primaryTextColor
                     )
                 )
                 Text(
@@ -237,7 +243,7 @@ fun TimeAndAttendanceDetails(
                         item.day.lowercase().replaceFirstChar { it.uppercase() }
                     })",
                     style = MaterialTheme.typography.bodyMedium.copy(
-                        color = MaterialTheme.colorScheme.secondaryTextColor
+                        color = MaterialTheme.erpColors.secondaryTextColor
                     )
                 )
             }
@@ -256,7 +262,7 @@ fun TimeAndAttendanceDetails(
                             Text(
                                 text = stringResource(SharedRes.Strings.clockIn),
                                 style = MaterialTheme.typography.bodyMedium.copy(
-                                    color = MaterialTheme.colorScheme.primaryTextColor
+                                    color = MaterialTheme.erpColors.primaryTextColor
                                 )
                             )
                         },
@@ -269,7 +275,7 @@ fun TimeAndAttendanceDetails(
                             Text(
                                 text = stringResource(SharedRes.Strings.clockOut),
                                 style = MaterialTheme.typography.bodyMedium.copy(
-                                    color = MaterialTheme.colorScheme.primaryTextColor
+                                    color = MaterialTheme.erpColors.primaryTextColor
                                 )
                             )
                         },
@@ -306,11 +312,11 @@ fun TimeAndAttendanceDetails(
         ) {
             RowText(
                 name = SharedRes.Strings.clockIn,
-                value = item.clockInTime
+                value = item.clockInTime ?: "--:--"
             )
             RowText(
                 name = SharedRes.Strings.clockOut,
-                value = item.clockOutTime
+                value = item.clockOutTime ?: "--:--"
             )
             RowText(
                 name = SharedRes.Strings.status,
@@ -327,7 +333,7 @@ fun TimeAndAttendanceDetails(
 fun RowScope.RowText(
     name: StringResource,
     value: String,
-    textColor: Color = MaterialTheme.colorScheme.darkPrimaryTextColor
+    textColor: Color = MaterialTheme.erpColors.darkPrimaryTextColor
 
 ) {
     Column(
@@ -338,7 +344,7 @@ fun RowScope.RowText(
             modifier = Modifier.fillMaxWidth(),
             text = stringResource(name),
             style = MaterialTheme.typography.titleSmall.copy(
-                color = MaterialTheme.colorScheme.primaryTextColor,
+                color = MaterialTheme.erpColors.primaryTextColor,
                 fontWeight = FontWeight.SemiBold
             ),
             textAlign = TextAlign.Start

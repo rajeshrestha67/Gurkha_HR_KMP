@@ -333,6 +333,11 @@ class AddNotesViewModel(
         title: String,
         id: Int
     ) = viewModelScope.launch {
+        _state.update {
+            it.copy(
+                isUpdating = true,
+            )
+        }
         val data = NoteDataUi(
             id = id,
             title = title,

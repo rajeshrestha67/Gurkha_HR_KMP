@@ -27,8 +27,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.dimens
+import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.res.SharedRes
-import com.gurkha.hr.res.theme.primaryTextColor
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -126,7 +126,7 @@ fun PromptModalBottomSheet(
                 modifier = Modifier.padding(top = MaterialTheme.dimens.small2),
                 text = text,
                 style = MaterialTheme.typography.bodyMedium.copy(
-                    color = MaterialTheme.colorScheme.primaryTextColor
+                    color = MaterialTheme.erpColors.primaryTextColor
                 ),
                 textAlign = TextAlign.Center
             )

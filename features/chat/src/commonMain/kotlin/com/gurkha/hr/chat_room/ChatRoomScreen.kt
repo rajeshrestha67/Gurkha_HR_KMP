@@ -41,6 +41,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -67,17 +68,10 @@ import com.gurkha.hr.chat_room.model.ChatMessage
 import com.gurkha.hr.chat_room.model.ChatRoomScreenAction
 import com.gurkha.hr.chat_room.model.ChatRoomScreenState
 import com.gurkha.hr.components.dimens
+import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.components.isKeyboardVisible
 import com.gurkha.hr.components.textField.ERPTextField
 import com.gurkha.hr.res.SharedRes
-import com.gurkha.hr.res.theme.borderColor
-import com.gurkha.hr.res.theme.chatBackgroundColor
-import com.gurkha.hr.res.theme.chatSecondaryTextColor
-import com.gurkha.hr.res.theme.inComingBubbleColor
-import com.gurkha.hr.res.theme.inComingTextColor
-import com.gurkha.hr.res.theme.outGoingBubbleColor
-import com.gurkha.hr.res.theme.primaryTextColor
-import com.gurkha.hr.res.theme.secondaryTextColor
 import com.gurkha.model.chat.ChatUserData
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -120,7 +114,7 @@ private fun ChatRoomScreenContent(
         modifier = Modifier
             .fillMaxSize()
             .imePadding(),
-        containerColor = MaterialTheme.colorScheme.chatBackgroundColor,
+        containerColor = MaterialTheme.erpColors.chatBackgroundColor,
         topBar = {
             state.chatUserData?.let {
                 ChatTopBar(
@@ -142,12 +136,20 @@ private fun ChatRoomScreenContent(
             )
         }
     ) { contentPadding ->
-        ChatRoomLazyColumn(
+        PullToRefreshBox(
             modifier = Modifier
                 .padding(contentPadding)
                 .fillMaxSize(),
-            isKeyboardOpen = isKeyboardOpen,
-            state = state
+            isRefreshing = state.isRefreshing,
+            onRefresh = { onAction(ChatRoomScreenAction.OnRefresh) },
+            content = {
+                ChatRoomLazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    isKeyboardOpen = isKeyboardOpen,
+                    state = state
+                )
+            }
         )
     }
 }
@@ -233,7 +235,7 @@ private fun ChatTopBar(
                         )
                         .border(
                             width = 0.5.dp,
-                            color = MaterialTheme.colorScheme.borderColor,
+                            color = MaterialTheme.colorScheme.outline,
                             shape = CircleShape
                         )
                         .aspectRatio(1f)
@@ -249,7 +251,7 @@ private fun ChatTopBar(
                         modifier = Modifier.align(Alignment.Center),
                         text = userData.nameInitials,
                         style = MaterialTheme.typography.titleLarge.copy(
-                            color = MaterialTheme.colorScheme.primaryTextColor
+                            color = MaterialTheme.erpColors.primaryTextColor
                         )
                     )
                 }
@@ -261,13 +263,13 @@ private fun ChatTopBar(
                     Text(
                         text = userData.employeeName,
                         style = MaterialTheme.typography.titleMedium.copy(
-                            color = MaterialTheme.colorScheme.primaryTextColor
+                            color = MaterialTheme.erpColors.primaryTextColor
                         )
                     )
                     Text(
                         text = userData.branchName,
                         style = MaterialTheme.typography.titleSmall.copy(
-                            color = MaterialTheme.colorScheme.secondaryTextColor
+                            color = MaterialTheme.erpColors.secondaryTextColor
                         )
                     )
                 }
@@ -351,7 +353,7 @@ private fun ChatRoomLazyColumn(
                                 text = key,
                                 textAlign = TextAlign.Center,
                                 style = MaterialTheme.typography.titleSmall.copy(
-                                    color = MaterialTheme.colorScheme.secondaryTextColor
+                                    color = MaterialTheme.erpColors.secondaryTextColor
                                 )
                             )
                         }
@@ -400,7 +402,7 @@ private fun ChatMessageBox(
 
                 Triangle(
                     true,
-                    MaterialTheme.colorScheme.outGoingBubbleColor
+                    MaterialTheme.erpColors.outGoingBubbleColor
                 )
 
             }
@@ -418,7 +420,7 @@ private fun ChatMessageBox(
                             if (!chatMessage.fromMe) 0.dp else MaterialTheme.dimens.small2
                         )
                     )
-                        .background(color = if (!chatMessage.fromMe) MaterialTheme.colorScheme.outGoingBubbleColor else MaterialTheme.colorScheme.inComingBubbleColor)
+                        .background(color = if (!chatMessage.fromMe) MaterialTheme.erpColors.outGoingBubbleColor else MaterialTheme.erpColors.inComingBubbleColor)
                         .padding(
                             horizontal = MaterialTheme.dimens.small2,
                             vertical = MaterialTheme.dimens.small1
@@ -428,7 +430,7 @@ private fun ChatMessageBox(
                         Text(
                             text = chatMessage.message,
                             style = MaterialTheme.typography.bodyMedium.copy(
-                                color = MaterialTheme.colorScheme.inComingTextColor
+                                color = MaterialTheme.erpColors.inComingTextColor
                             )
                         )
                         Spacer(Modifier.size(MaterialTheme.dimens.small1))
@@ -440,7 +442,7 @@ private fun ChatMessageBox(
                                 text = chatMessage.time,
                                 textAlign = TextAlign.End,
                                 style = MaterialTheme.typography.labelSmall.copy(
-                                    color = MaterialTheme.colorScheme.chatSecondaryTextColor
+                                    color = MaterialTheme.erpColors.chatSecondaryTextColor
                                 )
                             )
                         }
@@ -451,7 +453,7 @@ private fun ChatMessageBox(
             if (chatMessage.fromMe) {
                 Triangle(
                     false,
-                    MaterialTheme.colorScheme.inComingBubbleColor
+                    MaterialTheme.erpColors.inComingBubbleColor
                 )
             }
         }
@@ -461,7 +463,7 @@ private fun ChatMessageBox(
 @Composable
 private fun TypingIndicator(
     modifier: Modifier = Modifier,
-    dotColor: Color = MaterialTheme.colorScheme.chatSecondaryTextColor,
+    dotColor: Color = MaterialTheme.erpColors.chatSecondaryTextColor,
     dotSize: Dp = MaterialTheme.dimens.small2,
     dotSpacing: Dp = MaterialTheme.dimens.small1
 ) {
@@ -474,7 +476,7 @@ private fun TypingIndicator(
     ) {
         Triangle(
             risingToTheRight = true,
-            background = MaterialTheme.colorScheme.outGoingBubbleColor,
+            background = MaterialTheme.erpColors.outGoingBubbleColor,
             bottomPadding = 0.dp
         )
         Row(
@@ -487,7 +489,7 @@ private fun TypingIndicator(
                         0.dp
                     )
                 )
-                .background(MaterialTheme.colorScheme.outGoingBubbleColor)
+                .background(MaterialTheme.erpColors.outGoingBubbleColor)
                 .padding(MaterialTheme.dimens.small2),
             horizontalArrangement = Arrangement.spacedBy(dotSpacing)
         ) {

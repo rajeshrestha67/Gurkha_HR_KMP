@@ -2,22 +2,17 @@ package com.gurkha.hr.leave.leave
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gurkha.hr.domain.attendance.attendanceStatus.model.AttendanceStatusData
+import com.gurkha.hr.date.data.model.CalendarModel
+import com.gurkha.hr.date.getMonthStartAndEndDate
 import com.gurkha.hr.domain.leave.leaveReport.model.LeaveReportData
 import com.gurkha.hr.domain.leave.leaveReport.useCase.LeaveReportUseCase
-import com.gurkha.hr.domain.leave.leaveRequest.usecase.LeaveRequestUseCase
 import com.gurkha.hr.domain.leave.leaveSummary.useCase.LeaveSummaryUseCase
 import com.gurkha.hr.leave.model.leave.LeaveScreenAction
 import com.gurkha.hr.leave.model.leave.LeaveScreenState
 import com.gurkha.hr.leave.model.leave.LeaveStatusEnum
 import com.gurkha.hr.networkhelper.onError
 import com.gurkha.hr.networkhelper.onSuccess
-import com.gurkha.model.attendance.attendanceRequest.AttendanceRequestData
 import com.gurkha.model.leave.leave_request.LeaveRequestData
-import com.gurkha.model.leave.ui.AssigneeUi
-import com.gurkha.model.leave.ui.LeaveDurationUi
-import com.gurkha.model.leave.ui.LeaveTypeUi
-import com.gurkha.model.network.toErrorMessage
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -30,7 +25,8 @@ import kotlinx.serialization.json.Json
 
 class LeaveScreenViewModel(
     private val leaveReportUseCase: LeaveReportUseCase,
-    private val leaveSummaryUseCase: LeaveSummaryUseCase
+    private val leaveSummaryUseCase: LeaveSummaryUseCase,
+    private val calendarModel: CalendarModel,
 ) : ViewModel() {
     private val _state = MutableStateFlow(LeaveScreenState())
     private val _errorChannel = Channel<String>()
@@ -39,11 +35,15 @@ class LeaveScreenViewModel(
     private val _successChannel = Channel<String>()
     val successChannel = _successChannel.receiveAsFlow()
 
+    val datePair = calendarModel.getMonthStartAndEndDate()
+
 
     val state = _state
         .onStart {
             fetchLeaveSummary()
             fetchLeaveReport(
+                fromDate = datePair.first,
+                toDate = datePair.second,
                 leaveStatus = LeaveStatusEnum.PENDING,
             )
         }
@@ -68,6 +68,8 @@ class LeaveScreenViewModel(
                 }
                 if (state.value.currentTapItem.result.isEmpty()) {
                     fetchLeaveReport(
+                        fromDate = datePair.first,
+                        toDate = datePair.second,
                         leaveStatus = state.value.leaveStatus,
                     )
                 }
@@ -81,11 +83,16 @@ class LeaveScreenViewModel(
                 }
 
                 action.json?.let {
-                    val data: LeaveRequestData =Json.decodeFromString<LeaveRequestData>(action.json)
+                    val data: LeaveRequestData =
+                        Json.decodeFromString<LeaveRequestData>(action.json)
                     updateLeaveRequestData(
                         data = data
                     )
                 }
+            }
+
+            is LeaveScreenAction.OnRefresh ->{
+                refresh()
             }
         }
     }
@@ -93,6 +100,8 @@ class LeaveScreenViewModel(
 
     //    fetch leave report
     fun fetchLeaveReport(
+        fromDate: String,
+        toDate: String,
         leaveStatus: LeaveStatusEnum,
     ) = viewModelScope.launch {
 
@@ -119,6 +128,8 @@ class LeaveScreenViewModel(
 
         }
         leaveReportUseCase(
+            fromDate = fromDate,
+            toDate = toDate,
             leaveStatus = leaveStatus.value,
         ).onSuccess { data ->
             when (leaveStatus) {
@@ -184,21 +195,25 @@ class LeaveScreenViewModel(
                                     days = data.remainingLeaveCount.toString()
                                 )
                             }
+
                             1 -> {
                                 item.copy(
                                     days = data.approvedCount.toString()
                                 )
                             }
+
                             2 -> {
                                 item.copy(
                                     days = data.pendingCount.toString()
                                 )
                             }
+
                             3 -> {
                                 item.copy(
                                     days = data.rejectedCount.toString()
                                 )
                             }
+
                             else -> {
                                 item
                             }
@@ -244,6 +259,25 @@ class LeaveScreenViewModel(
             )
         }
 
+    }
+
+    private fun refresh()=viewModelScope.launch {
+        _state.update {
+            it.copy(
+                isRefreshing = true
+            )
+        }
+        fetchLeaveSummary()
+        fetchLeaveReport(
+            fromDate = datePair.first,
+            toDate = datePair.second,
+            leaveStatus = LeaveStatusEnum.PENDING,
+        )
+        _state.update {
+            it.copy(
+                isRefreshing = false
+            )
+        }
     }
 
 }

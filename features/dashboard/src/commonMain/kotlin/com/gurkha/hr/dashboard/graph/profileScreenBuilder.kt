@@ -8,6 +8,7 @@ import com.gurkha.hr.dashboard.route.ProfileRoute
 import com.gurkha.hr.profile.allocated_leave.AllocatedLeaveScreen
 import com.gurkha.hr.profile.company_assets.CompanyAssetsScreen
 import com.gurkha.hr.profile.document.DocumentScreen
+import com.gurkha.hr.profile.edit_profile.EditProfileScreen
 import com.gurkha.hr.profile.history.HistoryScreen
 import com.gurkha.hr.profile.model.profile_screen.AccountList
 import com.gurkha.hr.profile.model.profile_screen.GeneralList
@@ -81,6 +82,16 @@ fun NavGraphBuilder.profileScreenBuilder(
     }
     composable<ProfileRoute.ProfileInfoScreenRoute> {
         ProfileInfoScreen(
+            onBackPressed = {
+                navController.popBackStack()
+            }
+            , onGotoEditProfile = {
+                navController.navigate(ProfileRoute.EditProfileRoute)
+            }
+        )
+    }
+    composable <ProfileRoute.EditProfileRoute>{
+        EditProfileScreen(
             onBackPressed = {
                 navController.popBackStack()
             }

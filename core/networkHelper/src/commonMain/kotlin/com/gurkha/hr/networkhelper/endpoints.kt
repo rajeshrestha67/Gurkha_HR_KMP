@@ -17,6 +17,7 @@ object EndPoint {
     const val CHAT_MESSAGE_ENDPOINT = "api/external-chat/messages"
     const val ALLOCATED_LEAVE_ENDPOINT = "api/employee-leave"
     const val COMPANY_ASSETS_ENDPOINT = "api/employee-assets/get"
+    const val EDIT_USER_DETAILS_ENDPOINT = "/api/employee/update-profile"
     const val ATTENDANCE_REQUEST_END_POINT = "api/attendance/request"
     const val HISTORY_END_POINT = "api/attendance/employee/monthly"
     const val LEAVE_SUMMARY_END_POINT = "api/leave-request/overall-leave-detail"
@@ -32,4 +33,6 @@ object EndPoint {
     const val TOTAL_NOTIFICATION_COUNT_END_POINT = "api/notifications/get-total"
     const val TOTAL_UNREAD_NOTIFICATION_COUNT_END_POINT = "api/notifications/check-unread"
     const val ALL_NOTIFICATION_END_POINT = "api/notifications/get-by-limit/12?offset=0"
+    const val DO_ATTENDANCE_END_POINT="api/appClockInClockOut"
+    const val ATTENDANCE_COUNT_REPORT_ENT_POINT="api/attendance/total-count"
 }

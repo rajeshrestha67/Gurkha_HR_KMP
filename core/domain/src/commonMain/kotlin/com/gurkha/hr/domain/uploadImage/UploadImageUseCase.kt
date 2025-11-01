@@ -20,7 +20,8 @@ class UploadImageUseCase(
             onProgress = onProgress
         ).map {
             UploadImageData(
-                a = it.message
+                a = it.message,
+                imageName = it.data?.fileNames?.firstOrNull()
             )
         }
     }

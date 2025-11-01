@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -24,6 +25,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -32,11 +34,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.gurkha.hr.components.dimens
+import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.profile.model.document_screen.DocumentList
 import com.gurkha.hr.res.SharedRes
-import com.gurkha.hr.res.theme.borderColor
-import com.gurkha.hr.res.theme.primaryTextColor
-import com.gurkha.hr.res.theme.secondaryTextColor
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -68,40 +68,41 @@ fun DocumentScreen(
             )
         }
     ) { paddingValues ->
-        DocumentScreenContainer(
+        PullToRefreshBox(
             modifier = Modifier.padding(paddingValues).fillMaxSize(),
+            isRefreshing = false,
+            onRefresh = {},
+            content = {
+                DocumentScreenContainer()
+            }
         )
-
-
     }
 }
 
 @Composable
 fun DocumentScreenContainer(
-    modifier: Modifier = Modifier,
 ) {
     val documentList = remember { DocumentList.list }
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2),
-        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2),
+        modifier = Modifier,
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3),
+        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3),
         contentPadding = PaddingValues(
-            MaterialTheme.dimens.small2
+            horizontal = MaterialTheme.dimens.small3,
+            vertical = MaterialTheme.dimens.small2
         )
     ) {
         items(
             documentList,
             key = { it.toString() },
         ) { item ->
-
             DocumentItemRow(
                 text = stringResource(item.title),
                 uploadText = stringResource(item.uploadText),
                 onClick = {},
-
-                )
+            )
         }
     }
 }
@@ -115,38 +116,37 @@ fun DocumentItemRow(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .height(
-                135.dp
-            )
             .border(
                 width = 0.5.dp,
-                color = MaterialTheme.colorScheme.borderColor,
+                color = MaterialTheme.colorScheme.outline,
                 shape = MaterialTheme.shapes.medium
             )
             .clickable { onClick() }
-            .padding(MaterialTheme.dimens.small2),
+            .padding(MaterialTheme.dimens.small3),
 
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceBetween
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2)
     ) {
         Text(
+            modifier = Modifier.fillMaxWidth(),
             text = text,
             style = MaterialTheme.typography.titleMedium.copy(
-                color = MaterialTheme.colorScheme.primaryTextColor
+                color = MaterialTheme.erpColors.primaryTextColor
             ),
+            textAlign = TextAlign.Center
         )
         Icon(
             imageVector = Icons.Filled.CloudUpload,
             contentDescription = "upload",
             modifier = Modifier.size(MaterialTheme.dimens.medium1),
-            tint = MaterialTheme.colorScheme.secondaryTextColor
+            tint = MaterialTheme.erpColors.secondaryTextColor
         )
         Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
         Text(
             text = uploadText,
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.bodyMedium.copy(
-                color = MaterialTheme.colorScheme.secondaryTextColor,
+                color = MaterialTheme.erpColors.secondaryTextColor,
             ),
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,

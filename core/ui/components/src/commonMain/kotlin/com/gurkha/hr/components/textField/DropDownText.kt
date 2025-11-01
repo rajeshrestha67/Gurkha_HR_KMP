@@ -27,8 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import com.gurkha.hr.components.dimens
-import com.gurkha.hr.res.theme.disabledTextFieldBorderColor
-import com.gurkha.hr.res.theme.primaryTextColor
+import com.gurkha.hr.components.erpColors
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -36,10 +35,10 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun <T> DropDownText(
     label: StringResource,
-    hint: StringResource,
+    hint: String,
     selectedValue: String,
     error: StringResource?,
-    dropdownTextColor: Color = MaterialTheme.colorScheme.primaryTextColor,
+    dropdownTextColor: Color = MaterialTheme.erpColors.primaryTextColor,
     enabled: Boolean = true,
     onError: (StringResource?) -> Unit,
     listOfItems: List<T>,
@@ -51,7 +50,7 @@ fun <T> DropDownText(
         Icon(
             imageVector = Icons.Filled.ArrowDropDown,
             contentDescription = "drop down",
-            tint = if (enabled) MaterialTheme.colorScheme.primaryTextColor else MaterialTheme.colorScheme.disabledTextFieldBorderColor
+            tint = if (enabled) MaterialTheme.erpColors.primaryTextColor else MaterialTheme.erpColors.disabledTextFieldBorderColor
 
         )
     },
@@ -79,9 +78,7 @@ fun <T> DropDownText(
             },
             readOnly = true,
             label = stringResource(label),
-            hint = stringResource(
-                hint
-            ),
+            hint = hint,
             trailingIcon = {
                 if (isFetchingError) {
                     IconButton(

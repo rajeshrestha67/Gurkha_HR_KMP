@@ -7,8 +7,6 @@ data class LoginScreenState(
     val password: String = "Test123@",
 //    val username: String = "suneelshrestha9@gmail.com",
 //    val password: String = "Soci@lmedia07",
-//        val username: String = "shreejesh.mbank@gmail.com",
-//    val password: String = "Test@1234",
     val usernameError: StringResource? = null,
     val passwordError: StringResource? = null,
     val isLoading: Boolean = false,

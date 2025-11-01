@@ -7,6 +7,7 @@ import com.gurkha.hr.networkhelper.EndPoint
 import com.gurkha.hr.networkhelper.get
 import com.gurkha.hr.networkhelper.post
 import com.gurkha.hr.networkhelper.safeCall
+import com.gurkha.model.attendance.attendanceCountReport.AttendanceCountReportResponseDto
 import com.gurkha.model.attendance.attendanceReport.AttendanceReportRequestDto
 import com.gurkha.model.attendance.attendanceReport.AttendanceResponseDto
 import com.gurkha.model.attendance.attendanceRequest.AttendanceRequestDto
@@ -14,8 +15,11 @@ import com.gurkha.model.attendance.attendanceRequest.AttendanceRequestResponseDt
 import com.gurkha.model.attendance.attendanceStatus.AttendanceStatusRequestDTO
 import com.gurkha.model.attendance.attendanceStatus.AttendanceStatusResponseDTO
 import com.gurkha.model.attendance.attendanceSummary.AttendanceSummaryResponseDto
+import com.gurkha.model.attendance.doAttendance.DoAttendanceRequestDto
+import com.gurkha.model.attendance.doAttendance.DoAttendanceResponseDto
 import com.gurkha.model.network.DataError
 import io.ktor.client.HttpClient
+import io.ktor.client.request.parameter
 import io.ktor.client.request.setBody
 
 class KtorAttendanceRemoteRepository(
@@ -46,7 +50,9 @@ class KtorAttendanceRemoteRepository(
     override suspend fun fetchAttendanceStatus(
         attendanceStatus: String,
         employeeName: String,
-        isSelf: String
+        isSelf: String,
+        fromDate: String,
+        toDate: String
     ): ERPResult<AttendanceStatusResponseDTO, DataError> {
         return safeCall {
             httpClient.post(
@@ -56,7 +62,10 @@ class KtorAttendanceRemoteRepository(
                 setBody(AttendanceStatusRequestDTO(
                     attendanceStatus,
                     employeeName,
-                    isSelf))
+                    isSelf,
+                    fromDate,
+                    toDate
+                ))
             }
         }
     }
@@ -90,6 +99,38 @@ class KtorAttendanceRemoteRepository(
                 baseUrl = BaseUrl.Generic,
                 endPoint = EndPoint.ATTENDANCE_SUMMARY_END_POINT
             )
+        }
+    }
+
+    override suspend fun doAttendance(
+        employeeId: Int,
+        imageName: String,
+        forDate: String
+    ): ERPResult<DoAttendanceResponseDto, DataError> {
+        return safeCall {
+            httpClient.post(
+                baseUrl = BaseUrl.Generic,
+                endPoint = EndPoint.DO_ATTENDANCE_END_POINT
+            ){
+                setBody(DoAttendanceRequestDto(employeeId = employeeId, imageName = imageName, forDate = forDate))
+            }
+        }
+    }
+
+    override suspend fun attendanceCountReportFetch(
+        employeeId: Int,
+        toDate: String,
+        fromDate: String
+    ): ERPResult<AttendanceCountReportResponseDto, DataError> {
+        return safeCall {
+            httpClient.get(
+                baseUrl = BaseUrl.Generic,
+                endPoint = EndPoint.ATTENDANCE_COUNT_REPORT_ENT_POINT
+            ) {
+                parameter("employeeId", employeeId)
+                parameter("toDate", toDate)
+                parameter("fromDate", fromDate)
+            }
         }
     }
 }

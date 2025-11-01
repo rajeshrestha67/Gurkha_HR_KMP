@@ -21,6 +21,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -30,13 +31,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gurkha.hr.components.dimens
+import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.domain.companyAssets.model.CompanyAssetsData
 import com.gurkha.hr.profile.model.companyAssets.CompanyAssetsState
+import com.gurkha.hr.profile.model.companyAssets.CompanyAssetsViewAction
 import com.gurkha.hr.res.SharedRes
-import com.gurkha.hr.res.theme.darkPrimaryTextColor
-import com.gurkha.hr.res.theme.highLightColor
-import com.gurkha.hr.res.theme.primaryTextColor
-import com.gurkha.hr.res.theme.secondaryTextColor
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -70,13 +69,18 @@ fun CompanyAssetsScreen(
             )
         }
     ) { paddingValues ->
-        CompanyAssetsScreenContainer(
+        PullToRefreshBox(
             modifier = Modifier.fillMaxSize()
                 .padding(paddingValues),
-            state = state
+            isRefreshing = state.isRefreshing,
+            onRefresh = { viewModel.onAction(CompanyAssetsViewAction.OnRefresh) },
+            content = {
+                CompanyAssetsScreenContainer(
+                    modifier = Modifier.fillMaxSize(),
+                    state = state
+                )
+            }
         )
-
-
     }
 }
 
@@ -131,7 +135,7 @@ fun EmptyMessage() {
         Text(
             text = stringResource(SharedRes.Strings.noAssetsAvailable),
             style = MaterialTheme.typography.titleMedium.copy(
-                color = MaterialTheme.colorScheme.darkPrimaryTextColor
+                color = MaterialTheme.erpColors.darkPrimaryTextColor
             ),
 
             )
@@ -164,7 +168,7 @@ fun CompanyAssetsDetails(
             .fillMaxWidth()
             .clip(MaterialTheme.shapes.medium)
             .padding(MaterialTheme.dimens.small1)
-            .background(MaterialTheme.colorScheme.highLightColor)
+            .background(MaterialTheme.erpColors.highLightColor)
             .padding(
                 horizontal = MaterialTheme.dimens.small2,
                 vertical = MaterialTheme.dimens.small2
@@ -184,13 +188,13 @@ fun CompanyAssetsDetails(
             Text(
                 text = stringResource(SharedRes.Strings.date),
                 style = MaterialTheme.typography.titleMedium.copy(
-                    color = MaterialTheme.colorScheme.primaryTextColor
+                    color = MaterialTheme.erpColors.primaryTextColor
                 )
             )
             Text(
                 text = item.dateInBs,
                 style = MaterialTheme.typography.bodyMedium.copy(
-                    color = MaterialTheme.colorScheme.secondaryTextColor
+                    color = MaterialTheme.erpColors.secondaryTextColor
                 )
             )
         }
@@ -227,14 +231,14 @@ private fun ColumnText(
             modifier = Modifier.weight(1f),
             text = stringResource(name),
             style = MaterialTheme.typography.titleSmall.copy(
-                color = MaterialTheme.colorScheme.secondaryTextColor
+                color = MaterialTheme.erpColors.secondaryTextColor
             )
         )
         Text(
             modifier = Modifier.weight(1f),
             text = value.trim(),
             style = MaterialTheme.typography.titleSmall.copy(
-                color = MaterialTheme.colorScheme.primaryTextColor
+                color = MaterialTheme.erpColors.primaryTextColor
             ),
             textAlign = TextAlign.End
         )

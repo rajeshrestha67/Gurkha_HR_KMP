@@ -6,3 +6,5 @@ actual val CAMERA_PERMISSION: String
     get() = "ios.permission.CAMERA"
 actual val GALLERY_PERMISSION: String
     get() = "ios.permission.PHOTO_LIBRARY"
+actual val GALLERY_PERMISSION_LIMITED: String
+    get() = ""

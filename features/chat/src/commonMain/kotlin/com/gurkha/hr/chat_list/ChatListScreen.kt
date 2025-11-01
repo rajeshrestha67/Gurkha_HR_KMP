@@ -30,6 +30,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -44,13 +45,11 @@ import com.gurkha.hr.chat_list.model.ChatListScreenAction
 import com.gurkha.hr.chat_list.model.ChatListScreenState
 import com.gurkha.hr.components.ProfilePicture
 import com.gurkha.hr.components.dimens
+import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.components.shimmer.ShimmerView
 import com.gurkha.hr.components.textField.ERPTextField
 import com.gurkha.hr.domain.chat.model.ChatItem
 import com.gurkha.hr.res.SharedRes
-import com.gurkha.hr.res.theme.borderColor
-import com.gurkha.hr.res.theme.primaryTextColor
-import com.gurkha.hr.res.theme.secondaryTextColor
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -116,7 +115,7 @@ private fun ChatListScreenContent(
                                 modifier = Modifier.fillMaxWidth(),
                                 text = stringResource(SharedRes.Strings.chat),
                                 style = MaterialTheme.typography.titleLarge.copy(
-                                    color = MaterialTheme.colorScheme.primaryTextColor
+                                    color = MaterialTheme.erpColors.primaryTextColor
                                 )
                             )
 
@@ -171,10 +170,17 @@ private fun ChatListScreenContent(
             )
         }
     ) { paddingValues ->
-        ChatListLazyColumn(
+        PullToRefreshBox(
             modifier = Modifier.padding(paddingValues).fillMaxSize(),
-            state = state,
-            onAction = onAction
+            isRefreshing = state.isRefreshing,
+            onRefresh = { onAction(ChatListScreenAction.OnRefresh) },
+            content = {
+                ChatListLazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    state = state,
+                    onAction = onAction
+                )
+            }
         )
     }
 }
@@ -269,7 +275,7 @@ private fun ChatListItem(chatItem: ChatItem, onClick: () -> Unit) {
             shape = CircleShape,
             background = chatItem.backgroundColor,
             borderWidth = 0.5.dp,
-            borderColor = MaterialTheme.colorScheme.borderColor,
+            borderColor = MaterialTheme.colorScheme.outline,
             ratio = 1f
         )
 
@@ -295,7 +301,7 @@ private fun ChatListItem(chatItem: ChatItem, onClick: () -> Unit) {
                 Text(
                     text = chatItem.employeeName,
                     style = MaterialTheme.typography.bodyMedium.copy(
-                        color = MaterialTheme.colorScheme.primaryTextColor
+                        color = MaterialTheme.colorScheme.outline
                     )
                 )
             }
@@ -303,7 +309,7 @@ private fun ChatListItem(chatItem: ChatItem, onClick: () -> Unit) {
             Text(
                 text = chatItem.branchName,
                 style = MaterialTheme.typography.bodySmall.copy(
-                    color = MaterialTheme.colorScheme.secondaryTextColor
+                    color = MaterialTheme.erpColors.secondaryTextColor
                 )
             )
         }

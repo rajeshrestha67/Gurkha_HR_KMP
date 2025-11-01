@@ -8,9 +8,11 @@ import gurkhahr.core.ui.res.generated.resources.absent
 import gurkhahr.core.ui.res.generated.resources.account
 import gurkhahr.core.ui.res.generated.resources.ad
 import gurkhahr.core.ui.res.generated.resources.add_notes
+import gurkhahr.core.ui.res.generated.resources.add_photos
 import gurkhahr.core.ui.res.generated.resources.address
 import gurkhahr.core.ui.res.generated.resources.all_leaves
 import gurkhahr.core.ui.res.generated.resources.allocated_leave
+import gurkhahr.core.ui.res.generated.resources.allow_permission
 import gurkhahr.core.ui.res.generated.resources.annual_leave
 import gurkhahr.core.ui.res.generated.resources.app_appearance
 import gurkhahr.core.ui.res.generated.resources.apply_days
@@ -33,8 +35,11 @@ import gurkhahr.core.ui.res.generated.resources.attendance_request_form
 import gurkhahr.core.ui.res.generated.resources.attendance_summary
 import gurkhahr.core.ui.res.generated.resources.bachelor
 import gurkhahr.core.ui.res.generated.resources.biometric
+import gurkhahr.core.ui.res.generated.resources.blood_group
+import gurkhahr.core.ui.res.generated.resources.branch
 import gurkhahr.core.ui.res.generated.resources.bs
 import gurkhahr.core.ui.res.generated.resources.camera
+import gurkhahr.core.ui.res.generated.resources.camera_permission_denied
 import gurkhahr.core.ui.res.generated.resources.cancel
 import gurkhahr.core.ui.res.generated.resources.cancelled
 import gurkhahr.core.ui.res.generated.resources.change_password
@@ -58,11 +63,13 @@ import gurkhahr.core.ui.res.generated.resources.date_of_birth
 import gurkhahr.core.ui.res.generated.resources.delete
 import gurkhahr.core.ui.res.generated.resources.delete_confirmation
 import gurkhahr.core.ui.res.generated.resources.description
+import gurkhahr.core.ui.res.generated.resources.designation
 import gurkhahr.core.ui.res.generated.resources.do_you_really_want_to_logout
 import gurkhahr.core.ui.res.generated.resources.document
 import gurkhahr.core.ui.res.generated.resources.early_out
 import gurkhahr.core.ui.res.generated.resources.edit
 import gurkhahr.core.ui.res.generated.resources.edit_notes
+import gurkhahr.core.ui.res.generated.resources.edit_profile
 import gurkhahr.core.ui.res.generated.resources.email
 import gurkhahr.core.ui.res.generated.resources.emergency_contact
 import gurkhahr.core.ui.res.generated.resources.end_date
@@ -77,13 +84,16 @@ import gurkhahr.core.ui.res.generated.resources.enter_your_username
 import gurkhahr.core.ui.res.generated.resources.event
 import gurkhahr.core.ui.res.generated.resources.experience_document
 import gurkhahr.core.ui.res.generated.resources.faq
+import gurkhahr.core.ui.res.generated.resources.fix_now
 import gurkhahr.core.ui.res.generated.resources.from_date
 import gurkhahr.core.ui.res.generated.resources.full_day
 import gurkhahr.core.ui.res.generated.resources.gallery
+import gurkhahr.core.ui.res.generated.resources.gallery_permission_denied
 import gurkhahr.core.ui.res.generated.resources.gender
 import gurkhahr.core.ui.res.generated.resources.general
 import gurkhahr.core.ui.res.generated.resources.getStarted
 import gurkhahr.core.ui.res.generated.resources.go_home
+import gurkhahr.core.ui.res.generated.resources.go_to_setting
 import gurkhahr.core.ui.res.generated.resources.guardian_information
 import gurkhahr.core.ui.res.generated.resources.guardian_name
 import gurkhahr.core.ui.res.generated.resources.guardian_phone
@@ -100,6 +110,16 @@ import gurkhahr.core.ui.res.generated.resources.invalid_password_lowercase
 import gurkhahr.core.ui.res.generated.resources.invalid_password_special_char
 import gurkhahr.core.ui.res.generated.resources.invalid_password_uppercase
 import gurkhahr.core.ui.res.generated.resources.is_event
+import gurkhahr.core.ui.res.generated.resources.label_contract
+import gurkhahr.core.ui.res.generated.resources.label_designation
+import gurkhahr.core.ui.res.generated.resources.label_employee_type
+import gurkhahr.core.ui.res.generated.resources.label_joined_date
+import gurkhahr.core.ui.res.generated.resources.label_level
+import gurkhahr.core.ui.res.generated.resources.label_pan_number
+import gurkhahr.core.ui.res.generated.resources.label_permanent
+import gurkhahr.core.ui.res.generated.resources.label_pf_number
+import gurkhahr.core.ui.res.generated.resources.label_probation
+import gurkhahr.core.ui.res.generated.resources.label_user_id
 import gurkhahr.core.ui.res.generated.resources.language
 import gurkhahr.core.ui.res.generated.resources.late_in
 import gurkhahr.core.ui.res.generated.resources.leave
@@ -147,18 +167,22 @@ import gurkhahr.core.ui.res.generated.resources.numbers
 import gurkhahr.core.ui.res.generated.resources.ok
 import gurkhahr.core.ui.res.generated.resources.on_time
 import gurkhahr.core.ui.res.generated.resources.one
+import gurkhahr.core.ui.res.generated.resources.others
 import gurkhahr.core.ui.res.generated.resources.outline_logout_24
 import gurkhahr.core.ui.res.generated.resources.password
 import gurkhahr.core.ui.res.generated.resources.password_does_not_match
 import gurkhahr.core.ui.res.generated.resources.pending
+import gurkhahr.core.ui.res.generated.resources.personal
 import gurkhahr.core.ui.res.generated.resources.personal_details
 import gurkhahr.core.ui.res.generated.resources.personal_info
 import gurkhahr.core.ui.res.generated.resources.phone
+import gurkhahr.core.ui.res.generated.resources.photos
 import gurkhahr.core.ui.res.generated.resources.plus_two_image
 import gurkhahr.core.ui.res.generated.resources.present
 import gurkhahr.core.ui.res.generated.resources.privacy_policy
 import gurkhahr.core.ui.res.generated.resources.profile
 import gurkhahr.core.ui.res.generated.resources.profile_image
+import gurkhahr.core.ui.res.generated.resources.profile_incomplete
 import gurkhahr.core.ui.res.generated.resources.reason
 import gurkhahr.core.ui.res.generated.resources.remaining_leave
 import gurkhahr.core.ui.res.generated.resources.remarks
@@ -189,6 +213,7 @@ import gurkhahr.core.ui.res.generated.resources.system_default
 import gurkhahr.core.ui.res.generated.resources.terms_and_services
 import gurkhahr.core.ui.res.generated.resources.time_and_attendance
 import gurkhahr.core.ui.res.generated.resources.title
+import gurkhahr.core.ui.res.generated.resources.to_access_all_photos
 import gurkhahr.core.ui.res.generated.resources.to_date
 import gurkhahr.core.ui.res.generated.resources.today
 import gurkhahr.core.ui.res.generated.resources.total_absent_days
@@ -213,6 +238,7 @@ import gurkhahr.core.ui.res.generated.resources.upload_national_id
 import gurkhahr.core.ui.res.generated.resources.upload_plus_two_image
 import gurkhahr.core.ui.res.generated.resources.upload_profile_image
 import gurkhahr.core.ui.res.generated.resources.upload_slc_marksheet
+import gurkhahr.core.ui.res.generated.resources.userId
 import gurkhahr.core.ui.res.generated.resources.username
 import gurkhahr.core.ui.res.generated.resources.view_all
 import gurkhahr.core.ui.res.generated.resources.weeks_days
@@ -299,6 +325,11 @@ object SharedRes {
         val uploadBachelor = Res.string.upload_bachelor
         val uploadMaster = Res.string.upload_master
         val uploadExperienceDocument = Res.string.upload_experience_document
+
+        val editProfile = Res.string.edit_profile
+        val personal = Res.string.personal
+        val others = Res.string.others
+        val bloodGroup = Res.string.blood_group
 
         val profileImage = Res.string.profile_image
         val citizenshipFront = Res.string.citizenship_front
@@ -420,6 +451,18 @@ object SharedRes {
         val toDate = Res.string.to_date
         val month = Res.string.month
 
+        val labelDesignation = Res.string.label_designation
+        val labelLevel = Res.string.label_level
+        val labelEmployeeType = Res.string.label_employee_type
+        val labelPanNumber = Res.string.label_pan_number
+        val labelPfNumber = Res.string.label_pf_number
+        val labelUserId = Res.string.label_user_id
+        val labelJoinedDate = Res.string.label_joined_date
+        val labelContract = Res.string.label_contract
+        val labelProbation = Res.string.label_probation
+        val labelPermanent = Res.string.label_permanent
+
+
         val setting = Res.string.setting
         val appAppearance = Res.string.app_appearance
         val system_default = Res.string.system_default
@@ -499,5 +542,22 @@ object SharedRes {
 
         val english = Res.string.english
         val nepali = Res.string.nepali
+
+        val branch = Res.string.branch
+
+        val userId = Res.string.userId
+
+        val designation = Res.string.designation
+        val fix_now = Res.string.fix_now
+        val profile_incomplete = Res.string.profile_incomplete
+
+        val go_to_setting = Res.string.go_to_setting
+        val allow_permission = Res.string.allow_permission
+        val addPhotos = Res.string.add_photos
+        val photos = Res.string.photos
+        val toAccessAllPhotos = Res.string.to_access_all_photos
+        val cameraPermissionDenied = Res.string.camera_permission_denied
+        val galleryPermissionDenied = Res.string.gallery_permission_denied
+
     }
 }

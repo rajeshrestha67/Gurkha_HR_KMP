@@ -1,6 +1,5 @@
 package com.gurkha.hr.viewAllScreen
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -19,6 +18,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -31,14 +31,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gurkha.hr.components.ProfilePicture
 import com.gurkha.hr.components.dimens
+import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.model.viewAll.ViewAllScreenAction
 import com.gurkha.hr.model.viewAll.ViewAllScreenState
-import com.gurkha.hr.res.theme.borderColor
-import com.gurkha.hr.res.theme.darkPrimaryTextColor
-import com.gurkha.hr.res.theme.imageBackgroundColor
-import com.gurkha.hr.res.theme.primaryTextColor
-import com.gurkha.hr.res.theme.veryLightGray
+import com.gurkha.hr.res.SharedRes
 import com.gurkha.model.upComingBirthday.ui.ViewAllUi
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -120,49 +118,62 @@ fun ViewAllScreenContent(
 fun ResultBox(
     item: ViewAllUi
 ) {
-    Row(
+    Surface(
         modifier = Modifier.fillMaxWidth()
-            .clip(shape = MaterialTheme.shapes.small)
-            .background(MaterialTheme.colorScheme.veryLightGray)
-            .padding(all = MaterialTheme.dimens.small2),
-        verticalAlignment = Alignment.Top,
-        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
-    ) {
-        ProfilePicture(
-            imageUrl = item.imageUrl,
-            employeeName = item.fullName,
-            nameInitials = item.initials,
-            size = MaterialTheme.dimens.large,
-            shape = CircleShape,
-            background = MaterialTheme.colorScheme.imageBackgroundColor,
-            borderWidth = 0.5.dp,
-            borderColor = MaterialTheme.colorScheme.borderColor,
-            ratio = 1f
-        )
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.Center,
+            .clip(shape = MaterialTheme.shapes.small),
+        tonalElevation = 4.dp,
+
         ) {
-
-            Text(
-                text = item.fullName, style = MaterialTheme.typography.titleMedium.copy(
-                    color = MaterialTheme.colorScheme.darkPrimaryTextColor
-                )
+        Row(
+            modifier = Modifier.fillMaxWidth()
+                .clip(shape = MaterialTheme.shapes.small)
+                .padding(all = MaterialTheme.dimens.small2),
+            verticalAlignment = Alignment.Top,
+            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
+        ) {
+            ProfilePicture(
+                imageUrl = item.imageUrl,
+                employeeName = item.fullName,
+                nameInitials = item.initials,
+                size = MaterialTheme.dimens.large,
+                shape = CircleShape,
+                background = MaterialTheme.erpColors.imageBackgroundColor,
+                borderWidth = 0.5.dp,
+                borderColor = MaterialTheme.colorScheme.outline,
+                ratio = 1f
             )
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.Center,
+            ) {
 
-            Text(
-                text = "Designation : ${item.designationName}",
-                style = MaterialTheme.typography.titleSmall.copy(
-                    color = MaterialTheme.colorScheme.primaryTextColor
+                Text(
+                    text = item.fullName, style = MaterialTheme.typography.titleMedium.copy(
+                        color = MaterialTheme.erpColors.primaryTextColor
+                    )
                 )
-            )
 
-            Text(
-                "Branch : ${item.branchName}", style = MaterialTheme.typography.titleSmall.copy(
-                    color = MaterialTheme.colorScheme.primaryTextColor
+                Text(
+                    text = "${stringResource(SharedRes.Strings.designation)} : ${item.designationName}",
+                    style = MaterialTheme.typography.titleSmall.copy(
+                        color = MaterialTheme.erpColors.primaryTextColor
+                    )
                 )
-            )
 
+                Text(
+                    "${stringResource(SharedRes.Strings.branch)} : ${item.branchName}",
+                    style = MaterialTheme.typography.titleSmall.copy(
+                        color = MaterialTheme.erpColors.primaryTextColor
+                    )
+                )
+                Text(
+                    "${stringResource(SharedRes.Strings.date)} : ${item.date}",
+                    style = MaterialTheme.typography.titleSmall.copy(
+                        color = MaterialTheme.erpColors.primaryTextColor
+                    )
+                )
+
+            }
         }
     }
 }
