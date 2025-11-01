@@ -213,9 +213,8 @@ fun MediaSelectorModalBottomSheet(
         if (!fullAccess && !limitedAccess) {
             onGalleryPermission()
         } else {
-            galleryFullAccess = checkGalleryFullAccess()
+            galleryFullAccess = fullAccess
         }
-        println("called $fullAccess, $limitedAccess")
     }
     LifecycleResumeEffect(Unit) {
         loadGallery()
@@ -411,7 +410,7 @@ fun MediaSelectorModalBottomSheet(
                 }
 
 
-                items(galleryImages.size) { index ->
+                items(galleryImages.size, key = { it }) { index ->
                     val uri = galleryImages[index]
                     Surface(
                         modifier = Modifier

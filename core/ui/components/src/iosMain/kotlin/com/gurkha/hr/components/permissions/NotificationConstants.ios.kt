@@ -7,4 +7,4 @@ actual val CAMERA_PERMISSION: String
 actual val GALLERY_PERMISSION: String
     get() = "ios.permission.PHOTO_LIBRARY"
 actual val GALLERY_PERMISSION_LIMITED: String
-    get() = TODO("Not yet implemented")
+    get() = ""
