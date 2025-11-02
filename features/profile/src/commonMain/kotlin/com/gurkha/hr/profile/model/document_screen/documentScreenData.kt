@@ -5,36 +5,61 @@ import org.jetbrains.compose.resources.StringResource
 
 enum class DocumentList(
     val title: StringResource,
-    val uploadText: StringResource
+    val uploadText: StringResource,
+    val imageType: DocumentType,
 ) {
     UploadProfileImage(
         title = SharedRes.Strings.profileImage,
-        uploadText = SharedRes.Strings.uploadProfileImage),
+        uploadText = SharedRes.Strings.uploadProfileImage,
+        imageType = DocumentType.PROFILE_IMAGE
+    ),
     UploadCitizenshipFront(
         title = SharedRes.Strings.citizenshipFront,
-        uploadText = SharedRes.Strings.uploadCitizenshipFront),
+        uploadText = SharedRes.Strings.uploadCitizenshipFront,
+        imageType = DocumentType.CITIZENSHIP_FRONT
+    ),
     UploadCitizenshipBack(
         title = SharedRes.Strings.citizenshipBack,
-        uploadText = SharedRes.Strings.uploadCitizenshipBack),
+        uploadText = SharedRes.Strings.uploadCitizenshipBack,
+        imageType = DocumentType.CITIZENSHIP_BACK
+
+    ),
     UploadNationalId(
         title = SharedRes.Strings.nationalId,
-        uploadText = SharedRes.Strings.uploadNationalId),
+        uploadText = SharedRes.Strings.uploadNationalId,
+        imageType = DocumentType.NATIONAL_ID
+
+    ),
     UploadSlcMarksheet(
         title = SharedRes.Strings.slcMarksheet,
-        uploadText = SharedRes.Strings.uploadSlcMarksheet),
+        uploadText = SharedRes.Strings.uploadSlcMarksheet,
+        imageType = DocumentType.SLC_MARKSHEET
+
+    ),
     UploadPlusTwoImage(
         title = SharedRes.Strings.plusTwoImage,
-        uploadText = SharedRes.Strings.uploadPlusTwoImage),
+        uploadText = SharedRes.Strings.uploadPlusTwoImage,
+        imageType = DocumentType.PLUS_TWO_IMAGE
+
+    ),
     UploadBachelor(
         title = SharedRes.Strings.bachelor,
-        uploadText = SharedRes.Strings.uploadBachelor),
+        uploadText = SharedRes.Strings.uploadBachelor,
+        imageType = DocumentType.BACHELOR
+    ),
     UploadMaster(
         title = SharedRes.Strings.master,
-        uploadText = SharedRes.Strings.uploadMaster),
+        uploadText = SharedRes.Strings.uploadMaster,
+        imageType = DocumentType.MASTER
+
+    ),
     UploadExperienceDocument(
         title = SharedRes.Strings.experienceDocument,
-        uploadText = SharedRes.Strings.uploadExperienceDocument);
-    companion object{
+        uploadText = SharedRes.Strings.uploadExperienceDocument,
+        imageType = DocumentType.EXPERIENCE_DOCUMENT
+    );
+
+    companion object {
         private val titleMap =
             enumValues<DocumentList>().associateBy { it.title }
 //        private val uploadMap =
@@ -51,6 +76,20 @@ enum class DocumentList(
     }
 
 
+}
 
-
+enum class DocumentType {
+    PROFILE_IMAGE,
+    CITIZENSHIP_FRONT,
+    CITIZENSHIP_BACK,
+    NATIONAL_ID,
+    SLC_MARKSHEET,
+    PLUS_TWO_IMAGE,
+    BACHELOR,
+    MASTER,
+    EXPERIENCE_DOCUMENT,
+    CLOCK_IN_IMAGE,
+    CLOCK_OUT_IMAGE,
+    EXTRA_IMAGE_ONE,
+    EXTRA_IMAGE_TWO
 }

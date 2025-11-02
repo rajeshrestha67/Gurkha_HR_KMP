@@ -231,7 +231,6 @@ class HomeScreenViewModel(
             toDate = toDate
         ).onSuccess { data ->
             AppLogger.d(tag = TAG, "Attendance Fetch  success")
-
             val attendanceData = data.find { data ->
                 val day = getDayFromDate(date = data.date)?.toInt()
                 day == calendarModel.today.dayOfMonth
@@ -267,6 +266,7 @@ class HomeScreenViewModel(
                 )
             }
             updateSwipeText()
+
 
         }.onError { error ->
             AppLogger.e(

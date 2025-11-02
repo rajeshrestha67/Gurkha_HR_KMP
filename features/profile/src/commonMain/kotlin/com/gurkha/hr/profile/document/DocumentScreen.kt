@@ -27,25 +27,36 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.erpColors
+import com.gurkha.hr.components.media.MediaSelectorModalBottomSheet
 import com.gurkha.hr.profile.model.document_screen.DocumentList
+import com.gurkha.hr.profile.model.document_screen.DocumentScreenAction
+import com.gurkha.hr.profile.model.document_screen.DocumentScreenState
 import com.gurkha.hr.res.SharedRes
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
+
+const val TAG = "DocumentScreen"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DocumentScreen(
     onBackPressed: () -> Unit,
 ) {
-
+    val viewModel: DocumentScreenViewModel = koinViewModel()
+    val state by viewModel.state.collectAsStateWithLifecycle()
     Scaffold(
         contentWindowInsets = WindowInsets(0.dp),
         modifier = Modifier.fillMaxSize(),
@@ -74,7 +85,10 @@ fun DocumentScreen(
             isRefreshing = false,
             onRefresh = {},
             content = {
-                DocumentScreenContainer()
+                DocumentScreenContainer(
+                    state = state,
+                    action = viewModel::onAction
+                )
             }
         )
     }
@@ -82,8 +96,25 @@ fun DocumentScreen(
 
 @Composable
 fun DocumentScreenContainer(
+    state: DocumentScreenState,
+    action: (DocumentScreenAction) -> Unit
 ) {
     val documentList = remember { DocumentList.list }
+    var showMediaBottomSheet by remember { mutableStateOf(false) }
+
+
+    if (showMediaBottomSheet) {
+        MediaSelectorModalBottomSheet(
+            tag = TAG,
+            onDismiss = {
+                showMediaBottomSheet = false
+            },
+            onImageReceived = { uri ->
+                showMediaBottomSheet = false
+                action(DocumentScreenAction.OnReceivedDocumentUri(uri = uri))
+            }
+        )
+    }
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
@@ -100,9 +131,12 @@ fun DocumentScreenContainer(
             key = { it.toString() },
         ) { item ->
             DocumentItemRow(
-                text = stringResource(item.title),
-                uploadText = stringResource(item.uploadText),
-                onClick = {},
+                state = state,
+                item = item,
+                action = action,
+                onOpenCamera={
+                    showMediaBottomSheet = true
+                }
             )
         }
     }
@@ -110,9 +144,10 @@ fun DocumentScreenContainer(
 
 @Composable
 fun DocumentItemRow(
-    text: String,
-    uploadText: String,
-    onClick: () -> Unit,
+    item: DocumentList,
+    state: DocumentScreenState,
+    onOpenCamera: () -> Unit,
+    action: (DocumentScreenAction)-> Unit
 ) {
     Column(
         modifier = Modifier
@@ -124,8 +159,10 @@ fun DocumentItemRow(
             )
             .clip(
                 shape = MaterialTheme.shapes.medium
-            )
-            .clickable { onClick() }
+            ).clickable(onClick = {
+                onOpenCamera()
+                action(DocumentScreenAction.OnSelectedDocument(item.imageType))
+            })
             .padding(MaterialTheme.dimens.small3),
 
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -133,7 +170,7 @@ fun DocumentItemRow(
     ) {
         Text(
             modifier = Modifier.fillMaxWidth(),
-            text = text,
+            text = stringResource(item.title),
             style = MaterialTheme.typography.titleMedium.copy(
                 color = MaterialTheme.erpColors.primaryTextColor
             ),
@@ -147,7 +184,7 @@ fun DocumentItemRow(
         )
         Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
         Text(
-            text = uploadText,
+            text = stringResource(item.uploadText),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.bodyMedium.copy(
                 color = MaterialTheme.erpColors.secondaryTextColor,
