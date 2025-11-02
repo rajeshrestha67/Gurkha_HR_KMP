@@ -8,6 +8,7 @@ import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.withContext
 import okio.FileSystem
@@ -29,6 +30,7 @@ class UserInfoDataStoreTest : KoinTest {
     val userInfoDataStore: UserInfoDataStore by inject()
     val repository: UserInfoRepository by inject()
     val fs = FileSystem.SYSTEM
+    private val testScope = TestScope()
 
     @OptIn(ExperimentalTime::class)
     @BeforeTest
@@ -47,7 +49,7 @@ class UserInfoDataStoreTest : KoinTest {
     }
 
     @Test
-    fun shouldSaveAndReadUserInfoCorrectly() = runTest {
+    fun shouldSaveAndReadUserInfoCorrectly() = testScope.runTest {
         val userInfo = UserInfo(isFirstTime = false, userThemeMode = 1, langCode = "np")
         userInfoDataStore.update(userInfo)
         val actual = repository.userInfo.first()
@@ -55,7 +57,7 @@ class UserInfoDataStoreTest : KoinTest {
     }
 
     @AfterTest
-    fun tearDown() = runTest {
+    fun tearDown() = testScope.runTest {
         withContext(Dispatchers.IO) {
             val path = tempFilePath.toPath()
             if (fs.exists(path)) fs.delete(path)
