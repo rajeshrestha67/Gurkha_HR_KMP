@@ -128,13 +128,11 @@ fun LeaveTypeBox(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(MaterialTheme.shapes.medium)
-            .background(MaterialTheme.erpColors.highLightColor),
+            .clip(MaterialTheme.shapes.medium),
         verticalArrangement = Arrangement.spacedBy(
             MaterialTheme.dimens.small2,
             alignment = Alignment.CenterVertically
         ),
-        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             text = title,

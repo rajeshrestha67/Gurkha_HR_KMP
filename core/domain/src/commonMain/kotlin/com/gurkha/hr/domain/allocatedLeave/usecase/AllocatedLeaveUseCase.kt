@@ -14,14 +14,9 @@ class AllocatedLeaveUseCase(
     private val allocatedLeaveRemoteRepository: AllocatedLeaveRemoteRepository,
     private val userDataRepository: UserDataRepository,
 ) {
-    suspend operator fun invoke(
-
-    ):
-            ERPResult<List<AllocatedLeaveData>, DataError> {
+    suspend operator fun invoke(): ERPResult<List<AllocatedLeaveData>, DataError> {
         val id = userDataRepository.userDataFlow.firstOrNull()?.employeeId ?: 0
-        return allocatedLeaveRemoteRepository.getAllocatedLeave(
-            id
-        ).map {
+        return allocatedLeaveRemoteRepository.getAllocatedLeave(id).map {
             it.toData()
         }
     }

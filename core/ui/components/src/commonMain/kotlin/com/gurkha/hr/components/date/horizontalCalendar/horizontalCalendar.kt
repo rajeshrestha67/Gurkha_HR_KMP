@@ -62,10 +62,10 @@ fun HorizontalCalendar(
 
 
     Column(
-        verticalArrangement = Arrangement.spacedBy(
-            space = MaterialTheme.dimens.small2,
-            alignment = Alignment.CenterVertically
-        ),
+//        verticalArrangement = Arrangement.spacedBy(
+//            space = MaterialTheme.dimens.small2,
+//            alignment = Alignment.CenterVertically
+//        ),
         modifier = modifier.fillMaxWidth()
     ) {
 

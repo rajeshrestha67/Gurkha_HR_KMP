@@ -13,11 +13,9 @@ import com.gurkha.hr.leave.model.leave.LeaveStatusEnum
 import com.gurkha.hr.networkhelper.onError
 import com.gurkha.hr.networkhelper.onSuccess
 import com.gurkha.model.leave.leave_request.LeaveRequestData
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -29,18 +27,13 @@ class LeaveScreenViewModel(
     private val calendarModel: CalendarModel,
 ) : ViewModel() {
     private val _state = MutableStateFlow(LeaveScreenState())
-    private val _errorChannel = Channel<String>()
-    val errorChannel = _errorChannel.receiveAsFlow()
-
-    private val _successChannel = Channel<String>()
-    val successChannel = _successChannel.receiveAsFlow()
 
     val datePair = calendarModel.getMonthStartAndEndDate()
 
 
     val state = _state
         .onStart {
-            fetchLeaveSummary()
+            fetchLeaveSummary(isRefreshing = false)
             fetchLeaveReport(
                 fromDate = datePair.first,
                 toDate = datePair.second,
@@ -91,8 +84,8 @@ class LeaveScreenViewModel(
                 }
             }
 
-            is LeaveScreenAction.OnRefresh ->{
-                refresh()
+            is LeaveScreenAction.OnRefresh -> {
+                fetchLeaveSummary(isRefreshing = true)
             }
         }
     }
@@ -178,15 +171,17 @@ class LeaveScreenViewModel(
         }
     }
 
-    private fun fetchLeaveSummary() = viewModelScope.launch {
+    private fun fetchLeaveSummary(isRefreshing: Boolean) = viewModelScope.launch {
         _state.update {
             it.copy(
+                isRefreshing= isRefreshing,
                 isLeaveSummaryLoading = true
             )
         }
         leaveSummaryUseCase().onSuccess { data ->
             _state.update {
                 it.copy(
+                    isRefreshing = false,
                     isLeaveSummaryLoading = false,
                     leaveItemsList = _state.value.leaveItemsList.mapIndexed { index, item ->
                         when (index) {
@@ -261,24 +256,6 @@ class LeaveScreenViewModel(
 
     }
 
-    private fun refresh()=viewModelScope.launch {
-        _state.update {
-            it.copy(
-                isRefreshing = true
-            )
-        }
-        fetchLeaveSummary()
-        fetchLeaveReport(
-            fromDate = datePair.first,
-            toDate = datePair.second,
-            leaveStatus = LeaveStatusEnum.PENDING,
-        )
-        _state.update {
-            it.copy(
-                isRefreshing = false
-            )
-        }
-    }
 
 }
 

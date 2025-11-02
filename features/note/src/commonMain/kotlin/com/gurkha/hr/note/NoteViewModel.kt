@@ -127,6 +127,10 @@ class NoteViewModel(
                 }
             }
 
+            is NoteAction.OnRefresh ->{
+                refresh()
+            }
+
         }
     }
 
@@ -140,7 +144,8 @@ class NoteViewModel(
             _state.update {
                 it.copy(
                     isFetchingNotes = false,
-                    noteItem = data
+                    noteItem = data,
+                    isRefreshing = false
                 )
             }
         }.onError {
@@ -185,10 +190,5 @@ class NoteViewModel(
             )
         }
         fetchAllNotes()
-        _state.update {
-            it.copy(
-                isRefreshing = false
-            )
-        }
     }
 }

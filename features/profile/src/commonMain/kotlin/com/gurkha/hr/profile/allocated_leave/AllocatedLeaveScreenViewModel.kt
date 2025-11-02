@@ -46,8 +46,8 @@ class AllocatedLeaveScreenViewModel(
             _state.update {
                 it.copy(
                     isLoading = false,
-                    leaveSummaryList = data
-
+                    leaveSummaryList = data,
+                    isRefreshing = false
                 )
             }
         }
@@ -61,11 +61,6 @@ class AllocatedLeaveScreenViewModel(
             )
         }
         onFetchData()
-        _state.update {
-            it.copy(
-                isRefreshing = false
-            )
-        }
     }
 
 }

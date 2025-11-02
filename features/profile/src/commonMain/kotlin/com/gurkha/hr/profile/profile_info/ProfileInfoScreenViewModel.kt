@@ -23,7 +23,7 @@ class ProfileInfoScreenViewModel(
     private val _state = MutableStateFlow(ProfileInfoScreenState())
     val state = _state
         .onStart {
-            fetchUserDetails()
+            fetchUserDetails(isRefreshing = false)
         }
         .stateIn(
             scope = viewModelScope,
@@ -41,23 +41,25 @@ class ProfileInfoScreenViewModel(
                     )
                 }
             }
-            is ProfileInfoViewAction.OnRefresh->{
+
+            is ProfileInfoViewAction.OnRefresh -> {
                 refresh()
             }
         }
     }
 
-    private fun fetchUserDetails() = viewModelScope.launch {
+    private fun fetchUserDetails(isRefreshing: Boolean) = viewModelScope.launch {
         _state.update {
             it.copy(
                 isProfileLoading = true
             )
         }
 
-        fetchUserDetailUseCase()
+        fetchUserDetailUseCase(force = isRefreshing)
             .onSuccess { userDetail ->
                 _state.update {
                     it.copy(
+                        isRefreshing = false,
                         isProfileLoading = false,
                         fullName = userDetail.fullName,
                         initials = userDetail.initials,
@@ -65,7 +67,7 @@ class ProfileInfoScreenViewModel(
                         employeeId = userDetail.employeeId,
                         branchName = userDetail.branchName,
                         address = userDetail.address,
-                        joinedDate = userDetail.joinedDate ?: "",
+                        joinedDate = userDetail.joinedDate,
                         contactInfo = listOf(
                             ProfileInfo(
                                 name = SharedRes.Strings.email,
@@ -83,7 +85,7 @@ class ProfileInfoScreenViewModel(
                         personalDetails = listOf(
                             ProfileInfo(
                                 name = SharedRes.Strings.date_of_birth,
-                                value = userDetail.dateOfBirth ?: ""
+                                value = userDetail.dateOfBirth
                             ),
                             ProfileInfo(
                                 name = SharedRes.Strings.gender,
@@ -119,19 +121,13 @@ class ProfileInfoScreenViewModel(
             }
     }
 
-    private fun refresh()=viewModelScope.launch {
+    private fun refresh() = viewModelScope.launch {
         _state.update {
             it.copy(
                 isRefreshing = true
             )
         }
-        fetchUserDetails()
-
-        _state.update {
-            it.copy(
-                isRefreshing = false
-            )
-        }
+        fetchUserDetails(isRefreshing = true)
     }
 
 

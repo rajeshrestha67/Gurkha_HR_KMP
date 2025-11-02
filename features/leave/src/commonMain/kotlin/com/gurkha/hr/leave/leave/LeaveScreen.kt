@@ -51,6 +51,8 @@ import com.gurkha.hr.domain.leave.leaveReport.model.LeaveReportData
 import com.gurkha.hr.leave.model.leave.LeaveItem
 import com.gurkha.hr.leave.model.leave.LeaveScreenAction
 import com.gurkha.hr.leave.model.leave.LeaveScreenState
+import com.gurkha.hr.leave.model.leave.backgroundColor
+import com.gurkha.hr.leave.model.leave.outlineColor
 import com.gurkha.hr.res.SharedRes
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
@@ -90,7 +92,7 @@ fun LeaveScreen(
                 windowInsets = WindowInsets(0.dp),
                 title = {
                     Text(
-                        text = stringResource(SharedRes.Strings.all_leaves),
+                        text = stringResource(SharedRes.Strings.leave_request_form),
                         style = MaterialTheme.typography.titleLarge.copy(
                             color = MaterialTheme.erpColors.darkPrimaryTextColor
                         )
@@ -209,11 +211,11 @@ fun LeaveBox(
             .fillMaxSize()
             .border(
                 width = 1.dp,
-                color = item.color,
+                color = item.outlineColor,
                 shape = MaterialTheme.shapes.medium
             )
             .clip(shape = MaterialTheme.shapes.medium)
-            .background(item.backGroundColor)
+            .background(item.backgroundColor)
             .heightIn(min = MaterialTheme.dimens.leaveBoxHeight)
             .clickable(onClick = {})
             .padding(MaterialTheme.dimens.small2),
@@ -376,7 +378,9 @@ fun LazyItemScope.ResultBox(
                     )
                 }
 
-                Column {
+                Column(
+                    modifier = Modifier.padding(horizontal = MaterialTheme.dimens.small1),
+                ) {
                     Text(
                         text = stringResource(SharedRes.Strings.approver),
                         style = MaterialTheme.typography.titleSmall.copy(

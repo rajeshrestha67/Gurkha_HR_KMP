@@ -72,7 +72,7 @@ suspend inline fun HttpClient.uploadImage(
     fileName: String,
     fileBytes: ByteArray,
     crossinline block: HttpRequestBuilder.() -> Unit = {},
-    crossinline onProgress: (Int) -> Unit
+    crossinline onProgress: (Int) -> Unit,
 ): HttpResponse {
     return post(
         baseUrl = baseUrl,

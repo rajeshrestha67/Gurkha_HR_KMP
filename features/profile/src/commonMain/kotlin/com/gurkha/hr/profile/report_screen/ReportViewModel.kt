@@ -2,6 +2,8 @@ package com.gurkha.hr.profile.report_screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gurkha.hr.date.data.model.CalendarModel
+import com.gurkha.hr.date.getMonthStartAndEndDate
 import com.gurkha.hr.domain.form.RequiredValidationUseCase
 import com.gurkha.hr.domain.history.useCase.HistoryUseCase
 import com.gurkha.hr.domain.reportScreen.useCase.ReportUseCase
@@ -19,14 +21,16 @@ import kotlinx.coroutines.launch
 class ReportViewModel(
     private val requiredValidationUseCase: RequiredValidationUseCase,
     private val reportUseCase: ReportUseCase,
-    private val historyUseCase: HistoryUseCase
+    private val historyUseCase: HistoryUseCase,
+    private val calendarModel: CalendarModel
 
 ) : ViewModel() {
+
 
     private val _state = MutableStateFlow(ReportScreenState())
     val state = _state
         .onStart {
-            onFetchData()
+            onFetchData(isRefreshing = false)
         }
         .stateIn(
             scope = viewModelScope,
@@ -35,9 +39,13 @@ class ReportViewModel(
         )
 
     private fun onFetchData(
+        isRefreshing : Boolean,
     ) = viewModelScope.launch {
         _state.update {
-            it.copy(isLoading = true)
+            it.copy(
+                isLoading = true,
+                isRefreshing = isRefreshing
+            )
         }
 
         reportUseCase(
@@ -47,6 +55,7 @@ class ReportViewModel(
         ).onSuccess { data ->
             _state.update {
                 it.copy(
+                    isRefreshing = false,
                     isLoading = false,
                     reportListItems = _state.value.reportListItems.mapIndexed { index, reportItems ->
                         when (
@@ -87,8 +96,8 @@ class ReportViewModel(
             }
         }
         historyUseCase(
-            bsMonth = _state.value.monthValue,
-            bsYear = _state.value.year
+            bsMonth = calendarModel.today.month,
+            bsYear = calendarModel.today.year
         ).onSuccess { data ->
 
             _state.update {
@@ -154,7 +163,7 @@ class ReportViewModel(
             }
 
             is ReportScreenViewAction.OnRefresh -> {
-                refresh()
+                onFetchData(isRefreshing = true)
             }
         }
     }
@@ -181,21 +190,8 @@ class ReportViewModel(
                 }
             }
         }
-        onFetchData()
+        onFetchData(isRefreshing = false)
     }
 
-    private fun refresh() = viewModelScope.launch {
-        _state.update {
-            it.copy(
-                isRefreshing = true
-            )
-        }
-        onFetchData()
 
-        _state.update {
-            it.copy(
-                isRefreshing = false
-            )
-        }
-    }
 }

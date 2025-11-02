@@ -2,6 +2,8 @@ package com.gurkha.hr.profile.history
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gurkha.hr.date.data.model.CalendarModel
+import com.gurkha.hr.date.getMonthStartAndEndDate
 import com.gurkha.hr.domain.form.RequiredValidationUseCase
 import com.gurkha.hr.domain.history.useCase.HistoryUseCase
 import com.gurkha.hr.networkhelper.onError
@@ -16,17 +18,16 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-//import kotlinx.serialization.json.Json
-
 class HistoryViewModel(
     private val requiredValidationUseCase: RequiredValidationUseCase,
-    private val historyUseCase: HistoryUseCase
+    private val historyUseCase: HistoryUseCase,
+    private val calendarModel: CalendarModel
 
 ) : ViewModel() {
     private val _state = MutableStateFlow(HistoryState())
     val state = _state
         .onStart {
-            onFetchData()
+            onFetchData(isRefreshing = false)
         }
         .stateIn(
             scope = viewModelScope,
@@ -35,19 +36,24 @@ class HistoryViewModel(
         )
 
     private fun onFetchData(
+        isRefreshing: Boolean ,
     ) = viewModelScope.launch {
         _state.update {
-            it.copy(isLoading = true)
+            it.copy(
+                isLoading = true,
+                isRefreshing = isRefreshing
+            )
         }
 
         historyUseCase(
-            bsMonth = _state.value.monthValue,
-            bsYear = _state.value.year
+            bsMonth = calendarModel.today.month,
+            bsYear = calendarModel.today.year
         ).onSuccess { data ->
 //            AppLogger.d("HistoryViewModel", "history fetch success ${Json.encodeToString(data)}")
             _state.update {
                 it.copy(
                     isLoading = false,
+                    isRefreshing= false,
                     historySummaryList = data.map { mData -> mData.toUI() }
                 )
             }
@@ -109,7 +115,7 @@ class HistoryViewModel(
             }
 
             is HistoryScreenViewAction.OnRefresh -> {
-                refresh()
+                onFetchData(isRefreshing = true)
             }
 
         }
@@ -138,22 +144,7 @@ class HistoryViewModel(
                 }
             }
         }
-        onFetchData(
-        )
+        onFetchData(isRefreshing = false)
     }
 
-    private fun refresh() = viewModelScope.launch {
-        _state.update {
-            it.copy(
-                isRefreshing = true
-            )
-        }
-        onFetchData()
-
-        _state.update {
-            it.copy(
-                isRefreshing = false
-            )
-        }
-    }
 }

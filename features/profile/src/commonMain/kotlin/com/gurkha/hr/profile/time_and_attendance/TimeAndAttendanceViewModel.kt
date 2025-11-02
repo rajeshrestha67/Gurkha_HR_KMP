@@ -2,6 +2,8 @@ package com.gurkha.hr.profile.time_and_attendance
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gurkha.hr.date.data.model.CalendarModel
+import com.gurkha.hr.date.getMonthStartAndEndDate
 import com.gurkha.hr.domain.attendance.attendanceReport.usecase.AttendanceUseCase
 import com.gurkha.hr.domain.form.RequiredValidationUseCase
 import com.gurkha.hr.networkhelper.onSuccess
@@ -17,13 +19,15 @@ import kotlinx.coroutines.launch
 class TimeAndAttendanceViewModel(
     private val requiredValidationUseCase: RequiredValidationUseCase,
     private val timeAndAttendanceUseCase: AttendanceUseCase,
+    private val calendarModel: CalendarModel
 ) : ViewModel() {
+    val datePair = calendarModel.getMonthStartAndEndDate()
 
     private val _state = MutableStateFlow(TimeAndAttendanceState())
     val state = _state
 
         .onStart {
-            onFetchData()
+            onFetchData(isRefreshing = false)
         }
         .stateIn(
             scope = viewModelScope,
@@ -32,26 +36,27 @@ class TimeAndAttendanceViewModel(
         )
 
     private fun onFetchData(
-        fromDate: String? = null,
-        toDate: String? = null,
+        isRefreshing: Boolean,
+        fromDate: String = datePair.first,
+        toDate: String = datePair.second,
         attendanceStatus: String? = null,
-        employeeId: Int? = null
     ) = viewModelScope.launch {
         _state.update {
             it.copy(
                 isLoading = true,
+                isRefreshing = isRefreshing
             )
         }
         timeAndAttendanceUseCase(
             toDate = toDate,
             fromDate = fromDate,
             attendanceStatus =  attendanceStatus,
-            employeeId = employeeId
         ).onSuccess { data ->
             _state.update {
                 it.copy(
                     isLoading = false,
-                    timeAndAttendanceList = data
+                    timeAndAttendanceList = data,
+                    isRefreshing = false
                 )
             }
         }
@@ -86,19 +91,15 @@ class TimeAndAttendanceViewModel(
             }
 
             TimeAndAttendanceViewAction.OnRefresh -> {
-                refresh()
+                onFetchData(isRefreshing = true)
             }
         }
     }
 
-    private fun submit(
-
-    ) = viewModelScope.launch {
-        val fromDate = state.value.fromDate?.displayValueAD
-        val toDate = state.value.toDate?.displayValueAD
-        val employeeId = state.value.employeeId
+    private fun submit() = viewModelScope.launch {
+        val fromDate = _state.value.fromDate
+        val toDate = _state.value.toDate
         val attendanceStatus = ""
-
         val fromDateError = requiredValidationUseCase(state.value.fromDate?.displayValueAD)
         val toDateError = requiredValidationUseCase(state.value.toDate?.displayValueAD)
 
@@ -130,24 +131,11 @@ class TimeAndAttendanceViewModel(
             }
         }
         onFetchData(
-            fromDate = fromDate,
-            toDate = toDate,
-            employeeId = employeeId,
-            attendanceStatus = attendanceStatus
+            fromDate = fromDate?.displayValueAD ?: "",
+            toDate = toDate?.displayValueAD ?: "",
+            attendanceStatus = attendanceStatus,
+            isRefreshing = true
         )
 
-    }
-    private fun refresh()=viewModelScope.launch {
-        _state.update {
-            it.copy(
-                isRefreshing = true
-            )
-        }
-        onFetchData()
-        _state.update {
-            it.copy(
-                isRefreshing = false
-            )
-        }
     }
 }

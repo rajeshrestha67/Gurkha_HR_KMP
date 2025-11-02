@@ -25,7 +25,15 @@ data class ERPColorPalette(
     val chatSecondaryTextColor: Color = Color.Unspecified,
     val attendanceHoliday: Color = Color.Unspecified,
     val veryLightGray: Color = Color.Unspecified,
-    val disabledTextFieldBorderColor: Color = Color.Unspecified
+    val disabledTextFieldBorderColor: Color = Color.Unspecified,
+    val box1OutlineColor: Color = Color.Unspecified,
+    val box2OutlineColor: Color = Color.Unspecified,
+    val box3OutlineColor: Color = Color.Unspecified,
+    val box4OutlineColor: Color = Color.Unspecified,
+    val box1BackgroundColor: Color = Color.Unspecified,
+    val box2BackgroundColor: Color = Color.Unspecified,
+    val box3BackgroundColor: Color = Color.Unspecified,
+    val box4BackgroundColor: Color = Color.Unspecified
 
 )
 
@@ -49,7 +57,17 @@ val lightERPPalette = ERPColorPalette(
     holidayBlueColor = Color(0xFF03A9F4),
     inComingTextColor = Color(0xFF111111),
     chatSecondaryTextColor = Color(0xFF757575),
-    attendanceHoliday = Color(0xFFFFA000)
+    attendanceHoliday = Color(0xFFFFA000),
+    box1OutlineColor = Color(0xFF81D4FA),
+    box2OutlineColor = Color(0xFFA5D6A7),
+    box3OutlineColor = Color(0xFFC5E1A5),
+    box4OutlineColor = Color(0xFFEF9A9A),
+    box1BackgroundColor = Color(0xFFE1F5FE),
+    box2BackgroundColor = Color(0xFFE8F5E9),
+    box3BackgroundColor = Color(0xFFF1F8E9),
+    box4BackgroundColor = Color(0xFFFFEBEE)
+
+
 )
 
 val darkERPPalette = ERPColorPalette(
@@ -72,5 +90,13 @@ val darkERPPalette = ERPColorPalette(
     holidayBlueColor = Color(0xFF2196F3),
     inComingTextColor = Color(0xFFE0E0E0),
     chatSecondaryTextColor = Color(0xFFAAAAAA),
-    attendanceHoliday = Color(0xFFBF6F00)
+    attendanceHoliday = Color(0xFFBF6F00),
+    box1OutlineColor = Color(0xFF0288D1),
+    box2OutlineColor = Color(0xFF2E7D32),
+    box3OutlineColor = Color(0xFF558B2F),
+    box4OutlineColor = Color(0xFFC62828),
+    box1BackgroundColor = Color(0xFF0B3D91),
+    box2BackgroundColor = Color(0xFF174D1F),
+    box3BackgroundColor = Color(0xFF2B3E16),
+    box4BackgroundColor = Color(0xFF7F1A1A)
 )

@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
@@ -79,6 +80,7 @@ import com.gurkha.hr.components.swipeToDismiss.SwipeToDismissBox
 import com.gurkha.hr.date.data.CalendarDate
 import com.gurkha.hr.date.data.CalendarDay
 import com.gurkha.hr.domain.upComingBirthday.mapper.toUi
+import com.gurkha.hr.domain.upComingEvent.mapper.toUi
 import com.gurkha.hr.domain.upComingEvent.model.EventData
 import com.gurkha.hr.domain.upComingWorkAnniversaries.mapper.toUi
 import com.gurkha.hr.logger.AppLogger
@@ -110,6 +112,7 @@ fun HomeScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val anniversaryTitle = stringResource(SharedRes.Strings.work_anniversaries)
     val birthdayTitle = stringResource(SharedRes.Strings.upcoming_birthday)
+    val eventTitle = stringResource(SharedRes.Strings.upcoming_events)
 
 
     Scaffold(
@@ -167,7 +170,7 @@ fun HomeScreen(
                             .noRippleClickable(onClick = onNotificationClick)
                             .padding(horizontal = MaterialTheme.dimens.small3),
                         badge = {
-                            if(state.totalUnSeenNotification != 0){
+                            if (state.totalUnSeenNotification != 0) {
                                 Badge(
                                     contentColor = MaterialTheme.colorScheme.onError
                                 ) {
@@ -198,7 +201,8 @@ fun HomeScreen(
                     onViewAllClick = onViewAllClick,
                     birthdayTitle = birthdayTitle,
                     anniversaryTitle = anniversaryTitle,
-                    onGoToFixProfile = onGoToFixProfile
+                    onGoToFixProfile = onGoToFixProfile,
+                    eventTitle = eventTitle
                 )
             }
         )
@@ -214,7 +218,8 @@ fun HomeScreenContent(
     onViewAllClick: (String?, String) -> Unit,
     birthdayTitle: String,
     anniversaryTitle: String,
-    onGoToFixProfile: () -> Unit
+    onGoToFixProfile: () -> Unit,
+    eventTitle: String
 ) {
     var showPermissionModal by remember { mutableStateOf(false) }
 
@@ -223,6 +228,7 @@ fun HomeScreenContent(
             onAction(HomeScreenActions.SwipeToDismiss(uri = uri))
         },
         onError = { e ->
+            onAction(HomeScreenActions.OnCameraCancel)
             println("❌ Error: ${e.message}")
         }
     )
@@ -324,6 +330,8 @@ fun HomeScreenContent(
             // event section
             eventSection(
                 state = state,
+                eventTitle = eventTitle,
+                onViewAllClick = onViewAllClick,
             )
 
             //birthday section
@@ -525,178 +533,184 @@ private fun AttendanceHistoryItem(
     item: AttendanceHistoryItemUI
 ) {
     var showMore by rememberSaveable { mutableStateOf(false) }
-    Box(
+    Surface(
         modifier = Modifier
             .fillMaxWidth()
             .padding(
                 horizontal = MaterialTheme.dimens.small3
             )
-            .background(
-                MaterialTheme.erpColors.highLightColor,
-                shape = MaterialTheme.shapes.medium
-            )
+            .clip(MaterialTheme.shapes.small)
+        ,
+        tonalElevation = 4.dp
     ) {
-
-        if (!item.isHoliday) {
-            Box(
-                modifier = Modifier.align(Alignment.TopEnd)
-            ) {
-                IconButton(
-                    onClick = {
-                        showMore = true
-                    }
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.MoreVert,
-                        contentDescription = "More Option"
-                    )
-                }
-                DropdownMenu(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    expanded = showMore,
-                    onDismissRequest = {
-                        showMore = false
-                    }
-                ) {
-                    DropdownMenuItem(
-                        text = {
-                            Text(
-                                text = stringResource(SharedRes.Strings.attendanceRequest),
-                                style = MaterialTheme.typography.bodyMedium.copy(
-                                    color = MaterialTheme.erpColors.primaryTextColor
-                                )
-                            )
-                        },
-                        onClick = {
-
-                        }
-                    )
-                }
-            }
-
-        }
-
-
-        Column(
-            modifier = Modifier.fillMaxSize().padding(
-                all = MaterialTheme.dimens.small2
-            )
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
         ) {
 
-            Row {
-
-                Column(
-                    modifier = Modifier.weight(1f)
+            if (!item.isHoliday) {
+                Box(
+                    modifier = Modifier.align(Alignment.TopEnd)
                 ) {
-                    Text(
-                        text = stringResource(SharedRes.Strings.date),
-                        style = MaterialTheme.typography.titleSmall.copy(
-                            color = MaterialTheme.erpColors.darkPrimaryTextColor
-                        )
-                    )
-                    Text(
-                        text = item.date,
-                        style = MaterialTheme.typography.bodySmall.copy(
-                            color = MaterialTheme.erpColors.primaryTextColor
-                        )
-                    )
-                }
-
-                Text(
-                    modifier = Modifier.padding(horizontal = MaterialTheme.dimens.small2).align(
-                        Alignment.CenterVertically
-                    ).padding(end = MaterialTheme.dimens.medium1),
-                    text = item.status.value, style = MaterialTheme.typography.bodyLarge.copy(
-                        color = item.status.color
-                    )
-                )
-            }
-
-
-            HorizontalDivider(
-                modifier = Modifier.padding(vertical = MaterialTheme.dimens.small2)
-                    .height(MaterialTheme.dimens.extraSmall)
-            )
-
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2),
-            ) {
-
-                Column(
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Text(
-                        text = stringResource(SharedRes.Strings.clockIn),
-                        style = MaterialTheme.typography.titleSmall.copy(
-                            color = MaterialTheme.erpColors.darkPrimaryTextColor
-                        )
-                    )
-                    Text(
-                        text = item.clockInTime, style = MaterialTheme.typography.bodySmall.copy(
-                            color = MaterialTheme.erpColors.primaryTextColor
-                        )
-                    )
-                }
-
-                Column(
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Text(
-                        text = stringResource(SharedRes.Strings.clockOut),
-                        style = MaterialTheme.typography.titleSmall.copy(
-                            color = MaterialTheme.erpColors.darkPrimaryTextColor
-                        )
-                    )
-                    Text(
-                        text = item.clockOutTime, style = MaterialTheme.typography.bodySmall.copy(
-                            color = MaterialTheme.erpColors.primaryTextColor
-                        )
-                    )
-                }
-
-                Column(
-                    modifier = Modifier.weight(2f)
-                ) {
-                    Text(
-                        text = stringResource(SharedRes.Strings.status),
-                        style = MaterialTheme.typography.titleSmall.copy(
-                            color = MaterialTheme.erpColors.darkPrimaryTextColor
-                        )
-                    )
-                    Row(
-                        modifier = Modifier
-                            .fillMaxSize().padding(vertical = MaterialTheme.dimens.small1),
-                        verticalAlignment = Alignment.Top,
-                        horizontalArrangement = Arrangement.spacedBy(
-                            space = MaterialTheme.dimens.small1,
-                            alignment = Alignment.Start
-                        )
-                    ) {
-
-                        repeat(item.statusClips.size) {
-                            Text(
-                                modifier = Modifier
-                                    .border(
-                                        width = 1.dp,
-                                        color = MaterialTheme.colorScheme.outline,
-                                        shape = MaterialTheme.shapes.small
-                                    ).padding(MaterialTheme.dimens.small1),
-                                text = item.statusClips[it],
-                                style = MaterialTheme.typography.bodySmall.copy(
-                                    color = MaterialTheme.erpColors.primaryTextColor
-                                )
-                            )
-
+                    IconButton(
+                        onClick = {
+                            showMore = true
                         }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.MoreVert,
+                            contentDescription = "More Option"
+                        )
+                    }
+                    DropdownMenu(
+                        containerColor = MaterialTheme.colorScheme.background,
+                        expanded = showMore,
+                        onDismissRequest = {
+                            showMore = false
+                        }
+                    ) {
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    text = stringResource(SharedRes.Strings.attendanceRequest),
+                                    style = MaterialTheme.typography.bodyMedium.copy(
+                                        color = MaterialTheme.erpColors.primaryTextColor
+                                    )
+                                )
+                            },
+                            onClick = {
 
+                            }
+                        )
                     }
                 }
 
             }
-        }
 
+
+            Column(
+                modifier = Modifier.fillMaxSize().padding(
+                    all = MaterialTheme.dimens.small2
+                )
+            ) {
+
+                Row {
+
+                    Column(
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(
+                            text = stringResource(SharedRes.Strings.date),
+                            style = MaterialTheme.typography.titleSmall.copy(
+                                color = MaterialTheme.erpColors.darkPrimaryTextColor
+                            )
+                        )
+                        Text(
+                            text = item.date,
+                            style = MaterialTheme.typography.bodySmall.copy(
+                                color = MaterialTheme.erpColors.primaryTextColor
+                            )
+                        )
+                    }
+
+                    Text(
+                        modifier = Modifier.padding(horizontal = MaterialTheme.dimens.small2).align(
+                            Alignment.CenterVertically
+                        ).padding(end = MaterialTheme.dimens.medium1),
+                        text = item.status.value, style = MaterialTheme.typography.bodyLarge.copy(
+                            color = item.status.color
+                        )
+                    )
+                }
+
+
+                HorizontalDivider(
+                    modifier = Modifier.padding(vertical = MaterialTheme.dimens.small2)
+                        .height(MaterialTheme.dimens.extraSmall)
+                )
+
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2),
+                ) {
+
+                    Column(
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(
+                            text = stringResource(SharedRes.Strings.clockIn),
+                            style = MaterialTheme.typography.titleSmall.copy(
+                                color = MaterialTheme.erpColors.darkPrimaryTextColor
+                            )
+                        )
+                        Text(
+                            text = item.clockInTime,
+                            style = MaterialTheme.typography.bodySmall.copy(
+                                color = MaterialTheme.erpColors.primaryTextColor
+                            )
+                        )
+                    }
+
+                    Column(
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(
+                            text = stringResource(SharedRes.Strings.clockOut),
+                            style = MaterialTheme.typography.titleSmall.copy(
+                                color = MaterialTheme.erpColors.darkPrimaryTextColor
+                            )
+                        )
+                        Text(
+                            text = item.clockOutTime,
+                            style = MaterialTheme.typography.bodySmall.copy(
+                                color = MaterialTheme.erpColors.primaryTextColor
+                            )
+                        )
+                    }
+
+                    Column(
+                        modifier = Modifier.weight(2f)
+                    ) {
+                        Text(
+                            text = stringResource(SharedRes.Strings.status),
+                            style = MaterialTheme.typography.titleSmall.copy(
+                                color = MaterialTheme.erpColors.darkPrimaryTextColor
+                            )
+                        )
+                        Row(
+                            modifier = Modifier
+                                .fillMaxSize().padding(vertical = MaterialTheme.dimens.small1),
+                            verticalAlignment = Alignment.Top,
+                            horizontalArrangement = Arrangement.spacedBy(
+                                space = MaterialTheme.dimens.small1,
+                                alignment = Alignment.Start
+                            )
+                        ) {
+
+                            repeat(item.statusClips.size) {
+                                Text(
+                                    modifier = Modifier
+                                        .border(
+                                            width = 1.dp,
+                                            color = MaterialTheme.colorScheme.outline,
+                                            shape = MaterialTheme.shapes.small
+                                        ).padding(MaterialTheme.dimens.small1),
+                                    text = item.statusClips[it],
+                                    style = MaterialTheme.typography.bodySmall.copy(
+                                        color = MaterialTheme.erpColors.primaryTextColor
+                                    )
+                                )
+
+                            }
+
+                        }
+                    }
+
+                }
+            }
+
+        }
     }
 
 }
@@ -875,7 +889,11 @@ fun AttendanceItemContent(
 
 fun LazyListScope.eventSection(
     state: HomeScreenState,
+    onViewAllClick: (String?, String) -> Unit,
+    eventTitle : String
 ) {
+    val data = Json.encodeToString<List<ViewAllUi>>(state.upComingEvent.toUi())
+    val title = Json.encodeToString<String>(eventTitle)
     if (state.upComingEvent.isNotEmpty()) {
         item(key = "event title") {
             TitleBar(
@@ -884,8 +902,11 @@ fun LazyListScope.eventSection(
                         start = MaterialTheme.dimens.small3,
                         end = MaterialTheme.dimens.small1
                     ),
-                onViewAll = {},
+                onViewAll = {
+                    onViewAllClick(data,title)
+                },
                 title = SharedRes.Strings.upcoming_events,
+                subTitle = SharedRes.Strings.view_all
             )
         }
         item(key = "event list") {
@@ -909,17 +930,13 @@ fun LazyListScope.eventSection(
                 }
 
                 else -> {
-                    LazyRow(
-                        modifier = Modifier.fillMaxWidth(),
+                    LazyColumn(
+                        modifier = Modifier.fillMaxWidth()
+                            .height(MaterialTheme.dimens.chartHeight),
                         contentPadding = PaddingValues(horizontal = MaterialTheme.dimens.small3),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = state.upComingWorkAnniversary.size.let { size ->
-                            if (size > 2) Arrangement.spacedBy(MaterialTheme.dimens.medium3)
-                            else Arrangement.SpaceBetween
-                        }
-
+                        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
                     ) {
-                        items(state.upComingEvent) { item ->
+                        items(state.upComingEvent.take(n=3)) { item ->
                             EventCard(
                                 item = item
                             )
@@ -1020,7 +1037,7 @@ fun EventCard(
 ) {
     Column(
         modifier = Modifier
-            .widthIn(min = 150.dp)
+            .fillMaxWidth()
             .clip(shape = MaterialTheme.shapes.small)
             .background(
                 MaterialTheme.colorScheme.primary.copy(
@@ -1041,7 +1058,7 @@ fun EventCard(
         )
 
         Text(
-            text = "${item.fromDateBs} to ${item.toDateBs}",
+            text = "${item.fromDateBs }  to  ${ item.toDateBs}",
             style = MaterialTheme.typography.titleSmall.copy(
                 color = MaterialTheme.erpColors.primaryTextColor
             )

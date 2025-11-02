@@ -1,6 +1,9 @@
 package com.gurkha.hr.model.attendanceScreen
 
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.domain.attendance.attendanceReport.model.AttendanceData
 import com.gurkha.hr.domain.attendance.attendanceStatus.model.AttendanceStatusData
 import com.gurkha.hr.res.SharedRes
@@ -31,26 +34,18 @@ data class AttendanceScreenState(
         AttendanceItem(
             title = SharedRes.Strings.missed_attendance,
             days = "-",
-            color = Color(0xFF81D4FA),
-            backGroundColor = Color(0xFFE1F5FE)
         ),
         AttendanceItem(
             title = SharedRes.Strings.attendance_approved,
             days = "-",
-            color = Color(0xFFA5D6A7),
-            backGroundColor = Color(0xFFE8F5E9)
         ),
         AttendanceItem(
             title = SharedRes.Strings.attendance_pending,
             days = "-",
-            color = Color(0xFFC5E1A5),
-            backGroundColor = Color(0xFFF1F8E9)
         ),
         AttendanceItem(
             title = SharedRes.Strings.attendance_cancelled,
             days = "-",
-            color = Color(0xFFEF9A9A),
-            backGroundColor = Color(0xFFFFEBEE)
         ),
     ),
 
@@ -60,8 +55,6 @@ data class AttendanceScreenState(
 data class AttendanceItem(
     val title: StringResource,
     val days: String,
-    val color: Color,
-    val backGroundColor: Color
 )
 
 data class AttendanceTabItem(
@@ -69,4 +62,23 @@ data class AttendanceTabItem(
     val result: List<AttendanceStatusData> = emptyList(),
 )
 
+val AttendanceItem.backgroundColor: Color
+    @Composable get() =
+        when(title){
+            SharedRes.Strings.missed_attendance -> MaterialTheme.erpColors.box1BackgroundColor
+            SharedRes.Strings.attendance_approved -> MaterialTheme.erpColors.box2BackgroundColor
+            SharedRes.Strings.attendance_pending -> MaterialTheme.erpColors.box3BackgroundColor
+            SharedRes.Strings.attendance_cancelled -> MaterialTheme.erpColors.box4BackgroundColor
+            else -> MaterialTheme.erpColors.box1BackgroundColor
+        }
+
+val AttendanceItem.outlineColor: Color
+    @Composable get() =
+        when(title){
+            SharedRes.Strings.missed_attendance -> MaterialTheme.erpColors.box1OutlineColor
+            SharedRes.Strings.attendance_approved -> MaterialTheme.erpColors.box2OutlineColor
+            SharedRes.Strings.attendance_pending -> MaterialTheme.erpColors.box3OutlineColor
+            SharedRes.Strings.attendance_cancelled -> MaterialTheme.erpColors.box4OutlineColor
+            else -> MaterialTheme.erpColors.box1OutlineColor
+        }
 
