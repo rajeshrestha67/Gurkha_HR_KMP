@@ -49,6 +49,7 @@ fun ViewAllScreen(
     val viewModel: ViewAllScreenViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
+
     LaunchedEffect(json) {
         json?.let {
             viewModel.onAction(ViewAllScreenAction.OnJsonUpdate(json))
@@ -97,6 +98,8 @@ fun ViewAllScreenContent(
     modifier: Modifier = Modifier,
     state: ViewAllScreenState
 ) {
+    val eventTitle = stringResource(SharedRes.Strings.upcoming_events)
+
     LazyColumn(
         modifier = modifier.fillMaxWidth(),
         contentPadding = PaddingValues(
@@ -107,7 +110,11 @@ fun ViewAllScreenContent(
     ) {
         state.data?.let {
             items(state.data) { item ->
-                ResultBox(item = item)
+                if (state.title == eventTitle){
+                    EventBox(item = item)
+                }else{
+                    ResultBox(item = item)
+                }
             }
         }
     }
@@ -133,8 +140,8 @@ fun ResultBox(
         ) {
             ProfilePicture(
                 imageUrl = item.imageUrl,
-                employeeName = item.fullName,
-                nameInitials = item.initials,
+                employeeName = item.fullName ?: "",
+                nameInitials = item.initials ?: "",
                 size = MaterialTheme.dimens.large,
                 shape = CircleShape,
                 background = MaterialTheme.erpColors.imageBackgroundColor,
@@ -147,11 +154,13 @@ fun ResultBox(
                 verticalArrangement = Arrangement.Center,
             ) {
 
-                Text(
-                    text = item.fullName, style = MaterialTheme.typography.titleMedium.copy(
-                        color = MaterialTheme.erpColors.primaryTextColor
+                item.fullName?.let {
+                    Text(
+                        text = it, style = MaterialTheme.typography.titleMedium.copy(
+                            color = MaterialTheme.erpColors.primaryTextColor
+                        )
                     )
-                )
+                }
 
                 Text(
                     text = "${stringResource(SharedRes.Strings.designation)} : ${item.designationName}",
@@ -177,5 +186,53 @@ fun ResultBox(
         }
     }
 }
+
+
+@Composable
+fun EventBox(
+    item: ViewAllUi
+) {
+    Surface(
+        modifier = Modifier.fillMaxWidth()
+            .clip(shape = MaterialTheme.shapes.small),
+        tonalElevation = 4.dp,
+
+        ) {
+        Row(
+            modifier = Modifier.fillMaxWidth()
+                .clip(shape = MaterialTheme.shapes.small)
+                .padding(all = MaterialTheme.dimens.small2),
+            verticalAlignment = Alignment.Top,
+            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
+        ) {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2),
+            ) {
+
+                Text(
+                    text = item.title ?: "", style = MaterialTheme.typography.titleMedium.copy(
+                        color = MaterialTheme.erpColors.primaryTextColor
+                    )
+                )
+
+                Text(
+                    text = "From : ${item.fromDate} To : ${item.toDate}",
+                    style = MaterialTheme.typography.titleSmall.copy(
+                        color = MaterialTheme.erpColors.primaryTextColor
+                    )
+                )
+
+                Text(
+                    "${stringResource(SharedRes.Strings.description)} : ${item.description}",
+                    style = MaterialTheme.typography.titleSmall.copy(
+                        color = MaterialTheme.erpColors.primaryTextColor
+                    )
+                )
+            }
+        }
+    }
+}
+
 
 

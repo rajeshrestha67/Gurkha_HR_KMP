@@ -28,7 +28,7 @@ fun List<UpComingWorkAnniversaryData>.toUi(): List<ViewAllUi> {
             branchName = it.branchName,
             imageUrl = it.imageUrl,
             initials = it.initials,
-            date = it.joinedDate
+            date = it.joinedDate,
         )
     }
 }

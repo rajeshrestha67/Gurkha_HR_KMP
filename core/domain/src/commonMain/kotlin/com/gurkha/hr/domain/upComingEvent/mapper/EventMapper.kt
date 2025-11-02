@@ -1,6 +1,7 @@
 package com.gurkha.hr.domain.upComingEvent.mapper
 
 import com.gurkha.hr.domain.upComingEvent.model.EventData
+import com.gurkha.model.upComingBirthday.ui.ViewAllUi
 import com.gurkha.model.upComingEvents.EventsResponseDto
 
 fun EventsResponseDto.toData(): List<EventData> {
@@ -13,4 +14,15 @@ fun EventsResponseDto.toData(): List<EventData> {
             isNotice = it.isNotice ?: ""
         )
     } ?: emptyList()
+}
+
+fun List<EventData>.toUi(): List<ViewAllUi>{
+    return map {
+        ViewAllUi(
+            title = it.name,
+            description = it.description,
+            toDate = it.toDateBs,
+            fromDate = it.fromDateBs,
+        )
+    }
 }

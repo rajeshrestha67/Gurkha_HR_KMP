@@ -9,6 +9,7 @@ import com.gurkha.hr.domain.uploadImage.UploadImageUseCase
 import com.gurkha.hr.domain.userDetail.repository.UserDetailRemoteRepository
 import com.gurkha.hr.domain.userDetail.usecase.FetchUserDetailUseCase
 import com.gurkha.hr.domain.userDetail.usecase.UpdateUserDetailUseCase
+import com.gurkha.hr.profile.document.DocumentScreenViewModel
 import com.gurkha.hr.profile.profile_screen.ProfileScreenViewModel
 import io.ktor.client.HttpClient
 import org.koin.android.annotation.KoinViewModel
@@ -58,4 +59,8 @@ class ProfileScreenModule {
         userDetailUseCase = userDetailUseCase,
         uploadImageUseCase = uploadImageUseCase,
     )
+
+
+    @KoinViewModel
+    fun getDocumentScreenViewModel(): DocumentScreenViewModel = DocumentScreenViewModel()
 }
