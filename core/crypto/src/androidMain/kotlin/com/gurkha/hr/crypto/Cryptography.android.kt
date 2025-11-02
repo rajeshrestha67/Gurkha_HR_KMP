@@ -4,19 +4,15 @@ import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.json.Json
 import java.security.KeyStore
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
 import javax.crypto.spec.IvParameterSpec
 
-private const val MAX_POOL_SIZE = 10
-
-object Crypto {
-    private const val KEY_ALIAS = "secret"
-    private const val ALGORITHM = KeyProperties.KEY_ALGORITHM_AES
-    private const val BLOCK_MODE = KeyProperties.BLOCK_MODE_CBC
-    private const val PADDING = KeyProperties.ENCRYPTION_PADDING_PKCS7
+class AndroidCryptography : Cryptography {
 
     private val keyStore = KeyStore
         .getInstance("AndroidKeyStore")
@@ -118,4 +114,36 @@ object Crypto {
             }
         }
     }
+
+    override suspend fun <T> encrypt(
+        t: T,
+        serializer: KSerializer<T>
+    ): ByteArray? {
+        val str = Json.encodeToString(serializer, t)
+        val bytes = str.encodeToByteArray()
+        return safeEncrypt(bytes)
+    }
+
+    override suspend fun <T> decrypt(
+        bytes: ByteArray,
+        deserializer: KSerializer<T>
+    ): T? {
+        val decryptedBytes = safeDecrypt(bytes)
+        val json = decryptedBytes?.decodeToString()
+        return json?.let { Json.decodeFromString(deserializer, it) }
+    }
+
+
+    companion object {
+        private const val MAX_POOL_SIZE = 10
+        private const val KEY_ALIAS = "secret"
+        private const val ALGORITHM = KeyProperties.KEY_ALGORITHM_AES
+        private const val BLOCK_MODE = KeyProperties.BLOCK_MODE_CBC
+        private const val PADDING = KeyProperties.ENCRYPTION_PADDING_PKCS7
+    }
+
+}
+
+actual fun getPlatformCryptography(): Cryptography {
+    return AndroidCryptography()
 }

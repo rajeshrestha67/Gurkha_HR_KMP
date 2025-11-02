@@ -2,7 +2,7 @@ package com.gurkha.hr.datastore.notificationCount.local
 
 
 import androidx.datastore.core.okio.OkioSerializer
-import com.gurkha.hr.crypto.CryptoFactory
+import com.gurkha.hr.crypto.Cryptography
 import com.gurkha.hr.datastore.notificationCount.model.NotificationTotalCountData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -10,8 +10,10 @@ import kotlinx.coroutines.withContext
 import okio.BufferedSink
 import okio.BufferedSource
 import okio.use
+import org.koin.mp.KoinPlatform.getKoin
 
 internal object NotificationDataJsonSerializer : OkioSerializer<NotificationTotalCountData> {
+    val cryptography: Cryptography = getKoin().get()
     override val defaultValue: NotificationTotalCountData
         get() = NotificationTotalCountData(0)
 
@@ -22,7 +24,8 @@ internal object NotificationDataJsonSerializer : OkioSerializer<NotificationTota
             source.readByteArray()
         }
         return try {
-            CryptoFactory.decrypt(encryptedByte) ?: defaultValue
+            cryptography.decrypt(encryptedByte, NotificationTotalCountData.serializer())
+                ?: defaultValue
         } catch (_: Exception) {
             defaultValue
         }
@@ -34,7 +37,7 @@ internal object NotificationDataJsonSerializer : OkioSerializer<NotificationTota
     ) {
         sink.use {
             withContext(Dispatchers.IO) {
-                CryptoFactory.encrypt(t)?.let { data ->
+                cryptography.encrypt(t, NotificationTotalCountData.serializer())?.let { data ->
                     it.write(data)
                 }
             }

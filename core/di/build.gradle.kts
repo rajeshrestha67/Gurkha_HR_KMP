@@ -92,6 +92,7 @@ kotlin {
                 implementation(projects.features.attendance)
                 implementation(projects.core.ui.date)
                 implementation(projects.features.note)
+                implementation(projects.core.crypto)
 
 
                 implementation(projects.core.ui.components)
