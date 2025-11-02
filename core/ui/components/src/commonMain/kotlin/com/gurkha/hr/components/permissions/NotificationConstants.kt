@@ -6,6 +6,7 @@ expect val CAMERA_PERMISSION: String
 
 
 expect val GALLERY_PERMISSION: String
+expect val GALLERY_PERMISSION_LIMITED: String
 
 
 

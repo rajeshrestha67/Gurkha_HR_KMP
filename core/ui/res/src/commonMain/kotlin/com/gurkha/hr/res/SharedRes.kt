@@ -8,6 +8,7 @@ import gurkhahr.core.ui.res.generated.resources.absent
 import gurkhahr.core.ui.res.generated.resources.account
 import gurkhahr.core.ui.res.generated.resources.ad
 import gurkhahr.core.ui.res.generated.resources.add_notes
+import gurkhahr.core.ui.res.generated.resources.add_photos
 import gurkhahr.core.ui.res.generated.resources.address
 import gurkhahr.core.ui.res.generated.resources.all_leaves
 import gurkhahr.core.ui.res.generated.resources.allocated_leave
@@ -38,6 +39,7 @@ import gurkhahr.core.ui.res.generated.resources.blood_group
 import gurkhahr.core.ui.res.generated.resources.branch
 import gurkhahr.core.ui.res.generated.resources.bs
 import gurkhahr.core.ui.res.generated.resources.camera
+import gurkhahr.core.ui.res.generated.resources.camera_permission_denied
 import gurkhahr.core.ui.res.generated.resources.cancel
 import gurkhahr.core.ui.res.generated.resources.cancelled
 import gurkhahr.core.ui.res.generated.resources.change_password
@@ -86,6 +88,7 @@ import gurkhahr.core.ui.res.generated.resources.fix_now
 import gurkhahr.core.ui.res.generated.resources.from_date
 import gurkhahr.core.ui.res.generated.resources.full_day
 import gurkhahr.core.ui.res.generated.resources.gallery
+import gurkhahr.core.ui.res.generated.resources.gallery_permission_denied
 import gurkhahr.core.ui.res.generated.resources.gender
 import gurkhahr.core.ui.res.generated.resources.general
 import gurkhahr.core.ui.res.generated.resources.getStarted
@@ -173,6 +176,7 @@ import gurkhahr.core.ui.res.generated.resources.personal
 import gurkhahr.core.ui.res.generated.resources.personal_details
 import gurkhahr.core.ui.res.generated.resources.personal_info
 import gurkhahr.core.ui.res.generated.resources.phone
+import gurkhahr.core.ui.res.generated.resources.photos
 import gurkhahr.core.ui.res.generated.resources.plus_two_image
 import gurkhahr.core.ui.res.generated.resources.present
 import gurkhahr.core.ui.res.generated.resources.privacy_policy
@@ -209,6 +213,7 @@ import gurkhahr.core.ui.res.generated.resources.system_default
 import gurkhahr.core.ui.res.generated.resources.terms_and_services
 import gurkhahr.core.ui.res.generated.resources.time_and_attendance
 import gurkhahr.core.ui.res.generated.resources.title
+import gurkhahr.core.ui.res.generated.resources.to_access_all_photos
 import gurkhahr.core.ui.res.generated.resources.to_date
 import gurkhahr.core.ui.res.generated.resources.today
 import gurkhahr.core.ui.res.generated.resources.total_absent_days
@@ -548,5 +553,11 @@ object SharedRes {
 
         val go_to_setting = Res.string.go_to_setting
         val allow_permission = Res.string.allow_permission
+        val addPhotos = Res.string.add_photos
+        val photos = Res.string.photos
+        val toAccessAllPhotos = Res.string.to_access_all_photos
+        val cameraPermissionDenied = Res.string.camera_permission_denied
+        val galleryPermissionDenied = Res.string.gallery_permission_denied
+
     }
 }

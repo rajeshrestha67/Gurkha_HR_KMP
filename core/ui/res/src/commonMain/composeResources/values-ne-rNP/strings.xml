@@ -83,7 +83,6 @@
     <string name="label_permanent">स्थायी</string>
 
 
-
     <string name="select_end_date">अन्त्य मिति चयन </string>
     <string name="leave_type">बिदाको प्रकार चयन </string>
     <string name="reason">कारण</string>
@@ -168,9 +167,10 @@
     <string name="notification">सूचनाहरू</string>
 
     <string name="leave_req_accepted">तपाईँको बिदाको अनुरोध स्वीकार गरिएको छ</string>
-    <string name = "leave_req_rejected"> तपाईँको बिदाको अनुरोध </string> द्वारा अस्वीकार गरिएको छ
+    <string name="leave_req_rejected"> तपाईँको बिदाको अनुरोध </string>
+    द्वारा अस्वीकार गरिएको छ
 
-    <string name = "attendance_req_accepted"> तपाईँको उपस्थिति अनुरोध स्वीकार गरिएको छ</string>
+    <string name="attendance_req_accepted"> तपाईँको उपस्थिति अनुरोध स्वीकार गरिएको छ</string>
     <string name="attendance_req_rejected">तपाईँको उपस्थिति अनुरोध अस्वीकार गरिएको छ</string>
 
     <string name="view_all">सबै हेर्नुहोस्</string>
@@ -288,7 +288,11 @@
 
     <string name="allow_permission">सेटिङमा अनुमति दिनुहोस्</string>
     <string name="go_to_setting">सेटिङमा जानुहोस्</string>
-    
+    <string name="add_photos">तस्बिरहरू थप्नुहोस्</string>
+    <string name="to_access_all_photos">सबै तस्बिरहरू पहुँच गर्न, आफ्नो सेटिङहरू परिवर्तन गर्नुहोस्</string>
+    <string name="camera_permission_denied">क्यामेरा अनुमति अस्वीकार गरियो।</string>
+    <string name="gallery_permission_denied">ग्यालेरी अनुमति अस्वीकार गरियो।</string>
+    <string name="photos">फोटोहरू</string>
     <string-array name="months">
         <item>बैशाख</item>
         <item>जेठ</item>
