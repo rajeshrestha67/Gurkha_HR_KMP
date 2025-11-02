@@ -50,10 +50,10 @@ class GregorianCalendar : CalendarType {
         val date = availableStartDate
             .plus(DatePeriod(months = page))  // Add months
             .let { adjustedDate ->
-                LocalDate(  // Rebuild with day=1
+                LocalDate(// Rebuild with day=1
                     year = adjustedDate.year,
                     month = adjustedDate.month,
-                    dayOfMonth = 1
+                    day = 1
                 )
             }
             .coerceAtMost(availableLastDate)

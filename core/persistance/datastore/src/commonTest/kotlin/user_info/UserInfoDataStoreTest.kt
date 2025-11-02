@@ -1,14 +1,13 @@
 package user_info
 
+import com.gurkha.hr.crypto.Cryptography
 import com.gurkha.hr.datastore.user_info.local.UserInfoDataStore
-import com.gurkha.hr.datastore.user_info.repository.LocalUserInfoRepository
-import com.gurkha.hr.datastore.user_info.repository.UserInfoRepository
 import com.gurkha.model.user_info.UserInfo
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.withContext
 import okio.FileSystem
@@ -17,6 +16,8 @@ import okio.SYSTEM
 import org.koin.core.component.inject
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.bind
 import org.koin.dsl.module
 import org.koin.test.KoinTest
 import kotlin.random.Random
@@ -28,36 +29,72 @@ import kotlin.time.ExperimentalTime
 class UserInfoDataStoreTest : KoinTest {
     lateinit var tempFilePath: String
     val userInfoDataStore: UserInfoDataStore by inject()
-    val repository: UserInfoRepository by inject()
+
     val fs = FileSystem.SYSTEM
-    private val testScope = TestScope()
 
     @OptIn(ExperimentalTime::class)
     @BeforeTest
     fun setup() {
         val absolutePath = FileSystem.SYSTEM_TEMPORARY_DIRECTORY / "userinfo_${Random.nextInt()}.db"
         tempFilePath = absolutePath.toString()
-
         startKoin {
             modules(
                 module {
                     single { UserInfoDataStore { tempFilePath } }
-                    single<UserInfoRepository> { LocalUserInfoRepository(get()) }
+                    singleOf(::FakeCryptography).bind<Cryptography>()
                 }
             )
         }
     }
 
     @Test
-    fun shouldSaveAndReadUserInfoCorrectly() = testScope.runTest {
+    fun shouldSaveAndReadUserInfoCorrectly() = runTest {
         val userInfo = UserInfo(isFirstTime = false, userThemeMode = 1, langCode = "np")
         userInfoDataStore.update(userInfo)
-        val actual = repository.userInfo.first()
+        val actual = userInfoDataStore.userInfoFlow.first()
         actual shouldBe userInfo
     }
 
+    @Test
+    fun shouldSaveAndReadUserInfoIncorrectly() = runTest {
+        val userInfo = UserInfo(isFirstTime = false, userThemeMode = 1, langCode = "np")
+        userInfoDataStore.update(userInfo)
+        val actual = userInfoDataStore.userInfoFlow.first()
+        actual shouldNotBe UserInfo(isFirstTime = false, userThemeMode = 1, langCode = "en")
+    }
+
+    @Test
+    fun shouldReturnDefaultUserInfoWhenEmpty() = runTest {
+        val actual = userInfoDataStore.userInfoFlow.first()
+        actual shouldBe UserInfo()
+    }
+
+    @Test
+    fun shouldOverwriteExistingUserInfo() = runTest {
+        val first = UserInfo(isFirstTime = true, userThemeMode = 0, langCode = "en")
+        userInfoDataStore.update(first)
+
+        val second = UserInfo(isFirstTime = false, userThemeMode = 2, langCode = "np")
+        userInfoDataStore.update(second)
+
+        val actual = userInfoDataStore.userInfoFlow.first()
+        actual shouldBe second
+        actual shouldNotBe first
+    }
+
+    @Test
+    fun shouldHandleCorruptedDataGracefully() = runTest {
+        withContext(Dispatchers.IO) {
+            val path = tempFilePath.toPath()
+            fs.write(path) { writeUtf8("invalid_json_encrypted_data") }
+        }
+
+        val actual = userInfoDataStore.userInfoFlow.first()
+        actual shouldBe UserInfo()
+    }
+
     @AfterTest
-    fun tearDown() = testScope.runTest {
+    fun tearDown() = runTest {
         withContext(Dispatchers.IO) {
             val path = tempFilePath.toPath()
             if (fs.exists(path)) fs.delete(path)

@@ -1,8 +1,10 @@
 package com.gurkha.model.attendance.attendanceReport
 
 import kotlinx.serialization.EncodeDefault
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 
+@OptIn(ExperimentalSerializationApi::class)
 @Serializable
 data class AttendanceReportRequestDto(
     val fromDate: String? = null,
