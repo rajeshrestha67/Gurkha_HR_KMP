@@ -1,7 +1,7 @@
 package com.gurkha.hr.datastore.token.local
 
 import androidx.datastore.core.okio.OkioSerializer
-import com.gurkha.hr.crypto.CryptoFactory
+import com.gurkha.hr.crypto.Cryptography
 import com.gurkha.hr.datastore.token.model.Token
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -9,8 +9,10 @@ import kotlinx.coroutines.withContext
 import okio.BufferedSink
 import okio.BufferedSource
 import okio.use
+import org.koin.mp.KoinPlatform.getKoin
 
 internal object TokenJsonSerializer : OkioSerializer<Token> {
+    val cryptography: Cryptography = getKoin().get()
     override val defaultValue: Token
         get() = Token()
 
@@ -19,7 +21,7 @@ internal object TokenJsonSerializer : OkioSerializer<Token> {
             source.readByteArray()
         }
         return try {
-            CryptoFactory.decrypt(encryptedByte)
+            cryptography.decrypt(encryptedByte, Token.serializer())
                 ?: defaultValue
         } catch (e: Exception) {
             defaultValue
@@ -32,7 +34,7 @@ internal object TokenJsonSerializer : OkioSerializer<Token> {
     ) {
         sink.use {
             withContext(Dispatchers.IO) {
-                CryptoFactory.encrypt(t)?.let { data ->
+                cryptography.encrypt(t, Token.serializer())?.let { data ->
                     it.write(data)
                 }
             }

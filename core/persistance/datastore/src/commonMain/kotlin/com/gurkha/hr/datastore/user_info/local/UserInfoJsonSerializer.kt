@@ -1,19 +1,21 @@
 package com.gurkha.hr.datastore.user_info.local
 
+
 import androidx.datastore.core.okio.OkioSerializer
-import com.gurkha.hr.crypto.CryptoFactory
+import com.gurkha.hr.crypto.Cryptography
 import com.gurkha.model.user_info.UserInfo
-
-
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
 import okio.BufferedSink
 import okio.BufferedSource
 import okio.use
+import org.koin.mp.KoinPlatform.getKoin
 
 
 internal object UserInfoJsonSerializer : OkioSerializer<UserInfo> {
+
+    val cryptography: Cryptography = getKoin().get()
     override val defaultValue: UserInfo
         get() = UserInfo()
 
@@ -24,7 +26,7 @@ internal object UserInfoJsonSerializer : OkioSerializer<UserInfo> {
             source.readByteArray()
         }
         return try {
-            CryptoFactory.decrypt(encryptedByte) ?: defaultValue
+            cryptography.decrypt(encryptedByte, UserInfo.serializer()) ?: defaultValue
         } catch (ex: Exception) {
             defaultValue
         }
@@ -37,7 +39,7 @@ internal object UserInfoJsonSerializer : OkioSerializer<UserInfo> {
     ) {
         sink.use {
             withContext(Dispatchers.IO) {
-                CryptoFactory.encrypt(t)?.let { data ->
+                cryptography.encrypt(t, UserInfo.serializer())?.let { data ->
                     it.write(data)
                 }
             }
