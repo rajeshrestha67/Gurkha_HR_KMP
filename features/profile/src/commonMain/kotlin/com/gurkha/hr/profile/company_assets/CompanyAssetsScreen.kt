@@ -19,6 +19,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -27,6 +28,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -92,7 +94,7 @@ fun CompanyAssetsScreenContainer(
     LazyColumn(
         modifier = modifier,
         contentPadding = PaddingValues(
-            horizontal = MaterialTheme.dimens.small1,
+            horizontal = MaterialTheme.dimens.small3,
         ),
         verticalArrangement = Arrangement.spacedBy(
             MaterialTheme.dimens.small2,
@@ -114,8 +116,7 @@ fun CompanyAssetsScreenContainer(
                 state.companyAssetsList, key = { it.toString() },
                 itemContent = { item ->
                     CompanyAssetsDetails(
-                        item = item,
-
+                        item = item
                         )
                 },
             )
@@ -137,7 +138,6 @@ fun EmptyMessage() {
             style = MaterialTheme.typography.titleMedium.copy(
                 color = MaterialTheme.erpColors.darkPrimaryTextColor
             ),
-
             )
     }
 }
@@ -147,10 +147,7 @@ fun HeaderSection(text: StringResource) {
 
     Text(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(
-                MaterialTheme.dimens.small2
-            ),
+            .fillMaxWidth(),
         text = stringResource(text),
         style = MaterialTheme.typography.titleLarge
 
@@ -160,59 +157,59 @@ fun HeaderSection(text: StringResource) {
 @Composable
 fun CompanyAssetsDetails(
     item: CompanyAssetsData
-
 ) {
-
-    Column(
+    Surface(
         modifier = Modifier
+            .clip(MaterialTheme.shapes.small)
             .fillMaxWidth()
-            .clip(MaterialTheme.shapes.medium)
-            .padding(MaterialTheme.dimens.small1)
-            .background(MaterialTheme.erpColors.highLightColor)
-            .padding(
-                horizontal = MaterialTheme.dimens.small2,
-                vertical = MaterialTheme.dimens.small2
-            ),
-        verticalArrangement = Arrangement.spacedBy(
-            MaterialTheme.dimens.small2,
-            alignment = Alignment.Top
-        ),
-        horizontalAlignment = Alignment.CenterHorizontally
-
-    ) {
-
-
+        ,
+        tonalElevation = 4.dp
+    ){
         Column(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = MaterialTheme.dimens.small2)
-        ) {
-            Text(
-                text = stringResource(SharedRes.Strings.date),
-                style = MaterialTheme.typography.titleMedium.copy(
-                    color = MaterialTheme.erpColors.primaryTextColor
-                )
-            )
-            Text(
-                text = item.dateInBs,
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    color = MaterialTheme.erpColors.secondaryTextColor
-                )
-            )
-        }
-        HorizontalDivider(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .padding(
                     horizontal = MaterialTheme.dimens.small1,
-                    vertical = MaterialTheme.dimens.small1
+                    vertical = MaterialTheme.dimens.small2
+                ),
+            verticalArrangement = Arrangement.spacedBy(
+                MaterialTheme.dimens.small2,
+                alignment = Alignment.Top
+            ),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Column(
+                modifier = Modifier.fillMaxWidth().padding(horizontal = MaterialTheme.dimens.small2)
+            ) {
+                Text(
+                    text = stringResource(SharedRes.Strings.date),
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        color = MaterialTheme.erpColors.primaryTextColor
+                    )
                 )
-        )
-        ColumnText(
-            name = SharedRes.Strings.assetName,
-            value = item.assetsName
-        )
-        ColumnText(
-            name = SharedRes.Strings.description,
-            value = item.assetsDescription
-        )
+                Text(
+                    text = item.dateInBs,
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        color = MaterialTheme.erpColors.secondaryTextColor
+                    )
+                )
+            }
+            HorizontalDivider(
+                modifier = Modifier.fillMaxWidth()
+                    .padding(
+                        horizontal = MaterialTheme.dimens.small1,
+                        vertical = MaterialTheme.dimens.small1
+                    )
+            )
+            ColumnText(
+                name = SharedRes.Strings.assetName,
+                value = item.assetsName
+            )
+            ColumnText(
+                name = SharedRes.Strings.description,
+                value = item.assetsDescription
+            )
+        }
     }
 
 

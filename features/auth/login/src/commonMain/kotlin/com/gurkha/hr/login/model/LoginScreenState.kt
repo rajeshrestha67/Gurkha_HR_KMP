@@ -3,10 +3,10 @@ package com.gurkha.hr.login.model
 import org.jetbrains.compose.resources.StringResource
 
 data class LoginScreenState(
-    val username: String = "ramesh@gmail.com",
+//    val username: String = "ramesh@gmail.com",
+//    val password: String = "Test123@",
+    val username: String = "jyoti.sah@mbank.com.np",
     val password: String = "Test123@",
-//    val username: String = "",
-//    val password: String = "",
 //    val username: String = "suneelshrestha9@gmail.com",
 //    val password: String = "Soci@lmedia07",
     val usernameError: StringResource? = null,

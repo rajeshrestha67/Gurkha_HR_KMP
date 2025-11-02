@@ -71,7 +71,6 @@ class HomeScreenViewModel(
 //    @OptIn(ExperimentalTime::class)
     val state = _state
         .onStart {
-            println("HomeScreenViewModel_onStart")
             fetchCurrentUser(isRefreshing = false)
             fetchUpComingBirthday()
             fetchUpComingWorkAnniversary()
