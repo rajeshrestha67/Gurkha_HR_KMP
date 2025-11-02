@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 class LocalUserInfoRepository(
     private val userInfoDataStore: UserInfoDataStore
 ) : UserInfoRepository {
-    override val userInfo: Flow<UserInfo> = userInfoDataStore.userInfoFlow
+    override val userInfoFlow: Flow<UserInfo> = userInfoDataStore.userInfoFlow
 
     override suspend fun saveUserInfo(userInfo: UserInfo) {
         userInfoDataStore.update(

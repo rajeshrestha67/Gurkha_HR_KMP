@@ -7,6 +7,6 @@ class CheckFirstTimeUserUseCase(
     private val userInfoRepository: UserInfoRepository
 ) {
     suspend operator fun invoke(): Boolean {
-        return userInfoRepository.userInfo.firstOrNull()?.isFirstTime ?: true
+        return userInfoRepository.userInfoFlow.firstOrNull()?.isFirstTime ?: true
     }
 }

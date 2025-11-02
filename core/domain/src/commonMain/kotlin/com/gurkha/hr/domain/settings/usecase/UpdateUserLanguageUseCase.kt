@@ -10,7 +10,7 @@ class UpdateUserLanguageUseCase(
 ) {
     suspend operator fun invoke(langCode: String) {
         erpAppLocale = langCode
-        val userInfo = userInfoRepository.userInfo.firstOrNull() ?: UserInfo()
+        val userInfo = userInfoRepository.userInfoFlow.firstOrNull() ?: UserInfo()
         userInfoRepository.saveUserInfo(userInfo.copy(langCode = langCode))
     }
 }

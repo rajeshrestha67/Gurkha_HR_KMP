@@ -27,14 +27,14 @@ class RequiredValidationUseCaseTest : KoinTest {
     }
 
     @Test
-    fun emptyValueShouldFailRequiredRule() {
+    fun `Empty Value Should Fail Required Rule`() {
         val value = ""
         val result = useCase(value)
         result shouldBe SharedRes.Strings.required
     }
 
     @Test
-    fun notEmptyValueShouldPassRule() {
+    fun `Not Empty Value Should Pass Rule`() {
         val value = "test"
         val result = useCase(value)
         result shouldBe null

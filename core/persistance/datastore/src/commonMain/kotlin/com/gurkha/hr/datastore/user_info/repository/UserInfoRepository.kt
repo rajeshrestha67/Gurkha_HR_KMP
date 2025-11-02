@@ -4,7 +4,7 @@ import com.gurkha.model.user_info.UserInfo
 import kotlinx.coroutines.flow.Flow
 
 interface UserInfoRepository {
-    val userInfo: Flow<UserInfo>
+    val userInfoFlow: Flow<UserInfo>
 
     suspend fun saveUserInfo(userInfo: UserInfo)
 }

@@ -8,6 +8,6 @@ class FetchUserInfoUseCase(
     private val userInfoRepository: UserInfoRepository
 ) {
     operator fun invoke(): Flow<UserInfo> {
-        return userInfoRepository.userInfo
+        return userInfoRepository.userInfoFlow
     }
 }

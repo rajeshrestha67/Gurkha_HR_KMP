@@ -32,49 +32,49 @@ class EmailValidationUseCaseTest : KoinTest {
     }
 
     @Test
-    fun emptyEmailShouldFailRequiredRule() {
+    fun `Empty Email Should Fail Required Rule`() {
         val email = ""
         val result = useCase(email)
         result shouldBe SharedRes.Strings.required
     }
 
     @Test
-    fun missingAtSymbolShouldFailEmailRule() {
+    fun `Missing At Symbol Should Fail Email Rule`() {
         val email = "testexample.com"
         val result = useCase(email)
         result shouldBe SharedRes.Strings.invalidEmailAddress
     }
 
     @Test
-    fun missingDomainShouldFailEmailRule() {
+    fun `Missing Domain Should Fail Email Rule`() {
         val email = "test@"
         val result = useCase(email)
         result shouldBe SharedRes.Strings.invalidEmailAddress
     }
 
     @Test
-    fun missingUsernameShouldFailEmailRule() {
+    fun `Missing Username Should Fail Email Rule`() {
         val email = "@example.com"
         val result = useCase(email)
         result shouldBe SharedRes.Strings.invalidEmailAddress
     }
 
     @Test
-    fun validSimpleEmailShouldPass() {
+    fun `Valid Simple Email Should Pass`() {
         val email = "test@example.com"
         val result = useCase(email)
         result shouldBe null
     }
 
     @Test
-    fun validEmailWithSubdomainShouldPass() {
+    fun `Valid Email With Subdomain Should Pass`() {
         val email = "user@mail.example.co.uk"
         val result = useCase(email)
         result shouldBe null
     }
 
     @Test
-    fun validEmailWithSpecialCharactersShouldPass() {
+    fun `Valid Email With Special Characters Should Pass`() {
         val email = "user.name+tag@example.com"
         val result = useCase(email)
         result shouldBe null

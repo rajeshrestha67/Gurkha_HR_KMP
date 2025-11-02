@@ -8,7 +8,7 @@ class UpdateUserThemeUseCase(
     private val userInfoRepository: UserInfoRepository
 ) {
     suspend operator fun invoke(themeMode: Int) {
-        val userInfo = userInfoRepository.userInfo.firstOrNull() ?: UserInfo()
+        val userInfo = userInfoRepository.userInfoFlow.firstOrNull() ?: UserInfo()
         userInfoRepository.saveUserInfo(userInfo.copy(userThemeMode = themeMode))
     }
 }

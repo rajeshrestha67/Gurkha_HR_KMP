@@ -26,35 +26,35 @@ class PasswordValidationUseCaseTest : KoinTest {
     }
 
     @Test
-    fun emptyPasswordShouldFailRequiredRule() {
+    fun `Empty Password Should Fail Required Rule`() {
         val password = ""
         val result = useCase(password)
         result shouldBe SharedRes.Strings.required
     }
 
     @Test
-    fun passwordLessThan6CharsShouldFailLengthRule() {
+    fun `Password Less Than 6 Chars Should Fail Length Rule`() {
         val password = "12345"
         val result = useCase(password)
         result shouldBe SharedRes.Strings.invalidPasswordLength
     }
 
     @Test
-    fun passwordExactly6CharsShouldPass() {
+    fun `Password Exactly 6 Chars Should Pass`() {
         val password = "123456"
         val result = useCase(password)
         result shouldBe null
     }
 
     @Test
-    fun longPasswordShouldPass() {
+    fun `Long Password Should Pass`() {
         val password = "averylongpassword123"
         val result = useCase(password)
         result shouldBe null
     }
 
     @Test
-    fun passwordWithSpacesStillValidIfLengthOk() {
+    fun `Password With Spaces Still Valid If Length Ok`() {
         val password = "abc 123"
         val result = useCase(password)
         result shouldBe null

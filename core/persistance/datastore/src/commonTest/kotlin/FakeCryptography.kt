@@ -1,5 +1,3 @@
-package user_info
-
 import com.gurkha.hr.crypto.Cryptography
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
@@ -9,7 +7,7 @@ class FakeCryptography : Cryptography {
         t: T,
         serializer: KSerializer<T>
     ): ByteArray? {
-        val json = Json.encodeToString(serializer, t)
+        val json = Json.Default.encodeToString(serializer, t)
         return "[FAKE_ENCRYPTED]$json".encodeToByteArray()
     }
 
@@ -19,7 +17,7 @@ class FakeCryptography : Cryptography {
     ): T? {
         val content = bytes.decodeToString()
         val json = content.removePrefix("[FAKE_ENCRYPTED]")
-        return Json.decodeFromString(deserializer, json)
+        return Json.Default.decodeFromString(deserializer, json)
     }
 
 }

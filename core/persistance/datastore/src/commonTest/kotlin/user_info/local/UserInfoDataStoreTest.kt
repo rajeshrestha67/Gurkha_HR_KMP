@@ -1,5 +1,6 @@
-package user_info
+package user_info.local
 
+import FakeCryptography
 import com.gurkha.hr.crypto.Cryptography
 import com.gurkha.hr.datastore.user_info.local.UserInfoDataStore
 import com.gurkha.model.user_info.UserInfo
@@ -30,12 +31,13 @@ class UserInfoDataStoreTest : KoinTest {
     lateinit var tempFilePath: String
     val userInfoDataStore: UserInfoDataStore by inject()
 
-    val fs = FileSystem.SYSTEM
+    val fs = FileSystem.Companion.SYSTEM
 
     @OptIn(ExperimentalTime::class)
     @BeforeTest
     fun setup() {
-        val absolutePath = FileSystem.SYSTEM_TEMPORARY_DIRECTORY / "userinfo_${Random.nextInt()}.db"
+        val absolutePath =
+            FileSystem.Companion.SYSTEM_TEMPORARY_DIRECTORY / "userinfo_${Random.Default.nextInt()}.db"
         tempFilePath = absolutePath.toString()
         startKoin {
             modules(
@@ -48,7 +50,7 @@ class UserInfoDataStoreTest : KoinTest {
     }
 
     @Test
-    fun shouldSaveAndReadUserInfoCorrectly() = runTest {
+    fun `Should Save And Read UserInfo Correctly`() = runTest {
         val userInfo = UserInfo(isFirstTime = false, userThemeMode = 1, langCode = "np")
         userInfoDataStore.update(userInfo)
         val actual = userInfoDataStore.userInfoFlow.first()
@@ -56,7 +58,7 @@ class UserInfoDataStoreTest : KoinTest {
     }
 
     @Test
-    fun shouldSaveAndReadUserInfoIncorrectly() = runTest {
+    fun `Should Save And Read UserInfo Incorrectly`() = runTest {
         val userInfo = UserInfo(isFirstTime = false, userThemeMode = 1, langCode = "np")
         userInfoDataStore.update(userInfo)
         val actual = userInfoDataStore.userInfoFlow.first()
@@ -64,13 +66,13 @@ class UserInfoDataStoreTest : KoinTest {
     }
 
     @Test
-    fun shouldReturnDefaultUserInfoWhenEmpty() = runTest {
+    fun `Should Return Default UserInfo When Empty`() = runTest {
         val actual = userInfoDataStore.userInfoFlow.first()
         actual shouldBe UserInfo()
     }
 
     @Test
-    fun shouldOverwriteExistingUserInfo() = runTest {
+    fun `Should Overwrite Existing UserInfo`() = runTest {
         val first = UserInfo(isFirstTime = true, userThemeMode = 0, langCode = "en")
         userInfoDataStore.update(first)
 
@@ -83,7 +85,7 @@ class UserInfoDataStoreTest : KoinTest {
     }
 
     @Test
-    fun shouldHandleCorruptedDataGracefully() = runTest {
+    fun `Should Handle Corrupted Data Gracefully`() = runTest {
         withContext(Dispatchers.IO) {
             val path = tempFilePath.toPath()
             fs.write(path) { writeUtf8("invalid_json_encrypted_data") }
