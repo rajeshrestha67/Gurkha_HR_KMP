@@ -1,5 +1,6 @@
 package user_info.repository
 
+import com.gurkha.hr.datastore.user_info.repository.FakeLocalUserInfoRepository
 import com.gurkha.hr.datastore.user_info.repository.UserInfoRepository
 import com.gurkha.model.user_info.UserInfo
 import io.kotest.matchers.shouldBe

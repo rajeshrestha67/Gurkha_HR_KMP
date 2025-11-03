@@ -94,6 +94,7 @@ kotlin {
                 implementation(libs.kotest.framework)
                 implementation(libs.kotest.assertions)
                 implementation(libs.koin.test)
+                implementation(libs.kotlinx.coroutines.test)
             }
         }
 

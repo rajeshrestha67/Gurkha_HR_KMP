@@ -20,6 +20,7 @@ import io.ktor.http.ContentType
 import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpMessageBuilder
+import io.ktor.http.contentType
 import kotlinx.coroutines.flow.firstOrNull
 import org.koin.mp.KoinPlatform.getKoin
 
@@ -113,7 +114,7 @@ suspend inline fun HttpRequestBuilder.appendLocalAttributes(
     tokenRepository.token.firstOrNull()?.jwtToken?.let { token ->
         accessToken(token)
     }
-
+    contentType(ContentType.Application.Json)
     url(path = endPoint, host = baseUrl.url, scheme = "https")
     block()
 }

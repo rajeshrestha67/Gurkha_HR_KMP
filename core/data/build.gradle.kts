@@ -72,7 +72,8 @@ kotlin {
                 implementation(projects.core.ui.components)
 
                 implementation(projects.core.logger)
-
+                implementation(libs.ktor.client.content.negotiation)
+                implementation(libs.ktor.serialization.kotlinx.json)
 
                 //firebase
 //                implementation(libs.firebase.messaging.ktx)
@@ -83,6 +84,11 @@ kotlin {
         commonTest {
             dependencies {
                 implementation(libs.kotlin.test)
+                implementation(libs.kotest.framework)
+                implementation(libs.kotest.assertions)
+                implementation(libs.koin.test)
+                implementation(libs.kotlinx.coroutines.test)
+                implementation("io.ktor:ktor-client-mock:3.3.1")
             }
         }
 

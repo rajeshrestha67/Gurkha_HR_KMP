@@ -1,7 +1,7 @@
 package user_info.local
 
-import FakeCryptography
 import com.gurkha.hr.crypto.Cryptography
+import com.gurkha.hr.crypto.FakeCryptography
 import com.gurkha.hr.datastore.user_info.local.UserInfoDataStore
 import com.gurkha.model.user_info.UserInfo
 import io.kotest.matchers.shouldBe
