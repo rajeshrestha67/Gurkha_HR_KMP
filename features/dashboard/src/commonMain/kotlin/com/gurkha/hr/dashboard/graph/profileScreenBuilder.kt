@@ -3,6 +3,7 @@ package com.gurkha.hr.dashboard.graph
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import com.gurkha.hr.dashboard.route.DashboardRoute
 import com.gurkha.hr.dashboard.route.ProfileRoute
 import com.gurkha.hr.profile.allocated_leave.AllocatedLeaveScreen
@@ -28,24 +29,12 @@ fun NavGraphBuilder.profileScreenBuilder(
             onLogout = onLogout,
             onAccountClick = { item ->
                 when (item) {
-                    AccountList.TermsAndServices -> {
-                        navController.navigate(ProfileRoute.WebviewRoute)
-                    }
-
-                    AccountList.PrivacyPolicy -> {
-
-                    }
-
-                    AccountList.FAC -> {
-
-                    }
-
-                    AccountList.Support -> {
-
-                    }
-
                     AccountList.Settings -> {
                         navController.navigate(ProfileRoute.SettingsRoute)
+                    }
+
+                    else -> {
+                        navController.navigate(ProfileRoute.WebviewRoute(item.url))
                     }
                 }
             },
@@ -129,7 +118,9 @@ fun NavGraphBuilder.profileScreenBuilder(
     }
 
     composable<ProfileRoute.WebviewRoute> {
+        val url = it.toRoute<ProfileRoute.WebviewRoute>().url
         WebviewScreen(
+            url = url,
             onBackPressed = {
                 navController.popBackStack()
             }

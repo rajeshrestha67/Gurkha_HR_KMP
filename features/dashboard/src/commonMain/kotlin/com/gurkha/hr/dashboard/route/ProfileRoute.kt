@@ -35,5 +35,5 @@ sealed interface ProfileRoute {
     data object EditProfileRoute : ProfileRoute
 
     @Serializable
-    data object WebviewRoute : ProfileRoute
+    data class WebviewRoute(val url: String) : ProfileRoute
 }

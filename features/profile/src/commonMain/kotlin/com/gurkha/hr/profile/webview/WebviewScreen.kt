@@ -21,6 +21,7 @@ import org.jetbrains.compose.resources.stringResource
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WebviewScreen(
+    url: String,
     onBackPressed: () -> Unit
 ) {
 
@@ -44,7 +45,7 @@ fun WebviewScreen(
 
         PlatformWebView(
             modifier = Modifier.fillMaxSize().padding(paddingValues),
-            url = "https://mbank.gurkhahr.com/faq"
+            url = url
         )
 
     }
