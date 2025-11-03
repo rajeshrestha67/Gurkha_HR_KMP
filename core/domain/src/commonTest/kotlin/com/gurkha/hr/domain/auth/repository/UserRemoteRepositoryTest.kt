@@ -54,6 +54,19 @@ class UserRemoteRepositoryTest : KoinTest {
         }
     }
 
+    @Test
+    fun `login returns network error ERPResult`() = runTest {
+        val fakeRepo = repository as FakeUserRemoteRepository
+        fakeRepo.setShouldReturnNetworkError(true)
+
+        val result = repository.login("user", "pass")
+
+        when (result) {
+            is ERPResult.Error -> result.error shouldBe DataError.NetworkError.DataUnknown
+            else -> error("Expected network error but got $result")
+        }
+    }
+
     @AfterTest
     fun tearDown() {
         stopKoin()
