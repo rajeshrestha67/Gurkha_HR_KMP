@@ -16,6 +16,7 @@ import com.gurkha.hr.profile.profile_info.ProfileInfoScreen
 import com.gurkha.hr.profile.profile_screen.ProfileScreen
 import com.gurkha.hr.profile.report_screen.ReportScreen
 import com.gurkha.hr.profile.time_and_attendance.TimeAndAttendanceScreen
+import com.gurkha.hr.profile.webview.WebviewScreen
 
 
 fun NavGraphBuilder.profileScreenBuilder(
@@ -28,7 +29,7 @@ fun NavGraphBuilder.profileScreenBuilder(
             onAccountClick = { item ->
                 when (item) {
                     AccountList.TermsAndServices -> {
-
+                        navController.navigate(ProfileRoute.WebviewRoute)
                     }
 
                     AccountList.PrivacyPolicy -> {
@@ -84,13 +85,12 @@ fun NavGraphBuilder.profileScreenBuilder(
         ProfileInfoScreen(
             onBackPressed = {
                 navController.popBackStack()
-            }
-            , onGotoEditProfile = {
+            }, onGotoEditProfile = {
                 navController.navigate(ProfileRoute.EditProfileRoute)
             }
         )
     }
-    composable <ProfileRoute.EditProfileRoute>{
+    composable<ProfileRoute.EditProfileRoute> {
         EditProfileScreen(
             onBackPressed = {
                 navController.popBackStack()
@@ -126,6 +126,14 @@ fun NavGraphBuilder.profileScreenBuilder(
         ReportScreen(onBackPressed = {
             navController.popBackStack()
         })
+    }
+
+    composable<ProfileRoute.WebviewRoute> {
+        WebviewScreen(
+            onBackPressed = {
+                navController.popBackStack()
+            }
+        )
     }
 
 }

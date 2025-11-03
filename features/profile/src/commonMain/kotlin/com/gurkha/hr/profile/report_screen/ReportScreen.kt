@@ -57,7 +57,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun ReportScreen(
-    onBackPressed: () -> Unit,
+    onBackPressed: () -> Unit
 ) {
     val viewModel: ReportViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
