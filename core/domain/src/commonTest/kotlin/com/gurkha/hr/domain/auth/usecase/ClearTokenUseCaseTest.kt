@@ -40,7 +40,7 @@ class ClearTokenUseCaseTest : KoinTest {
 
     @Test
     fun `saveToken updates the token flow`() = runTest {
-        val newToken = Token("newToken")
+        val newToken = Token()
         tokenRepository.saveToken(newToken)
         val emitted = tokenRepository.token.first()
         emitted shouldBe newToken
