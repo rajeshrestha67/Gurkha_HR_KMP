@@ -33,8 +33,7 @@ enum class AccountList(val title: StringResource, val url: String) {
     ),
     PrivacyPolicy(title = SharedRes.Strings.privacy_policy, "https://mbank.gurkhahr.com/faq"),
     FAC(title = SharedRes.Strings.faq, "https://mbank.gurkhahr.com/faq"),
-    Support(title = SharedRes.Strings.support, "https://mbank.gurkhahr.com/faq"),
-    Settings(title = SharedRes.Strings.setting, "https://mbank.gurkhahr.com/faq");
+    Settings(title = SharedRes.Strings.setting, "");
 
     companion object {
         private val typeMap =
