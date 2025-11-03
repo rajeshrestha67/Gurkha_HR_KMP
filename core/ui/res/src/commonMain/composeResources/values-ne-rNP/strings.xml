@@ -293,6 +293,8 @@
     <string name="camera_permission_denied">क्यामेरा अनुमति अस्वीकार गरियो।</string>
     <string name="gallery_permission_denied">ग्यालेरी अनुमति अस्वीकार गरियो।</string>
     <string name="photos">फोटोहरू</string>
+    <string name="copy">प्रतिलिपि</string>
+    <string name="share">सेयर</string>
     <string-array name="months">
         <item>बैशाख</item>
         <item>जेठ</item>

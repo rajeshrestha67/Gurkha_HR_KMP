@@ -3,11 +3,6 @@ package com.gurkha.hr.note
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
-import androidx.compose.animation.with
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.ScrollableDefaults
@@ -30,7 +25,11 @@ import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ContentCopy
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -57,8 +56,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import com.gurkha.hr.components.PlatformMessage
 import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.erpColors
+import com.gurkha.hr.components.platform_utils.PlatformUtils
 import com.gurkha.hr.components.prompts.PromptModalBottomSheet
 import com.gurkha.hr.components.prompts.PromptType
 import com.gurkha.hr.components.shimmer.ShimmerView
@@ -70,6 +71,7 @@ import com.gurkha.hr.res.SharedRes
 import com.gurkha.model.note.ui.NoteDataUi
 import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -240,17 +242,12 @@ fun NoteScreenContent(
                         }
                     } else {
                         items(state.noteItem) { item ->
-                            AnimatedContent(
-                                targetState = item, transitionSpec = {
-                                    slideInVertically { height -> height } + fadeIn() with slideOutVertically { height -> -height } + fadeOut()
-                                }) {
-                                ResultBox(
-                                    onGoToAddNotesScreen = onGoToAddNotesScreen,
-                                    item = item,
-                                    onAction = onAction,
-                                    onGoToDetailNotesScreen = onGoToDetailNotesScreen
-                                )
-                            }
+                            ResultBox(
+                                onGoToAddNotesScreen = onGoToAddNotesScreen,
+                                item = item,
+                                onAction = onAction,
+                                onGoToDetailNotesScreen = onGoToDetailNotesScreen
+                            )
                         }
 
                     }
@@ -299,6 +296,10 @@ fun ResultBox(
     onAction: (NoteAction) -> Unit
 ) {
     var showDialogue by remember { mutableStateOf(false) }
+
+    val platformUtils: PlatformUtils = koinInject<PlatformUtils>()
+
+    val platformMessage: PlatformMessage = koinInject()
     Surface(
         modifier = Modifier.clickable(onClick = {
             val data = Json.encodeToString<NoteDataUi>(item.toUi())
@@ -349,19 +350,93 @@ fun ResultBox(
                         expanded = showMore,
                         onDismissRequest = { showMore = false }) {
                         DropdownMenuItem(
-                            text = { Text(text = stringResource(SharedRes.Strings.edit)) },
+                            text = {
+                                Text(
+                                    text = stringResource(SharedRes.Strings.edit),
+                                    style = MaterialTheme.typography.titleSmall.copy(
+                                        MaterialTheme.colorScheme.onBackground
+                                    )
+                                )
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Filled.Edit,
+                                    contentDescription = "Edit",
+                                    tint = MaterialTheme.colorScheme.onBackground
+                                )
+                            },
                             onClick = {
                                 val data = Json.encodeToString<NoteDataUi>(item.toUi())
                                 onGoToAddNotesScreen(data)
                                 showMore = false
-                            })
+                            }
+                        )
                         DropdownMenuItem(
-                            text = { Text(text = stringResource(SharedRes.Strings.delete)) },
+                            text = {
+                                Text(
+                                    text = stringResource(SharedRes.Strings.delete),
+                                    style = MaterialTheme.typography.titleSmall.copy(
+                                        MaterialTheme.colorScheme.error
+                                    )
+                                )
+                            },
                             onClick = {
                                 onAction(NoteAction.OnDeleteIdSelected(item.id))
                                 showDialogue = true
                                 showMore = false
-                            })
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Filled.Delete,
+                                    contentDescription = "Delete",
+                                    tint = MaterialTheme.colorScheme.error
+                                )
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    text = stringResource(SharedRes.Strings.copy),
+                                    style = MaterialTheme.typography.titleSmall.copy(
+                                        MaterialTheme.colorScheme.onBackground
+                                    )
+                                )
+                            },
+                            onClick = {
+                                platformUtils.copyToClipboard(item.description)
+                                platformMessage.showToast("Copied!!")
+                                showMore = false
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Filled.ContentCopy,
+                                    contentDescription = "Copy",
+                                    tint = MaterialTheme.colorScheme.onBackground
+                                )
+                            }
+                        )
+
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    text = stringResource(SharedRes.Strings.share),
+                                    style = MaterialTheme.typography.titleSmall.copy(
+                                        MaterialTheme.colorScheme.onBackground
+                                    )
+                                )
+                            },
+                            onClick = {
+                                platformUtils.shareText(item.description, item.title)
+                                showMore = false
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Filled.Share,
+                                    contentDescription = "Share",
+                                    tint = MaterialTheme.colorScheme.onBackground
+                                )
+                            }
+                        )
                     }
                 }
 
@@ -387,7 +462,7 @@ fun ResultBox(
                     buttonText = SharedRes.Strings.delete,
                     closePopUp = {
                         showDialogue = false
-                    },
+                    }
                 )
             }
 
