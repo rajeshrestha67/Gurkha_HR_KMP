@@ -35,23 +35,19 @@ actual class PlatformUtils {
     }
 
     actual fun callPhoneNumber(phoneNumber: String) {
-        // 1. Construct the 'tel:' URL for iOS
         val urlString = "tel:$phoneNumber"
         val url = NSURL(string = urlString)
-        
+
 
         val application = UIApplication.sharedApplication()
 
-        // 2. Use the modern, non-deprecated open(_:options:completionHandler:) API
-        // This function opens the URL and takes an options dictionary and a completion block.
         application.openURL(
             url = url,
-            options = NSDictionary.dictionary(), // Pass an empty dictionary for options
+            options = NSDictionary.dictionary(),
             completionHandler = { success ->
                 if (success) {
                     println("Successfully opened URL to call: $phoneNumber")
                 } else {
-                    // This block will be executed if the device cannot open the URL
                     println("Phone calls not supported on this device or action failed.")
                 }
             }

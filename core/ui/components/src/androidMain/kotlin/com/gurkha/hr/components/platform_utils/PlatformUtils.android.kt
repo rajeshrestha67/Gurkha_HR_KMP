@@ -26,7 +26,6 @@ actual class PlatformUtils {
         }
 
         val shareIntent = Intent.createChooser(sendIntent, title).apply {
-            // Needed if called outside of an Activity context
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
         context.startActivity(shareIntent)
@@ -35,9 +34,7 @@ actual class PlatformUtils {
     actual fun callPhoneNumber(phoneNumber: String) {
         val context: Context = getKoin().get()
         val intent = Intent(Intent.ACTION_DIAL).apply {
-            // Use 'tel:' URI scheme to indicate a phone number
             data = "tel:$phoneNumber".toUri()
-            // Needed if called outside of an Activity context
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
         context.startActivity(intent)
