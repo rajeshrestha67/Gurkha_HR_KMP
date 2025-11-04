@@ -9,6 +9,7 @@ import com.gurkha.hr.networkhelper.post
 import com.gurkha.hr.networkhelper.safeCall
 import com.gurkha.hr.networkhelper.uploadImage
 import com.gurkha.model.network.DataError
+import com.gurkha.model.uploadImage.UploadImageRequestDto
 import com.gurkha.model.uploadImage.UploadImageResponseDto
 import io.ktor.client.HttpClient
 
@@ -19,25 +20,7 @@ class KtorImageUploadRepository(
         filePath: String,
         imageName: String,
         onProgress: (Int) -> Unit,
-    ): ERPResult<UploadImageResponseDto, DataError> {
-        val bytes = getFileBytes(filePath)
-        return safeCall {
-            httpClient.uploadImage(
-                endPoint = EndPoint.IMAGE_UPLOAD_END_POINT,
-                fileName = imageName,
-                fileBytes = bytes,
-                uri = filePath,
-                onProgress = onProgress,
-            )
-        }
-    }
-
-    //remaining not working employeeId required error
-    override suspend fun employeeImageUpload(
-        filePath: String,
-        imageName: String,
-        onProgress: (Int) -> Unit,
-        employeeId : Int
+        employeeId: Int
     ): ERPResult<UploadImageResponseDto, DataError> {
         val bytes = getFileBytes(filePath)
         return safeCall {

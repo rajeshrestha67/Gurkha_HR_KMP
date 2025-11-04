@@ -1,8 +1,10 @@
 package com.gurkha.hr.profile.document
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -34,10 +36,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil3.compose.rememberAsyncImagePainter
 import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.components.media.MediaSelectorModalBottomSheet
@@ -99,7 +103,6 @@ fun DocumentScreenContainer(
     state: DocumentScreenState,
     action: (DocumentScreenAction) -> Unit
 ) {
-    val documentList = remember { DocumentList.list }
     var showMediaBottomSheet by remember { mutableStateOf(false) }
 
 
@@ -127,14 +130,14 @@ fun DocumentScreenContainer(
         )
     ) {
         items(
-            documentList,
+            state.documentList,
             key = { it.toString() },
         ) { item ->
             DocumentItemRow(
                 state = state,
                 item = item,
                 action = action,
-                onOpenCamera={
+                onOpenCamera = {
                     showMediaBottomSheet = true
                 }
             )
@@ -147,9 +150,9 @@ fun DocumentItemRow(
     item: DocumentList,
     state: DocumentScreenState,
     onOpenCamera: () -> Unit,
-    action: (DocumentScreenAction)-> Unit
+    action: (DocumentScreenAction) -> Unit
 ) {
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .border(
@@ -161,38 +164,65 @@ fun DocumentItemRow(
                 shape = MaterialTheme.shapes.medium
             ).clickable(onClick = {
                 onOpenCamera()
-                action(DocumentScreenAction.OnSelectedDocument(item.imageType))
+                action(DocumentScreenAction.OnSelectedDocument(item.imageType.key))
             })
             .padding(MaterialTheme.dimens.small3),
-
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2)
     ) {
-        Text(
-            modifier = Modifier.fillMaxWidth(),
-            text = stringResource(item.title),
-            style = MaterialTheme.typography.titleMedium.copy(
-                color = MaterialTheme.erpColors.primaryTextColor
-            ),
-            textAlign = TextAlign.Center
-        )
-        Icon(
-            imageVector = Icons.Filled.CloudUpload,
-            contentDescription = "upload",
-            modifier = Modifier.size(MaterialTheme.dimens.medium1),
-            tint = MaterialTheme.erpColors.secondaryTextColor
-        )
-        Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
-        Text(
-            text = stringResource(item.uploadText),
-            textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.bodyMedium.copy(
-                color = MaterialTheme.erpColors.secondaryTextColor,
-            ),
-            maxLines = 2,
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.padding(horizontal = MaterialTheme.dimens.small1)
-        )
+        item.uploadedImage?.let {
+            Image(
+                modifier = Modifier.fillMaxSize()
+                    .clip(shape = MaterialTheme.shapes.medium),
+                contentScale = ContentScale.Crop,
+                painter = rememberAsyncImagePainter(item.uploadedImage),
+                contentDescription = "uploaded Image",
+            )
+        }
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .border(
+                    width = 0.5.dp,
+                    color = MaterialTheme.colorScheme.outline,
+                    shape = MaterialTheme.shapes.medium
+                )
+                .clip(
+                    shape = MaterialTheme.shapes.medium
+                ).clickable(onClick = {
+                    onOpenCamera()
+                    action(DocumentScreenAction.OnSelectedDocument(item.imageType.key))
+                })
+                .padding(MaterialTheme.dimens.small3),
+
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2)
+        ) {
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = stringResource(item.title),
+                style = MaterialTheme.typography.titleMedium.copy(
+                    color = MaterialTheme.erpColors.primaryTextColor
+                ),
+                textAlign = TextAlign.Center
+            )
+            Icon(
+                imageVector = Icons.Filled.CloudUpload,
+                contentDescription = "upload",
+                modifier = Modifier.size(MaterialTheme.dimens.medium1),
+                tint = MaterialTheme.erpColors.secondaryTextColor
+            )
+            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
+            Text(
+                text = stringResource(item.uploadText),
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    color = MaterialTheme.erpColors.secondaryTextColor,
+                ),
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.padding(horizontal = MaterialTheme.dimens.small1)
+            )
+        }
     }
 }
 
