@@ -86,6 +86,13 @@ class LeaveScreenViewModel(
 
             is LeaveScreenAction.OnRefresh -> {
                 fetchLeaveSummary(isRefreshing = true)
+                LeaveStatusEnum.list.forEach {
+                    fetchLeaveReport(
+                        fromDate = datePair.first,
+                        toDate = datePair.second,
+                        leaveStatus = it
+                    )
+                }
             }
         }
     }
@@ -174,7 +181,7 @@ class LeaveScreenViewModel(
     private fun fetchLeaveSummary(isRefreshing: Boolean) = viewModelScope.launch {
         _state.update {
             it.copy(
-                isRefreshing= isRefreshing,
+                isRefreshing = isRefreshing,
                 isLeaveSummaryLoading = true
             )
         }
