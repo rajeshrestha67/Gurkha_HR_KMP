@@ -7,7 +7,7 @@ import org.koin.mp.KoinPlatform.getKoin
 import java.util.Locale
 import java.util.TimeZone
 
-actual fun getDeviceInfo(): DeviceInfo {
+actual fun getDeviceInfo(id: String): DeviceInfo {
     val context: Context = getKoin().get()
     val pm = context.packageManager
     val packageInfo = pm.getPackageInfo(context.packageName, 0)
@@ -25,6 +25,7 @@ actual fun getDeviceInfo(): DeviceInfo {
     }
     return DeviceInfo(
         platform = "Android",
+        uid = id,
         manufacturer = Build.MANUFACTURER,
         model = Build.MODEL,
         osVersion = Build.VERSION.RELEASE,

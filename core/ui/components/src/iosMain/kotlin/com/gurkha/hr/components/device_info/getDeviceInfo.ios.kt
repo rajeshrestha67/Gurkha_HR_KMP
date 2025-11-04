@@ -10,7 +10,7 @@ import platform.Foundation.localTimeZone
 import platform.Foundation.localeIdentifier
 import platform.UIKit.UIDevice
 
-actual fun getDeviceInfo(): DeviceInfo {
+actual fun getDeviceInfo(id: String): DeviceInfo {
     val device = UIDevice.currentDevice
     val bundle = NSBundle.mainBundle
 
@@ -31,6 +31,7 @@ actual fun getDeviceInfo(): DeviceInfo {
     return DeviceInfo(
         platform = "iOS",
         manufacturer = "Apple",
+        uid = id,
         model = model,
         osVersion = osVersion,
         sdkInt = sdkInt,

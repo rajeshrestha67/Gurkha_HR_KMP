@@ -1,5 +1,6 @@
 package com.gurkha.hr.data.login
 
+import com.gurkha.hr.components.device_info.getDeviceInfo
 import com.gurkha.hr.domain.auth.login.repository.UserRemoteRepository
 import com.gurkha.hr.logger.AppLogger
 import com.gurkha.hr.networkhelper.BaseUrl
@@ -20,7 +21,12 @@ class KtorUserRemoteRepository(
         username: String,
         password: String
     ): ERPResult<LoginResponseDto, DataError> {
-        val request = LoginRequestDto(username, password)
+        val deviceInfo = getDeviceInfo("10")
+        val request = LoginRequestDto(
+            email = username,
+            password = password,
+            deviceInfo = deviceInfo
+        )
         AppLogger.i(TAG, "login: api request $request")
         return safeCall {
             httpClient.post(
