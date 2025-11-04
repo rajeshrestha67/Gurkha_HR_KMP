@@ -78,12 +78,13 @@ class ProfileScreenViewModel(
             )
         }
         userDetailUseCase().onSuccess { data ->
+            println("dataProfile $data")
             _state.update {
                 it.copy(
                     isProfileLoading = false,
                     fullName = data.fullName,
                     levelName = data.levelName,
-                    userProfileUrl = data.userProfileUrl,
+                    userProfileUrl = data.imageUrl,
                     phoneNumber = data.phoneNumber,
                     initials = data.initials
                 )

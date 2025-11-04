@@ -93,8 +93,8 @@ suspend inline fun HttpClient.uploadImage(
                         )
                         append(HttpHeaders.ContentDisposition, "filename=\"$updatedFileName\"")
                     })
-                    append(key = "employeeId", value ="0".toByte() )
-                    append(key = "type", value ="CLOCK_IN_IMAGE".toByte() )
+                    append(key = "employeeId", value ="135" )
+                    append(key = "type", value ="CLOCK_IN_IMAGE" )
                 }
             )
         )

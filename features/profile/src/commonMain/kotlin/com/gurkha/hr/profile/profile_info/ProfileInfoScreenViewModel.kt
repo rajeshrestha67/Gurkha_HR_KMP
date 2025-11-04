@@ -60,6 +60,7 @@ class ProfileInfoScreenViewModel(
                 _state.update {
                     it.copy(
                         isRefreshing = false,
+                        userProfileUrl = userDetail.imageUrl,
                         isProfileLoading = false,
                         fullName = userDetail.fullName,
                         initials = userDetail.initials,

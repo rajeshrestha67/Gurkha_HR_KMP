@@ -10,6 +10,7 @@ data class ProfileScreenState(
     val initials: String = "",
     val levelName: String = "",
     val userProfileUrl: String? = null,
+    val email: String = "",
     val phoneNumber: String = "",
 
 
