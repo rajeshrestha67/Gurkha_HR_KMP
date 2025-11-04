@@ -61,6 +61,20 @@ class DocumentScreenViewModel(
             }
 
             is DocumentScreenAction.OnReceivedDocumentUri -> {
+                _state.update {
+                    it.copy(
+                        documentList = state.value.documentList.map { item ->
+                            if(item.imageType.key == _state.value.selectedDocumentType) {
+                                item.copy(
+                                    uploadedImage = action.uri
+                                )
+                            } else {
+                                item
+                            }
+
+                        }
+                    )
+                }
                 uploadImage(uri = action.uri)
             }
 
@@ -130,7 +144,6 @@ class DocumentScreenViewModel(
 
     private fun fetchUserData() = viewModelScope.launch {
         fetchUserDetailUseCase().onSuccess { data ->
-            println("data_document $data")
             _state.update {
                 it.copy(
                     documentList = _state.value.documentList.mapIndexed { index, item ->

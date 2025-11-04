@@ -1,6 +1,5 @@
 package com.gurkha.hr.profile.document
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.combinedClickable
@@ -11,6 +10,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -40,6 +40,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
@@ -49,7 +50,6 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
-import coil3.compose.rememberAsyncImagePainter
 import com.gurkha.hr.components.PlatformMessage
 import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.erpColors
@@ -235,17 +235,30 @@ fun DocumentItemRow(
                     contentDescription = "uploaded Image",
                     modifier = Modifier.fillMaxSize()
                 )
-                Text(
-                    modifier = Modifier
-                        .background(MaterialTheme.colorScheme.background)
-                        .fillMaxWidth()
-                        .padding(MaterialTheme.dimens.small1),
-                    textAlign = TextAlign.Center,
-                    text = stringResource(item.title),
-                    style = MaterialTheme.typography.labelMedium.copy(
-                        color = MaterialTheme.erpColors.primaryTextColor
+                Box(
+                    modifier = Modifier.fillMaxWidth().fillMaxHeight(0.5f).background(
+                        brush = Brush.verticalGradient(
+                            colors = listOf(
+                                Color.Transparent,
+                                Color.Transparent,
+                                Color.Black.copy(alpha = 0.2f),
+                                Color.Black.copy(alpha = 0.3f)
+                            )
+                        )
+                    ),
+                    contentAlignment = Alignment.BottomCenter
+                ) {
+                    Text(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(MaterialTheme.dimens.small1),
+                        textAlign = TextAlign.Center,
+                        text = stringResource(item.title),
+                        style = MaterialTheme.typography.labelMedium.copy(
+                            color = MaterialTheme.erpColors.veryLightGray
+                        )
                     )
-                )
+                }
             }
 
         } ?: Column(

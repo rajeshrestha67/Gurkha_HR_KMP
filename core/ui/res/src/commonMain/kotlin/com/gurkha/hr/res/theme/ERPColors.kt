@@ -65,7 +65,8 @@ val lightERPPalette = ERPColorPalette(
     box1BackgroundColor = Color(0xFFE1F5FE),
     box2BackgroundColor = Color(0xFFE8F5E9),
     box3BackgroundColor = Color(0xFFF1F8E9),
-    box4BackgroundColor = Color(0xFFFFEBEE)
+    box4BackgroundColor = Color(0xFFFFEBEE),
+
 
 
 )
