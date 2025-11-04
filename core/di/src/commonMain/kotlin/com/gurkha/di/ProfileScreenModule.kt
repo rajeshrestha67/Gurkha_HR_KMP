@@ -6,7 +6,6 @@ import com.gurkha.hr.datastore.user_data.local.UserDataDataStore
 import com.gurkha.hr.datastore.user_data.repository.LocalUserDataRepository
 import com.gurkha.hr.datastore.user_data.repository.UserDataRepository
 import com.gurkha.hr.domain.imageUpload.ImageUploadRepository
-import com.gurkha.hr.domain.uploadImage.EmployeeImageUpload
 import com.gurkha.hr.domain.uploadImage.UploadImageUseCase
 import com.gurkha.hr.domain.userDetail.repository.UserDetailRemoteRepository
 import com.gurkha.hr.domain.userDetail.usecase.FetchUserDetailUseCase
@@ -53,16 +52,6 @@ class ProfileScreenModule {
     )
 
 
-    @Factory
-    fun employeeImageUpload(
-        userDataRepository: UserDataRepository,
-        imageUploadRepository: ImageUploadRepository,
-    ): EmployeeImageUpload = EmployeeImageUpload(
-        userDataRepository = userDataRepository,
-        imageUploadRepository = imageUploadRepository,
-    )
-
-
     @KoinViewModel
     fun getProfileScreenViewModel(
         userDetailUseCase: FetchUserDetailUseCase,
@@ -76,9 +65,9 @@ class ProfileScreenModule {
     @KoinViewModel
     fun getDocumentScreenViewModel(
         uploadImageUseCase: UploadImageUseCase,
-        employeeImageUpload: EmployeeImageUpload
+        fetchUserDetailUseCase: FetchUserDetailUseCase
     ): DocumentScreenViewModel = DocumentScreenViewModel(
+        fetchUserDetailUseCase = fetchUserDetailUseCase,
         uploadImageUseCase = uploadImageUseCase,
-        employeeImageUpload = employeeImageUpload,
     )
 }

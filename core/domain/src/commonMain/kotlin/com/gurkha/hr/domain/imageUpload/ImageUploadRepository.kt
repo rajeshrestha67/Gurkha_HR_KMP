@@ -8,13 +8,7 @@ interface ImageUploadRepository {
     suspend fun uploadImage(
         filePath: String,
         imageName: String,
-        onProgress: (Int) -> Unit
-    ): ERPResult<UploadImageResponseDto, DataError>
-
-    suspend fun employeeImageUpload(
-        filePath: String,
-        imageName: String,
         onProgress: (Int) -> Unit,
-        employeeId : Int
+        employeeId: Int
     ): ERPResult<UploadImageResponseDto, DataError>
 }
