@@ -52,7 +52,15 @@ class FetchUserDetailUseCase(
                         guardianPhone = userDetail.guardianNumber,
                         pfNumber = userDetail.pfNumber,
                         panNumber = userDetail.panNumber,
-                        isCompleteProfile = userDetail.isCompleteProfile
+                        isCompleteProfile = userDetail.isCompleteProfile,
+                        citizenshipFrontImage = userDetail.citizenshipFrontImage ?: "",
+                        citizenshipBackImage = userDetail.citizenshipBackImage ?: "",
+                        nationalId = userDetail.nationalId ?: "",
+                        slcDocument = userDetail.slcDocument ?: "",
+                        plusTwoImage = userDetail.plusTwoImage ?: "",
+                        bachelorImage = userDetail.bachelorImage ?: "",
+                        masterImage = userDetail.masterImage ?: "",
+                        experienceDocuments = userDetail.experienceDocuments ?: ""
                     ) ?: UserData()
                 )
             }

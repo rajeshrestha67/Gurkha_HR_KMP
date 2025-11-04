@@ -59,16 +59,16 @@ val documentItemList = listOf(
         uploadText = SharedRes.Strings.uploadExperienceDocument,
         imageType = DocumentType.EXPERIENCE_DOCUMENT
     ),
-//    DocumentList(
-//        title = SharedRes.Strings.extraImageOne,
-//        uploadText = SharedRes.Strings.uploadExtraImageOne,
-//        imageType = DocumentType.EXTRA_IMAGE_ONE
-//    ),
-//    DocumentList(
-//        title = SharedRes.Strings.extraImageTwo,
-//        uploadText = SharedRes.Strings.uploadExtraImageTwo,
-//        imageType = DocumentType.EXTRA_IMAGE_TWO
-//    )
+    DocumentList(
+        title = SharedRes.Strings.extra_image_one,
+        uploadText = SharedRes.Strings.upload_extra_image_one,
+        imageType = DocumentType.EXTRA_IMAGE_ONE
+    ),
+    DocumentList(
+        title = SharedRes.Strings.extra_image_two,
+        uploadText = SharedRes.Strings.upload_extra_image_two,
+        imageType = DocumentType.EXTRA_IMAGE_TWO
+    )
 )
 
 

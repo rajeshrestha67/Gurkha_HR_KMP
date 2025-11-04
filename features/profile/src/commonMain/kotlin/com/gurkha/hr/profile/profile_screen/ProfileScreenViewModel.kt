@@ -7,14 +7,17 @@ import com.gurkha.hr.domain.uploadImage.UploadImageUseCase
 import com.gurkha.hr.domain.userDetail.usecase.FetchUserDetailUseCase
 import com.gurkha.hr.networkhelper.onError
 import com.gurkha.hr.networkhelper.onSuccess
+import com.gurkha.hr.profile.model.document_screen.DocumentType
 import com.gurkha.hr.profile.model.profile_screen.ProfileScreenState
 import com.gurkha.hr.profile.profile_screen.model.ProfileScreenAction
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -57,14 +60,15 @@ class ProfileScreenViewModel(
         uploadImageUseCase(
             filePath = uri,
             imageName = "image${Clock.System.now().toEpochMilliseconds()}",
+            type = DocumentType.PROFILE_IMAGE.key,
             onProgress = { progress ->
-//                viewModelScope.launch {
-//                    withContext(Dispatchers.Main.immediate) {
-//                        notification.showNotification(
-//                            progress = progress
-//                        )
-//                    }
-//                }
+                viewModelScope.launch {
+                    withContext(Dispatchers.Main.immediate) {
+                        notification.showNotification(
+                            progress = progress
+                        )
+                    }
+                }
             }
         ).onSuccess { data ->
             data.a

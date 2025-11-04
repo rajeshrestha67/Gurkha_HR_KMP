@@ -34,15 +34,14 @@ class DocumentScreenViewModel(
             fetchUserData()
         }
         .stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = DocumentScreenState()
-    )
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = DocumentScreenState()
+        )
 
     fun onAction(action: DocumentScreenAction) {
         when (action) {
             is DocumentScreenAction.OnSelectedDocument -> {
-                println("selectedItem ${action.type}")
                 _state.update {
                     it.copy(
                         selectedDocumentType = action.type
@@ -52,7 +51,6 @@ class DocumentScreenViewModel(
 
             is DocumentScreenAction.OnReceivedDocumentUri -> {
                 uploadImage(uri = action.uri)
-
             }
         }
     }
@@ -64,6 +62,7 @@ class DocumentScreenViewModel(
         uploadImageUseCase(
             imageName = _state.value.selectedDocumentType.toString(),
             filePath = uri,
+            type = _state.value.selectedDocumentType ?: "",
             onProgress = { progress ->
                 viewModelScope.launch {
                     withContext(Dispatchers.Main.immediate) {
@@ -73,22 +72,52 @@ class DocumentScreenViewModel(
                     }
                 }
             }
-        ).onSuccess { data ->
-            println("successImage $data")
+        ).onSuccess {
         }
     }
 
 
-    private fun fetchUserData()=viewModelScope.launch {
+    private fun fetchUserData() = viewModelScope.launch {
         fetchUserDetailUseCase().onSuccess { data ->
+            println("data_document $data")
             _state.update {
                 it.copy(
-                    documentList = _state.value.documentList.mapIndexed { index,item ->
-                        when(index){
-                            0->item.copy(
-                                uploadedImage = data.imageUrl
+                    documentList = _state.value.documentList.mapIndexed { index, item ->
+                        when (index) {
+                            0 -> item.copy(
+
+                                uploadedImage = if (data.citizenshipFrontImage.isNullOrBlank()) null else data.citizenshipFrontImage
                             )
-                            else->item
+
+                            1 -> item.copy(
+                                uploadedImage = if (data.citizenshipBackImage.isNullOrBlank()) null else data.citizenshipFrontImage
+                            )
+
+                            2 -> item.copy(
+                                uploadedImage = if (data.nationalId.isNullOrBlank()) null else data.nationalId
+                            )
+
+                            3 -> item.copy(
+                                uploadedImage = if (data.slcDocument.isNullOrBlank()) null else data.slcDocument
+                            )
+
+                            4 -> item.copy(
+                                uploadedImage = if (data.plusTwoImage.isNullOrBlank()) null else data.plusTwoImage
+                            )
+
+                            5 -> item.copy(
+                                uploadedImage = if (data.bachelorImage.isNullOrBlank()) null else data.bachelorImage
+                            )
+
+                            6 -> item.copy(
+                                uploadedImage = if (data.masterImage.isNullOrBlank()) null else data.masterImage
+                            )
+
+                            7 -> item.copy(
+                                uploadedImage = if (data.experienceDocuments.isNullOrBlank()) null else data.experienceDocuments
+                            )
+
+                            else -> item
                         }
                     }
                 )

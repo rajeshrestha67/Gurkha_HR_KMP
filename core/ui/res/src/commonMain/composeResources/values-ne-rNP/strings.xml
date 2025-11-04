@@ -295,6 +295,13 @@
     <string name="photos">फोटोहरू</string>
     <string name="copy">प्रतिलिपि</string>
     <string name="share">सेयर</string>
+
+    <string name="extra_image_one">Extra Image One</string>
+    <string name="extra_image_two">Extra Image Two</string>
+
+    <string name="upload_extra_image_one"> अतिरिक्त छवि एउटा अपलोड गर्नुहोस्</string>
+    <string name="upload_extra_image_two"> अतिरिक्त छवि दुई अपलोड गर्नुहोस्</string>
+
     <string-array name="months">
         <item>बैशाख</item>
         <item>जेठ</item>

@@ -292,6 +292,14 @@
     <string name="gallery_permission_denied">Gallery permission denied.</string>
     <string name="to_access_all_photos">To access all photos, change your settings</string>
 
+    <string name="extra_image_one">Extra Image One</string>
+    <string name="extra_image_two">Extra Image Two</string>
+
+    <string name="upload_extra_image_one"> Upload Extra Image One</string>
+    <string name="upload_extra_image_two"> Upload Extra Image Two</string>
+
+
+
 
     <string-array name="months">
         <item>Baisakh</item>

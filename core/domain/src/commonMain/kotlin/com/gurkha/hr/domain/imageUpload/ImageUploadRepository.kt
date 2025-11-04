@@ -9,6 +9,7 @@ interface ImageUploadRepository {
         filePath: String,
         imageName: String,
         onProgress: (Int) -> Unit,
-        employeeId: Int
+        employeeId: Int,
+        type: String
     ): ERPResult<UploadImageResponseDto, DataError>
 }

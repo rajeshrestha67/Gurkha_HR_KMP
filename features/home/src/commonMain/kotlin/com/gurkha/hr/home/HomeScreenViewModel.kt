@@ -485,11 +485,12 @@ class HomeScreenViewModel(
                 showSwipeView = false
             )
         }
-        val imageName = if (isAlreadyClockIn.value) "clockOut" else "clockIn"
+        val imageName = if (isAlreadyClockIn.value) "CLOCK_OUT_IMAGE" else "CLOCK_IN_IMAGE"
 
         uploadImageUseCase(
             imageName = "$imageName${Clock.System.now().toEpochMilliseconds()}",
             filePath = uri,
+            type = imageName,
             onProgress = { progress ->
                 //when the image is uploading don't show the swipe button
                 _state.update {

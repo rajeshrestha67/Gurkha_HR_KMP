@@ -73,6 +73,8 @@ suspend inline fun HttpClient.uploadImage(
     fileBytes: ByteArray,
     crossinline block: HttpRequestBuilder.() -> Unit = {},
     crossinline onProgress: (Int) -> Unit,
+    type: String,
+    employeeId: Int
 ): HttpResponse {
     return post(
         baseUrl = baseUrl,
@@ -93,8 +95,8 @@ suspend inline fun HttpClient.uploadImage(
                         )
                         append(HttpHeaders.ContentDisposition, "filename=\"$updatedFileName\"")
                     })
-                    append(key = "employeeId", value ="135" )
-                    append(key = "type", value ="CLOCK_IN_IMAGE" )
+                    append(key = "employeeId", value =employeeId.toString() )
+                    append(key = "type", value =type )
                 }
             )
         )
