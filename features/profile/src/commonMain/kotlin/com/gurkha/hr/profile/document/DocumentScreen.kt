@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -155,6 +156,7 @@ fun DocumentItemRow(
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .aspectRatio(1f)
             .border(
                 width = 0.5.dp,
                 color = MaterialTheme.colorScheme.outline,
@@ -166,7 +168,6 @@ fun DocumentItemRow(
                 onOpenCamera()
                 action(DocumentScreenAction.OnSelectedDocument(item.imageType.key))
             })
-            .padding(MaterialTheme.dimens.small3),
     ) {
         item.uploadedImage?.let {
             Image(
@@ -176,53 +177,45 @@ fun DocumentItemRow(
                 painter = rememberAsyncImagePainter(item.uploadedImage),
                 contentDescription = "uploaded Image",
             )
-        }
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .border(
-                    width = 0.5.dp,
-                    color = MaterialTheme.colorScheme.outline,
-                    shape = MaterialTheme.shapes.medium
+        } ?:
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clickable(onClick = {
+                        onOpenCamera()
+                        action(DocumentScreenAction.OnSelectedDocument(item.imageType.key))
+                    })
+                    .padding(MaterialTheme.dimens.small3),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2)
+            ) {
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = stringResource(item.title),
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        color = MaterialTheme.erpColors.primaryTextColor
+                    ),
+                    textAlign = TextAlign.Center
                 )
-                .clip(
-                    shape = MaterialTheme.shapes.medium
-                ).clickable(onClick = {
-                    onOpenCamera()
-                    action(DocumentScreenAction.OnSelectedDocument(item.imageType.key))
-                })
-                .padding(MaterialTheme.dimens.small3),
+                Icon(
+                    imageVector = Icons.Filled.CloudUpload,
+                    contentDescription = "upload",
+                    modifier = Modifier.size(MaterialTheme.dimens.medium1),
+                    tint = MaterialTheme.erpColors.secondaryTextColor
+                )
+                Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
+                Text(
+                    text = stringResource(item.uploadText),
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        color = MaterialTheme.erpColors.secondaryTextColor,
+                    ),
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.padding(horizontal = MaterialTheme.dimens.small1)
+                )
+            }
 
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2)
-        ) {
-            Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = stringResource(item.title),
-                style = MaterialTheme.typography.titleMedium.copy(
-                    color = MaterialTheme.erpColors.primaryTextColor
-                ),
-                textAlign = TextAlign.Center
-            )
-            Icon(
-                imageVector = Icons.Filled.CloudUpload,
-                contentDescription = "upload",
-                modifier = Modifier.size(MaterialTheme.dimens.medium1),
-                tint = MaterialTheme.erpColors.secondaryTextColor
-            )
-            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
-            Text(
-                text = stringResource(item.uploadText),
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    color = MaterialTheme.erpColors.secondaryTextColor,
-                ),
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.padding(horizontal = MaterialTheme.dimens.small1)
-            )
-        }
     }
 }
 
