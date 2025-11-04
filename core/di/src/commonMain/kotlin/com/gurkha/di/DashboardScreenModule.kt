@@ -2,7 +2,9 @@ package com.gurkha.di
 
 import com.gurkha.hr.dashboard.DashboardViewModel
 import com.gurkha.hr.data.userDetail.KtorUserDetailRemoteRepository
+import com.gurkha.hr.datastore.token.repository.TokenRepository
 import com.gurkha.hr.datastore.user_data.repository.UserDataRepository
+import com.gurkha.hr.domain.token.usecase.FetchTokenUseCase
 import com.gurkha.hr.domain.userDetail.repository.UserDetailRemoteRepository
 import com.gurkha.hr.domain.userDetail.usecase.FetchUserDetailUseCase
 import com.gurkha.model.AuthState
@@ -28,14 +30,19 @@ class DashboardScreenModule {
             userDataRepository
         )
 
+    @Factory
+    fun fetchTokenUseCase(tokenRepository: TokenRepository): FetchTokenUseCase =
+        FetchTokenUseCase(tokenRepository = tokenRepository)
 
     @KoinViewModel
     fun getDashboardViewModel(
         userDetailUseCase: FetchUserDetailUseCase,
-        authState: AuthState
+        authState: AuthState,
+        fetchTokenUseCase: FetchTokenUseCase
     ) = DashboardViewModel(
         userDetailUseCase = userDetailUseCase,
-        authState = authState
+        authState = authState,
+        fetchTokenUseCase = fetchTokenUseCase
     )
 
 }

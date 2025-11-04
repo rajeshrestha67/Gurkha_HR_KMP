@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.gurkha.hr.dashboard.model.DashboardScreenAction
 import com.gurkha.hr.dashboard.model.DashboardScreenState
 import com.gurkha.hr.dashboard.route.DashboardRoute
+import com.gurkha.hr.domain.token.usecase.FetchTokenUseCase
 import com.gurkha.hr.domain.userDetail.usecase.FetchUserDetailUseCase
 import com.gurkha.hr.networkhelper.onError
 import com.gurkha.hr.networkhelper.onSuccess
@@ -12,19 +13,23 @@ import com.gurkha.model.AuthState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class DashboardViewModel(
     private val userDetailUseCase: FetchUserDetailUseCase,
-    private val authState: AuthState
+    private val authState: AuthState,
+    private val fetchTokenUseCase: FetchTokenUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(DashboardScreenState())
 
     val sessionExpired: StateFlow<Boolean> = authState.sessionExpired
-
     val state = _state
+        .onStart {
+            println("repository.token ${fetchTokenUseCase()}")
+        }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),

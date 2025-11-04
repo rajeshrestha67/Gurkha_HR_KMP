@@ -66,6 +66,7 @@ kotlin {
             implementation(projects.features.settings)
             implementation(projects.core.model)
             implementation(projects.core.logger)
+            implementation(projects.core.persistance.datastore)
 
             implementation(libs.koin.compose.viewmodel)
             implementation(compose.components.resources)

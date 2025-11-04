@@ -17,14 +17,21 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.graphics.toColorInt
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import com.gurkha.hr.datastore.token.model.Token
+import com.gurkha.hr.datastore.token.repository.TokenRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.koin.android.ext.android.inject
 import java.net.HttpURLConnection
 import java.net.URL
 
 class FirebaseService : FirebaseMessagingService() {
+    val repository: TokenRepository by inject()
+    val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
 
@@ -51,6 +58,10 @@ class FirebaseService : FirebaseMessagingService() {
 
     override fun onNewToken(token: String) {
         super.onNewToken(token)
+        scope.launch {
+            val token = repository.token.firstOrNull() ?: Token()
+            repository.saveToken(token)
+        }
         println("firebase newToken: $token")
     }
 
