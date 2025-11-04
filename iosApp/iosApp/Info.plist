@@ -16,5 +16,7 @@
 		<key>UIImageName</key>
 		<string>gurkha_hr</string>
 	</dict>
+    <key>NSFaceIDUsageDescription</key>
+    <string>We need access to Face ID to quickly and securely log you in.</string>
 </dict>
 </plist>

@@ -61,6 +61,7 @@ class ChatListViewModel(
             }
 
             is ChatListScreenAction.ItemClick -> {
+
                 val chatUserData = ChatUserData(
                     employeeId = action.chatItem.employeeId,
                     chatId = action.chatItem.chatId,
@@ -107,7 +108,7 @@ class ChatListViewModel(
         }
     }
 
-    private fun refresh()=viewModelScope.launch {
+    private fun refresh() = viewModelScope.launch {
         _state.update {
             it.copy(
                 isRefreshing = true

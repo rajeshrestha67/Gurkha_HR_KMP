@@ -56,6 +56,7 @@ import gurkhahr.core.ui.res.generated.resources.company_assets
 import gurkhahr.core.ui.res.generated.resources.confirm
 import gurkhahr.core.ui.res.generated.resources.confirm_password
 import gurkhahr.core.ui.res.generated.resources.contact_info
+import gurkhahr.core.ui.res.generated.resources.copy
 import gurkhahr.core.ui.res.generated.resources.current_password
 import gurkhahr.core.ui.res.generated.resources.dark
 import gurkhahr.core.ui.res.generated.resources.date
@@ -198,6 +199,7 @@ import gurkhahr.core.ui.res.generated.resources.select_leave_duration
 import gurkhahr.core.ui.res.generated.resources.select_leave_type
 import gurkhahr.core.ui.res.generated.resources.select_start_date
 import gurkhahr.core.ui.res.generated.resources.setting
+import gurkhahr.core.ui.res.generated.resources.share
 import gurkhahr.core.ui.res.generated.resources.sick_leave
 import gurkhahr.core.ui.res.generated.resources.skip
 import gurkhahr.core.ui.res.generated.resources.slc_marksheet
@@ -558,6 +560,7 @@ object SharedRes {
         val toAccessAllPhotos = Res.string.to_access_all_photos
         val cameraPermissionDenied = Res.string.camera_permission_denied
         val galleryPermissionDenied = Res.string.gallery_permission_denied
-
+        val copy = Res.string.copy
+        val share = Res.string.share
     }
 }

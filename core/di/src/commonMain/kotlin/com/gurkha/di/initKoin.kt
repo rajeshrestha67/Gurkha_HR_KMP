@@ -38,7 +38,8 @@ fun initKoin(config: KoinAppDeclaration? = null) {
             SettingsModule().module,
             CryptographyModule().module,
             EditProfileModule().module,
-            NoteScreenModule().module
+            NoteScreenModule().module,
+            PlatformUtilsModule().module
         )
     }
 }

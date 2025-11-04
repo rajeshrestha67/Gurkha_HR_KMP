@@ -29,8 +29,11 @@ sealed interface ProfileRoute {
     data object HistoryScreenRoute : ProfileRoute
 
     @Serializable
-    data object ReportScreenRoute: ProfileRoute
+    data object ReportScreenRoute : ProfileRoute
 
     @Serializable
-    data object EditProfileRoute: ProfileRoute
+    data object EditProfileRoute : ProfileRoute
+
+    @Serializable
+    data class WebviewRoute(val url: String) : ProfileRoute
 }

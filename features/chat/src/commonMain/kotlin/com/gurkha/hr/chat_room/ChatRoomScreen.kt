@@ -33,6 +33,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.filled.Call
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -70,6 +71,7 @@ import com.gurkha.hr.chat_room.model.ChatRoomScreenState
 import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.components.isKeyboardVisible
+import com.gurkha.hr.components.platform_utils.PlatformUtils
 import com.gurkha.hr.components.textField.ERPTextField
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.model.chat.ChatUserData
@@ -77,6 +79,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -134,7 +137,7 @@ private fun ChatRoomScreenContent(
                 message = state.message,
                 onAction = onAction
             )
-        }
+        },
     ) { contentPadding ->
         PullToRefreshBox(
             modifier = Modifier
@@ -216,6 +219,8 @@ private fun ChatTopBar(
     onBackPressed: () -> Unit,
     userData: ChatUserData
 ) {
+
+    val platformUtils: PlatformUtils = koinInject()
     TopAppBar(
         title = {
             Row(
@@ -283,6 +288,18 @@ private fun ChatTopBar(
                 Icon(
                     imageVector = Icons.AutoMirrored.Default.ArrowBack,
                     contentDescription = "Back"
+                )
+            }
+        },
+        actions = {
+            IconButton(
+                onClick = {
+                    platformUtils.callPhoneNumber("9840055429")
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Call,
+                    contentDescription = "Call"
                 )
             }
         }

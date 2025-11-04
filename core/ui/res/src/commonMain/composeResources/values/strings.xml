@@ -286,6 +286,8 @@
     <string name="go_to_setting">Go To Settings</string>
     <string name="add_photos">Add Photos</string>
     <string name="photos">Photos</string>
+    <string name="copy">Copy</string>
+    <string name="share">Share</string>
     <string name="camera_permission_denied">Camera permission denied.</string>
     <string name="gallery_permission_denied">Gallery permission denied.</string>
     <string name="to_access_all_photos">To access all photos, change your settings</string>

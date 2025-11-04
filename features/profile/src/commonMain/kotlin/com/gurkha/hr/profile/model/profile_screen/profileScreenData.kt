@@ -26,12 +26,15 @@ enum class GeneralList(val title: StringResource) {
 }
 
 
-enum class AccountList(val title: StringResource){
-    TermsAndServices(title = SharedRes.Strings.terms_and_services),
-    PrivacyPolicy(title = SharedRes.Strings.privacy_policy),
-    FAC(title = SharedRes.Strings.faq),
-    Support(title = SharedRes.Strings.support),
-    Settings(title = SharedRes.Strings.setting);
+enum class AccountList(val title: StringResource, val url: String) {
+    TermsAndServices(
+        title = SharedRes.Strings.terms_and_services,
+        "https://mbank.gurkhahr.com/faq"
+    ),
+    PrivacyPolicy(title = SharedRes.Strings.privacy_policy, "https://mbank.gurkhahr.com/faq"),
+    FAC(title = SharedRes.Strings.faq, "https://mbank.gurkhahr.com/faq"),
+    Settings(title = SharedRes.Strings.setting, "");
+
     companion object {
         private val typeMap =
             enumValues<AccountList>().associateBy { it.title }

@@ -15,3 +15,9 @@ data class UploadImageResponseDto(
 data class UploadImageResponseDtoData(
     val fileNames: List<String>? = null
 )
+
+@Serializable
+data class UploadImageRequestDto(
+    val employeeId: Int,
+    val type: String
+)

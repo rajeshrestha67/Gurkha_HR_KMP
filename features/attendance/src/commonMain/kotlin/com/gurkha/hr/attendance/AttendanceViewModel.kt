@@ -14,11 +14,9 @@ import com.gurkha.hr.model.attendanceScreen.TabItemsEnums
 import com.gurkha.hr.networkhelper.onError
 import com.gurkha.hr.networkhelper.onSuccess
 import com.gurkha.model.attendance.attendanceRequest.AttendanceRequestData
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -83,7 +81,8 @@ class AttendanceViewModel(
                     )
                 }
             }
-            is AttendanceAction.OnRefresh->{
+
+            is AttendanceAction.OnRefresh -> {
                 refresh()
             }
         }
@@ -249,21 +248,25 @@ class AttendanceViewModel(
                                     days = data.forgottenAttendanceDaysCount.toString()
                                 )
                             }
+
                             1 -> {
                                 item.copy(
                                     days = data.approvedAttendanceCount.toString()
                                 )
                             }
+
                             2 -> {
                                 item.copy(
                                     days = data.pendingAttendanceCount.toString()
                                 )
                             }
+
                             3 -> {
                                 item.copy(
                                     days = data.rejectedAttendanceCount.toString()
                                 )
                             }
+
                             else -> {
                                 item
                             }
@@ -274,19 +277,22 @@ class AttendanceViewModel(
         }
     }
 
-    private fun refresh()=viewModelScope.launch {
+    private fun refresh() = viewModelScope.launch {
         _state.update {
             it.copy(
                 isRefreshing = true
             )
         }
         fetchAttendanceSummary()
-        fetchAttendance(
-            attendanceStatus = TabItemsEnums.PENDING,
-            employeeName = "",
-            isSelf = "Y",
-            fromDate = datePair.first,
-            toDate = datePair.second
-        )
+        TabItemsEnums.list.forEach {
+            fetchAttendance(
+                attendanceStatus = it,
+                employeeName = "",
+                isSelf = "Y",
+                fromDate = datePair.first,
+                toDate = datePair.second
+            )
+        }
+
     }
 }

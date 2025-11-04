@@ -3,6 +3,7 @@ package com.gurkha.hr.dashboard.graph
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import com.gurkha.hr.dashboard.route.DashboardRoute
 import com.gurkha.hr.dashboard.route.ProfileRoute
 import com.gurkha.hr.profile.allocated_leave.AllocatedLeaveScreen
@@ -16,6 +17,7 @@ import com.gurkha.hr.profile.profile_info.ProfileInfoScreen
 import com.gurkha.hr.profile.profile_screen.ProfileScreen
 import com.gurkha.hr.profile.report_screen.ReportScreen
 import com.gurkha.hr.profile.time_and_attendance.TimeAndAttendanceScreen
+import com.gurkha.hr.profile.webview.WebviewScreen
 
 
 fun NavGraphBuilder.profileScreenBuilder(
@@ -27,24 +29,12 @@ fun NavGraphBuilder.profileScreenBuilder(
             onLogout = onLogout,
             onAccountClick = { item ->
                 when (item) {
-                    AccountList.TermsAndServices -> {
-
-                    }
-
-                    AccountList.PrivacyPolicy -> {
-
-                    }
-
-                    AccountList.FAC -> {
-
-                    }
-
-                    AccountList.Support -> {
-
-                    }
-
                     AccountList.Settings -> {
                         navController.navigate(ProfileRoute.SettingsRoute)
+                    }
+
+                    else -> {
+                        navController.navigate(ProfileRoute.WebviewRoute(item.url))
                     }
                 }
             },
@@ -84,13 +74,12 @@ fun NavGraphBuilder.profileScreenBuilder(
         ProfileInfoScreen(
             onBackPressed = {
                 navController.popBackStack()
-            }
-            , onGotoEditProfile = {
+            }, onGotoEditProfile = {
                 navController.navigate(ProfileRoute.EditProfileRoute)
             }
         )
     }
-    composable <ProfileRoute.EditProfileRoute>{
+    composable<ProfileRoute.EditProfileRoute> {
         EditProfileScreen(
             onBackPressed = {
                 navController.popBackStack()
@@ -126,6 +115,16 @@ fun NavGraphBuilder.profileScreenBuilder(
         ReportScreen(onBackPressed = {
             navController.popBackStack()
         })
+    }
+
+    composable<ProfileRoute.WebviewRoute> {
+        val url = it.toRoute<ProfileRoute.WebviewRoute>().url
+        WebviewScreen(
+            url = url,
+            onBackPressed = {
+                navController.popBackStack()
+            }
+        )
     }
 
 }
