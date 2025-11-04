@@ -20,7 +20,8 @@ class KtorImageUploadRepository(
         filePath: String,
         imageName: String,
         onProgress: (Int) -> Unit,
-        employeeId: Int
+        employeeId: Int,
+        type: String
     ): ERPResult<UploadImageResponseDto, DataError> {
         val bytes = getFileBytes(filePath)
         return safeCall {
@@ -30,6 +31,9 @@ class KtorImageUploadRepository(
                 fileBytes = bytes,
                 uri = filePath,
                 onProgress = onProgress,
+                type = type,
+                employeeId = employeeId
+
             )
         }
     }

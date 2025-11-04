@@ -38,7 +38,7 @@ data class UserDetailData(
     val plusTwoImage: String?,
     val profileId: Int,
     val slcDocument: String?,
-    val userProfileUrl: String,
+    val userProfileUrl: String?,
     val nationality: String,
     val initials: String,
     val isCompleteProfile: Boolean,

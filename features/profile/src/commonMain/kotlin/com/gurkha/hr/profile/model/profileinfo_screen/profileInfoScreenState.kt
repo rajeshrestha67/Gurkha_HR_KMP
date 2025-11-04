@@ -22,6 +22,7 @@ data class ProfileInfoScreenState(
     val isProfileLoading: Boolean = false,
     val selectedTab: InfoList = InfoList.PersonalInfo,
 
+
     val isRefreshing: Boolean = false
 )
 

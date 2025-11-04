@@ -33,26 +33,44 @@ fun UserDetailResponseDto.toData(): UserDetailData {
         designation = detail?.designation ?: "",
         panNumber = detail?.employeeDetails?.panNumber ?: "",
         pfNumber = detail?.employeeDetails?.pfNumber ?: "",
-        bachelorImage = detail?.employeeDetails?.bachelorImageUrl ?: "",
+        bachelorImage = detail?.employeeDetails?.bachelorImageUrl?.let {
+            "https://mbank.gurkhahr.com/erp-images/${it}"
+        } ,
         branchId =detail?.employeeDetails?.user?.branch?.id ?: 0,
-        citizenshipBackImage = detail?.employeeDetails?.citizenshipBackImage ?: "",
-        citizenshipFrontImage = detail?.employeeDetails?.citizenshipFrontImage ?: "",
+        citizenshipBackImage = detail?.employeeDetails?.citizenshipBackImage?.let {
+            "https://mbank.gurkhahr.com/erp-images/${it}"
+        } ,
+        citizenshipFrontImage = detail?.employeeDetails?.citizenshipFrontImage?.let {
+            "https://mbank.gurkhahr.com/erp-images/${it}"
+        } ,
         departmentId = detail?.departmentId?:0,
         designationId =detail?.designationId?: 0 ,
         employeeType = detail?.employeeType ?: "",
         enableImageAttendance = detail?.employeeDetails?.enableImageAttendance ?: "",
         enableManualAttendance = detail?.employeeDetails?.enableManualAttendance ?: "",
-        experienceDocuments = detail?.employeeDetails?.experienceDocumentsUrl ?: "",
-        imageUrl = detail?.imageUrl ?: "",
+        experienceDocuments = detail?.employeeDetails?.experienceDocumentsUrl?.let {
+            "https://mbank.gurkhahr.com/erp-images/${it}"
+        } ,
+        imageUrl = detail?.imageUrl ,
         levelId = detail?.levelId ?: 0,
         mapId = detail?.employeeDetails?.mapId ?: 0,
-        masterImage = detail?.employeeDetails?.masterImageUrl ?: "",
-        nationalId = detail?.employeeDetails?.nationalIdImage ?: "",
-        panImage = detail?.employeeDetails?.panImage ?: "",
+        masterImage = detail?.employeeDetails?.masterImageUrl?.let {
+            "https://mbank.gurkhahr.com/erp-images/${it}"
+        } ,
+        nationalId = detail?.employeeDetails?.nationalIdImage?.let {
+            "https://mbank.gurkhahr.com/erp-images/${it}"
+        } ,
+        panImage = detail?.employeeDetails?.panImage?.let {
+            "https://mbank.gurkhahr.com/erp-images/${it}"
+        },
         password = "",
-        plusTwoImage = detail?.employeeDetails?.plusTwoImage ?: "",
+        plusTwoImage = detail?.employeeDetails?.plusTwoImage?.let {
+            "https://mbank.gurkhahr.com/erp-images/${it}"
+        } ,
         profileId = detail?.profileId ?: detail?.employeeDetails?.profileId ?: 0,
-        slcDocument = detail?.employeeDetails?.slcDocumentUrl ?: ""
+        slcDocument = detail?.employeeDetails?.slcDocumentUrl?.let {
+            "https://mbank.gurkhahr.com/erp-images/${it}"
+        }
     )
 }
 

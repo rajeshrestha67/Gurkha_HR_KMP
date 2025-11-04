@@ -196,10 +196,6 @@ class EditProfileViewModel(
             }
 
         }
-        state.value.profileSummaryList?.let {
-
-        }
-
     }
 
 }

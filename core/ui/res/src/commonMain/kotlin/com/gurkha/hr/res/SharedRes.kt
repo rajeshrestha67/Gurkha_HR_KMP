@@ -84,6 +84,8 @@ import gurkhahr.core.ui.res.generated.resources.enter_your_password
 import gurkhahr.core.ui.res.generated.resources.enter_your_username
 import gurkhahr.core.ui.res.generated.resources.event
 import gurkhahr.core.ui.res.generated.resources.experience_document
+import gurkhahr.core.ui.res.generated.resources.extra_image_one
+import gurkhahr.core.ui.res.generated.resources.extra_image_two
 import gurkhahr.core.ui.res.generated.resources.faq
 import gurkhahr.core.ui.res.generated.resources.fix_now
 import gurkhahr.core.ui.res.generated.resources.from_date
@@ -235,6 +237,8 @@ import gurkhahr.core.ui.res.generated.resources.upload_bachelor
 import gurkhahr.core.ui.res.generated.resources.upload_citizenship_back
 import gurkhahr.core.ui.res.generated.resources.upload_citizenship_front
 import gurkhahr.core.ui.res.generated.resources.upload_experience_document
+import gurkhahr.core.ui.res.generated.resources.upload_extra_image_one
+import gurkhahr.core.ui.res.generated.resources.upload_extra_image_two
 import gurkhahr.core.ui.res.generated.resources.upload_master
 import gurkhahr.core.ui.res.generated.resources.upload_national_id
 import gurkhahr.core.ui.res.generated.resources.upload_plus_two_image
@@ -562,5 +566,11 @@ object SharedRes {
         val galleryPermissionDenied = Res.string.gallery_permission_denied
         val copy = Res.string.copy
         val share = Res.string.share
+
+        val extra_image_one = Res.string.extra_image_one
+        val extra_image_two = Res.string.extra_image_two
+
+        val upload_extra_image_one = Res.string.upload_extra_image_one
+        val upload_extra_image_two = Res.string.upload_extra_image_two
     }
 }
