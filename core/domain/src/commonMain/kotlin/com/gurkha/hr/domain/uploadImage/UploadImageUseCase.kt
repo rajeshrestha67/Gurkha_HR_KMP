@@ -36,20 +36,20 @@ class UploadImageUseCase(
             val userData = userDataRepository.userDataFlow.firstOrNull() ?: UserData()
 
             //only update if file path is not null
-            filePath?.let {
-                when(type){
-                    "PROFILE_IMAGE"->{
-                        userDataRepository.saveUserData(userData.copy(
-                            imageUrl = filePath
-                        ))
-                    }
-                    "CITIZENSHIP_FRONT"->{
-                        userDataRepository.saveUserData(userData.copy(
-                            imageUrl = filePath
-                        ))
-                    }
-                }
-            }
+//            filePath?.let {
+//                when(type){
+//                    "PROFILE_IMAGE"->{
+//                        userDataRepository.saveUserData(userData.copy(
+//                            imageUrl = filePath
+//                        ))
+//                    }
+//                    "CITIZENSHIP_FRONT"->{
+//                        userDataRepository.saveUserData(userData.copy(
+//                            imageUrl = filePath
+//                        ))
+//                    }
+//                }
+//            }
         }
             .map {
             UploadImageData(

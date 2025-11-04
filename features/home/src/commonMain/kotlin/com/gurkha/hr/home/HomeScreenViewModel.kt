@@ -1,7 +1,5 @@
 package com.gurkha.hr.home
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gurkha.hr.components.permissions.ProgressNotification
@@ -58,17 +56,17 @@ class HomeScreenViewModel(
     private val unseenNotificationUseCase: UnseenNotificationUseCase,
     private val uploadImageUseCase: UploadImageUseCase,
     private val doAttendanceUseCase: DoAttendanceUseCase,
-    private val attendanceCountReportUseCase : AttendanceCountReportUseCase
+    private val attendanceCountReportUseCase: AttendanceCountReportUseCase
 ) : ViewModel() {
     private val notification = ProgressNotification()
 
-    private var isAlreadyClockIn: MutableState<Boolean> = mutableStateOf(false)
+    private var isAlreadyClockIn: Boolean = false
 
     val datePair = calendarModel.getMonthStartAndEndDate()
 
     private val _state = MutableStateFlow(HomeScreenState())
 
-//    @OptIn(ExperimentalTime::class)
+    //    @OptIn(ExperimentalTime::class)
     val state = _state
         .onStart {
             fetchCurrentUser(isRefreshing = false)
@@ -81,10 +79,10 @@ class HomeScreenViewModel(
             getAttendanceTotalCountReport()
         }
         .stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = HomeScreenState()
-    )
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = HomeScreenState()
+        )
 
     fun onAction(action: HomeScreenActions) {
         when (action) {
@@ -161,6 +159,7 @@ class HomeScreenViewModel(
                     RequestType.CheckOut -> item.copy(
                         duration = attendanceData.clockOutTime ?: "--:--"
                     )
+
                     else -> item
                 }
             } ?: item
@@ -237,7 +236,7 @@ class HomeScreenViewModel(
             }
             _state.update {
                 it.copy(
-                    isRefreshing= false,
+                    isRefreshing = false,
                     isAttendanceLoading = false,
                     attendanceReport = data,
                     todayAttendance = attendanceData,
@@ -463,13 +462,13 @@ class HomeScreenViewModel(
     private fun updateSwipeText() = viewModelScope.launch {
         _state.value.todayAttendance?.clockInTime?.let {
             _state.update {
-                isAlreadyClockIn.value = true
+                isAlreadyClockIn = true
                 it.copy(
                     swipeText = SharedRes.Strings.swipeToCheckOut,
                 )
             }
         } ?: _state.update {
-            isAlreadyClockIn.value = false
+            isAlreadyClockIn = false
             it.copy(
                 swipeText = SharedRes.Strings.swipeToCheckIn,
             )
@@ -485,7 +484,7 @@ class HomeScreenViewModel(
                 showSwipeView = false
             )
         }
-        val imageName = if (isAlreadyClockIn.value) "CLOCK_OUT_IMAGE" else "CLOCK_IN_IMAGE"
+        val imageName = if (isAlreadyClockIn) "CLOCK_OUT_IMAGE" else "CLOCK_IN_IMAGE"
 
         uploadImageUseCase(
             imageName = "$imageName${Clock.System.now().toEpochMilliseconds()}",
@@ -535,7 +534,7 @@ class HomeScreenViewModel(
             updateSwipeText()
 
             _state.update {
-                if (isAlreadyClockIn.value) {
+                if (isAlreadyClockIn) {
                     it.copy(
                         showSwipeView = true,
                         requests = it.requests.updateDuration(
@@ -572,7 +571,7 @@ class HomeScreenViewModel(
         private const val TAG = "HomeScreenViewModel"
     }
 
-    private fun getAttendanceTotalCountReport()=viewModelScope.launch {
+    private fun getAttendanceTotalCountReport() = viewModelScope.launch {
         _state.update {
             it.copy(
                 isAttendanceCountLoading = true
@@ -592,7 +591,7 @@ class HomeScreenViewModel(
                     )
                 )
             }
-        }.onError {error ->
+        }.onError { error ->
             AppLogger.e(
                 tag = TAG,
                 "Attendance Count Report Fetch failed: ${error.toErrorMessage()}"

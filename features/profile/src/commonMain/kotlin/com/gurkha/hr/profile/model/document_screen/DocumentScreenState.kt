@@ -7,7 +7,9 @@ data class DocumentScreenState(
     val selectedDocumentImageURi : String? = null,
     val selectedDocumentType: String? = null,
     val documentList : List<DocumentList> = documentItemList,
-    val isUploading: Boolean = false
+    val isUploading: Boolean = false,
+    val isLongImagePressed : Boolean = false,
+    val longPressedImage : String = ""
 )
 
 
