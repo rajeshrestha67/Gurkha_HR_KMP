@@ -10,8 +10,8 @@ import com.gurkha.model.network.DataError
 class NotificationUseCase(
     private val notificationRemoteRepository: NotificationRemoteRepository,
 ) {
-    suspend operator fun invoke(): ERPResult<List<NotificationData>, DataError>{
-        return notificationRemoteRepository.getAllNotification().map {
+    suspend operator fun invoke(offset: Int): ERPResult<List<NotificationData>, DataError>{
+        return notificationRemoteRepository.getAllNotification(offset = offset).map {
             it.toData()
         }
     }

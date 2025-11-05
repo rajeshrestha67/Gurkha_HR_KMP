@@ -9,7 +9,7 @@ import androidx.navigation.toRoute
 import com.gurkha.hr.dashboard.route.DashboardRoute
 import com.gurkha.hr.dashboard.route.HomeRoute
 import com.gurkha.hr.home.HomeScreen
-import com.gurkha.hr.notification.Notification
+import com.gurkha.hr.notification.NotificationScreen
 import com.gurkha.hr.profile.edit_profile.EditProfileScreen
 import com.gurkha.hr.viewAllScreen.ViewAllScreen
 
@@ -47,7 +47,7 @@ fun NavGraphBuilder.homeScreenBuilder(
     }
 
     composable<HomeRoute.NotificationRoute> {
-        Notification(
+        NotificationScreen(
             onBackClicked = {
                 navController.popBackStack()
             }

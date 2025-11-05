@@ -11,6 +11,7 @@ import com.gurkha.model.notification.notificationCount.NotificationCountResponse
 import com.gurkha.model.notification.notificationData.NotificationsResponseDto
 import com.gurkha.model.notification.unSeenNotificationCount.UnSeenNotificationCountDto
 import io.ktor.client.HttpClient
+import io.ktor.client.request.parameter
 
 class KtorNotificationRemoteRepository(
     private val httpClient: HttpClient
@@ -24,12 +25,16 @@ class KtorNotificationRemoteRepository(
         }
     }
 
-    override suspend fun getAllNotification(): ERPResult<NotificationsResponseDto, DataError> {
+    override suspend fun getAllNotification(
+        offset: Int,
+    ): ERPResult<NotificationsResponseDto, DataError> {
         return safeCall {
             httpClient.get(
                 baseUrl = BaseUrl.Generic,
-                endPoint = EndPoint.ALL_NOTIFICATION_END_POINT
-            )
+                endPoint = EndPoint.ALL_NOTIFICATION_END_POINT+"/10"
+            ){
+                parameter("offset", offset)
+            }
         }
     }
 

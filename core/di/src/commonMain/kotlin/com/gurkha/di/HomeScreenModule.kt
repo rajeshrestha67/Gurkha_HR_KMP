@@ -86,10 +86,8 @@ class HomeScreenModule {
     @Factory
     fun notificationCountUseCase(
         notificationRemoteRepository: NotificationRemoteRepository,
-        notificationCountDataRepository: NotificationCountDataRepository
     ): NotificationCountUseCase = NotificationCountUseCase(
         notificationRemoteRepository = notificationRemoteRepository,
-        notificationCountDataRepository = notificationCountDataRepository
     )
 
     @Factory
@@ -193,9 +191,11 @@ class HomeScreenModule {
 
     @KoinViewModel
     fun getNotificationViewModel(
-        notificationUseCase: NotificationUseCase
+        notificationUseCase: NotificationUseCase,
+        notificationCountUseCase: NotificationCountUseCase,
     ): NotificationViewModel = NotificationViewModel(
-        notificationUseCase = notificationUseCase
+        notificationUseCase = notificationUseCase,
+        notificationCountUseCase = notificationCountUseCase
     )
 }
 

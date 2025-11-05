@@ -35,6 +35,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gurkha.hr.components.ProfilePicture
 import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.erpColors
+import com.gurkha.hr.components.paging.PagingLazyColumn
 import com.gurkha.hr.components.shimmer.ShimmerView
 import com.gurkha.hr.domain.notification.notificationData.model.NotificationData
 import com.gurkha.hr.model.notification.NotificationAction
@@ -45,7 +46,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Notification(
+fun NotificationScreen(
     onBackClicked: () -> Unit
 ) {
     val viewModel: NotificationViewModel = koinViewModel()
@@ -84,7 +85,8 @@ fun Notification(
                 NotificationScreenContent(
                     modifier = Modifier
                         .fillMaxSize(),
-                    state = state
+                    state = state,
+                    action = viewModel::onAction
                 )
             }
         )
@@ -94,10 +96,18 @@ fun Notification(
 @Composable
 fun NotificationScreenContent(
     modifier: Modifier = Modifier,
-    state: NotificationState
+    state: NotificationState,
+    action: (NotificationAction)-> Unit
 ) {
-    LazyColumn(
+    PagingLazyColumn(
         modifier = modifier.fillMaxWidth(),
+        pagingListState = state.pagingState,
+        onBottomReached = {
+            action(NotificationAction.OnPagination)
+        },
+        onRetry = {
+            action(NotificationAction.OnPagination)
+        }
     ) {
         if (state.isNotificationLoading) {
             items(5) {
@@ -126,9 +136,6 @@ fun NotificationScreenContent(
 
                 itemsIndexed(notification) { index, item ->
                     NotificationBox(item = item)
-                    if (index == notification.lastIndex && !state.isNotificationLoading) {
-                        println("lastIndex_reached_fetchMore")
-                    }
                 }
             }
         }

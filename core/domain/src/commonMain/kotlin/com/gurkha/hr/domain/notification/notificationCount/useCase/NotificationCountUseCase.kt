@@ -14,13 +14,10 @@ import kotlinx.coroutines.flow.firstOrNull
 
 class NotificationCountUseCase(
     private val notificationRemoteRepository: NotificationRemoteRepository,
-    private val notificationCountDataRepository: NotificationCountDataRepository
 ) {
-
     suspend operator fun invoke(force: Boolean = false): ERPResult<NotificationCountData, DataError> {
         return notificationRemoteRepository.getNotificationCount().map {
             it.toData()
         }
     }
-
 }

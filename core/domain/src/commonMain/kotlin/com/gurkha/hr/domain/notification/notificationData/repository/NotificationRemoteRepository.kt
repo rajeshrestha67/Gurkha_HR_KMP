@@ -9,7 +9,7 @@ import com.gurkha.model.notification.unSeenNotificationCount.UnSeenNotificationC
 interface NotificationRemoteRepository {
     suspend fun getNotificationCount(): ERPResult<NotificationCountResponseDto, DataError>
 
-    suspend fun getAllNotification(): ERPResult<NotificationsResponseDto, DataError>
+    suspend fun getAllNotification(offset: Int): ERPResult<NotificationsResponseDto, DataError>
 
     suspend fun getAllUnseenNotification(): ERPResult<UnSeenNotificationCountDto, DataError>
 }
