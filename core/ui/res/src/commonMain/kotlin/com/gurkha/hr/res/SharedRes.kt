@@ -165,6 +165,7 @@ import gurkhahr.core.ui.res.generated.resources.no_data_found
 import gurkhahr.core.ui.res.generated.resources.note
 import gurkhahr.core.ui.res.generated.resources.notes
 import gurkhahr.core.ui.res.generated.resources.notification
+import gurkhahr.core.ui.res.generated.resources.notification_action
 import gurkhahr.core.ui.res.generated.resources.notifications
 import gurkhahr.core.ui.res.generated.resources.numbers
 import gurkhahr.core.ui.res.generated.resources.ok
@@ -572,5 +573,6 @@ object SharedRes {
 
         val upload_extra_image_one = Res.string.upload_extra_image_one
         val upload_extra_image_two = Res.string.upload_extra_image_two
+        val notification_action = Res.string.notification_action
     }
 }

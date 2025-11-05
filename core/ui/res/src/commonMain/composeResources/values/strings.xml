@@ -298,7 +298,7 @@
     <string name="upload_extra_image_one"> Upload Extra Image One</string>
     <string name="upload_extra_image_two"> Upload Extra Image Two</string>
 
-
+    <string name="notification_action">Your %1$s request has %2$sed by %3$s</string>
 
 
     <string-array name="months">

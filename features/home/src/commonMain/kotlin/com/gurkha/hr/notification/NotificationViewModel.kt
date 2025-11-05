@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.math.min
 
 class NotificationViewModel(
     private val notificationUseCase: NotificationUseCase,
@@ -25,9 +26,9 @@ class NotificationViewModel(
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(NotificationState())
-    var totalCount : Int = 0
-    var offSet : Int = 0
-    var remainingCount : Int = 0
+    var totalCount: Int = 0
+    
+    var offSet: Int = 0
 
     val state = _state
         .onStart {
@@ -39,22 +40,20 @@ class NotificationViewModel(
             initialValue = NotificationState()
         )
 
-    fun onAction(action: NotificationAction){
-        when (action){
-            is NotificationAction.OnRefresh->{
+    fun onAction(action: NotificationAction) {
+        when (action) {
+            is NotificationAction.OnRefresh -> {
                 getAllNotificationsAndMeta(isRefreshing = true)
             }
 
-            is NotificationAction.OnPagination ->{
-                println("paginationState ${state.value.pagingState}")
-                if(totalCount < remainingCount){
+            is NotificationAction.OnPagination -> {
+                if (offSet >= totalCount) {
                     return
                 }
-                if(_state.value.pagingState.isPaging() || _state.value.pagingState.isLoading()){
+
+                if (_state.value.pagingState.isPaging() || _state.value.pagingState.isLoading()) {
                     return
                 }
-                offSet += OFFSET
-                remainingCount -= OFFSET
 
                 getNotifications(pagingState = PagingListState.Paging)
             }
@@ -77,18 +76,18 @@ class NotificationViewModel(
         }
 
 
-
         val notificationResult = notificationAsync.await()
         val callResult = notificationCountAsync.await()
-        callResult.onSuccess {countData ->
+        callResult.onSuccess { countData ->
             totalCount = countData.count
-            remainingCount = totalCount
             notificationResult.onSuccess { data ->
                 val grouped = data.groupByTo(LinkedHashMap()) { it.actionDate }
+                updateOffset()
                 _state.update {
                     it.copy(
                         isNotificationLoading = false,
                         notificationGrouped = grouped,
+                        notifications = data,
                         pagingState = PagingListState.Loaded
                     )
                 }
@@ -109,41 +108,37 @@ class NotificationViewModel(
     }
 
 
-
-    private fun refresh() = viewModelScope.launch {
-        _state.update {
-            it.copy(
-                isRefreshing = true
-            )
-        }
-        getAllNotificationsAndMeta(isRefreshing = true)
-        _state.update {
-            it.copy(
-                isRefreshing = false
-            )
+    private fun updateOffset() {
+        offSet += if (offSet != 0) {
+            min(totalCount - offSet, OFFSET)
+        } else {
+            OFFSET
         }
     }
+
     private fun getNotifications(
         pagingState: PagingListState
-    )=viewModelScope.launch {
+    ) = viewModelScope.launch {
         _state.update {
             it.copy(
                 pagingState = pagingState
             )
         }
-        notificationUseCase(offset = offSet).onSuccess {data ->
+        notificationUseCase(offset = offSet).onSuccess { data ->
 
             val updatedList = _state.value.notifications.toMutableList()
             updatedList.addAll(data)
-
             val grouped = updatedList.groupByTo(LinkedHashMap()) { it.actionDate }
+            updateOffset()
             _state.update {
                 it.copy(
                     isNotificationLoading = false,
                     notificationGrouped = grouped,
+                    notifications = updatedList,
                     pagingState = PagingListState.Loaded
                 )
             }
+
         }.onError {
             _state.update {
                 it.copy(
@@ -154,6 +149,6 @@ class NotificationViewModel(
     }
 
     companion object {
-       private const val OFFSET = 10
+        private const val OFFSET = 10
     }
 }

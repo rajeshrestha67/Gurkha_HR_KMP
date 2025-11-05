@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -97,10 +96,10 @@ fun NotificationScreen(
 fun NotificationScreenContent(
     modifier: Modifier = Modifier,
     state: NotificationState,
-    action: (NotificationAction)-> Unit
+    action: (NotificationAction) -> Unit
 ) {
     PagingLazyColumn(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxSize(),
         pagingListState = state.pagingState,
         onBottomReached = {
             action(NotificationAction.OnPagination)
@@ -186,8 +185,14 @@ fun NotificationBox(
                         color = MaterialTheme.erpColors.darkPrimaryTextColor
                     )
                 )
+                
                 Text(
-                    "Your ${item.actionField} request has been ${item.actionType}ed by : ${item.actionPerformerName}",
+                    text = stringResource(
+                        SharedRes.Strings.notification_action,
+                        item.actionField,
+                        item.actionType,
+                        item.actionPerformerName
+                    ),
                     style = MaterialTheme.typography.titleSmall.copy(
                         color = MaterialTheme.erpColors.primaryTextColor
                     )
