@@ -39,6 +39,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.PlatformMessage
+import com.gurkha.hr.components.biometric.rememberBiometricPromptLauncher
 import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.components.hideKeyboardOnTap
@@ -51,6 +52,7 @@ import com.gurkha.hr.logger.AppLogger
 import com.gurkha.hr.login.model.LoginScreenAction
 import com.gurkha.hr.login.model.LoginScreenState
 import com.gurkha.hr.res.SharedRes
+import com.gurkha.model.biometric.BiometricAuthResult
 import com.gurkha.model.biometric.BiometricPromptLauncher
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -135,6 +137,19 @@ fun LoginScreenContent(
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
     }
+
+    //test only
+    val launcher = rememberBiometricPromptLauncher(
+        onResult = { result ->
+            val authStatus = when (result) {
+                BiometricAuthResult.Success -> "✅ Login Successful!"
+                is BiometricAuthResult.Error -> "❌ Error: ${result.message}"
+                BiometricAuthResult.Failure -> "❌ Authentication Failed. Try again."
+                BiometricAuthResult.NotAvailable -> "⚠️ Biometrics Not Available or Set Up."
+            }
+            println("authStatus $authStatus")
+        }
+    )
 
 
     Scaffold(
@@ -240,7 +255,11 @@ fun LoginScreenContent(
                             .fillMaxSize()
                                 ,
                         onClick = {
-
+                            launcher.launch(
+                                "Login Verification",       // title
+                                "Authenticate using your fingerprint",  // subtitle
+                                "Cancel"                    // negativeButtonText
+                            )
                         },
                         content = {
                             Icon(Icons.Filled.Fingerprint, contentDescription = "Fingerprint",
