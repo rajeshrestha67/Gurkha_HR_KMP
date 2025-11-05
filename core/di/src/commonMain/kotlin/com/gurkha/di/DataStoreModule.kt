@@ -1,9 +1,6 @@
 package com.gurkha.di
 
 import com.gurkha.hr.datastore.DataStoreFactory
-import com.gurkha.hr.datastore.notificationCount.local.NotificationCountDataStore
-import com.gurkha.hr.datastore.notificationCount.repository.LocalNotificationCountDataRepository
-import com.gurkha.hr.datastore.notificationCount.repository.NotificationCountDataRepository
 import com.gurkha.hr.datastore.token.local.TokenDataStore
 import com.gurkha.hr.datastore.token.repository.LocalTokenRepository
 import com.gurkha.hr.datastore.token.repository.TokenRepository
@@ -39,12 +36,6 @@ class DataStoreModule {
         return factory.getUserData("user_data")
     }
 
-    @Single
-    fun getNotificationCountDataStore(): NotificationCountDataStore {
-        val factory: DataStoreFactory = getKoin().get()
-        return factory.getNotificationCount("notification_count")
-    }
-
 
     @Factory(binds = [TokenRepository::class])
     fun getTokenRepository(tokenDataStore: TokenDataStore) = LocalTokenRepository(tokenDataStore)
@@ -57,9 +48,6 @@ class DataStoreModule {
     fun getUserDataRepository(userDataDataStore: UserDataDataStore) =
         LocalUserDataRepository(userDataDataStore)
 
-    @Factory(binds = [NotificationCountDataRepository::class])
-    fun getNotificationCountDataRepository(notificationCountDataStore: NotificationCountDataStore) =
-        LocalNotificationCountDataRepository(notificationCountDataStore = notificationCountDataStore)
 
     @Single
     fun getDataStoreFactory(): DataStoreFactory = DataStoreFactory()

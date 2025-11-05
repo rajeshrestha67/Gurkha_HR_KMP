@@ -6,9 +6,6 @@ import com.gurkha.hr.data.upComingBirthday.KtorUpComingBirthdayRemoteRepository
 import com.gurkha.hr.data.upComingEvent.KtorEventRemoteRepository
 import com.gurkha.hr.data.upComingWorkAnniversary.KtorUpComingWorkAnniversaryRemoteRepository
 import com.gurkha.hr.data.userDetail.KtorUserDetailRemoteRepository
-import com.gurkha.hr.datastore.notificationCount.local.NotificationCountDataStore
-import com.gurkha.hr.datastore.notificationCount.repository.LocalNotificationCountDataRepository
-import com.gurkha.hr.datastore.notificationCount.repository.NotificationCountDataRepository
 import com.gurkha.hr.datastore.user_data.local.UserDataDataStore
 import com.gurkha.hr.datastore.user_data.repository.LocalUserDataRepository
 import com.gurkha.hr.datastore.user_data.repository.UserDataRepository
@@ -73,14 +70,6 @@ class HomeScreenModule {
     ): NotificationUseCase = NotificationUseCase(
         notificationRemoteRepository = notificationRemoteRepository,
     )
-
-    @Factory(binds = [UserDataRepository::class])
-    fun notificationCountDataRepository(
-        notificationCountDataStore: NotificationCountDataStore
-    ): NotificationCountDataRepository =
-        LocalNotificationCountDataRepository(
-            notificationCountDataStore = notificationCountDataStore
-        )
 
 
     @Factory

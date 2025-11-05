@@ -1,6 +1,5 @@
 package com.gurkha.hr.datastore
 
-import com.gurkha.hr.datastore.notificationCount.local.NotificationCountDataStore
 import com.gurkha.hr.datastore.token.local.TokenDataStore
 import com.gurkha.hr.datastore.user_data.local.UserDataDataStore
 import com.gurkha.hr.datastore.user_info.local.UserInfoDataStore
@@ -15,5 +14,4 @@ expect class DataStoreFactory() {
 
     fun getUserData(jsonPath: String): UserDataDataStore
 
-    fun getNotificationCount(jsonPath: String): NotificationCountDataStore
 }

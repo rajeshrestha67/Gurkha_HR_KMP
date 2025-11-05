@@ -155,9 +155,9 @@ fun SettingScreenContent(
                     endIndicator = {
                         if (item == SettingList.Biometric) {
                             Switch(
-                                checked = state.notificationEnabled,
+                                checked = state.biometricEnabled,
                                 onCheckedChange = {
-                                    onAction(SettingsScreenAction.OnNotificationStatusChange(it))
+                                    onAction(SettingsScreenAction.OnBiometricStatusChange(it))
                                 }
                             )
                         } else {
