@@ -34,7 +34,7 @@ class AttendanceViewModel(
 
     val state = _state
         .onStart {
-            fetchAttendanceSummary()
+            fetchAttendanceSummary(isRefreshing = false)
             fetchAttendance(
                 attendanceStatus = TabItemsEnums.PENDING,
                 employeeName = "",
@@ -83,7 +83,21 @@ class AttendanceViewModel(
             }
 
             is AttendanceAction.OnRefresh -> {
-                refresh()
+                fetchAttendanceSummary(isRefreshing = true)
+                TabItemsEnums.list.forEach {
+                    fetchAttendance(
+                        attendanceStatus = it,
+                        employeeName = "",
+                        isSelf = "Y",
+                        fromDate = datePair.first,
+                        toDate = datePair.second
+                    )
+                }
+                _state.update {
+                    it.copy(
+                        currentTapItem = it.pendingTapItem
+                    )
+                }
             }
         }
     }
@@ -229,9 +243,10 @@ class AttendanceViewModel(
         }
     }
 
-    private fun fetchAttendanceSummary() = viewModelScope.launch {
+    private fun fetchAttendanceSummary(isRefreshing: Boolean) = viewModelScope.launch {
         _state.update {
             it.copy(
+                isRefreshing = isRefreshing,
                 isFetchingAttendanceSummary = true
             )
         }
@@ -275,24 +290,5 @@ class AttendanceViewModel(
                 )
             }
         }
-    }
-
-    private fun refresh() = viewModelScope.launch {
-        _state.update {
-            it.copy(
-                isRefreshing = true
-            )
-        }
-        fetchAttendanceSummary()
-        TabItemsEnums.list.forEach {
-            fetchAttendance(
-                attendanceStatus = it,
-                employeeName = "",
-                isSelf = "Y",
-                fromDate = datePair.first,
-                toDate = datePair.second
-            )
-        }
-
     }
 }

@@ -17,7 +17,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -29,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -39,6 +39,8 @@ import com.gurkha.hr.components.shimmer.ShimmerView
 import com.gurkha.hr.domain.notification.notificationData.model.NotificationData
 import com.gurkha.hr.model.notification.NotificationAction
 import com.gurkha.hr.model.notification.NotificationState
+import com.gurkha.hr.res.SharedRes
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -55,7 +57,7 @@ fun Notification(
             TopAppBar(
                 windowInsets = WindowInsets(0.dp),
                 title = {
-                    Text("Notification")
+                    Text(stringResource(SharedRes.Strings.notifications))
                 },
                 navigationIcon = {
                     IconButton(
@@ -96,13 +98,19 @@ fun NotificationScreenContent(
 ) {
     LazyColumn(
         modifier = modifier.fillMaxWidth(),
-//        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
     ) {
         if (state.isNotificationLoading) {
             items(5) {
                 ShimmerView(
-                    modifier = Modifier.fillMaxWidth().height(MaterialTheme.dimens.extraLarge)
-                        .padding(vertical = MaterialTheme.dimens.small1)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(MaterialTheme.dimens.bottomBar)
+                        .padding(
+                            horizontal = MaterialTheme.dimens.small3,
+                            vertical = MaterialTheme.dimens.small2
+                        )
+                        .clip(shape = MaterialTheme.shapes.medium)
+
                 )
             }
         } else {
@@ -118,9 +126,6 @@ fun NotificationScreenContent(
 
                 itemsIndexed(notification) { index, item ->
                     NotificationBox(item = item)
-                    HorizontalDivider(
-                        modifier = Modifier.padding(horizontal = MaterialTheme.dimens.small2)
-                    )
                     if (index == notification.lastIndex && !state.isNotificationLoading) {
                         println("lastIndex_reached_fetchMore")
                     }

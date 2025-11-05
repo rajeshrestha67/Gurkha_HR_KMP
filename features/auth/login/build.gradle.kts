@@ -73,6 +73,8 @@ kotlin {
 
                 implementation(libs.koin.compose.viewmodel)
                 implementation(compose.components.resources)
+                implementation(compose.materialIconsExtended)
+
 
                 implementation(projects.core.domain)
                 implementation(projects.core.networkHelper)

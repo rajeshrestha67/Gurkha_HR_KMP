@@ -23,9 +23,10 @@ class NotificationViewModel(
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(NotificationState())
+
     val state = _state
         .onStart {
-            getAllNotifications()
+            getAllNotifications(isRefreshing = false)
         }
         .stateIn(
             scope = viewModelScope,
@@ -33,17 +34,18 @@ class NotificationViewModel(
             initialValue = NotificationState()
         )
 
-    fun onAction(action: NotificationAction) {
-        when (action) {
-            is NotificationAction.OnRefresh -> {
-                refresh()
+    fun onAction(action: NotificationAction){
+        when (action){
+            is NotificationAction.OnRefresh->{
+                getAllNotifications(isRefreshing = true)
             }
         }
     }
 
-    private fun getAllNotifications() = viewModelScope.launch {
+    private fun getAllNotifications(isRefreshing: Boolean) = viewModelScope.launch {
         _state.update {
             it.copy(
+                isRefreshing = isRefreshing,
                 isNotificationLoading = true
             )
         }
@@ -93,7 +95,7 @@ class NotificationViewModel(
                 isRefreshing = true
             )
         }
-        getAllNotifications()
+        getAllNotifications(isRefreshing = true)
         _state.update {
             it.copy(
                 isRefreshing = false

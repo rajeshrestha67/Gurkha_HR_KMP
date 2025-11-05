@@ -49,8 +49,8 @@ class ReportViewModel(
         }
 
         reportUseCase(
-            bsMonth = _state.value.monthValue,
-            bsYear = _state.value.year
+            bsMonth =calendarModel.today.month,
+            bsYear = calendarModel.today.year,
 
         ).onSuccess { data ->
             _state.update {

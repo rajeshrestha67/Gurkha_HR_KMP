@@ -10,6 +10,7 @@ import com.gurkha.hr.domain.leave.leaveSummary.useCase.LeaveSummaryUseCase
 import com.gurkha.hr.leave.model.leave.LeaveScreenAction
 import com.gurkha.hr.leave.model.leave.LeaveScreenState
 import com.gurkha.hr.leave.model.leave.LeaveStatusEnum
+import com.gurkha.hr.leave.model.leave.LeaveTapItem
 import com.gurkha.hr.networkhelper.onError
 import com.gurkha.hr.networkhelper.onSuccess
 import com.gurkha.model.leave.leave_request.LeaveRequestData
@@ -90,7 +91,12 @@ class LeaveScreenViewModel(
                     fetchLeaveReport(
                         fromDate = datePair.first,
                         toDate = datePair.second,
-                        leaveStatus = it
+                        leaveStatus = it,
+                    )
+                }
+                _state.update {
+                    it.copy(
+                        currentTapItem = it.pendingTapItem
                     )
                 }
             }
