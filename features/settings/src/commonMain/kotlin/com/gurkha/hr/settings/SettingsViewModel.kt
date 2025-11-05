@@ -68,7 +68,7 @@ class SettingsViewModel(
         fetchBiometricEnableUseCase().collect { token ->
             _state.update {
                 it.copy(
-
+                    biometricEnabled =token.isBiometricEnable
                 )
             }
         }
@@ -77,6 +77,6 @@ class SettingsViewModel(
     private fun updateEnabledBiometric(
         isEnable : Boolean
     )=viewModelScope.launch {
-        updateBiometricEnableUseCase(isEnable = true)
+        updateBiometricEnableUseCase(isEnable = isEnable)
     }
 }
