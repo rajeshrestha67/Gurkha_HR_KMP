@@ -4,9 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gurkha.hr.domain.notification.notificationData.useCase.NotificationUseCase
 import com.gurkha.hr.model.notification.NotificationAction
+import com.gurkha.hr.model.notification.NotificationState
+import com.gurkha.hr.networkhelper.ERPResult
 import com.gurkha.hr.networkhelper.onError
 import com.gurkha.hr.networkhelper.onSuccess
-import com.gurkha.hr.model.notification.NotificationState
+import com.gurkha.model.network.DataError
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
@@ -29,9 +33,9 @@ class NotificationViewModel(
             initialValue = NotificationState()
         )
 
-    fun onAction(action: NotificationAction){
-        when (action){
-            is NotificationAction.OnRefresh->{
+    fun onAction(action: NotificationAction) {
+        when (action) {
+            is NotificationAction.OnRefresh -> {
                 refresh()
             }
         }
@@ -43,25 +47,47 @@ class NotificationViewModel(
                 isNotificationLoading = true
             )
         }
-        notificationUseCase().onSuccess { data ->
-            val groupedNotifications = data.groupByTo(LinkedHashMap()) { it.actionDate }
+        val notificationAsync = async {
+            notificationUseCase()
+        }
+        val callAsync = async {
+            call()
+        }
 
-            _state.update {
-                it.copy(
-                    isNotificationLoading = false,
-                    notificationGrouped = groupedNotifications
-                )
+        val notificationResult = notificationAsync.await()
+        val callResult = callAsync.await()
+        callResult.onSuccess {
+            notificationResult.onSuccess { data ->
+                val grouped = data.groupByTo(LinkedHashMap()) { it.actionDate }
+                _state.update {
+                    it.copy(
+                        isNotificationLoading = false,
+                        notificationGrouped = grouped
+                    )
+                }
+            }.onError {
+                _state.update {
+                    it.copy(
+                        isNotificationLoading = false,
+                    )
+                }
             }
         }.onError {
             _state.update {
                 it.copy(
-                    isNotificationLoading = false
+                    isNotificationLoading = false,
                 )
             }
         }
     }
 
-    private fun refresh()=viewModelScope.launch {
+
+    suspend fun call(): ERPResult<String, DataError> {
+        delay(10000)
+        return ERPResult.Error(DataError.LocalError.NoData)
+    }
+
+    private fun refresh() = viewModelScope.launch {
         _state.update {
             it.copy(
                 isRefreshing = true
