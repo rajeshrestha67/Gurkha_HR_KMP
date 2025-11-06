@@ -66,7 +66,7 @@ class ChatRoomViewModel(
                     it.copy(chatUserData = chatUserData)
                 }
                 initSocket(chatUserData = chatUserData)
-                fetchChatMessage(chatUserData = chatUserData)
+                fetchChatMessage(chatUserData = chatUserData, isRefreshing = false)
             }
 
             is ChatRoomScreenAction.MessageChanged -> {
@@ -88,7 +88,9 @@ class ChatRoomViewModel(
             }
 
             ChatRoomScreenAction.OnRefresh -> {
-                refresh()
+                _state.value.chatUserData?.let { chatUserData ->
+                    fetchChatMessage(chatUserData = chatUserData, isRefreshing = true)
+                }
             }
         }
     }
@@ -215,10 +217,23 @@ class ChatRoomViewModel(
         }
     }
 
-    private fun fetchChatMessage(chatUserData: ChatUserData) = viewModelScope.launch {
+    private fun fetchChatMessage(
+        chatUserData: ChatUserData,
+        isRefreshing: Boolean
+    ) = viewModelScope.launch {
 
-        _state.update {
-            it.copy(isLoading = true)
+        if (isRefreshing) {
+            _state.update {
+                it.copy(
+                    isLoading = true
+                )
+            }
+        } else {
+            _state.update {
+                it.copy(
+                    isRefreshing = true
+                )
+            }
         }
         fetchChatMessageUseCase(
             chatId = chatUserData.chatId,
@@ -241,7 +256,8 @@ class ChatRoomViewModel(
 //                        .asReversed()
                         .toMap(LinkedHashMap()),
                     metaData = data.metaData?.toChatMetaData(),
-                    isLoading = false
+                    isLoading = false,
+                    isRefreshing = false
                 )
             }
 
