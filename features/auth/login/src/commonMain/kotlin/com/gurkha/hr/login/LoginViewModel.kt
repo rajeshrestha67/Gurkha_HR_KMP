@@ -127,7 +127,7 @@ class LoginViewModel(
     private fun login() = viewModelScope.launch {
 
         if (previousEmail != null && state.value.username != previousEmail) {
-            
+
             return@launch
         }
         _state.update {
@@ -138,8 +138,7 @@ class LoginViewModel(
         // else the token is sent and will be able to login with any pw
         loginUseCase(
             username = state.value.username,
-            password = state.value.password,
-            biometricToken = null
+            password = state.value.password
         ).onSuccess { data ->
             _state.update {
                 it.copy(isLoading = false)
@@ -159,10 +158,8 @@ class LoginViewModel(
         _state.update {
             it.copy(isLoading = true)
         }
-
         loginUseCase(
             username = state.value.username,
-            password = state.value.password,
             biometricToken = bioToken
         ).onSuccess { data ->
             _state.update {
