@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
@@ -115,6 +116,7 @@ fun LoginScreen(
         onPermission()
     }
     LoginScreenContent(
+        platformMessage = platformMessage,
         state = state,
         onAction = loginViewModel::onAction
     )
@@ -123,6 +125,7 @@ fun LoginScreen(
 
 @Composable
 fun LoginScreenContent(
+    platformMessage: PlatformMessage,
     state: LoginScreenState,
     onAction: (LoginScreenAction) -> Unit
 ) {
@@ -136,15 +139,31 @@ fun LoginScreenContent(
     //test only
     val launcher = rememberBiometricPromptLauncher(
         onResult = { result ->
-            val authStatus = when (result) {
-                BiometricAuthResult.Success -> "✅ Login Successful!"
-                is BiometricAuthResult.Error -> "❌ Error: ${result.message}"
-                BiometricAuthResult.Failure -> "❌ Authentication Failed. Try again."
-                BiometricAuthResult.NotAvailable -> "⚠️ Biometrics Not Available or Set Up."
+            when (result) {
+                BiometricAuthResult.Success -> {
+                    onAction(LoginScreenAction.OnBiometricLogin)
+                }
+
+                is BiometricAuthResult.Error -> {
+                    platformMessage.showToast("❌ Error: ${result.message}")
+                }
+
+                BiometricAuthResult.Failure -> {
+                    platformMessage.showToast("❌ Authentication Failed. Try again.")
+                }
+
+                BiometricAuthResult.NotAvailable -> {
+                    platformMessage.showToast("⚠️ Biometrics Not Available or Set Up.")
+
+                }
             }
-            println("authStatus $authStatus")
         }
     )
+
+    val title = stringResource(SharedRes.Strings.login_verification)
+    val subTitle = stringResource(SharedRes.Strings.auth_using_biometric)
+    val negativeText = stringResource(SharedRes.Strings.cancel)
+
 
 
     Scaffold(
@@ -237,7 +256,7 @@ fun LoginScreenContent(
                     horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
                 ) {
                     ERPButton(
-                        modifier = Modifier.fillMaxWidth(0.8f),
+                        modifier = Modifier.fillMaxWidth(if (state.isBiometricEnabled) 0.8f else 1f),
                         onClick = {
                             onAction(LoginScreenAction.LoginClicked)
                         },
@@ -245,25 +264,26 @@ fun LoginScreenContent(
                         text = stringResource(SharedRes.Strings.login)
                     )
                     //only show if the user has enabled the biometric
-                    IconButton(
-                        modifier = Modifier
-                            .fillMaxSize(),
-                        onClick = {
-                            if (launcher.isAvailable) {
+                    if (state.isBiometricEnabled) {
+                        IconButton(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            onClick = {
+                                keyboardController?.hide()
                                 launcher.launch(
-                                    "Login Verification",
-                                    "Authenticate using your fingerprint",
-                                    "Cancel"
+                                    title,
+                                    subTitle,
+                                    negativeText
                                 )
-                            }
-                        },
-                        content = {
-                            Icon(
-                                Icons.Filled.Fingerprint, contentDescription = "Fingerprint",
-                                modifier = Modifier
-                                    .fillMaxSize()
-                            )
-                        })
+                            },
+                            content = {
+                                Icon(
+                                    Icons.Filled.Fingerprint, contentDescription = "Fingerprint",
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                )
+                            })
+                    }
                 }
             }
         }

@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 class FetchBiometricEnableUseCase(
     private val tokenRepository: TokenRepository
 ) {
-    suspend operator fun invoke(): Flow<Token> {
+     operator fun invoke(): Flow<Token> {
         val currentToken = tokenRepository.token
         return currentToken
     }

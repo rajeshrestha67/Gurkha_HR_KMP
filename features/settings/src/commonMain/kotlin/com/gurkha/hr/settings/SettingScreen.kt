@@ -131,6 +131,9 @@ fun SettingScreenContent(
             println("authStatus $authStatus")
         }
     )
+    val title = stringResource(SharedRes.Strings.login_verification)
+    val subTitle = stringResource(SharedRes.Strings.auth_using_biometric)
+    val negativeText = stringResource(SharedRes.Strings.cancel)
 
     LaunchedEffect(Unit) {
         onAction(SettingsScreenAction.OnIsAvailableCheck(launcher.isAvailable))
@@ -178,15 +181,19 @@ fun SettingScreenContent(
                         if (item == SettingList.Biometric) {
                             Switch(
                                 checked = state.biometricEnabled,
-                                onCheckedChange = {isEnable->
+                                onCheckedChange = { isEnable ->
                                     if (isEnable) {
                                         launcher.launch(
-                                            "Login Verification",
-                                            "Authenticate using your fingerprint",
-                                            "Cancel"
+                                            title,
+                                            subTitle,
+                                            negativeText
                                         )
-                                    }else{
-                                        onAction(SettingsScreenAction.OnBiometricStatusChange(isEnable))
+                                    } else {
+                                        onAction(
+                                            SettingsScreenAction.OnBiometricStatusChange(
+                                                isEnable
+                                            )
+                                        )
                                     }
                                 }
                             )

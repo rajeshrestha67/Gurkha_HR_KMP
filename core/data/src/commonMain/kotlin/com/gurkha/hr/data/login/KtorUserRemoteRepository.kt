@@ -19,10 +19,12 @@ class KtorUserRemoteRepository(
 ) : UserRemoteRepository {
     override suspend fun login(
         username: String,
-        password: String
+        password: String?,
+        biometricToken: String?
     ): ERPResult<LoginResponseDto, DataError> {
         val deviceInfo = getDeviceInfo("10")
         val request = LoginRequestDto(
+            biometricToken = biometricToken,
             email = username,
             password = password,
             deviceInfo = deviceInfo

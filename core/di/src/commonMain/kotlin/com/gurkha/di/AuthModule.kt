@@ -9,6 +9,8 @@ import com.gurkha.hr.domain.auth.login.usecase.LoginUseCase
 import com.gurkha.hr.domain.form.EmailValidateUseCase
 import com.gurkha.hr.domain.form.PasswordValidateUseCase
 import com.gurkha.hr.domain.splash.UpdateFirstTimeCheckUseCase
+import com.gurkha.hr.domain.token.usecase.FetchBiometricEnableUseCase
+import com.gurkha.hr.domain.userDetail.usecase.FetchUserDetailFlowUseCase
 import com.gurkha.hr.login.LoginViewModel
 import io.ktor.client.HttpClient
 import org.koin.android.annotation.KoinViewModel
@@ -34,6 +36,13 @@ class AuthModule {
     )
 
     @Factory
+    fun fetchUserDetailFlowUseCase(
+        userDataRepository: UserDataRepository
+    ): FetchUserDetailFlowUseCase=FetchUserDetailFlowUseCase(
+        userDataRepository = userDataRepository
+    )
+
+    @Factory
     fun clearTokenUseCase(tokenRepository: TokenRepository) =
         ClearTokenUseCase(tokenRepository = tokenRepository)
 
@@ -43,14 +52,18 @@ class AuthModule {
         clearTokenUseCase: ClearTokenUseCase,
         emailValidateUseCase: EmailValidateUseCase,
         passwordValidateUseCase: PasswordValidateUseCase,
-        updateFirstTimeCheckUseCase: UpdateFirstTimeCheckUseCase
+        updateFirstTimeCheckUseCase: UpdateFirstTimeCheckUseCase,
+        fetchBiometricEnableUseCase: FetchBiometricEnableUseCase,
+        fetchUserDetailFlowUseCase: FetchUserDetailFlowUseCase
     ) =
         LoginViewModel(
             loginUseCase = loginUseCase,
             clearTokenUseCase = clearTokenUseCase,
             emailValidateUseCase = emailValidateUseCase,
             passwordValidateUseCase = passwordValidateUseCase,
-            updateFirstTimeCheckUseCase = updateFirstTimeCheckUseCase
+            updateFirstTimeCheckUseCase = updateFirstTimeCheckUseCase,
+            fetchBiometricEnableUseCase = fetchBiometricEnableUseCase,
+            fetchUserDetailFlowUseCase = fetchUserDetailFlowUseCase
         )
 
 }

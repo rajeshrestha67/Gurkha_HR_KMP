@@ -33,6 +33,7 @@ import gurkhahr.core.ui.res.generated.resources.attendance_req_rejected
 import gurkhahr.core.ui.res.generated.resources.attendance_request
 import gurkhahr.core.ui.res.generated.resources.attendance_request_form
 import gurkhahr.core.ui.res.generated.resources.attendance_summary
+import gurkhahr.core.ui.res.generated.resources.auth_using_biometric
 import gurkhahr.core.ui.res.generated.resources.bachelor
 import gurkhahr.core.ui.res.generated.resources.biometric
 import gurkhahr.core.ui.res.generated.resources.blood_group
@@ -144,6 +145,7 @@ import gurkhahr.core.ui.res.generated.resources.light
 import gurkhahr.core.ui.res.generated.resources.location
 import gurkhahr.core.ui.res.generated.resources.log_out
 import gurkhahr.core.ui.res.generated.resources.login
+import gurkhahr.core.ui.res.generated.resources.login_verification
 import gurkhahr.core.ui.res.generated.resources.marital_status
 import gurkhahr.core.ui.res.generated.resources.master
 import gurkhahr.core.ui.res.generated.resources.maternity_leave
@@ -574,5 +576,7 @@ object SharedRes {
         val upload_extra_image_one = Res.string.upload_extra_image_one
         val upload_extra_image_two = Res.string.upload_extra_image_two
         val notification_action = Res.string.notification_action
+        val login_verification = Res.string.login_verification
+        val auth_using_biometric = Res.string.auth_using_biometric
     }
 }
