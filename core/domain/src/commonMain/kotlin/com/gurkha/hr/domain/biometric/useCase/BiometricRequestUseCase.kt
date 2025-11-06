@@ -12,10 +12,10 @@ class BiometricRequestUseCase(
 ) {
     suspend operator fun invoke(
         biometricToken: String,
-        uid: Int
-    ): ERPResult<BiometricData, DataError>{
+        uid: String
+    ): ERPResult<BiometricData, DataError> {
         return biometricRemoteRepository.biometricRequest(
-            biometricToken= biometricToken,
+            biometricToken = biometricToken,
             uid = uid
         ).map {
             it.toData()

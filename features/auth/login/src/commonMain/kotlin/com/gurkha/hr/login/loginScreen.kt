@@ -1,14 +1,20 @@
 package com.gurkha.hr.login
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -17,11 +23,15 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
@@ -38,6 +48,7 @@ import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.PlatformMessage
 import com.gurkha.hr.components.biometric.rememberBiometricPromptLauncher
 import com.gurkha.hr.components.dimens
+import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.components.hideKeyboardOnTap
 import com.gurkha.hr.components.permissions.POST_NOTIFICATIONS_PERMISSION
 import com.gurkha.hr.components.permissions.rememberRequestPermission
@@ -65,6 +76,7 @@ fun LoginScreen(
     val state by loginViewModel.state.collectAsStateWithLifecycle()
 
     val platformMessage: PlatformMessage = koinInject()
+    var showResetModal by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         loginViewModel.errorChannel.collect {
@@ -80,6 +92,13 @@ fun LoginScreen(
         }
     }
 
+    LaunchedEffect(Unit) {
+        loginViewModel.resetChannel.collect {
+            if (it) {
+                showResetModal = true
+            }
+        }
+    }
 
     val onPermission = rememberRequestPermission(
         permissions = listOf(
@@ -117,13 +136,20 @@ fun LoginScreen(
     LoginScreenContent(
         platformMessage = platformMessage,
         state = state,
-        onAction = loginViewModel::onAction
+        onAction = loginViewModel::onAction,
+        onDismiss = {
+            showResetModal = false
+        },
+        showResetModal = showResetModal
     )
+
 
 }
 
 @Composable
 fun LoginScreenContent(
+    showResetModal: Boolean,
+    onDismiss: () -> Unit,
     platformMessage: PlatformMessage,
     state: LoginScreenState,
     onAction: (LoginScreenAction) -> Unit
@@ -286,7 +312,85 @@ fun LoginScreenContent(
                         )
                     }
                 }
+                if (showResetModal) {
+                    ShowResetModal(
+                        onDismiss = onDismiss,
+                        onReset = {
+                            onAction(LoginScreenAction.OnResetBiometric)
+                            onDismiss()
+                        }
+                    )
+                }
             }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ShowResetModal(
+    onDismiss: () -> Unit,
+    onReset: () -> Unit
+) {
+    val sheet = rememberModalBottomSheetState(
+        skipPartiallyExpanded = false,
+        confirmValueChange = { newValue ->
+            newValue != SheetValue.Hidden
+        }
+    )
+    ModalBottomSheet(
+        sheetState = sheet,
+        modifier = Modifier
+            .fillMaxWidth()
+            .statusBarsPadding(),
+        onDismissRequest = onDismiss,
+        containerColor = MaterialTheme.colorScheme.background,
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(MaterialTheme.dimens.small3),
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(MaterialTheme.dimens.promptDialogSize)
+                    .aspectRatio(1f)
+                    .background(
+                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
+                        shape = CircleShape
+                    )
+                    .padding(MaterialTheme.dimens.medium1)
+                    .background(
+                        color = MaterialTheme.colorScheme.primary,
+                        shape = CircleShape
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Fingerprint,
+                    contentDescription = "Success",
+                    tint = MaterialTheme.colorScheme.onPrimary,
+                    modifier = Modifier.size(MaterialTheme.dimens.medium3)
+                )
+            }
+            Text(
+                text = stringResource(SharedRes.Strings.please_reset_biometric),
+                style = MaterialTheme.typography.titleMedium.copy(
+                    color = MaterialTheme.erpColors.primaryTextColor
+                )
+            )
+            ERPButton(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = onReset, text = stringResource(SharedRes.Strings.reset_biometric)
+            )
+
+            ERPButton(
+                modifier = Modifier.fillMaxWidth(),
+                backgroundColor = MaterialTheme.colorScheme.error,
+                onClick = onDismiss, text = stringResource(SharedRes.Strings.cancel)
+            )
         }
     }
 }

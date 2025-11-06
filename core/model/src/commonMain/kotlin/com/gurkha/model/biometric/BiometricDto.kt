@@ -4,11 +4,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class BiometricResponseDto(
-    val message : String ? = null
+    val message: String? = null
 )
 
 @Serializable
 data class BiometricRequestDto(
-    val uid: Int,
+    val uid: String,
     val biometricToken: String
 )

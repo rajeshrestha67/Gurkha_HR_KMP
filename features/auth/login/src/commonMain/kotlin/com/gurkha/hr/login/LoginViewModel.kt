@@ -2,12 +2,14 @@ package com.gurkha.hr.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gurkha.hr.datastore.token.model.Token
 import com.gurkha.hr.domain.auth.login.usecase.ClearTokenUseCase
 import com.gurkha.hr.domain.auth.login.usecase.LoginUseCase
 import com.gurkha.hr.domain.form.EmailValidateUseCase
 import com.gurkha.hr.domain.form.PasswordValidateUseCase
 import com.gurkha.hr.domain.splash.UpdateFirstTimeCheckUseCase
 import com.gurkha.hr.domain.token.usecase.FetchBiometricEnableUseCase
+import com.gurkha.hr.domain.token.usecase.UpdateBiometricEnableUseCase
 import com.gurkha.hr.domain.userDetail.usecase.FetchUserDetailFlowUseCase
 import com.gurkha.hr.logger.AppLogger
 import com.gurkha.hr.login.model.LoginScreenAction
@@ -33,7 +35,8 @@ class LoginViewModel(
     private val passwordValidateUseCase: PasswordValidateUseCase,
     private val updateFirstTimeCheckUseCase: UpdateFirstTimeCheckUseCase,
     private val fetchBiometricEnableUseCase: FetchBiometricEnableUseCase,
-    private val fetchUserDetailFlowUseCase: FetchUserDetailFlowUseCase
+    private val fetchUserDetailFlowUseCase: FetchUserDetailFlowUseCase,
+    private val updateBiometricEnableUseCase: UpdateBiometricEnableUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(LoginScreenState())
@@ -46,6 +49,9 @@ class LoginViewModel(
     private var bioToken: String? = null
 
     private var previousEmail: String? = null
+
+    private val _resetChannel = Channel<Boolean>()
+    val resetChannel = _resetChannel.receiveAsFlow()
     val state = _state.combine(
         flow = fetchBiometricEnableUseCase(),
     ) { state, token ->
@@ -102,6 +108,10 @@ class LoginViewModel(
                 biometricLogin()
             }
 
+            is LoginScreenAction.OnResetBiometric -> {
+                resetBiometric()
+            }
+
             LoginScreenAction.LoginClicked -> {
                 val usernameError = emailValidateUseCase(state.value.username)
                 val passwordError = passwordValidateUseCase(state.value.password)
@@ -126,10 +136,6 @@ class LoginViewModel(
 
     private fun login() = viewModelScope.launch {
 
-        if (previousEmail != null && state.value.username != previousEmail) {
-            
-            return@launch
-        }
         _state.update {
             it.copy(isLoading = true)
         }
@@ -138,8 +144,37 @@ class LoginViewModel(
         // else the token is sent and will be able to login with any pw
         loginUseCase(
             username = state.value.username,
-            password = state.value.password,
-            biometricToken = null
+            password = state.value.password
+        ).onSuccess { data ->
+            _state.update {
+                it.copy(isLoading = false)
+            }
+            _successChannel.send(true)
+            AppLogger.i(TAG, "login: api response $data")
+
+            if (previousEmail != null && state.value.username != previousEmail) {
+                resetBiometric()
+            }
+        }.onError { error ->
+            _state.update {
+                it.copy(isLoading = false)
+            }
+            _errorChannel.send(error.toErrorMessage())
+            AppLogger.e(TAG, "login: api response", error)
+        }
+    }
+
+    private fun biometricLogin() = viewModelScope.launch {
+        if (previousEmail != null && state.value.username != previousEmail) {
+            _resetChannel.send(true)
+            return@launch
+        }
+        _state.update {
+            it.copy(isLoading = true)
+        }
+        loginUseCase(
+            username = state.value.username,
+            biometricToken = bioToken
         ).onSuccess { data ->
             _state.update {
                 it.copy(isLoading = false)
@@ -155,28 +190,14 @@ class LoginViewModel(
         }
     }
 
-    private fun biometricLogin() = viewModelScope.launch {
-        _state.update {
-            it.copy(isLoading = true)
-        }
-
-        loginUseCase(
-            username = state.value.username,
-            password = state.value.password,
-            biometricToken = bioToken
-        ).onSuccess { data ->
-            _state.update {
-                it.copy(isLoading = false)
-            }
-            _successChannel.send(true)
-            AppLogger.i(TAG, "login: api response $data")
-        }.onError { error ->
-            _state.update {
-                it.copy(isLoading = false)
-            }
-            _errorChannel.send(error.toErrorMessage())
-            AppLogger.e(TAG, "login: api response", error)
-        }
+    private fun resetBiometric() = viewModelScope.launch {
+        val token = fetchBiometricEnableUseCase().firstOrNull() ?: Token()
+        updateBiometricEnableUseCase(
+            token.copy(
+                isBiometricEnable = false,
+                biometricToken = null
+            )
+        )
     }
 
     private fun updateFirstTimeUser() = viewModelScope.launch {
