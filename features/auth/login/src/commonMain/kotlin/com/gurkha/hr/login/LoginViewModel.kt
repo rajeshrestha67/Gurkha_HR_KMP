@@ -58,7 +58,7 @@ class LoginViewModel(
         .onStart {
             updateFirstTimeUser()
             clearToken()
-            fetchUserDetailFlowUseCase().firstOrNull()?.let { user->
+            fetchUserDetailFlowUseCase().firstOrNull()?.let { user ->
                 _state.update {
                     it.copy(
                         username = user.email
@@ -98,7 +98,7 @@ class LoginViewModel(
                 }
             }
 
-            is LoginScreenAction.OnBiometricLogin ->{
+            is LoginScreenAction.OnBiometricLogin -> {
                 biometricLogin()
             }
 
@@ -129,10 +129,12 @@ class LoginViewModel(
             it.copy(isLoading = true)
         }
 
+        //while login with the email and password send token null
+        // else the token is sent and will be able to login with any pw
         loginUseCase(
             username = state.value.username,
             password = state.value.password,
-            biometricToken = bioToken
+            biometricToken = null
         ).onSuccess { data ->
             _state.update {
                 it.copy(isLoading = false)
@@ -148,7 +150,7 @@ class LoginViewModel(
         }
     }
 
-    private fun biometricLogin()=viewModelScope.launch {
+    private fun biometricLogin() = viewModelScope.launch {
         _state.update {
             it.copy(isLoading = true)
         }
