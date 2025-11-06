@@ -4,9 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gurkha.hr.domain.auth.login.usecase.ClearTokenUseCase
 import com.gurkha.hr.domain.auth.login.usecase.LoginUseCase
+import com.gurkha.hr.domain.biometric.useCase.BiometricRequestUseCase
 import com.gurkha.hr.domain.form.EmailValidateUseCase
 import com.gurkha.hr.domain.form.PasswordValidateUseCase
 import com.gurkha.hr.domain.splash.UpdateFirstTimeCheckUseCase
+import com.gurkha.hr.domain.token.usecase.FetchBiometricEnableUseCase
+import com.gurkha.hr.domain.userDetail.usecase.FetchUserDetailFlowUseCase
+import com.gurkha.hr.domain.userDetail.usecase.FetchUserDetailUseCase
 import com.gurkha.hr.logger.AppLogger
 import com.gurkha.hr.login.model.LoginScreenAction
 import com.gurkha.hr.login.model.LoginScreenState
@@ -16,6 +20,8 @@ import com.gurkha.model.network.toErrorMessage
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
@@ -27,7 +33,9 @@ class LoginViewModel(
     private val clearTokenUseCase: ClearTokenUseCase,
     private val emailValidateUseCase: EmailValidateUseCase,
     private val passwordValidateUseCase: PasswordValidateUseCase,
-    private val updateFirstTimeCheckUseCase: UpdateFirstTimeCheckUseCase
+    private val updateFirstTimeCheckUseCase: UpdateFirstTimeCheckUseCase,
+    private val fetchBiometricEnableUseCase: FetchBiometricEnableUseCase,
+    private val fetchUserDetailFlowUseCase: FetchUserDetailFlowUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(LoginScreenState())
@@ -37,11 +45,26 @@ class LoginViewModel(
 
     private val _successChannel = Channel<Boolean>()
     val successChannel = _successChannel.receiveAsFlow()
+    var bioToken: String? = null
 
-    val state = _state
+    val state = _state.combine(
+        flow = fetchBiometricEnableUseCase(),
+    ) { state, token ->
+        bioToken = token.biometricToken
+        state.copy(
+            isBiometricEnabled = token.isBiometricEnable,
+        )
+    }
         .onStart {
             updateFirstTimeUser()
             clearToken()
+            fetchUserDetailFlowUseCase().firstOrNull()?.let { user->
+                _state.update {
+                    it.copy(
+                        username = user.email
+                    )
+                }
+            }
         }
         .stateIn(
             viewModelScope,
@@ -75,6 +98,10 @@ class LoginViewModel(
                 }
             }
 
+            is LoginScreenAction.OnBiometricLogin ->{
+                biometricLogin()
+            }
+
             LoginScreenAction.LoginClicked -> {
                 val usernameError = emailValidateUseCase(state.value.username)
                 val passwordError = passwordValidateUseCase(state.value.password)
@@ -104,7 +131,32 @@ class LoginViewModel(
 
         loginUseCase(
             username = state.value.username,
-            password = state.value.password
+            password = state.value.password,
+            biometricToken = bioToken
+        ).onSuccess { data ->
+            _state.update {
+                it.copy(isLoading = false)
+            }
+            _successChannel.send(true)
+            AppLogger.i(TAG, "login: api response $data")
+        }.onError { error ->
+            _state.update {
+                it.copy(isLoading = false)
+            }
+            _errorChannel.send(error.toErrorMessage())
+            AppLogger.e(TAG, "login: api response", error)
+        }
+    }
+
+    private fun biometricLogin()=viewModelScope.launch {
+        _state.update {
+            it.copy(isLoading = true)
+        }
+
+        loginUseCase(
+            username = state.value.username,
+            password = state.value.password,
+            biometricToken = bioToken
         ).onSuccess { data ->
             _state.update {
                 it.copy(isLoading = false)

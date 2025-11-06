@@ -27,6 +27,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gurkha.hr.components.ColumnItemRow
+import com.gurkha.hr.components.biometric.rememberBiometricPromptLauncher
 import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.res.SharedRes
@@ -43,6 +45,7 @@ import com.gurkha.hr.res.theme.ThemeMode
 import com.gurkha.hr.settings.model.settings.SettingList
 import com.gurkha.hr.settings.model.settings.SettingsScreenAction
 import com.gurkha.hr.settings.model.settings.SettingsScreenState
+import com.gurkha.model.biometric.BiometricAuthResult
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -62,6 +65,7 @@ fun SettingScreen(
         navigateToChangePassword = navigateToChangePassword,
         onAction = settingsViewModel::onAction
     )
+
 
 }
 
@@ -113,6 +117,27 @@ fun SettingScreenContent(
     state: SettingsScreenState,
     onAction: (SettingsScreenAction) -> Unit
 ) {
+    val launcher = rememberBiometricPromptLauncher(
+        onResult = { result ->
+            val authStatus = when (result) {
+                BiometricAuthResult.Success -> {
+                    onAction(SettingsScreenAction.OnBiometricStatusChange(true))
+                }
+
+                is BiometricAuthResult.Error, is BiometricAuthResult.Failure, is BiometricAuthResult.NotAvailable -> {
+                    onAction(SettingsScreenAction.OnBiometricStatusChange(false))
+                }
+            }
+            println("authStatus $authStatus")
+        }
+    )
+    val title = stringResource(SharedRes.Strings.login_verification)
+    val subTitle = stringResource(SharedRes.Strings.auth_using_biometric)
+    val negativeText = stringResource(SharedRes.Strings.cancel)
+
+    LaunchedEffect(Unit) {
+        onAction(SettingsScreenAction.OnIsAvailableCheck(launcher.isAvailable))
+    }
 
     var showThemeBottomSheet by remember { mutableStateOf(false) }
     var showLanguageBottomSheet by remember { mutableStateOf(false) }
@@ -155,9 +180,21 @@ fun SettingScreenContent(
                     endIndicator = {
                         if (item == SettingList.Biometric) {
                             Switch(
-                                checked = state.notificationEnabled,
-                                onCheckedChange = {
-                                    onAction(SettingsScreenAction.OnNotificationStatusChange(it))
+                                checked = state.biometricEnabled,
+                                onCheckedChange = { isEnable ->
+                                    if (isEnable) {
+                                        launcher.launch(
+                                            title,
+                                            subTitle,
+                                            negativeText
+                                        )
+                                    } else {
+                                        onAction(
+                                            SettingsScreenAction.OnBiometricStatusChange(
+                                                isEnable
+                                            )
+                                        )
+                                    }
                                 }
                             )
                         } else {

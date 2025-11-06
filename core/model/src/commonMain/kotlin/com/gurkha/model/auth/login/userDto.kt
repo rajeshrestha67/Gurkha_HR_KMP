@@ -12,6 +12,7 @@ data class LoginRequestDto(
     val email: String,
     @EncodeDefault(EncodeDefault.Mode.NEVER)
     val password: String? = null,
+    @EncodeDefault(EncodeDefault.Mode.NEVER)
     val biometricToken: String? = null,
     val deviceInfo: DeviceInfo
 )

@@ -6,5 +6,5 @@ import com.gurkha.model.network.DataError
 
 interface UserRemoteRepository {
 
-    suspend fun login(username: String, password: String): ERPResult<LoginResponseDto, DataError>
+    suspend fun login(username: String, password: String?, biometricToken: String?): ERPResult<LoginResponseDto, DataError>
 }

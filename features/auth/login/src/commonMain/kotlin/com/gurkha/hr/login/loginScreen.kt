@@ -1,6 +1,5 @@
 package com.gurkha.hr.login
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.verticalScroll
@@ -25,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
@@ -33,14 +32,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.PlatformMessage
+import com.gurkha.hr.components.biometric.rememberBiometricPromptLauncher
 import com.gurkha.hr.components.dimens
-import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.components.hideKeyboardOnTap
 import com.gurkha.hr.components.permissions.POST_NOTIFICATIONS_PERMISSION
 import com.gurkha.hr.components.permissions.rememberRequestPermission
@@ -51,7 +49,7 @@ import com.gurkha.hr.logger.AppLogger
 import com.gurkha.hr.login.model.LoginScreenAction
 import com.gurkha.hr.login.model.LoginScreenState
 import com.gurkha.hr.res.SharedRes
-import com.gurkha.model.biometric.BiometricPromptLauncher
+import com.gurkha.model.biometric.BiometricAuthResult
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
@@ -118,6 +116,7 @@ fun LoginScreen(
         onPermission()
     }
     LoginScreenContent(
+        platformMessage = platformMessage,
         state = state,
         onAction = loginViewModel::onAction
     )
@@ -126,6 +125,7 @@ fun LoginScreen(
 
 @Composable
 fun LoginScreenContent(
+    platformMessage: PlatformMessage,
     state: LoginScreenState,
     onAction: (LoginScreenAction) -> Unit
 ) {
@@ -135,6 +135,35 @@ fun LoginScreenContent(
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
     }
+
+    //test only
+    val launcher = rememberBiometricPromptLauncher(
+        onResult = { result ->
+            when (result) {
+                BiometricAuthResult.Success -> {
+                    onAction(LoginScreenAction.OnBiometricLogin)
+                }
+
+                is BiometricAuthResult.Error -> {
+                    platformMessage.showToast("❌ Error: ${result.message}")
+                }
+
+                BiometricAuthResult.Failure -> {
+                    platformMessage.showToast("❌ Authentication Failed. Try again.")
+                }
+
+                BiometricAuthResult.NotAvailable -> {
+                    platformMessage.showToast("⚠️ Biometrics Not Available or Set Up.")
+
+                }
+            }
+        }
+    )
+
+    val title = stringResource(SharedRes.Strings.login_verification)
+    val subTitle = stringResource(SharedRes.Strings.auth_using_biometric)
+    val negativeText = stringResource(SharedRes.Strings.cancel)
+
 
 
     Scaffold(
@@ -225,9 +254,9 @@ fun LoginScreenContent(
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
-                ){
+                ) {
                     ERPButton(
-                        modifier = Modifier.fillMaxWidth(0.8f),
+                        modifier = Modifier.fillMaxWidth(if (state.isBiometricEnabled) 0.8f else 1f),
                         onClick = {
                             onAction(LoginScreenAction.LoginClicked)
                         },
@@ -235,18 +264,26 @@ fun LoginScreenContent(
                         text = stringResource(SharedRes.Strings.login)
                     )
                     //only show if the user has enabled the biometric
-                    IconButton(
-                        modifier = Modifier
-                            .fillMaxSize()
-                                ,
-                        onClick = {
-
-                        },
-                        content = {
-                            Icon(Icons.Filled.Fingerprint, contentDescription = "Fingerprint",
-                                modifier = Modifier
-                                    .size(MaterialTheme.dimens.extraLarge))
-                        })
+                    if (state.isBiometricEnabled) {
+                        IconButton(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            onClick = {
+                                keyboardController?.hide()
+                                launcher.launch(
+                                    title,
+                                    subTitle,
+                                    negativeText
+                                )
+                            },
+                            content = {
+                                Icon(
+                                    Icons.Filled.Fingerprint, contentDescription = "Fingerprint",
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                )
+                            })
+                    }
                 }
             }
         }

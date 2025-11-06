@@ -9,4 +9,6 @@ sealed interface LoginScreenAction {
     data class OnPasswordError(val passwordError: StringResource?) : LoginScreenAction
 
     data object LoginClicked : LoginScreenAction
+
+    data object OnBiometricLogin : LoginScreenAction
 }

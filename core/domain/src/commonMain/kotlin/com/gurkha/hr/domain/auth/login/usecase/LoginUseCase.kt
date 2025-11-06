@@ -20,17 +20,21 @@ class LoginUseCase(
 ) {
     suspend operator fun invoke(
         username: String,
-        password: String
+        password: String?,
+        biometricToken: String?
     ): ERPResult<LoginData, DataError> {
-        return userRemoteRepository.login(username, password).map {
+        return userRemoteRepository.login(username, password, biometricToken).map {
             it.toData()
         }.onSuccess { data ->
-
             val token = tokenRepository.token.firstOrNull() ?: Token()
-            tokenRepository.saveToken(token.copy(data.token))
+            tokenRepository.saveToken(token.copy(
+                jwtToken = data.token
+            ))
 
             val userData = userDataRepository.userDataFlow.firstOrNull() ?: UserData()
             userDataRepository.saveUserData(userData.copy(email = username))
         }
     }
+
+
 }

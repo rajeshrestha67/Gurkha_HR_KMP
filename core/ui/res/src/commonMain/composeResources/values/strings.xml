@@ -300,6 +300,8 @@
 
     <string name="notification_action">Your %1$s request has %2$sed by %3$s</string>
 
+    <string name="login_verification">Login Verification</string>
+    <string name="auth_using_biometric">Authenticate using your fingerprint</string>
 
     <string-array name="months">
         <item>Baisakh</item>
