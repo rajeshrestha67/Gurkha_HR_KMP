@@ -11,6 +11,8 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 class SocketManager {
     var socket: Socket? = null
@@ -74,35 +76,35 @@ class SocketManager {
                     if (arg is JsonObject) {
                         val json = Json { ignoreUnknownKeys = true }
                         val content = json.decodeFromString<Content>(string = arg.toString())
-                        AppLogger.i(TAG, "socket new message $arg")
-                        _onContent.update {
-                            content
+                        println("content $content, username $username")
+                        if (content.fromUser != username) {
+                            AppLogger.i(TAG, "socket new message $arg")
+                            _onContent.update {
+                                content
+                            }
                         }
-//                        CoroutineScope(Dispatchers.IO).launch {
-//                            AppLogger.i(TAG, "socket new message1 $arg")
-//                            _onContent.emit(content)
-//                        }
                     }
                 }
             }
-            socket.on("$TYPING:$chatId") {
-                AppLogger.i(TAG, "socket typing")
-//                CoroutineScope(Dispatchers.IO).launch {
-//                    _onTyping.emit(Unit)
-//                }
-                _onTyping.update {
-                    true
+            socket.on("$TYPING:$chatId") { args ->
+                args.firstOrNull()?.let { arg ->
+                    if (arg.toString() != username) {
+                        AppLogger.i(TAG, "socket typing")
+                        _onTyping.update {
+                            true
+                        }
+                    }
                 }
-
             }
 
-            socket.on("$STOP_TYPING:$chatId") {
-                AppLogger.i(TAG, "socket stop typing")
-//                CoroutineScope(Dispatchers.IO).launch {
-//                    _onTypingStop.emit(Unit)
-//                }
-                _onTyping.update {
-                    false
+            socket.on("$STOP_TYPING:$chatId") { args ->
+                args.firstOrNull()?.let { arg ->
+                    if (arg.toString() != username) {
+                        AppLogger.i(TAG, "socket typing")
+                        _onTyping.update {
+                            false
+                        }
+                    }
                 }
             }
             socket.open()
@@ -119,9 +121,12 @@ class SocketManager {
         })
     }
 
+    @OptIn(ExperimentalUuidApi::class)
     fun sendMessage(chatId: String, fromUser: String, message: String) {
         AppLogger.i(TAG, "socket send message")
+        val id = Uuid.random().toString()
         socket?.emit(PRIVATE_MESSAGE, buildJsonObject {
+            put("id", id)
             put(CHAT_ID, chatId)
             put(FROM_USER, fromUser)
             put(MESSAGE, message)

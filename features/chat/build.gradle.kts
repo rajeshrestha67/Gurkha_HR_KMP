@@ -73,6 +73,7 @@ kotlin {
                 implementation(libs.kotlinx.serialization.json)
                 implementation(projects.core.domain)
                 implementation(projects.core.model)
+                implementation(projects.core.persistance.datastore)
                 implementation(projects.core.networkHelper)
                 implementation(projects.core.network)
                 implementation(projects.core.ui.res)

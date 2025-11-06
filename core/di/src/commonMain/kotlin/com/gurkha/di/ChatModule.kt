@@ -115,15 +115,17 @@ class ChatModule {
         sendTypingUseCase: SendTypingUseCase,
         sendStopTypingUseCase: SendStopTypingUseCase,
         observeSocketEventsUseCase: ObserveSocketEventsUseCase,
-        disconnectSocketUseCase: DisconnectSocketUseCase
+        disconnectSocketUseCase: DisconnectSocketUseCase,
+        userDataRepository: UserDataRepository
     ) = ChatRoomViewModel(
         fetchChatMessageUseCase = fetchChatMessageUseCase,
-        connectSocketUseCase = connectSocketUseCase,
-        joinRoomUseCase = joinRoomUseCase,
-        sendMessageUseCase = sendMessageUseCase,
-        sendTypingUseCase = sendTypingUseCase,
-        sendStopTypingUseCase = sendStopTypingUseCase,
-        observeSocketEventsUseCase = observeSocketEventsUseCase,
-        disconnectSocketUseCase = disconnectSocketUseCase
+//        connectSocketUseCase = connectSocketUseCase,
+//        joinRoomUseCase = joinRoomUseCase,
+//        sendMessageUseCase = sendMessageUseCase,
+//        sendTypingUseCase = sendTypingUseCase,
+//        sendStopTypingUseCase = sendStopTypingUseCase,
+//        observeSocketEventsUseCase = observeSocketEventsUseCase,
+//        disconnectSocketUseCase = disconnectSocketUseCase
+        userDataRepository = userDataRepository
     )
 }
