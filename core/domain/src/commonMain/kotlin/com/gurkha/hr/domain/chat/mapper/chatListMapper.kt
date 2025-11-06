@@ -3,12 +3,12 @@ package com.gurkha.hr.domain.chat.mapper
 
 import androidx.compose.ui.graphics.Color
 import com.gurkha.hr.components.extractInitials
-import com.gurkha.hr.domain.chat.model.ChatItem
+import com.gurkha.hr.domain.chat.model.EmployChatItem
 import com.gurkha.model.chat.list.EmptyListItemResponseDto
 import kotlin.random.Random
 
-fun EmptyListItemResponseDto.toChatItem(): ChatItem {
-    return ChatItem(
+fun EmptyListItemResponseDto.toChatItem(): EmployChatItem {
+    return EmployChatItem(
         employeeId = employeeId ?: 0L,
         chatId = chatId ?: "",
         branchName = branchName ?: "",

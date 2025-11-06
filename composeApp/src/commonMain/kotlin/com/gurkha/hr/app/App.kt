@@ -62,6 +62,7 @@ fun AppScreen(isFirstTime: Boolean) {
                 onChatClick = {
                     navController.navigate(ChatRoute.ChatList)
                 })
+
             chatScreenBuilder(
                 navController = navController
             )

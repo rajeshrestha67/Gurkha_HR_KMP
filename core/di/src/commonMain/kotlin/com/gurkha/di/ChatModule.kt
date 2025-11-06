@@ -1,13 +1,12 @@
 package com.gurkha.di
 
-import com.gurkha.hr.chat_list.ChatListViewModel
-import com.gurkha.hr.chat_room.ChatRoomViewModel
+import com.gurkha.hr.ChatViewModel
 import com.gurkha.hr.data.chat.IOChatSocketRepository
 import com.gurkha.hr.data.chat.KtorChatRemoteRepository
 import com.gurkha.hr.datastore.user_data.repository.UserDataRepository
 import com.gurkha.hr.domain.chat.repository.ChatRemoteRepository
 import com.gurkha.hr.domain.chat.repository.ChatSocketRepository
-import com.gurkha.hr.domain.chat.usecase.ChatListUseCase
+import com.gurkha.hr.domain.chat.usecase.ChatEmployListUseCase
 import com.gurkha.hr.domain.chat.usecase.ConnectSocketUseCase
 import com.gurkha.hr.domain.chat.usecase.DisconnectSocketUseCase
 import com.gurkha.hr.domain.chat.usecase.FetchChatMessageUseCase
@@ -37,7 +36,7 @@ class ChatModule {
 
     @Factory
     fun getChatListUseCase(chatRemoteRepository: ChatRemoteRepository) =
-        ChatListUseCase(chatRemoteRepository)
+        ChatEmployListUseCase(chatRemoteRepository)
 
     @Factory
     fun fetchChatMessageUseCase(
@@ -103,29 +102,41 @@ class ChatModule {
         DisconnectSocketUseCase(chatSocketRepository)
 
 
-    @KoinViewModel
-    fun getChatListViewModel(chatListUseCase: ChatListUseCase) = ChatListViewModel(chatListUseCase)
+//    @KoinViewModel
+//    fun getChatListViewModel(chatListUseCase: ChatEmployListUseCase) =
+//        ChatListViewModel(chatListUseCase)
 
     @KoinViewModel
-    fun getChatRoomViewModel(
+    fun getChatViewModel(
         fetchChatMessageUseCase: FetchChatMessageUseCase,
-        connectSocketUseCase: ConnectSocketUseCase,
-        joinRoomUseCase: JoinRoomUseCase,
-        sendMessageUseCase: SendMessageUseCase,
-        sendTypingUseCase: SendTypingUseCase,
-        sendStopTypingUseCase: SendStopTypingUseCase,
-        observeSocketEventsUseCase: ObserveSocketEventsUseCase,
-        disconnectSocketUseCase: DisconnectSocketUseCase,
-        userDataRepository: UserDataRepository
-    ) = ChatRoomViewModel(
+        userDataRepository: UserDataRepository,
+        chatEmployListUseCase: ChatEmployListUseCase
+    ): ChatViewModel = ChatViewModel(
+        chatEmployListUseCase = chatEmployListUseCase,
         fetchChatMessageUseCase = fetchChatMessageUseCase,
-//        connectSocketUseCase = connectSocketUseCase,
-//        joinRoomUseCase = joinRoomUseCase,
-//        sendMessageUseCase = sendMessageUseCase,
-//        sendTypingUseCase = sendTypingUseCase,
-//        sendStopTypingUseCase = sendStopTypingUseCase,
-//        observeSocketEventsUseCase = observeSocketEventsUseCase,
-//        disconnectSocketUseCase = disconnectSocketUseCase
         userDataRepository = userDataRepository
     )
+
+//    @KoinViewModel
+//    fun getChatRoomViewModel(
+//        fetchChatMessageUseCase: FetchChatMessageUseCase,
+//        connectSocketUseCase: ConnectSocketUseCase,
+//        joinRoomUseCase: JoinRoomUseCase,
+//        sendMessageUseCase: SendMessageUseCase,
+//        sendTypingUseCase: SendTypingUseCase,
+//        sendStopTypingUseCase: SendStopTypingUseCase,
+//        observeSocketEventsUseCase: ObserveSocketEventsUseCase,
+//        disconnectSocketUseCase: DisconnectSocketUseCase,
+//        userDataRepository: UserDataRepository
+//    ) = ChatRoomViewModel(
+//        fetchChatMessageUseCase = fetchChatMessageUseCase,
+////        connectSocketUseCase = connectSocketUseCase,
+////        joinRoomUseCase = joinRoomUseCase,
+////        sendMessageUseCase = sendMessageUseCase,
+////        sendTypingUseCase = sendTypingUseCase,
+////        sendStopTypingUseCase = sendStopTypingUseCase,
+////        observeSocketEventsUseCase = observeSocketEventsUseCase,
+////        disconnectSocketUseCase = disconnectSocketUseCase
+//        userDataRepository = userDataRepository
+//    )
 }

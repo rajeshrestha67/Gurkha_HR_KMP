@@ -65,17 +65,16 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.gurkha.hr.chat_room.components.triangle.Triangle
-import com.gurkha.hr.chat_room.model.ChatMessage
-import com.gurkha.hr.chat_room.model.ChatRoomScreenAction
-import com.gurkha.hr.chat_room.model.ChatRoomScreenState
 import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.components.isKeyboardVisible
 import com.gurkha.hr.components.platform_utils.PlatformUtils
 import com.gurkha.hr.components.textField.ERPTextField
+import com.gurkha.hr.model.ChatMessage
+import com.gurkha.hr.model.ChatScreenAction
+import com.gurkha.hr.model.ChatScreenState
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.model.chat.ChatUserData
 import kotlinx.coroutines.Job
@@ -83,36 +82,36 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
-import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ChatRoomScreen(
     onBackPressed: () -> Unit,
-    chatUserJsonData: String
+    state: ChatScreenState,
+    onAction: (ChatScreenAction) -> Unit
+
 ) {
 
-    val viewModel = koinViewModel<ChatRoomViewModel>()
-    val state by viewModel.state.collectAsStateWithLifecycle()
+//    val viewModel = koinViewModel<ChatRoomViewModel>()
+//    val state by viewModel.state.collectAsStateWithLifecycle()
 
 
-
-    LaunchedEffect(key1 = chatUserJsonData) {
-        viewModel.onAction(action = ChatRoomScreenAction.UpdateChatData(json = chatUserJsonData))
-    }
+//    LaunchedEffect(key1 = chatUserJsonData) {
+//        // viewModel.onAction(action = ChatRoomScreenAction.UpdateChatData(json = chatUserJsonData))
+//    }
 
     ChatRoomScreenContent(
         onBackPressed = onBackPressed,
         state = state,
-        onAction = viewModel::onAction
+        onAction = onAction
     )
 }
 
 @Composable
 private fun ChatRoomScreenContent(
     onBackPressed: () -> Unit,
-    state: ChatRoomScreenState,
-    onAction: (ChatRoomScreenAction) -> Unit
+    state: ChatScreenState,
+    onAction: (ChatScreenAction) -> Unit
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val isKeyboardOpen by isKeyboardVisible()
@@ -146,8 +145,8 @@ private fun ChatRoomScreenContent(
             modifier = Modifier
                 .padding(contentPadding)
                 .fillMaxSize(),
-            isRefreshing = state.isRefreshing,
-            onRefresh = { onAction(ChatRoomScreenAction.OnRefresh) },
+            isRefreshing = state.isChatRefreshing,
+            onRefresh = { onAction(ChatScreenAction.OnChatRefresh) },
             content = {
                 ChatRoomLazyColumn(
                     modifier = Modifier
@@ -164,7 +163,7 @@ private fun ChatRoomScreenContent(
 @Composable
 private fun ChatBottomBar(
     message: String,
-    onAction: (ChatRoomScreenAction) -> Unit
+    onAction: (ChatScreenAction) -> Unit
 ) {
     var typingJob by remember { mutableStateOf<Job?>(null) }
     val coroutineScope = rememberCoroutineScope()
@@ -186,12 +185,12 @@ private fun ChatBottomBar(
             text = message,
             hint = stringResource(resource = SharedRes.Strings.type_here),
             onValueChange = {
-                onAction(ChatRoomScreenAction.MessageChanged(it))
+                onAction(ChatScreenAction.MessageChanged(it))
                 typingJob?.cancel()
-                onAction(ChatRoomScreenAction.OnTyping(isTyping = it.isNotEmpty()))
+                onAction(ChatScreenAction.OnTyping(isTyping = it.isNotEmpty()))
                 typingJob = coroutineScope.launch {
                     delay(600)
-                    onAction(ChatRoomScreenAction.OnTyping(isTyping = false))
+                    onAction(ChatScreenAction.OnTyping(isTyping = false))
                 }
             },
             onErrorStateChange = {},
@@ -199,13 +198,13 @@ private fun ChatBottomBar(
             focusedBorderColor = Color.Transparent,
             unfocusedBorderColor = Color.Transparent,
             keyboardActions = KeyboardActions(onSend = {
-                onAction(ChatRoomScreenAction.Send)
+                onAction(ChatScreenAction.Send)
             })
         )
 
         IconButton(
             enabled = message.isNotEmpty(),
-            onClick = { onAction(ChatRoomScreenAction.Send) }
+            onClick = { onAction(ChatScreenAction.Send) }
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.Send,
@@ -271,13 +270,13 @@ private fun ChatTopBar(
                     modifier = Modifier.weight(weight = 1f)
                 ) {
                     Text(
-                        text = userData.employeeName,
+                        text = "userData.employeeName",
                         style = MaterialTheme.typography.titleMedium.copy(
                             color = MaterialTheme.erpColors.primaryTextColor
                         )
                     )
                     Text(
-                        text = userData.branchName,
+                        text = "userData.branchName",
                         style = MaterialTheme.typography.titleSmall.copy(
                             color = MaterialTheme.erpColors.secondaryTextColor
                         )
@@ -345,7 +344,7 @@ private fun ChatTopBar(
 private fun ChatRoomLazyColumn(
     modifier: Modifier = Modifier,
     isKeyboardOpen: Boolean,
-    state: ChatRoomScreenState
+    state: ChatScreenState
 ) {
 
     val listState = rememberLazyListState()
@@ -376,7 +375,7 @@ private fun ChatRoomLazyColumn(
     ) {
         AnimatedContent(
             modifier = Modifier.weight(1f).fillMaxWidth(),
-            targetState = state.isLoading
+            targetState = state.isChatLoading
         ) { isLoading ->
             if (isLoading) {
                 Box(

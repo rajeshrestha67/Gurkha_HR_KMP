@@ -32,48 +32,39 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.gurkha.hr.chat_list.model.ChatListScreenAction
-import com.gurkha.hr.chat_list.model.ChatListScreenState
 import com.gurkha.hr.components.ProfilePicture
 import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.components.shimmer.ShimmerView
 import com.gurkha.hr.components.textField.ERPTextField
-import com.gurkha.hr.domain.chat.model.ChatItem
+import com.gurkha.hr.domain.chat.model.EmployChatItem
+import com.gurkha.hr.model.ChatScreenAction
+import com.gurkha.hr.model.ChatScreenState
 import com.gurkha.hr.res.SharedRes
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun ChatListScreen(
+    state: ChatScreenState,
+    onAction: (ChatScreenAction) -> Unit,
     onBackPressed: () -> Unit,
     navigateToChat: (chatUserJsonData: String) -> Unit
 ) {
-    val viewModel = koinViewModel<ChatListViewModel>()
-    val state by viewModel.state.collectAsStateWithLifecycle()
+//    val viewModel = koinViewModel<ChatListViewModel>()
+//    val state by viewModel.state.collectAsStateWithLifecycle()
 
-
-    LaunchedEffect(Unit) {
-        viewModel.navigateChannel.collect { chatUserJsonData ->
-            chatUserJsonData?.let {
-                navigateToChat(it)
-            }
-        }
-    }
 
     ChatListScreenContent(
         onBackPressed = onBackPressed,
         state = state,
-        onAction = viewModel::onAction
+        onAction = onAction,
+        navigateToChat = navigateToChat
     )
 }
 
@@ -81,8 +72,9 @@ fun ChatListScreen(
 @Composable
 private fun ChatListScreenContent(
     onBackPressed: () -> Unit,
-    state: ChatListScreenState,
-    onAction: (ChatListScreenAction) -> Unit
+    state: ChatScreenState,
+    onAction: (ChatScreenAction) -> Unit,
+    navigateToChat: (chatUserJsonData: String) -> Unit
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize().imePadding(),
@@ -96,7 +88,7 @@ private fun ChatListScreenContent(
                                 text = state.query ?: "",
                                 hint = stringResource(SharedRes.Strings.searchUsers),
                                 onValueChange = {
-                                    onAction(ChatListScreenAction.SearchQueryChanged(it))
+                                    onAction(ChatScreenAction.SearchQueryChanged(it))
                                 },
                                 onErrorStateChange = {},
                                 imeAction = ImeAction.Done,
@@ -105,7 +97,7 @@ private fun ChatListScreenContent(
                                 backgroundColor = MaterialTheme.colorScheme.background,
                                 keyboardActions = KeyboardActions(
                                     onDone = {
-                                        onAction(ChatListScreenAction.ClearSearch)
+                                        onAction(ChatScreenAction.ClearSearch)
                                     }
                                 )
                             )
@@ -126,7 +118,7 @@ private fun ChatListScreenContent(
                     IconButton(
                         onClick = {
                             if (state.showSearch) {
-                                onAction(ChatListScreenAction.ClearSearch)
+                                onAction(ChatScreenAction.ClearSearch)
                             } else {
                                 onBackPressed()
                             }
@@ -143,7 +135,7 @@ private fun ChatListScreenContent(
                         if (showSearch) {
                             IconButton(
                                 onClick = {
-                                    onAction(ChatListScreenAction.ClearSearch)
+                                    onAction(ChatScreenAction.ClearSearch)
                                 }
                             ) {
                                 Icon(
@@ -154,9 +146,9 @@ private fun ChatListScreenContent(
 
                         } else {
                             IconButton(
-                                enabled = !state.isLoading,
+                                enabled = !state.isEmployListLoading,
                                 onClick = {
-                                    onAction(ChatListScreenAction.SearchClicked)
+                                    onAction(ChatScreenAction.SearchClicked)
                                 }
                             ) {
                                 Icon(
@@ -172,13 +164,14 @@ private fun ChatListScreenContent(
     ) { paddingValues ->
         PullToRefreshBox(
             modifier = Modifier.padding(paddingValues).fillMaxSize(),
-            isRefreshing = state.isRefreshing,
-            onRefresh = { onAction(ChatListScreenAction.OnRefresh) },
+            isRefreshing = state.isEmployListRefreshing,
+            onRefresh = { onAction(ChatScreenAction.OnEmployeeRefresh) },
             content = {
                 ChatListLazyColumn(
                     modifier = Modifier.fillMaxSize(),
                     state = state,
-                    onAction = onAction
+                    onAction = onAction,
+                    navigateToChat = navigateToChat
                 )
             }
         )
@@ -188,8 +181,9 @@ private fun ChatListScreenContent(
 @Composable
 private fun ChatListLazyColumn(
     modifier: Modifier = Modifier,
-    state: ChatListScreenState,
-    onAction: (ChatListScreenAction) -> Unit
+    state: ChatScreenState,
+    onAction: (ChatScreenAction) -> Unit,
+    navigateToChat: (chatUserJsonData: String) -> Unit
 ) {
 
     LazyColumn(
@@ -199,7 +193,7 @@ private fun ChatListLazyColumn(
             vertical = MaterialTheme.dimens.small2
         )
     ) {
-        if (state.isLoading) {
+        if (state.isEmployListLoading) {
             items(5) {
                 ChatListItemLoading()
             }
@@ -211,7 +205,8 @@ private fun ChatListLazyColumn(
                 ChatListItem(
                     chatItem = chatItem,
                     onClick = {
-                        onAction(ChatListScreenAction.ItemClick(chatItem))
+                        onAction(ChatScreenAction.ItemClick(chatItem))
+                        navigateToChat("")
                     }
                 )
             }
@@ -256,7 +251,7 @@ private fun ChatListItemLoading() {
 }
 
 @Composable
-private fun ChatListItem(chatItem: ChatItem, onClick: () -> Unit) {
+private fun ChatListItem(chatItem: EmployChatItem, onClick: () -> Unit) {
 
     Row(
         modifier = Modifier.clickable(onClick = onClick).fillMaxWidth()

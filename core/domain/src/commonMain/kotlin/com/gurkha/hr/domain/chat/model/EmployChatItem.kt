@@ -3,7 +3,7 @@ package com.gurkha.hr.domain.chat.model
 import androidx.compose.ui.graphics.Color
 
 
-data class ChatItem(
+data class EmployChatItem(
     val employeeId: Long,
     val chatId: String,
     val branchName: String,

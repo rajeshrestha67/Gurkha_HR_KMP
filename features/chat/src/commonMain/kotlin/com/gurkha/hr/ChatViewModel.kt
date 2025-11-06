@@ -1,75 +1,88 @@
-package com.gurkha.hr.chat_room
+package com.gurkha.hr
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gurkha.hr.chat_room.model.ChatMessage
-import com.gurkha.hr.chat_room.model.ChatRoomScreenAction
-import com.gurkha.hr.chat_room.model.ChatRoomScreenState
-import com.gurkha.hr.chat_room.model.toChatMetaData
-import com.gurkha.hr.chat_room.model.toMessage
 import com.gurkha.hr.datastore.user_data.repository.UserDataRepository
 import com.gurkha.hr.domain.chat.mapper.getCurrentDataAndTime
+import com.gurkha.hr.domain.chat.usecase.ChatEmployListUseCase
 import com.gurkha.hr.domain.chat.usecase.FetchChatMessageUseCase
+import com.gurkha.hr.model.ChatMessage
+import com.gurkha.hr.model.ChatScreenAction
+import com.gurkha.hr.model.ChatScreenState
+import com.gurkha.hr.model.toChatMetaData
+import com.gurkha.hr.model.toMessage
 import com.gurkha.hr.network.SocketManager
 import com.gurkha.hr.networkhelper.onError
 import com.gurkha.hr.networkhelper.onSuccess
 import com.gurkha.model.chat.ChatUserData
+import com.gurkha.model.network.toErrorMessage
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.serialization.json.Json
 import kotlin.time.ExperimentalTime
 
-class ChatRoomViewModel(
+class ChatViewModel(
+    private val chatEmployListUseCase: ChatEmployListUseCase,
     private val fetchChatMessageUseCase: FetchChatMessageUseCase,
-//    private val connectSocketUseCase: ConnectSocketUseCase,
-//    private val joinRoomUseCase: JoinRoomUseCase,
-//    private val sendMessageUseCase: SendMessageUseCase,
-//    private val sendTypingUseCase: SendTypingUseCase,
-//    private val sendStopTypingUseCase: SendStopTypingUseCase,
-//    private val observeSocketEventsUseCase: ObserveSocketEventsUseCase,
-//    private val disconnectSocketUseCase: DisconnectSocketUseCase
     private val userDataRepository: UserDataRepository
 ) : ViewModel() {
+    private val _state = MutableStateFlow(ChatScreenState())
 
+    val state = _state.onStart {
+        fetchChatList()
+    }.stateIn(
+        viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = ChatScreenState()
+    )
     private val socketManager: SocketManager = SocketManager()
-    private val _state = MutableStateFlow(ChatRoomScreenState())
-
-    val state = _state
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = ChatRoomScreenState()
-        )
-
-    init {
-        viewModelScope.launch {
-
-
-        }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-//        disconnectSocketUseCase()
-    }
-
-    fun onAction(action: ChatRoomScreenAction) {
+    fun onAction(action: ChatScreenAction) {
         when (action) {
-
-            is ChatRoomScreenAction.UpdateChatData -> {
-                val chatUserData = Json.decodeFromString<ChatUserData>(string = action.json)
+            ChatScreenAction.ClearSearch -> {
                 _state.update {
-                    it.copy(chatUserData = chatUserData)
+                    it.copy(
+                        showSearch = false,
+                        query = null,
+                        chatList = it.chatListCache
+                    )
                 }
-                initSocket(chatUserData = chatUserData)
-                fetchChatMessage(chatUserData = chatUserData, isRefreshing = false)
             }
 
-            is ChatRoomScreenAction.MessageChanged -> {
+            ChatScreenAction.SearchClicked -> {
+                _state.update {
+                    it.copy(
+                        showSearch = true
+                    )
+                }
+            }
+
+            is ChatScreenAction.SearchQueryChanged -> {
+                updateChatList(query = action.query)
+            }
+
+//            is ChatScreenAction.ItemClick -> {
+//
+//                val chatUserData = ChatUserData(
+//                    employeeId = action.chatItem.employeeId,
+//                    chatId = action.chatItem.chatId,
+//                    branchName = action.chatItem.branchName,
+//                    employeeName = action.chatItem.employeeName,
+//                    profileImageUrl = action.chatItem.profileImageUrl,
+//                    nameInitials = action.chatItem.nameInitials,
+//                    backgroundColor = action.chatItem.backgroundColor.value,
+//                    phoneNumber = action.chatItem.phoneNumber
+//                )
+//            }
+
+            is ChatScreenAction.OnEmployeeRefresh -> {
+                fetchChatList(isRefreshing = true)
+            }
+
+            is ChatScreenAction.MessageChanged -> {
                 _state.update {
                     it.copy(
                         message = action.message
@@ -77,20 +90,80 @@ class ChatRoomViewModel(
                 }
             }
 
-            is ChatRoomScreenAction.OnTyping -> {
+            is ChatScreenAction.OnTyping -> {
                 sendTyping(isTyping = action.isTyping)
             }
 
-            is ChatRoomScreenAction.Send -> {
+            is ChatScreenAction.Send -> {
                 if (state.value.message.isNotEmpty()) {
                     sendMessage()
                 }
             }
 
-            ChatRoomScreenAction.OnRefresh -> {
+            ChatScreenAction.OnChatRefresh -> {
                 _state.value.chatUserData?.let { chatUserData ->
                     fetchChatMessage(chatUserData = chatUserData, isRefreshing = true)
                 }
+            }
+
+            is ChatScreenAction.ItemClick -> {
+                val chatUserData = ChatUserData(
+                    employeeId = action.chatItem.employeeId,
+                    chatId = action.chatItem.chatId,
+                    branchName = action.chatItem.branchName,
+                    employeeName = action.chatItem.employeeName,
+                    profileImageUrl = action.chatItem.profileImageUrl,
+                    nameInitials = action.chatItem.nameInitials,
+                    backgroundColor = action.chatItem.backgroundColor.value,
+                    phoneNumber = action.chatItem.phoneNumber
+                )
+                _state.update {
+                    it.copy(
+                        chatUserData = chatUserData
+                    )
+                }
+                fetchChatMessage(chatUserData = chatUserData)
+            }
+        }
+    }
+
+    private fun updateChatList(query: String?) {
+        _state.update {
+            it.copy(
+                query = query,
+                chatList = it.chatListCache.filter { chatItem ->
+                    chatItem.employeeName.contains(query ?: "", ignoreCase = true)
+                }
+            )
+        }
+    }
+
+    private fun fetchChatList(isRefreshing: Boolean = false) = viewModelScope.launch {
+        if (isRefreshing) {
+            _state.update {
+                it.copy(isEmployListRefreshing = true)
+            }
+        } else {
+            _state.update {
+                it.copy(isEmployListLoading = true)
+            }
+        }
+        chatEmployListUseCase().onSuccess { data ->
+            _state.update {
+                it.copy(
+                    isEmployListLoading = false,
+                    isEmployListRefreshing = false,
+                    chatList = data,
+                    chatListCache = data
+                )
+            }
+        }.onError { error ->
+            _state.update {
+                it.copy(
+                    isEmployListLoading = false,
+                    isEmployListRefreshing = false,
+                    error = error.toErrorMessage()
+                )
             }
         }
     }
@@ -219,19 +292,19 @@ class ChatRoomViewModel(
 
     private fun fetchChatMessage(
         chatUserData: ChatUserData,
-        isRefreshing: Boolean
+        isRefreshing: Boolean = false
     ) = viewModelScope.launch {
 
         if (isRefreshing) {
             _state.update {
                 it.copy(
-                    isLoading = true
+                    isChatLoading = true
                 )
             }
         } else {
             _state.update {
                 it.copy(
-                    isRefreshing = true
+                    isChatRefreshing = true
                 )
             }
         }
@@ -256,28 +329,15 @@ class ChatRoomViewModel(
 //                        .asReversed()
                         .toMap(LinkedHashMap()),
                     metaData = data.metaData?.toChatMetaData(),
-                    isLoading = false,
-                    isRefreshing = false
+                    isChatLoading = false,
+                    isChatRefreshing = false
                 )
             }
 
         }.onError {
             _state.update {
-                it.copy(isLoading = false)
+                it.copy(isChatLoading = false)
             }
-        }
-    }
-
-    private fun refresh() = viewModelScope.launch {
-        _state.update {
-            it.copy(
-                isRefreshing = true
-            )
-        }
-        _state.update {
-            it.copy(
-                isRefreshing = false
-            )
         }
     }
 

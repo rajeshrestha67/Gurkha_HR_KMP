@@ -10,3 +10,6 @@ sealed interface ChatRoute {
     @Serializable
     data class ChatRoom(val json: String) : ChatRoute
 }
+
+@Serializable
+object ChatGraphRoute
