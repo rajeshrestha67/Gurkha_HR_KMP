@@ -34,7 +34,7 @@ class SettingsViewModel(
 ) : ViewModel() {
 
     var bioToken: String? = null
-    var uid: Int = getDeviceInfo(10.toString()).uid.toInt()
+    var uid: Int = getDeviceInfo().uid.toInt()
 
     private val _state = MutableStateFlow(SettingsScreenState())
     val state = _state
@@ -105,7 +105,7 @@ class SettingsViewModel(
     private fun updateEnabledBiometric(
         isEnable: Boolean
     ) = viewModelScope.launch {
-        if(isEnable){
+        if (isEnable) {
             //first make the api call first and update the value in the local
             biometricRequestUseCase(
                 uid = uid,
@@ -119,7 +119,7 @@ class SettingsViewModel(
                     )
                 )
             }
-        }else{
+        } else {
             println("falase $isEnable")
             //if disable then only update the value in the local
             val token = fetchBiometricEnableUseCase().firstOrNull() ?: Token()

@@ -99,6 +99,7 @@ kotlin {
                 // commonMain by default and will correctly pull the Android artifacts of any KMP
                 // dependencies declared in commonMain.
                 implementation("androidx.biometric:biometric:1.2.0-alpha05")
+                implementation("androidx.security:security-crypto:1.1.0")
             }
         }
 
@@ -119,15 +120,16 @@ kotlin {
                 // KMP dependencies declared in commonMain.
             }
         }
-        targets.withType<org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget>()
-            .configureEach {
-                binaries.all {
-                    linkerOpts("-framework", "UserNotifications")
-                    linkerOpts("-framework", "Foundation")
-                    linkerOpts("-framework", "UIKit")
-                }
-            }
-    }
 
+    }
+    targets.withType<org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget>()
+        .configureEach {
+            binaries.all {
+                linkerOpts("-framework", "UserNotifications")
+                linkerOpts("-framework", "Foundation")
+                linkerOpts("-framework", "UIKit")
+                linkerOpts("-framework", "Security")
+            }
+        }
 
 }

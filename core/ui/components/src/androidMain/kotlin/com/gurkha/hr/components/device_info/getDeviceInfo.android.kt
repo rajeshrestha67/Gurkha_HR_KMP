@@ -2,12 +2,13 @@ package com.gurkha.hr.components.device_info
 
 import android.content.Context
 import android.os.Build
+import android.provider.Settings
 import com.gurkha.model.device_info.DeviceInfo
 import org.koin.mp.KoinPlatform.getKoin
 import java.util.Locale
 import java.util.TimeZone
 
-actual fun getDeviceInfo(id: String): DeviceInfo {
+actual fun getDeviceInfo(): DeviceInfo {
     val context: Context = getKoin().get()
     val pm = context.packageManager
     val packageInfo = pm.getPackageInfo(context.packageName, 0)
@@ -25,7 +26,7 @@ actual fun getDeviceInfo(id: String): DeviceInfo {
     }
     return DeviceInfo(
         platform = "Android",
-        uid = id,
+        uid = generateId(context = context),
         manufacturer = Build.MANUFACTURER,
         model = Build.MODEL,
         osVersion = Build.VERSION.RELEASE,
@@ -36,5 +37,12 @@ actual fun getDeviceInfo(id: String): DeviceInfo {
         appBuild = appBuild,
         deviceName = Build.DEVICE,
         isEmulator = isEmulator
+    )
+}
+
+private fun generateId(context: Context): String {
+    return Settings.Secure.getString(
+        context.contentResolver,
+        Settings.Secure.ANDROID_ID
     )
 }

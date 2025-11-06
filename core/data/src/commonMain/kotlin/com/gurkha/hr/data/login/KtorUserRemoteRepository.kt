@@ -22,7 +22,7 @@ class KtorUserRemoteRepository(
         password: String?,
         biometricToken: String?
     ): ERPResult<LoginResponseDto, DataError> {
-        val deviceInfo = getDeviceInfo("10")
+        val deviceInfo = getDeviceInfo()
         val request = LoginRequestDto(
             biometricToken = biometricToken,
             email = username,
