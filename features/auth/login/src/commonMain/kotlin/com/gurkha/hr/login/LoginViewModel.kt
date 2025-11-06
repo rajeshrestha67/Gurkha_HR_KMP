@@ -4,13 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gurkha.hr.domain.auth.login.usecase.ClearTokenUseCase
 import com.gurkha.hr.domain.auth.login.usecase.LoginUseCase
-import com.gurkha.hr.domain.biometric.useCase.BiometricRequestUseCase
 import com.gurkha.hr.domain.form.EmailValidateUseCase
 import com.gurkha.hr.domain.form.PasswordValidateUseCase
 import com.gurkha.hr.domain.splash.UpdateFirstTimeCheckUseCase
 import com.gurkha.hr.domain.token.usecase.FetchBiometricEnableUseCase
 import com.gurkha.hr.domain.userDetail.usecase.FetchUserDetailFlowUseCase
-import com.gurkha.hr.domain.userDetail.usecase.FetchUserDetailUseCase
 import com.gurkha.hr.logger.AppLogger
 import com.gurkha.hr.login.model.LoginScreenAction
 import com.gurkha.hr.login.model.LoginScreenState
@@ -45,8 +43,9 @@ class LoginViewModel(
 
     private val _successChannel = Channel<Boolean>()
     val successChannel = _successChannel.receiveAsFlow()
-    var bioToken: String? = null
+    private var bioToken: String? = null
 
+    private var previousEmail: String? = null
     val state = _state.combine(
         flow = fetchBiometricEnableUseCase(),
     ) { state, token ->
@@ -56,15 +55,16 @@ class LoginViewModel(
         )
     }
         .onStart {
-            updateFirstTimeUser()
-            clearToken()
             fetchUserDetailFlowUseCase().firstOrNull()?.let { user ->
+                previousEmail = user.email
                 _state.update {
                     it.copy(
                         username = user.email
                     )
                 }
             }
+            updateFirstTimeUser()
+            clearToken()
         }
         .stateIn(
             viewModelScope,
@@ -125,6 +125,11 @@ class LoginViewModel(
     }
 
     private fun login() = viewModelScope.launch {
+
+        if (previousEmail != null && state.value.username != previousEmail) {
+            
+            return@launch
+        }
         _state.update {
             it.copy(isLoading = true)
         }
