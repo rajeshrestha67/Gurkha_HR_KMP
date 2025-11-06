@@ -10,5 +10,6 @@ data class ChatUserData(
     val employeeName: String,
     val profileImageUrl: String?,
     val nameInitials: String,
-    val backgroundColor: ULong
+    val backgroundColor: ULong,
+    val phoneNumber: String?
 )

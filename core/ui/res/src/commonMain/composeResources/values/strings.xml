@@ -302,6 +302,7 @@
 
     <string name="login_verification">Login Verification</string>
     <string name="auth_using_biometric">Authenticate using your fingerprint</string>
+    <string name="call">Call</string>
 
     <string-array name="months">
         <item>Baisakh</item>

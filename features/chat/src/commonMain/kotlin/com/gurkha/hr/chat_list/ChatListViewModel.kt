@@ -69,7 +69,8 @@ class ChatListViewModel(
                     employeeName = action.chatItem.employeeName,
                     profileImageUrl = action.chatItem.profileImageUrl,
                     nameInitials = action.chatItem.nameInitials,
-                    backgroundColor = action.chatItem.backgroundColor.value
+                    backgroundColor = action.chatItem.backgroundColor.value,
+                    phoneNumber = action.chatItem.phoneNumber
                 )
                 _navigateChannel.trySend(
                     Json.encodeToString(chatUserData)

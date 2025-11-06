@@ -19,6 +19,7 @@ data class EmptyListItemResponseDto(
     val lastMessage: String? = null,
     val lastMessageSendUser: String? = null,
     val hasUnReadMessage: String? = null,
-    val sortOrder: Int? = null
+    val sortOrder: Int? = null,
+    val phoneNumber: String? = null
 )
 

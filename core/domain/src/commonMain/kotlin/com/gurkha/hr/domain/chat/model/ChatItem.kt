@@ -14,5 +14,6 @@ data class ChatItem(
     val hasUnReadMessage: String,
     val sortOrder: Int,
     val nameInitials: String,
-    val backgroundColor: Color
+    val backgroundColor: Color,
+    val phoneNumber: String?
 )

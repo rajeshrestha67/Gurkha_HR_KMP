@@ -34,7 +34,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.Call
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -221,6 +224,8 @@ private fun ChatTopBar(
 ) {
 
     val platformUtils: PlatformUtils = koinInject()
+
+    var showMoreOption by remember { mutableStateOf(false) }
     TopAppBar(
         title = {
             Row(
@@ -292,15 +297,45 @@ private fun ChatTopBar(
             }
         },
         actions = {
+
             IconButton(
                 onClick = {
-                    platformUtils.callPhoneNumber("9840055429")
+                    showMoreOption = true
                 }
             ) {
                 Icon(
-                    imageVector = Icons.Filled.Call,
-                    contentDescription = "Call"
+                    imageVector = Icons.Filled.MoreVert,
+                    contentDescription = "more"
                 )
+            }
+
+            DropdownMenu(
+                expanded = showMoreOption,
+                onDismissRequest = {
+                    showMoreOption = false
+                }
+            ) {
+                userData.phoneNumber?.let { phone ->
+                    DropdownMenuItem(
+                        text = {
+                            Text(
+                                text = stringResource(SharedRes.Strings.call)
+                            )
+                        },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Filled.Call,
+                                contentDescription = "more"
+                            )
+                        },
+                        onClick = {
+                            showMoreOption = false
+                            platformUtils.callPhoneNumber(
+                                phoneNumber = phone
+                            )
+                        }
+                    )
+                }
             }
         }
     )

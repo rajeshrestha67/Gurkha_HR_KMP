@@ -39,6 +39,7 @@ import gurkhahr.core.ui.res.generated.resources.biometric
 import gurkhahr.core.ui.res.generated.resources.blood_group
 import gurkhahr.core.ui.res.generated.resources.branch
 import gurkhahr.core.ui.res.generated.resources.bs
+import gurkhahr.core.ui.res.generated.resources.call
 import gurkhahr.core.ui.res.generated.resources.camera
 import gurkhahr.core.ui.res.generated.resources.camera_permission_denied
 import gurkhahr.core.ui.res.generated.resources.cancel
@@ -578,5 +579,6 @@ object SharedRes {
         val notification_action = Res.string.notification_action
         val login_verification = Res.string.login_verification
         val auth_using_biometric = Res.string.auth_using_biometric
+        val call = Res.string.call
     }
 }

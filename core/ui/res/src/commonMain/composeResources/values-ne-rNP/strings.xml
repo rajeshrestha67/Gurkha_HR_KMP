@@ -305,7 +305,7 @@
 
     <string name="login_verification">लगइन प्रमाणीकरण</string>
     <string name="auth_using_biometric">आफ्नो फिंगरप्रिन्ट प्रयोग गरेर प्रमाणीकरण गर्नुहोस्</string>
-
+    <string name="call">कल</string>
     <string-array name="months">
         <item>बैशाख</item>
         <item>जेठ</item>

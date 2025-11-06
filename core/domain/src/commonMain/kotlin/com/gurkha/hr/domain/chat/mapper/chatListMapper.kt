@@ -19,7 +19,8 @@ fun EmptyListItemResponseDto.toChatItem(): ChatItem {
         hasUnReadMessage = hasUnReadMessage ?: "",
         sortOrder = sortOrder ?: 0,
         nameInitials = employeeName.extractInitials(),
-        backgroundColor = randomLightColor()
+        backgroundColor = randomLightColor(),
+        phoneNumber = phoneNumber
     )
 }
 
