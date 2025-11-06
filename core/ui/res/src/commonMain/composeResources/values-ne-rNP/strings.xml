@@ -306,6 +306,9 @@
     <string name="login_verification">लगइन प्रमाणीकरण</string>
     <string name="auth_using_biometric">आफ्नो फिंगरप्रिन्ट प्रयोग गरेर प्रमाणीकरण गर्नुहोस्</string>
 
+    <string name="please_reset_biometric">कृपया आफ्नो बायोमेट्रिक रिसेट गर्नुहोस्</string>
+    <string name="reset_biometric">बायोमेट्रिक रिसेट गर्नुहोस्</string>
+
     <string-array name="months">
         <item>बैशाख</item>
         <item>जेठ</item>

@@ -183,6 +183,7 @@ import gurkhahr.core.ui.res.generated.resources.personal_details
 import gurkhahr.core.ui.res.generated.resources.personal_info
 import gurkhahr.core.ui.res.generated.resources.phone
 import gurkhahr.core.ui.res.generated.resources.photos
+import gurkhahr.core.ui.res.generated.resources.please_reset_biometric
 import gurkhahr.core.ui.res.generated.resources.plus_two_image
 import gurkhahr.core.ui.res.generated.resources.present
 import gurkhahr.core.ui.res.generated.resources.privacy_policy
@@ -195,6 +196,7 @@ import gurkhahr.core.ui.res.generated.resources.remarks
 import gurkhahr.core.ui.res.generated.resources.report
 import gurkhahr.core.ui.res.generated.resources.request
 import gurkhahr.core.ui.res.generated.resources.required
+import gurkhahr.core.ui.res.generated.resources.reset_biometric
 import gurkhahr.core.ui.res.generated.resources.response
 import gurkhahr.core.ui.res.generated.resources.search_users
 import gurkhahr.core.ui.res.generated.resources.select_assignee
@@ -578,5 +580,8 @@ object SharedRes {
         val notification_action = Res.string.notification_action
         val login_verification = Res.string.login_verification
         val auth_using_biometric = Res.string.auth_using_biometric
+
+        val please_reset_biometric = Res.string.please_reset_biometric
+        val reset_biometric = Res.string.reset_biometric
     }
 }

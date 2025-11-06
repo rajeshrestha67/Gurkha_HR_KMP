@@ -10,6 +10,7 @@ import com.gurkha.hr.domain.form.EmailValidateUseCase
 import com.gurkha.hr.domain.form.PasswordValidateUseCase
 import com.gurkha.hr.domain.splash.UpdateFirstTimeCheckUseCase
 import com.gurkha.hr.domain.token.usecase.FetchBiometricEnableUseCase
+import com.gurkha.hr.domain.token.usecase.UpdateBiometricEnableUseCase
 import com.gurkha.hr.domain.userDetail.usecase.FetchUserDetailFlowUseCase
 import com.gurkha.hr.login.LoginViewModel
 import io.ktor.client.HttpClient
@@ -54,7 +55,8 @@ class AuthModule {
         passwordValidateUseCase: PasswordValidateUseCase,
         updateFirstTimeCheckUseCase: UpdateFirstTimeCheckUseCase,
         fetchBiometricEnableUseCase: FetchBiometricEnableUseCase,
-        fetchUserDetailFlowUseCase: FetchUserDetailFlowUseCase
+        fetchUserDetailFlowUseCase: FetchUserDetailFlowUseCase,
+        updateBiometricEnableUseCase: UpdateBiometricEnableUseCase
     ) =
         LoginViewModel(
             loginUseCase = loginUseCase,
@@ -63,7 +65,8 @@ class AuthModule {
             passwordValidateUseCase = passwordValidateUseCase,
             updateFirstTimeCheckUseCase = updateFirstTimeCheckUseCase,
             fetchBiometricEnableUseCase = fetchBiometricEnableUseCase,
-            fetchUserDetailFlowUseCase = fetchUserDetailFlowUseCase
+            fetchUserDetailFlowUseCase = fetchUserDetailFlowUseCase,
+            updateBiometricEnableUseCase = updateBiometricEnableUseCase
         )
 
 }
