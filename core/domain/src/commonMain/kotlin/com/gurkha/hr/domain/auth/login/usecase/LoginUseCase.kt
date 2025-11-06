@@ -30,7 +30,6 @@ class LoginUseCase(
                 jwtToken = data.token
             ))
 
-
             val userData = userDataRepository.userDataFlow.firstOrNull() ?: UserData()
             userDataRepository.saveUserData(userData.copy(email = username))
         }

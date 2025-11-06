@@ -204,7 +204,7 @@ fun NotificationBox(
         Text(
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.End,
-            text = item.actionTime, style = MaterialTheme.typography.titleSmall.copy(
+            text = item.actionTime, style = MaterialTheme.typography.labelMedium.copy(
                 color = MaterialTheme.erpColors.primaryTextColor
             )
         )

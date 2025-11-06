@@ -38,4 +38,6 @@ object EndPoint {
 
     const val EMPLOYEE_IMAGE_UPLOAD_END_POINT = "api/employee/file-upload/image"
 
+    const val BIOMETRIC_REQUEST_END_POINT="/api/notifications/save-biometric-token"
+
 }

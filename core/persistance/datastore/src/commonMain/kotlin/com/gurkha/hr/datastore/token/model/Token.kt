@@ -6,5 +6,6 @@ import kotlinx.serialization.Serializable
 data class Token(
     val jwtToken: String? = null,
     val biometricToken: String? = null,
-    val isBiometricEnable: Boolean = false
+    val isBiometricEnable: Boolean = false,
+    val gcmToken: String? = null
 )

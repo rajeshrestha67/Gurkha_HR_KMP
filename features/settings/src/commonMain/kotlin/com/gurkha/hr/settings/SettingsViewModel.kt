@@ -2,27 +2,39 @@ package com.gurkha.hr.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gurkha.hr.components.device_info.getDeviceInfo
+import com.gurkha.hr.datastore.token.model.Token
+import com.gurkha.hr.domain.biometric.useCase.BiometricRequestUseCase
 import com.gurkha.hr.domain.settings.usecase.UpdateUserLanguageUseCase
 import com.gurkha.hr.domain.settings.usecase.UpdateUserThemeUseCase
 import com.gurkha.hr.domain.token.usecase.FetchBiometricEnableUseCase
 import com.gurkha.hr.domain.token.usecase.UpdateBiometricEnableUseCase
+import com.gurkha.hr.networkhelper.onSuccess
 import com.gurkha.hr.res.theme.EPRLanguage
 import com.gurkha.hr.res.theme.ThemeMode
+import com.gurkha.hr.settings.model.settings.SettingList
 import com.gurkha.hr.settings.model.settings.SettingsScreenAction
 import com.gurkha.hr.settings.model.settings.SettingsScreenState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 class SettingsViewModel(
     private val updateUserThemeUseCase: UpdateUserThemeUseCase,
     private val updateUserLanguageUseCase: UpdateUserLanguageUseCase,
     private val fetchBiometricEnableUseCase: FetchBiometricEnableUseCase,
-    private val updateBiometricEnableUseCase:UpdateBiometricEnableUseCase
+    private val updateBiometricEnableUseCase: UpdateBiometricEnableUseCase,
+    private val biometricRequestUseCase: BiometricRequestUseCase
 ) : ViewModel() {
+
+    var bioToken: String? = null
+    var uid: Int = getDeviceInfo(10.toString()).uid.toInt()
 
     private val _state = MutableStateFlow(SettingsScreenState())
     val state = _state
@@ -30,20 +42,21 @@ class SettingsViewModel(
             getBioData()
         }
         .stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = SettingsScreenState()
-    )
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = SettingsScreenState()
+        )
 
     fun onAction(action: SettingsScreenAction) {
         when (action) {
             is SettingsScreenAction.OnBiometricStatusChange -> {
-                _state.update {
-                    it.copy(
-                        biometricEnabled = action.enable
-                    )
+                if (action.enable) {
+                    updateEnabledBiometric(true)
+                } else {
+                    println("elseExecuted")
+                    bioToken = null
+                    updateEnabledBiometric(false)
                 }
-                updateEnabledBiometric(action.enable)
             }
 
             is SettingsScreenAction.OnThemeSelected -> {
@@ -52,6 +65,20 @@ class SettingsViewModel(
 
             is SettingsScreenAction.OnLanguageSelected -> {
                 updateLanguage(language = action.language)
+            }
+
+            is SettingsScreenAction.OnIsAvailableCheck -> {
+                _state.update {
+                    it.copy(
+                        items = _state.value.items.filter { item ->
+                            if (item == SettingList.Biometric)
+                                action.isAvailable
+                            else
+                                true
+                        },
+                        isAvailable = action.isAvailable
+                    )
+                }
             }
         }
     }
@@ -64,19 +91,51 @@ class SettingsViewModel(
         updateUserLanguageUseCase(language.langCode)
     }
 
-    private fun getBioData()=viewModelScope.launch {
+    private fun getBioData() = viewModelScope.launch {
         fetchBiometricEnableUseCase().collect { token ->
             _state.update {
                 it.copy(
-                    biometricEnabled =token.isBiometricEnable
+                    biometricEnabled = token.isBiometricEnable,
                 )
             }
+            bioToken = token.biometricToken ?: generateRandomUUid()
         }
     }
 
     private fun updateEnabledBiometric(
-        isEnable : Boolean
-    )=viewModelScope.launch {
-        updateBiometricEnableUseCase(isEnable = isEnable)
+        isEnable: Boolean
+    ) = viewModelScope.launch {
+        if(isEnable){
+            //first make the api call first and update the value in the local
+            biometricRequestUseCase(
+                uid = uid,
+                biometricToken = bioToken ?: ""
+            ).onSuccess {
+                val token = fetchBiometricEnableUseCase().firstOrNull() ?: Token()
+                updateBiometricEnableUseCase(
+                    token.copy(
+                        isBiometricEnable = isEnable,
+                        biometricToken = bioToken
+                    )
+                )
+            }
+        }else{
+            println("falase $isEnable")
+            //if disable then only update the value in the local
+            val token = fetchBiometricEnableUseCase().firstOrNull() ?: Token()
+            updateBiometricEnableUseCase(
+                token.copy(
+                    isBiometricEnable = isEnable,
+                    biometricToken = bioToken
+                )
+            )
+        }
     }
+
+    @OptIn(ExperimentalUuidApi::class)
+    private fun generateRandomUUid(): String {
+        val randomUuid = Uuid.random().toString()
+        return randomUuid
+    }
+
 }

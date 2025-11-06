@@ -1,6 +1,5 @@
 package com.gurkha.hr.login
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.verticalScroll
@@ -33,7 +31,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
@@ -41,7 +38,6 @@ import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.PlatformMessage
 import com.gurkha.hr.components.biometric.rememberBiometricPromptLauncher
 import com.gurkha.hr.components.dimens
-import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.components.hideKeyboardOnTap
 import com.gurkha.hr.components.permissions.POST_NOTIFICATIONS_PERMISSION
 import com.gurkha.hr.components.permissions.rememberRequestPermission
@@ -53,7 +49,6 @@ import com.gurkha.hr.login.model.LoginScreenAction
 import com.gurkha.hr.login.model.LoginScreenState
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.model.biometric.BiometricAuthResult
-import com.gurkha.model.biometric.BiometricPromptLauncher
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
@@ -240,7 +235,7 @@ fun LoginScreenContent(
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
-                ){
+                ) {
                     ERPButton(
                         modifier = Modifier.fillMaxWidth(0.8f),
                         onClick = {
@@ -252,19 +247,22 @@ fun LoginScreenContent(
                     //only show if the user has enabled the biometric
                     IconButton(
                         modifier = Modifier
-                            .fillMaxSize()
-                                ,
+                            .fillMaxSize(),
                         onClick = {
-                            launcher.launch(
-                                "Login Verification",       // title
-                                "Authenticate using your fingerprint",  // subtitle
-                                "Cancel"                    // negativeButtonText
-                            )
+                            if (launcher.isAvailable) {
+                                launcher.launch(
+                                    "Login Verification",
+                                    "Authenticate using your fingerprint",
+                                    "Cancel"
+                                )
+                            }
                         },
                         content = {
-                            Icon(Icons.Filled.Fingerprint, contentDescription = "Fingerprint",
+                            Icon(
+                                Icons.Filled.Fingerprint, contentDescription = "Fingerprint",
                                 modifier = Modifier
-                                    .size(MaterialTheme.dimens.extraLarge))
+                                    .fillMaxSize()
+                            )
                         })
                 }
             }
