@@ -23,7 +23,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
@@ -193,7 +192,7 @@ fun LoginScreenContent(
 
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxSize()
                     .padding(horizontal = MaterialTheme.dimens.small3),
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
 
@@ -278,11 +277,13 @@ fun LoginScreenContent(
                             },
                             content = {
                                 Icon(
-                                    Icons.Filled.Fingerprint, contentDescription = "Fingerprint",
+                                    Icons.Filled.Fingerprint,
+                                    contentDescription = "Fingerprint",
                                     modifier = Modifier
                                         .fillMaxSize()
                                 )
-                            })
+                            }
+                        )
                     }
                 }
             }
