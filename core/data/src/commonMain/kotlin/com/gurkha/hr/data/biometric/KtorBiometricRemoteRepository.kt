@@ -14,18 +14,23 @@ import io.ktor.client.request.setBody
 
 class KtorBiometricRemoteRepository(
     private val httpClient: HttpClient
-) : BiometricRemoteRepository{
+) : BiometricRemoteRepository {
     override suspend fun biometricRequest(
         biometricToken: String,
-        uid: Int
+        uid: String
     ): ERPResult<BiometricResponseDto, DataError> {
+        val requestDto = BiometricRequestDto(biometricToken = biometricToken, uid = uid)
+//        AppLogger.i(
+//            tag = "KtorBiometricRemoteRepository",
+//            message = "biometric request ${Json.encodeToString(requestDto)}"
+//        )
         return safeCall {
             httpClient.post(
                 baseUrl = BaseUrl.Generic,
                 endPoint = EndPoint.BIOMETRIC_REQUEST_END_POINT
-            ){
+            ) {
                 setBody(
-                    BiometricRequestDto(biometricToken = biometricToken, uid = uid)
+                    requestDto
                 )
             }
         }

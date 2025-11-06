@@ -7,6 +7,6 @@ import com.gurkha.model.network.DataError
 interface BiometricRemoteRepository {
     suspend fun biometricRequest(
         biometricToken: String,
-        uid: Int
+        uid: String
     ): ERPResult<BiometricResponseDto, DataError>
 }

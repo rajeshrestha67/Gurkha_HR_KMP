@@ -34,7 +34,7 @@ class SettingsViewModel(
 ) : ViewModel() {
 
     var bioToken: String? = null
-    var uid: Int = getDeviceInfo().uid.toInt()
+    var uid = getDeviceInfo().uid
 
     private val _state = MutableStateFlow(SettingsScreenState())
     val state = _state

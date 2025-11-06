@@ -51,7 +51,7 @@ class LoginViewModel(
     private var previousEmail: String? = null
 
     private val _resetChannel = Channel<Boolean>()
-    val  resetChannel = _resetChannel.receiveAsFlow()
+    val resetChannel = _resetChannel.receiveAsFlow()
     val state = _state.combine(
         flow = fetchBiometricEnableUseCase(),
     ) { state, token ->
@@ -108,7 +108,7 @@ class LoginViewModel(
                 biometricLogin()
             }
 
-            is LoginScreenAction.OnResetBiometric->{
+            is LoginScreenAction.OnResetBiometric -> {
                 resetBiometric()
             }
 
@@ -136,10 +136,6 @@ class LoginViewModel(
 
     private fun login() = viewModelScope.launch {
 
-        if (previousEmail != null && state.value.username != previousEmail) {
-
-            return@launch
-        }
         _state.update {
             it.copy(isLoading = true)
         }
@@ -194,7 +190,7 @@ class LoginViewModel(
         }
     }
 
-    private fun resetBiometric()=viewModelScope.launch {
+    private fun resetBiometric() = viewModelScope.launch {
         val token = fetchBiometricEnableUseCase().firstOrNull() ?: Token()
         updateBiometricEnableUseCase(
             token.copy(

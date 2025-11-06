@@ -18,9 +18,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Fingerprint
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -57,8 +54,6 @@ import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.components.hideKeyboardOnTap
 import com.gurkha.hr.components.permissions.POST_NOTIFICATIONS_PERMISSION
 import com.gurkha.hr.components.permissions.rememberRequestPermission
-import com.gurkha.hr.components.prompts.PromptModalBottomSheet
-import com.gurkha.hr.components.prompts.PromptType
 import com.gurkha.hr.components.textField.AGEmailTextField
 import com.gurkha.hr.components.textField.FormValidate
 import com.gurkha.hr.components.textField.PasswordTextField
@@ -147,8 +142,7 @@ fun LoginScreen(
         onDismiss = {
             showResetModal = false
         },
-        showResetModal = showResetModal,
-        onReset = {}
+        showResetModal = showResetModal
     )
 
 
@@ -158,7 +152,6 @@ fun LoginScreen(
 fun LoginScreenContent(
     showResetModal: Boolean,
     onDismiss: () -> Unit,
-    onReset: () -> Unit,
     platformMessage: PlatformMessage,
     state: LoginScreenState,
     onAction: (LoginScreenAction) -> Unit
