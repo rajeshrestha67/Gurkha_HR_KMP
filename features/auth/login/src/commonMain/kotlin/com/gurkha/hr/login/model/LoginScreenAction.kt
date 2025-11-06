@@ -11,4 +11,6 @@ sealed interface LoginScreenAction {
     data object LoginClicked : LoginScreenAction
 
     data object OnBiometricLogin : LoginScreenAction
+
+    data object OnResetBiometric: LoginScreenAction
 }

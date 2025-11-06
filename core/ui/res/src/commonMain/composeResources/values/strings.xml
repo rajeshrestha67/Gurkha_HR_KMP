@@ -303,6 +303,9 @@
     <string name="login_verification">Login Verification</string>
     <string name="auth_using_biometric">Authenticate using your fingerprint</string>
 
+    <string name="please_reset_biometric">Please Reset Your Biometric</string>
+    <string name="reset_biometric">Reset Biometric</string>
+
     <string-array name="months">
         <item>Baisakh</item>
         <item>Jestha</item>
