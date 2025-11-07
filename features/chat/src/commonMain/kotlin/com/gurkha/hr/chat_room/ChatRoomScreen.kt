@@ -143,8 +143,8 @@ private fun ChatRoomScreenContent(
     ) { contentPadding ->
         PullToRefreshBox(
             modifier = Modifier
-                .padding(contentPadding)
-                .fillMaxSize(),
+                .fillMaxSize()
+                .padding(contentPadding),
             isRefreshing = state.isChatRefreshing,
             onRefresh = { onAction(ChatScreenAction.OnChatRefresh) },
             content = {
@@ -270,13 +270,13 @@ private fun ChatTopBar(
                     modifier = Modifier.weight(weight = 1f)
                 ) {
                     Text(
-                        text = "userData.employeeName",
+                        text = userData.employeeName,
                         style = MaterialTheme.typography.titleMedium.copy(
                             color = MaterialTheme.erpColors.primaryTextColor
                         )
                     )
                     Text(
-                        text = "userData.branchName",
+                        text = userData.branchName,
                         style = MaterialTheme.typography.titleSmall.copy(
                             color = MaterialTheme.erpColors.secondaryTextColor
                         )

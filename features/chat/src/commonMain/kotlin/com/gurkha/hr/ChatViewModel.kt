@@ -33,7 +33,7 @@ class ChatViewModel(
     private val _state = MutableStateFlow(ChatScreenState())
 
     val state = _state.onStart {
-        fetchChatList()
+        fetchEmployList()
     }.stateIn(
         viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
@@ -79,7 +79,7 @@ class ChatViewModel(
 //            }
 
             is ChatScreenAction.OnEmployeeRefresh -> {
-                fetchChatList(isRefreshing = true)
+                fetchEmployList(isRefreshing = true)
             }
 
             is ChatScreenAction.MessageChanged -> {
@@ -138,7 +138,7 @@ class ChatViewModel(
         }
     }
 
-    private fun fetchChatList(isRefreshing: Boolean = false) = viewModelScope.launch {
+    private fun fetchEmployList(isRefreshing: Boolean = false) = viewModelScope.launch {
         if (isRefreshing) {
             _state.update {
                 it.copy(isEmployListRefreshing = true)
@@ -298,13 +298,13 @@ class ChatViewModel(
         if (isRefreshing) {
             _state.update {
                 it.copy(
-                    isChatLoading = true
+                    isChatRefreshing = true
                 )
             }
         } else {
             _state.update {
                 it.copy(
-                    isChatRefreshing = true
+                    isChatLoading = true
                 )
             }
         }
