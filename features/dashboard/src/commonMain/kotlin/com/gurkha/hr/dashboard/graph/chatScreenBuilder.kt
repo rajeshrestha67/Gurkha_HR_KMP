@@ -1,11 +1,13 @@
 package com.gurkha.hr.dashboard.graph
 
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import androidx.navigation.toRoute
 import com.gurkha.hr.ChatViewModel
 import com.gurkha.hr.chat_list.ChatListScreen
 import com.gurkha.hr.chat_room.ChatRoomScreen
@@ -22,14 +24,16 @@ fun NavGraphBuilder.chatScreenBuilder(
         composable<ChatRoute.ChatList> {
             val viewModel = navController.koinNavGraphViewModel<ChatViewModel, ChatGraphRoute>()
             val state by viewModel.state.collectAsStateWithLifecycle()
+            LaunchedEffect(Unit) {
+                viewModel.navigateToChatChannel.collect { json ->
+                    navController.navigate(ChatRoute.ChatRoom(json))
+                }
+            }
             ChatListScreen(
                 state = state,
                 onAction = viewModel::onAction,
                 onBackPressed = {
                     navController.popBackStack()
-                },
-                navigateToChat = { chatId ->
-                    navController.navigate(ChatRoute.ChatRoom(chatId))
                 }
             )
         }
@@ -38,7 +42,9 @@ fun NavGraphBuilder.chatScreenBuilder(
         composable<ChatRoute.ChatRoom> {
             val viewModel = navController.koinNavGraphViewModel<ChatViewModel, ChatGraphRoute>()
             val state by viewModel.state.collectAsStateWithLifecycle()
+            val json = it.toRoute<ChatRoute.ChatRoom>().json
             ChatRoomScreen(
+                chatJson = json,
                 state = state,
                 onAction = viewModel::onAction,
                 onBackPressed = {

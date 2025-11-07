@@ -16,13 +16,16 @@ import com.gurkha.hr.networkhelper.onError
 import com.gurkha.hr.networkhelper.onSuccess
 import com.gurkha.model.chat.ChatUserData
 import com.gurkha.model.network.toErrorMessage
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
 import kotlin.time.ExperimentalTime
 
 class ChatViewModel(
@@ -39,6 +42,9 @@ class ChatViewModel(
         started = SharingStarted.WhileSubscribed(5000),
         initialValue = ChatScreenState()
     )
+
+    private val _navigateToChatChannel = Channel<String>()
+    val navigateToChatChannel = _navigateToChatChannel.receiveAsFlow()
     private val socketManager: SocketManager = SocketManager()
     fun onAction(action: ChatScreenAction) {
         when (action) {
@@ -117,12 +123,20 @@ class ChatViewModel(
                     backgroundColor = action.chatItem.backgroundColor.value,
                     phoneNumber = action.chatItem.phoneNumber
                 )
+                viewModelScope.launch {
+                    _navigateToChatChannel.send(Json.encodeToString(chatUserData))
+                }
+                // fetchChatMessage(chatUserData = chatUserData)
+            }
+
+            is ChatScreenAction.UpdateCurrentEmploy -> {
+                val userData = Json.decodeFromString<ChatUserData>(action.json)
                 _state.update {
                     it.copy(
-                        chatUserData = chatUserData
+                        chatUserData = userData
                     )
                 }
-                fetchChatMessage(chatUserData = chatUserData)
+                fetchChatMessage(chatUserData = userData)
             }
         }
     }

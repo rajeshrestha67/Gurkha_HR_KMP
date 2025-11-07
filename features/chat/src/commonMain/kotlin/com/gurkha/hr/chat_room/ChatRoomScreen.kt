@@ -87,18 +87,14 @@ import org.koin.compose.koinInject
 @Composable
 fun ChatRoomScreen(
     onBackPressed: () -> Unit,
+    chatJson: String,
     state: ChatScreenState,
     onAction: (ChatScreenAction) -> Unit
-
 ) {
 
-//    val viewModel = koinViewModel<ChatRoomViewModel>()
-//    val state by viewModel.state.collectAsStateWithLifecycle()
-
-
-//    LaunchedEffect(key1 = chatUserJsonData) {
-//        // viewModel.onAction(action = ChatRoomScreenAction.UpdateChatData(json = chatUserJsonData))
-//    }
+    LaunchedEffect(key1 = chatJson) {
+        onAction(ChatScreenAction.UpdateCurrentEmploy(json = chatJson))
+    }
 
     ChatRoomScreenContent(
         onBackPressed = onBackPressed,

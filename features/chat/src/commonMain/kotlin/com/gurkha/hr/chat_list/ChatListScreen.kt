@@ -53,8 +53,7 @@ import org.jetbrains.compose.resources.stringResource
 fun ChatListScreen(
     state: ChatScreenState,
     onAction: (ChatScreenAction) -> Unit,
-    onBackPressed: () -> Unit,
-    navigateToChat: (chatUserJsonData: String) -> Unit
+    onBackPressed: () -> Unit
 ) {
 //    val viewModel = koinViewModel<ChatListViewModel>()
 //    val state by viewModel.state.collectAsStateWithLifecycle()
@@ -63,8 +62,7 @@ fun ChatListScreen(
     ChatListScreenContent(
         onBackPressed = onBackPressed,
         state = state,
-        onAction = onAction,
-        navigateToChat = navigateToChat
+        onAction = onAction
     )
 }
 
@@ -73,8 +71,7 @@ fun ChatListScreen(
 private fun ChatListScreenContent(
     onBackPressed: () -> Unit,
     state: ChatScreenState,
-    onAction: (ChatScreenAction) -> Unit,
-    navigateToChat: (chatUserJsonData: String) -> Unit
+    onAction: (ChatScreenAction) -> Unit
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize().imePadding(),
@@ -170,8 +167,7 @@ private fun ChatListScreenContent(
                 ChatListLazyColumn(
                     modifier = Modifier.fillMaxSize(),
                     state = state,
-                    onAction = onAction,
-                    navigateToChat = navigateToChat
+                    onAction = onAction
                 )
             }
         )
@@ -182,8 +178,7 @@ private fun ChatListScreenContent(
 private fun ChatListLazyColumn(
     modifier: Modifier = Modifier,
     state: ChatScreenState,
-    onAction: (ChatScreenAction) -> Unit,
-    navigateToChat: (chatUserJsonData: String) -> Unit
+    onAction: (ChatScreenAction) -> Unit
 ) {
 
     LazyColumn(
@@ -206,7 +201,6 @@ private fun ChatListLazyColumn(
                     chatItem = chatItem,
                     onClick = {
                         onAction(ChatScreenAction.ItemClick(chatItem))
-                        navigateToChat("")
                     }
                 )
             }

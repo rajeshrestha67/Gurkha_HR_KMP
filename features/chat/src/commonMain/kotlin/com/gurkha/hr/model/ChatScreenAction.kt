@@ -16,4 +16,7 @@ sealed interface ChatScreenAction {
     data class OnTyping(val isTyping: Boolean) : ChatScreenAction
 
     data object OnChatRefresh : ChatScreenAction
+
+    data class UpdateCurrentEmploy(val json: String) : ChatScreenAction
+
 }
