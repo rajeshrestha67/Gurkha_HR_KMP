@@ -53,9 +53,11 @@ import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.components.shimmer.ShimmerView
 import com.gurkha.hr.components.textField.FormValidate
 import com.gurkha.hr.domain.attendance.attendanceReport.model.AttendanceData
+import com.gurkha.hr.domain.attendance.clockStatusEnum.ClockStatus
 import com.gurkha.hr.profile.model.time_and_attendance_screen.TimeAndAttendanceState
 import com.gurkha.hr.profile.model.time_and_attendance_screen.TimeAndAttendanceViewAction
 import com.gurkha.hr.res.SharedRes
+import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -64,6 +66,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun TimeAndAttendanceScreen(
     onBackPressed: () -> Unit,
+    onGoToAttendanceRequestScreen: (String?, String?) -> Unit
 ) {
     val viewModel: TimeAndAttendanceViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -112,8 +115,8 @@ fun TimeAndAttendanceScreen(
                     modifier = Modifier.fillMaxSize(),
                     state = state,
                     showFilter = showFilter,
-                    onAction = viewModel::onAction
-
+                    onAction = viewModel::onAction,
+                    onGoToAttendanceRequestScreen = onGoToAttendanceRequestScreen
                 )
             })
 
@@ -124,7 +127,7 @@ fun TimeAndAttendanceScreen(
 @Composable
 fun TimeAndAttendanceScreenContainer(
     state: TimeAndAttendanceState, showFilter: Boolean,
-
+    onGoToAttendanceRequestScreen: (String?, String?) -> Unit,
     modifier: Modifier = Modifier, onAction: (TimeAndAttendanceViewAction) -> Unit
 ) {
 
@@ -168,7 +171,8 @@ fun TimeAndAttendanceScreenContainer(
                 key = { it.toString() },
                 itemContent = { item ->
                     TimeAndAttendanceDetails(
-                        onAction = onAction, state = state, item = item
+                        onAction = onAction, state = state, item = item,
+                        onGoToAttendanceRequestScreen = onGoToAttendanceRequestScreen
                     )
                 })
         }
@@ -180,7 +184,9 @@ fun TimeAndAttendanceDetails(
     item: AttendanceData,
     onAction: (TimeAndAttendanceViewAction) -> Unit,
     state: TimeAndAttendanceState,
-) {
+    onGoToAttendanceRequestScreen: (String?, String?) -> Unit,
+
+    ) {
 
     var showMore by remember { mutableStateOf(false) }
     Surface(
@@ -225,7 +231,7 @@ fun TimeAndAttendanceDetails(
                 }
 
                 //show the dropdown icon only if the day is not holiday
-                if(!item.isHoliday){
+                if (!item.isHoliday) {
                     Box {
                         DropdownMenu(
                             containerColor = MaterialTheme.colorScheme.background,
@@ -235,24 +241,30 @@ fun TimeAndAttendanceDetails(
                             }) {
                             DropdownMenuItem(text = {
                                 Text(
-                                    text = stringResource(SharedRes.Strings.clockIn),
+                                    text = stringResource(SharedRes.Strings.attendanceRequest),
                                     style = MaterialTheme.typography.bodyMedium.copy(
                                         color = MaterialTheme.erpColors.primaryTextColor
                                     )
                                 )
                             }, onClick = {
+                                //date also include day name so only send the date
+                                val dateToSend = item.date.split(" ")[0]
 
-                            })
-                            DropdownMenuItem(text = {
-                                Text(
-                                    text = stringResource(SharedRes.Strings.clockOut),
-                                    style = MaterialTheme.typography.bodyMedium.copy(
-                                        color = MaterialTheme.erpColors.primaryTextColor
-                                    )
-                                )
-                            }, onClick = {
+                                println("dateToSend ${item.clockInTime} ${item.clockOutTime}")
 
-                            })
+                                //send the status base on the time
+                                val date = Json.encodeToString(dateToSend)
+                                val clockStatus = item.clockInTime?.let {
+                                    Json.encodeToString(ClockStatus.CLOCK_OUT)
+                                } ?:
+                                    Json.encodeToString(ClockStatus.CLOCK_IN)
+
+                                onGoToAttendanceRequestScreen(date, clockStatus)
+
+                                //hide the show dropDown
+                                showMore = false
+                            }
+                            )
                         }
 
                         IconButton(
@@ -260,7 +272,8 @@ fun TimeAndAttendanceDetails(
                                 showMore = true
                             }) {
                             Icon(
-                                imageVector = Icons.Filled.MoreVert, contentDescription = "More Option"
+                                imageVector = Icons.Filled.MoreVert,
+                                contentDescription = "More Option"
                             )
                         }
                     }

@@ -4,6 +4,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
+import com.gurkha.hr.dashboard.route.AttendanceRoute
 import com.gurkha.hr.dashboard.route.DashboardRoute
 import com.gurkha.hr.dashboard.route.ProfileRoute
 import com.gurkha.hr.profile.allocated_leave.AllocatedLeaveScreen
@@ -92,9 +93,19 @@ fun NavGraphBuilder.profileScreenBuilder(
         })
     }
     composable<ProfileRoute.TimeAndAttendanceScreenRoute> {
-        TimeAndAttendanceScreen(onBackPressed = {
-            navController.popBackStack()
-        })
+        TimeAndAttendanceScreen(
+            onBackPressed = {
+                navController.popBackStack()
+            },
+            onGoToAttendanceRequestScreen = { date, clockStatus ->
+                navController.navigate(
+                    AttendanceRoute.AttendanceRequestScreen(
+                        date = date,
+                        clockStatus = clockStatus
+                    )
+                )
+            }
+        )
     }
     composable<ProfileRoute.DocumentScreenRoute> {
         DocumentScreen(onBackPressed = {

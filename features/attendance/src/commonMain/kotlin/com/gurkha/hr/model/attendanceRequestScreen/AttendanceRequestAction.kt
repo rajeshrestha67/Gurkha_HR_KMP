@@ -1,9 +1,9 @@
 package com.gurkha.hr.model.attendanceRequestScreen
 
 import com.gurkha.hr.components.date.DateData
+import com.gurkha.hr.domain.attendance.clockStatusEnum.ClockStatus
 import com.gurkha.model.attendance.attendanceRequest.AttendanceRequestData
 import com.gurkha.model.leave.ui.AssigneeUi
-import org.jetbrains.compose.resources.StringResource
 
 interface AttendanceRequestAction {
     data class OnAssigneeChange(val assignee: AssigneeUi) : AttendanceRequestAction
@@ -17,6 +17,8 @@ interface AttendanceRequestAction {
     data class OnUpdateAttendanceRequestData(val data: AttendanceRequestData) :
         AttendanceRequestAction
 
-    data class OnRadioOptionChange(val option: CheckStatus) : AttendanceRequestAction
+    data class OnRadioOptionChange(val option: ClockStatus) : AttendanceRequestAction
+
+    data class OnReceivedDataChange(val date: String, val clockStatus: String): AttendanceRequestAction
 
 }

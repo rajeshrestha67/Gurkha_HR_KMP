@@ -241,9 +241,9 @@ fun DashboardScreenContent(
                 onGoToFixProfile = {
                     dashboardNavController.navigate(HomeRoute.EditProfileRoute)
                 },
-//                onGoToRequestAttendance={
-//                    dashboardNavController.navigate(HomeRoute.EditProfileRoute)
-//                }
+                onGoToAttendanceRequestScreen = {date, clockStatus ->
+                    dashboardNavController.navigate(AttendanceRoute.AttendanceRequestScreen(date =date, clockStatus = clockStatus))
+                }
             )
             profileScreenBuilder(
                 onLogout = onLogout,
@@ -252,7 +252,7 @@ fun DashboardScreenContent(
             attendanceScreenBuilder(
                 navController = dashboardNavController,
                 onGoToAttendanceRequestScreen = {
-                    dashboardNavController.navigate(AttendanceRoute.AttendanceRequestScreen)
+                    dashboardNavController.navigate(AttendanceRoute.AttendanceRequestScreen(date = null, clockStatus = null))
                 }
             )
             leaveScreenBuilder(

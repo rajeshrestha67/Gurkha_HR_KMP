@@ -78,6 +78,7 @@ import com.gurkha.hr.components.shimmer.ShimmerView
 import com.gurkha.hr.components.swipeToDismiss.SwipeToDismissBox
 import com.gurkha.hr.date.data.CalendarDate
 import com.gurkha.hr.date.data.CalendarDay
+import com.gurkha.hr.domain.attendance.clockStatusEnum.ClockStatus
 import com.gurkha.hr.domain.upComingBirthday.mapper.toUi
 import com.gurkha.hr.domain.upComingEvent.mapper.toUi
 import com.gurkha.hr.domain.upComingEvent.model.EventData
@@ -105,7 +106,8 @@ fun HomeScreen(
     onChatClick: () -> Unit,
     onNotificationClick: () -> Unit,
     onViewAllClick: (String?, String) -> Unit,
-    onGoToFixProfile: () -> Unit
+    onGoToFixProfile: () -> Unit,
+    onGoToAttendanceRequestScreen:(String?, String?)-> Unit
 ) {
     val viewModel: HomeScreenViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -201,7 +203,8 @@ fun HomeScreen(
                     birthdayTitle = birthdayTitle,
                     anniversaryTitle = anniversaryTitle,
                     onGoToFixProfile = onGoToFixProfile,
-                    eventTitle = eventTitle
+                    eventTitle = eventTitle,
+                    onGoToAttendanceRequestScreen=onGoToAttendanceRequestScreen
                 )
             }
         )
@@ -218,7 +221,8 @@ fun HomeScreenContent(
     birthdayTitle: String,
     anniversaryTitle: String,
     onGoToFixProfile: () -> Unit,
-    eventTitle: String
+    eventTitle: String,
+    onGoToAttendanceRequestScreen:(String?, String?)-> Unit
 ) {
     var showPermissionModal by remember { mutableStateOf(false) }
 
@@ -349,7 +353,8 @@ fun HomeScreenContent(
 
             // attendance list
             attendanceSection(
-                state = state
+                state = state,
+                onGoToAttendanceRequestScreen=onGoToAttendanceRequestScreen
             )
 
         }
@@ -495,7 +500,8 @@ fun LazyListScope.birthDaySection(
 
 
 fun LazyListScope.attendanceSection(
-    state: HomeScreenState
+    state: HomeScreenState,
+    onGoToAttendanceRequestScreen:(String?, String?)-> Unit
 ) {
     item(key = "attendance_title") {
         TitleBar(
@@ -521,7 +527,8 @@ fun LazyListScope.attendanceSection(
     } else {
         items(items = state.attendanceReportHistory, key = { it.date }) {
             AttendanceHistoryItem(
-                item = it
+                item = it,
+                onGoToAttendanceRequestScreen = onGoToAttendanceRequestScreen
             )
         }
     }
@@ -529,7 +536,9 @@ fun LazyListScope.attendanceSection(
 
 @Composable
 private fun AttendanceHistoryItem(
-    item: AttendanceHistoryItemUI
+    item: AttendanceHistoryItemUI,
+    onGoToAttendanceRequestScreen:(String?, String?)-> Unit
+
 ) {
     var showMore by rememberSaveable { mutableStateOf(false) }
     Surface(
@@ -578,7 +587,19 @@ private fun AttendanceHistoryItem(
                                 )
                             },
                             onClick = {
+                                //date also include day name so only send the date
+                                val dateToSend = item.date.split(" ")[0]
 
+                                //send the status base on the time
+                                val date = Json.encodeToString(dateToSend)
+                                val clockStatus = if(item.clockInTime == "--:--")
+                                    Json.encodeToString(ClockStatus.CLOCK_IN)
+                                else
+                                    Json.encodeToString(ClockStatus.CLOCK_OUT)
+                                onGoToAttendanceRequestScreen(date, clockStatus)
+
+                                //hide the show dropDown
+                                showMore = false
                             }
                         )
                     }

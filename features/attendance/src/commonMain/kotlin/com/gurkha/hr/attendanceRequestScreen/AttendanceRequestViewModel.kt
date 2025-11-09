@@ -2,7 +2,9 @@ package com.gurkha.hr.attendanceRequestScreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gurkha.hr.components.date.DateData
 import com.gurkha.hr.domain.attendance.attendanceRequest.useCase.AttendanceRequestUseCase
+import com.gurkha.hr.domain.attendance.clockStatusEnum.ClockStatus
 import com.gurkha.hr.domain.form.RequiredValidationUseCase
 import com.gurkha.hr.domain.leave.leaveAssignee.model.toUiList
 import com.gurkha.hr.domain.leave.leaveAssignee.usecase.AssigneeUseCase
@@ -20,6 +22,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
 
 class AttendanceRequestViewModel(
     private val requiredValidationUseCase: RequiredValidationUseCase,
@@ -110,6 +113,21 @@ class AttendanceRequestViewModel(
                         selectedOption = action.option
                     )
                 }
+            }
+
+            is AttendanceRequestAction.OnReceivedDataChange ->{
+                val collectedDate = Json.decodeFromString<String>(action.date)
+
+                val date = DateData.fromDisplayBS(collectedDate)
+                val clockStatus = Json.decodeFromString<ClockStatus>(action.clockStatus)
+
+                _state.update {
+                    it.copy(
+                        date = date,
+                        selectedOption = clockStatus,
+                    )
+                }
+
             }
         }
     }
