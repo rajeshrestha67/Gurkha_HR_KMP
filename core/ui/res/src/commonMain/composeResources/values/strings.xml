@@ -307,6 +307,9 @@
     <string name="please_reset_biometric">Please Reset Your Biometric</string>
     <string name="reset_biometric">Reset Biometric</string>
 
+    <string name="absent_days">Absent Days</string>
+    <string name="present_days">Present Days</string>
+
     <string-array name="months">
         <item>Baisakh</item>
         <item>Jestha</item>

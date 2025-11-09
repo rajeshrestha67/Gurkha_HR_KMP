@@ -80,13 +80,13 @@ enum class RequestType(
     ),
     Leave(
         icon = Icons.Filled.TimeToLeave,
-        title = SharedRes.Strings.leave,
-        status = SharedRes.Strings.totalLeave
+        title = SharedRes.Strings.absent,
+        status = SharedRes.Strings.totalAbsentDays
     ),
     Attendance(
         icon = Icons.Filled.EditCalendar,
-        title = SharedRes.Strings.attendance,
-        status = SharedRes.Strings.workingDays
+        title = SharedRes.Strings.present,
+        status = SharedRes.Strings.totalPresentDays
     );
 
     companion object Companion {

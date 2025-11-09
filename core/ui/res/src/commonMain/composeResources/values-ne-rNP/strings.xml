@@ -310,6 +310,9 @@
     <string name="please_reset_biometric">कृपया आफ्नो बायोमेट्रिक रिसेट गर्नुहोस्</string>
     <string name="reset_biometric">बायोमेट्रिक रिसेट गर्नुहोस्</string>
 
+    <string name="absent_days">अनुपस्थित दिनहरू</string>
+    <string name="present_days">वर्तमान दिनहरू</string>
+
     <string-array name="months">
         <item>बैशाख</item>
         <item>जेठ</item>
