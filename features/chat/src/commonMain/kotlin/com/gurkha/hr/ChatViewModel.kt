@@ -166,6 +166,24 @@ class ChatViewModel(
                 }
             }
         }
+        viewModelScope.launch {
+            observeSocketEventsUseCase.onTyping.collect { typing ->
+                _state.update {
+                    it.copy(
+                        isTyping = typing
+                    )
+                }
+            }
+        }
+        viewModelScope.launch {
+            observeSocketEventsUseCase.onTyping.collect { typing ->
+                _state.update {
+                    it.copy(
+                        isTyping = typing
+                    )
+                }
+            }
+        }
     }
 
     private fun updateChatList(query: String?) {
@@ -266,6 +284,7 @@ class ChatViewModel(
                 socketPrefix = "mbank"
             )
         }
+
         viewModelScope.launch {
             observeSocketEventsUseCase.isConnected.collect {
                 if (it) {
@@ -276,26 +295,6 @@ class ChatViewModel(
                 }
             }
         }
-        viewModelScope.launch {
-            observeSocketEventsUseCase.onTyping.collect { typing ->
-                _state.update {
-                    it.copy(
-                        isTyping = typing
-                    )
-                }
-            }
-        }
-        viewModelScope.launch {
-            observeSocketEventsUseCase.onTyping.collect { typing ->
-                println("ChatRoomViewModel typing stop")
-                _state.update {
-                    it.copy(
-                        isTyping = typing
-                    )
-                }
-            }
-        }
-
     }
 
     private fun fetchChatMessage(
