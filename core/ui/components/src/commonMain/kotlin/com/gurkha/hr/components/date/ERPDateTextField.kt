@@ -55,12 +55,6 @@ fun ERPDateTextField(
     enabled: Boolean = true,
     rules: List<Rule>,
     error: StringResource?,
-//    defaultDateInBS: CalendarDate? = CalendarDate(
-//        year = 2082,
-//        month = 7,
-//        dayOfMonth = 22,
-//        page = 1338
-//    ),
     selectableDates: SelectableDates = DatePickerDefaults.AllDates,
     onErrorStateChange: (StringResource?) -> Unit,
     onDateSelected: (DateData) -> Unit
@@ -73,11 +67,7 @@ fun ERPDateTextField(
             DateData.getCalendarDateBS(it.displayValueBS)
         }
     }
-//    LaunchedEffect(defaultDateInBS) {
-//        defaultDateInBS?.let { selectedDate ->
-//            onDateSelected(DateData.fromDisplayBS(displayValue = "${selectedDate.year}-${selectedDate.month}-${selectedDate.dayOfMonth}"))
-//        }
-//    }
+
     Box(
         modifier = modifier.wrapContentHeight(),
         contentAlignment = Alignment.TopCenter
@@ -137,17 +127,6 @@ fun ERPDateTextField(
         )
 
         if (showDateDialog) {
-//            DatePickerDialog(
-//                onDismiss = {
-//                    showDateDialog = false
-//                },
-//                initialSelectedDateMillis = value?.actualValue,
-//                selectableDates = selectableDates,
-//                onDatePick = {
-//                    onDateSelected(it)
-//                    showDateDialog = false
-//                }
-//            )
             DatePickerModalBottomSheet(
                 defaultDate = defaultDate,
                 onDismiss = {
