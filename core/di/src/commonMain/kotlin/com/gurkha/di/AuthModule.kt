@@ -9,7 +9,7 @@ import com.gurkha.hr.domain.auth.login.usecase.LoginUseCase
 import com.gurkha.hr.domain.form.EmailValidateUseCase
 import com.gurkha.hr.domain.form.PasswordValidateUseCase
 import com.gurkha.hr.domain.splash.UpdateFirstTimeCheckUseCase
-import com.gurkha.hr.domain.token.usecase.FetchBiometricEnableUseCase
+import com.gurkha.hr.domain.token.usecase.FetchTokenAllValueUseCase
 import com.gurkha.hr.domain.token.usecase.UpdateBiometricEnableUseCase
 import com.gurkha.hr.domain.userDetail.usecase.FetchUserDetailFlowUseCase
 import com.gurkha.hr.login.LoginViewModel
@@ -54,7 +54,7 @@ class AuthModule {
         emailValidateUseCase: EmailValidateUseCase,
         passwordValidateUseCase: PasswordValidateUseCase,
         updateFirstTimeCheckUseCase: UpdateFirstTimeCheckUseCase,
-        fetchBiometricEnableUseCase: FetchBiometricEnableUseCase,
+        fetchTokenAllValueUseCase: FetchTokenAllValueUseCase,
         fetchUserDetailFlowUseCase: FetchUserDetailFlowUseCase,
         updateBiometricEnableUseCase: UpdateBiometricEnableUseCase
     ) =
@@ -64,7 +64,7 @@ class AuthModule {
             emailValidateUseCase = emailValidateUseCase,
             passwordValidateUseCase = passwordValidateUseCase,
             updateFirstTimeCheckUseCase = updateFirstTimeCheckUseCase,
-            fetchBiometricEnableUseCase = fetchBiometricEnableUseCase,
+            fetchTokenAllValueUseCase = fetchTokenAllValueUseCase,
             fetchUserDetailFlowUseCase = fetchUserDetailFlowUseCase,
             updateBiometricEnableUseCase = updateBiometricEnableUseCase
         )

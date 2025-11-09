@@ -60,7 +60,7 @@ class FirebaseService : FirebaseMessagingService() {
         super.onNewToken(token)
         scope.launch {
             val tokenData = repository.token.firstOrNull() ?: Token()
-            repository.saveToken(tokenData.copy(gcmToken = token))
+            repository.saveToken(tokenData.copy(fcmToken = token))
         }
         println("firebase newToken: $token")
     }
