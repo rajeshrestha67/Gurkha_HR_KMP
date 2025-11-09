@@ -52,6 +52,7 @@ class ChatViewModel(
     private var typingJob: Job? = null
     val state = _state.onStart {
         fetchEmployList()
+        observeMessage()
     }.stateIn(
         viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
@@ -131,6 +132,7 @@ class ChatViewModel(
                 )
                 viewModelScope.launch {
                     _navigateToChatChannel.send(Json.encodeToString(chatUserData))
+
                 }
             }
 
@@ -147,6 +149,24 @@ class ChatViewModel(
         }
     }
 
+    private fun observeMessage() {
+        viewModelScope.launch {
+            observeSocketEventsUseCase.onContent.collect { content ->
+                content?.let {
+
+                    val chatMessage = createChatMessage(
+                        fromMe = content.fromUser == userDataRepository.userDataFlow.firstOrNull()!!.fullName,
+                        message = content.content
+                    )
+                    _state.update {
+                        it.copy(
+                            messages = state.value.messages.addMessage(chatMessage)
+                        )
+                    }
+                }
+            }
+        }
+    }
 
     private fun updateChatList(query: String?) {
         _state.update {
@@ -275,22 +295,7 @@ class ChatViewModel(
                 }
             }
         }
-        viewModelScope.launch {
-            observeSocketEventsUseCase.onContent.collect { content ->
-                content?.let {
 
-                    val chatMessage = createChatMessage(
-                        fromMe = content.fromUser == userDataRepository.userDataFlow.firstOrNull()!!.fullName,
-                        message = content.content
-                    )
-                    _state.update {
-                        it.copy(
-                            messages = state.value.messages.addMessage(chatMessage)
-                        )
-                    }
-                }
-            }
-        }
     }
 
     private fun fetchChatMessage(

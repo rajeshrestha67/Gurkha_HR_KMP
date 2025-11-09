@@ -45,16 +45,25 @@ class SocketManager {
                 put(SOCKET_PREFIX, socketPrefix)
             }
         }
+        if (socket != null && isConnected.value) {
+            switchChatListener(username = username, chatId = chatId)
+            return
+        }
+
+
         IO.socket(SOCKET_URL, opts) { socket ->
+            socket.off(Socket.EVENT_CONNECT)
+            socket.off(Socket.EVENT_DISCONNECT)
+            socket.off(Socket.EVENT_CONNECT_ERROR)
+
+
             socket.on(Socket.EVENT_CONNECT) {
                 AppLogger.i(TAG, "socket connected")
                 this.socket = socket
+                switchChatListener(username = username, chatId = chatId)
                 _isConnected.update {
                     true
                 }
-//                CoroutineScope(Dispatchers.IO).launch {
-//                    _onConnect.emit(Unit)
-//                }
             }
             socket.on(Socket.EVENT_DISCONNECT) {
                 AppLogger.i(TAG, "socket disconnected")
@@ -71,43 +80,55 @@ class SocketManager {
                     false
                 }
             }
-            socket.on("$PRIVATE:$chatId") { args ->
-                args.firstOrNull()?.let { arg ->
-                    if (arg is JsonObject) {
-                        val json = Json { ignoreUnknownKeys = true }
-                        val content = json.decodeFromString<Content>(string = arg.toString())
-                        AppLogger.i(TAG, "socket new message $arg")
-                        _onContent.update {
-                            content
-                        }
-                    }
-                }
-            }
-            socket.on("$TYPING:$chatId") { args ->
-                args.firstOrNull()?.let { arg ->
-                    if (arg.toString() != username) {
-                        AppLogger.i(TAG, "socket typing")
-                        _onTyping.update {
-                            true
-                        }
-                    }
-                }
-            }
-
-            socket.on("$STOP_TYPING:$chatId") { args ->
-                args.firstOrNull()?.let { arg ->
-                    if (arg.toString() != username) {
-                        AppLogger.i(TAG, "socket stop typing")
-                        _onTyping.update {
-                            false
-                        }
-                    }
-                }
-            }
             socket.open()
         }
+
+
     }
 
+
+    private fun switchChatListener(username: String, chatId: String) {
+        val s = socket ?: return
+
+        chatId.let { oldId ->
+            s.off("$PRIVATE:$oldId")
+            s.off("$TYPING:$oldId")
+            s.off("$STOP_TYPING:$oldId")
+        }
+        s.on("$PRIVATE:$chatId") { args ->
+            args.firstOrNull()?.let { arg ->
+                if (arg is JsonObject) {
+                    val json = Json { ignoreUnknownKeys = true }
+                    val content = json.decodeFromString<Content>(string = arg.toString())
+                    AppLogger.i(TAG, "socket new message $arg")
+                    _onContent.update {
+                        content
+                    }
+                }
+            }
+        }
+        s.on("$TYPING:$chatId") { args ->
+            args.firstOrNull()?.let { arg ->
+                if (arg.toString() != username) {
+                    AppLogger.i(TAG, "socket typing")
+                    _onTyping.update {
+                        true
+                    }
+                }
+            }
+        }
+
+        s.on("$STOP_TYPING:$chatId") { args ->
+            args.firstOrNull()?.let { arg ->
+                if (arg.toString() != username) {
+                    AppLogger.i(TAG, "socket stop typing")
+                    _onTyping.update {
+                        false
+                    }
+                }
+            }
+        }
+    }
 
     fun joinRoom(chatId: String, fromUser: String, initiatorId: String) {
         AppLogger.i(TAG, "socket room join")
