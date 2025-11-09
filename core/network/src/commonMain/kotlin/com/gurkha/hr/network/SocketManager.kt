@@ -12,8 +12,6 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 class SocketManager {
     var socket: Socket? = null
@@ -52,6 +50,9 @@ class SocketManager {
             reconnectionDelay = RECONNECTION_DELAY
             transports = TRANSPORTS
             secure = true
+            query = mutableMapOf<String, String>().apply {
+                //put(SOCKET_PREFIX, socketPrefix)
+            }
         }
 
 
@@ -59,7 +60,8 @@ class SocketManager {
             socket.off(Socket.EVENT_CONNECT)
             socket.off(Socket.EVENT_DISCONNECT)
             socket.off(Socket.EVENT_CONNECT_ERROR)
-
+            socket.off(USER_STATUS_CHANGE)
+            socket.off(CHAT_ROOM_USER_LIST)
 
             socket.on(Socket.EVENT_CONNECT) {
                 AppLogger.i(TAG, "socket connected")
@@ -83,6 +85,27 @@ class SocketManager {
                     false
                 }
             }
+
+
+            println("$TAG starting to listen for user status change")
+            socket.on(USER_STATUS_CHANGE) { args ->
+                println("$TAG with ${args.firstOrNull()} starting to listen for user status change")
+                args.firstOrNull()?.let { arg ->
+                    if (arg is JsonObject) {
+                        val userStatusChangeResponseDto =
+                            json.decodeFromString<UserStatusChangeData>(string = arg.toString())
+                        AppLogger.i(TAG, "socket on user status change $arg")
+                        _onUserStatusChange.update {
+                            userStatusChangeResponseDto
+                        }
+                    }
+                }
+            }
+
+            println("$TAG starting to listen for chat room user list")
+            socket.on(CHAT_ROOM_USER_LIST) { args ->
+                println("$TAG ${args.firstOrNull()}")
+            }
             socket.open()
         }
 
@@ -101,7 +124,6 @@ class SocketManager {
             s.off("$PRIVATE:$oldId")
             s.off("$TYPING:$oldId")
             s.off("$STOP_TYPING:$oldId")
-            s.off(USER_STATUS_CHANGE)
         }
 
         s.on("$PRIVATE:$chatId") { args ->
@@ -137,19 +159,9 @@ class SocketManager {
                 }
             }
         }
-        s.on(USER_STATUS_CHANGE) { args ->
-            args.firstOrNull()?.let { arg ->
-                if (arg is JsonObject) {
-                    val userStatusChangeResponseDto =
-                        json.decodeFromString<UserStatusChangeData>(string = arg.toString())
-                    AppLogger.i(TAG, "socket on user status change $arg")
-                    _onUserStatusChange.update {
-                        userStatusChangeResponseDto
-                    }
-                }
-            }
-        }
+
     }
+
 
     fun joinRoom(chatId: String, fromUser: String, initiatorId: String) {
         AppLogger.i(TAG, "socket room join for user $fromUser, chat ID: $chatId")
@@ -160,12 +172,9 @@ class SocketManager {
         })
     }
 
-    @OptIn(ExperimentalUuidApi::class)
     fun sendMessage(chatId: String, fromUser: String, message: String) {
-        AppLogger.i(TAG, "socket send message for user $fromUser, message: $message")
-        val id = Uuid.random().toString()
+        AppLogger.i(TAG, "socket send message from user $fromUser, message: $message")
         socket?.emit(PRIVATE_MESSAGE, buildJsonObject {
-            put("id", id)
             put(CHAT_ID, chatId)
             put(FROM_USER, fromUser)
             put(MESSAGE, message)
@@ -201,6 +210,7 @@ class SocketManager {
         private const val FROM_USER = "fromUser"
         private const val MESSAGE = "message"
         private const val USER_STATUS_CHANGE = "userStatusChange"
+        private const val CHAT_ROOM_USER_LIST = "chatRoomUserList"
         private const val INITIATOR_ID = "initiatorId"
         private const val JOIN_ROOM = "joinRoom"
         private const val PRIVATE_MESSAGE = "privateMessage"

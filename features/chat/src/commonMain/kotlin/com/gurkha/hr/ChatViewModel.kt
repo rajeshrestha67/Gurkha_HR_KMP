@@ -52,8 +52,8 @@ class ChatViewModel(
     private var typingJob: Job? = null
     val state = _state.onStart {
         fetchEmployList()
-        observeMessage()
         connectSocketUseCase()
+        observeMessage()
     }.stateIn(
         viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
@@ -303,15 +303,13 @@ class ChatViewModel(
 
     private fun joinChatRoom(chatUserData: ChatUserData) {
         viewModelScope.launch {
-            observeSocketEventsUseCase.isConnected.collect {
-                if (it) {
-                    joinRoomUseCase(
-                        chatId = chatUserData.chatId,
-                        initiatorId = "app_mbank"
-                    )
-                    observeSocketEventsUseCase(chatId = chatUserData.chatId)
-                }
-            }
+            joinRoomUseCase(
+                chatId = chatUserData.chatId,
+                initiatorId = "app_mbank"
+            )
+        }
+        viewModelScope.launch {
+            observeSocketEventsUseCase(chatId = chatUserData.chatId)
         }
     }
 
