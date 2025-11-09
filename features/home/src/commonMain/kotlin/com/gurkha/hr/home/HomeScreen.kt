@@ -388,56 +388,58 @@ fun LazyListScope.anniversarySection(
 ) {
     val data = Json.encodeToString<List<ViewAllUi>>(state.upComingWorkAnniversary.toUi())
     val title = Json.encodeToString<String>(anniversaryTitle)
-    item(key = "anniversary title") {
-        TitleBar(
-            modifier = Modifier.fillMaxWidth()
-                .padding(start = MaterialTheme.dimens.small3, end = MaterialTheme.dimens.small1),
-            onViewAll = { onViewAllClick(data, title) },
-            title = SharedRes.Strings.work_anniversaries,
-            subTitle = SharedRes.Strings.view_all
-        )
-    }
+    if(state.upComingWorkAnniversary.isNotEmpty()){
+        item(key = "anniversary title") {
+            TitleBar(
+                modifier = Modifier.fillMaxWidth()
+                    .padding(start = MaterialTheme.dimens.small3, end = MaterialTheme.dimens.small1),
+                onViewAll = { onViewAllClick(data, title) },
+                title = SharedRes.Strings.work_anniversaries,
+                subTitle = SharedRes.Strings.view_all
+            )
+        }
+        item(key = "anniversary list") {
+            when {
+                state.isAnniversaryLoading -> {
 
-    item(key = "anniversary list") {
-        when {
-            state.isAnniversaryLoading -> {
-
-                Row(
-                    modifier = Modifier.fillMaxWidth()
-                        .padding(horizontal = MaterialTheme.dimens.small3),
-                    horizontalArrangement = Arrangement.spacedBy(
-                        MaterialTheme.dimens.small2, alignment = Alignment.Start
-                    )
-                ) {
-                    repeat(4) {
-                        ShimmerView(
-                            modifier = Modifier.size(MaterialTheme.dimens.bottomBar)
-                                .clip(MaterialTheme.shapes.small)
+                    Row(
+                        modifier = Modifier.fillMaxWidth()
+                            .padding(horizontal = MaterialTheme.dimens.small3),
+                        horizontalArrangement = Arrangement.spacedBy(
+                            MaterialTheme.dimens.small2, alignment = Alignment.Start
                         )
+                    ) {
+                        repeat(4) {
+                            ShimmerView(
+                                modifier = Modifier.size(MaterialTheme.dimens.bottomBar)
+                                    .clip(MaterialTheme.shapes.small)
+                            )
+                        }
                     }
+
                 }
 
-            }
+                else -> {
+                    LazyRow(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentPadding = PaddingValues(horizontal = MaterialTheme.dimens.small3),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
 
-            else -> {
-                LazyRow(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentPadding = PaddingValues(horizontal = MaterialTheme.dimens.small3),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
-
-                ) {
-                    items(state.upComingWorkAnniversary) { item ->
-                        UpComingCard(
-                            fullName = item.fullName,
-                            imageUrl = item.imageUrl,
-                            designationName = item.designationName
-                        )
+                    ) {
+                        items(state.upComingWorkAnniversary) { item ->
+                            UpComingCard(
+                                fullName = item.fullName,
+                                imageUrl = item.imageUrl,
+                                designationName = item.designationName
+                            )
+                        }
                     }
                 }
             }
         }
     }
+
 }
 
 
@@ -448,53 +450,58 @@ fun LazyListScope.birthDaySection(
 ) {
     val dataToSend = Json.encodeToString<List<ViewAllUi>>(state.upComingBirthday.toUi())
     val title = Json.encodeToString<String>(birthdayTitle)
-    item(key = "birthday") {
-        TitleBar(
-            modifier = Modifier.fillMaxWidth()
-                .padding(start = MaterialTheme.dimens.small3, end = MaterialTheme.dimens.small1),
-            onViewAll = { onViewAllClick(dataToSend, title) },
-            title = SharedRes.Strings.upcoming_birthday,
-            subTitle = SharedRes.Strings.view_all
-        )
-    }
 
-    item(key = "birthday list") {
-        when {
-            state.isBirthDayLoading -> {
-                Row(
-                    modifier = Modifier.fillMaxWidth()
-                        .padding(horizontal = MaterialTheme.dimens.small3),
-                    horizontalArrangement = Arrangement.spacedBy(
-                        MaterialTheme.dimens.small2, alignment = Alignment.Start
-                    )
-                ) {
-                    repeat(4) {
-                        ShimmerView(
-                            modifier = Modifier.size(MaterialTheme.dimens.bottomBar)
-                                .clip(MaterialTheme.shapes.small)
+    if(state.upComingBirthday.isNotEmpty()){
+
+        item(key = "birthday") {
+            TitleBar(
+                modifier = Modifier.fillMaxWidth()
+                    .padding(start = MaterialTheme.dimens.small3, end = MaterialTheme.dimens.small1),
+                onViewAll = { onViewAllClick(dataToSend, title) },
+                title = SharedRes.Strings.upcoming_birthday,
+                subTitle = SharedRes.Strings.view_all
+            )
+        }
+
+        item(key = "birthday list") {
+            when {
+                state.isBirthDayLoading -> {
+                    Row(
+                        modifier = Modifier.fillMaxWidth()
+                            .padding(horizontal = MaterialTheme.dimens.small3),
+                        horizontalArrangement = Arrangement.spacedBy(
+                            MaterialTheme.dimens.small2, alignment = Alignment.Start
                         )
+                    ) {
+                        repeat(4) {
+                            ShimmerView(
+                                modifier = Modifier.size(MaterialTheme.dimens.bottomBar)
+                                    .clip(MaterialTheme.shapes.small)
+                            )
+                        }
                     }
                 }
-            }
 
-            else -> {
-                LazyRow(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    contentPadding = PaddingValues(horizontal = MaterialTheme.dimens.small3),
-                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
-                ) {
-                    items(state.upComingBirthday) { item ->
-                        UpComingCard(
-                            fullName = item.fullName,
-                            imageUrl = item.imageUrl,
-                            designationName = item.designationName,
-                        )
+                else -> {
+                    LazyRow(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        contentPadding = PaddingValues(horizontal = MaterialTheme.dimens.small3),
+                        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
+                    ) {
+                        items(state.upComingBirthday) { item ->
+                            UpComingCard(
+                                fullName = item.fullName,
+                                imageUrl = item.imageUrl,
+                                designationName = item.designationName,
+                            )
+                        }
                     }
                 }
             }
         }
     }
+
 }
 
 
@@ -1071,23 +1078,33 @@ fun EventCard(
 
     ) {
         Text(
-            text = item.name, style = MaterialTheme.typography.titleMedium.copy(
+            text = item.name,
+            style = MaterialTheme.typography.titleMedium.copy(
                 color = MaterialTheme.erpColors.darkPrimaryTextColor
             )
         )
-
         Text(
             text = "${item.fromDateBs }  to  ${ item.toDateBs}",
-            style = MaterialTheme.typography.titleSmall.copy(
+            style = MaterialTheme.typography.labelMedium.copy(
                 color = MaterialTheme.erpColors.primaryTextColor
             )
         )
 
-        Text(
-            text = item.description, style = MaterialTheme.typography.titleSmall.copy(
-                color = MaterialTheme.erpColors.darkPrimaryTextColor
-            )
+        HorizontalDivider(
+            modifier = Modifier.padding(vertical = MaterialTheme.dimens.small2)
+                .height(MaterialTheme.dimens.extraSmall)
         )
+
+        Column(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(
+            text = item.description,
+                style = MaterialTheme.typography.titleMedium.copy(
+                    color = MaterialTheme.erpColors.primaryTextColor
+                )
+            )
+        }
     }
 }
 
