@@ -1,6 +1,5 @@
 package com.gurkha.hr.profile.time_and_attendance
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -157,7 +156,7 @@ fun TimeAndAttendanceScreenContainer(
             items(count = 10) {
                 ShimmerView(
                     modifier = Modifier.fillMaxWidth()
-                        .height(MaterialTheme.dimens.extraLarge)
+                        .height(MaterialTheme.dimens.bottomBar)
                         .clip(MaterialTheme.shapes.small)
                 )
 
@@ -181,8 +180,7 @@ fun TimeAndAttendanceDetails(
     item: AttendanceData,
     onAction: (TimeAndAttendanceViewAction) -> Unit,
     state: TimeAndAttendanceState,
-
-    ) {
+) {
 
     var showMore by remember { mutableStateOf(false) }
     Surface(
@@ -193,7 +191,7 @@ fun TimeAndAttendanceDetails(
             bottom = MaterialTheme.dimens.small1,
         ).clip(MaterialTheme.shapes.medium),
         tonalElevation = 4.dp
-    ){
+    ) {
         Column(
             modifier = Modifier.fillMaxWidth()
                 .padding(
@@ -202,7 +200,7 @@ fun TimeAndAttendanceDetails(
                     bottom = MaterialTheme.dimens.small2,
                     end = 0.dp,
                 ),
-            ) {
+        ) {
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -226,43 +224,45 @@ fun TimeAndAttendanceDetails(
                         ))
                 }
 
-                Box {
-                    //if (showMore) {
-                    DropdownMenu(
-                        containerColor = MaterialTheme.colorScheme.background,
-                        expanded = showMore,
-                        onDismissRequest = {
-                            showMore = false
-                        }) {
-                        DropdownMenuItem(text = {
-                            Text(
-                                text = stringResource(SharedRes.Strings.clockIn),
-                                style = MaterialTheme.typography.bodyMedium.copy(
-                                    color = MaterialTheme.erpColors.primaryTextColor
+                //show the dropdown icon only if the day is not holiday
+                if(!item.isHoliday){
+                    Box {
+                        DropdownMenu(
+                            containerColor = MaterialTheme.colorScheme.background,
+                            expanded = showMore,
+                            onDismissRequest = {
+                                showMore = false
+                            }) {
+                            DropdownMenuItem(text = {
+                                Text(
+                                    text = stringResource(SharedRes.Strings.clockIn),
+                                    style = MaterialTheme.typography.bodyMedium.copy(
+                                        color = MaterialTheme.erpColors.primaryTextColor
+                                    )
                                 )
-                            )
-                        }, onClick = {
+                            }, onClick = {
 
-                        })
-                        DropdownMenuItem(text = {
-                            Text(
-                                text = stringResource(SharedRes.Strings.clockOut),
-                                style = MaterialTheme.typography.bodyMedium.copy(
-                                    color = MaterialTheme.erpColors.primaryTextColor
+                            })
+                            DropdownMenuItem(text = {
+                                Text(
+                                    text = stringResource(SharedRes.Strings.clockOut),
+                                    style = MaterialTheme.typography.bodyMedium.copy(
+                                        color = MaterialTheme.erpColors.primaryTextColor
+                                    )
                                 )
-                            )
-                        }, onClick = {
+                            }, onClick = {
 
-                        })
-                    }
-                    //}
-                    IconButton(
-                        onClick = {
-                            showMore = true
-                        }) {
-                        Icon(
-                            imageVector = Icons.Filled.MoreVert, contentDescription = "More Option"
-                        )
+                            })
+                        }
+
+                        IconButton(
+                            onClick = {
+                                showMore = true
+                            }) {
+                            Icon(
+                                imageVector = Icons.Filled.MoreVert, contentDescription = "More Option"
+                            )
+                        }
                     }
                 }
 
@@ -335,10 +335,10 @@ fun DateFilter(
 ) {
     Box(
         modifier = Modifier.fillMaxWidth().padding(
-                bottom = MaterialTheme.dimens.small3,
-                start = MaterialTheme.dimens.small2,
-                end = MaterialTheme.dimens.small2
-            )
+            bottom = MaterialTheme.dimens.small3,
+            start = MaterialTheme.dimens.small2,
+            end = MaterialTheme.dimens.small2
+        )
 
     ) {
 

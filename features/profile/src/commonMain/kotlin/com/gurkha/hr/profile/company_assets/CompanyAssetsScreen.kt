@@ -1,6 +1,5 @@
 package com.gurkha.hr.profile.company_assets
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -28,7 +27,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -101,23 +99,23 @@ fun CompanyAssetsScreenContainer(
             alignment = Alignment.Top
         )
     ) {
-        stickyHeader {
-            HeaderSection(
-                text = SharedRes.Strings.assignedAssets
-            )
-        }
         if (state.companyAssetsList.isEmpty()) {
             item {
                 EmptyMessage()
             }
 
         } else {
+            stickyHeader {
+                HeaderSection(
+                    text = SharedRes.Strings.assignedAssets
+                )
+            }
             items(
                 state.companyAssetsList, key = { it.toString() },
                 itemContent = { item ->
                     CompanyAssetsDetails(
                         item = item
-                        )
+                    )
                 },
             )
         }
@@ -138,19 +136,17 @@ fun EmptyMessage() {
             style = MaterialTheme.typography.titleMedium.copy(
                 color = MaterialTheme.erpColors.darkPrimaryTextColor
             ),
-            )
+        )
     }
 }
 
 @Composable
 fun HeaderSection(text: StringResource) {
-
     Text(
-        modifier = Modifier
-            .fillMaxWidth(),
-        text = stringResource(text),
-        style = MaterialTheme.typography.titleLarge
-
+        text = stringResource(SharedRes.Strings.assignedAssets),
+        style = MaterialTheme.typography.titleLarge.copy(
+            color = MaterialTheme.colorScheme.primary
+        )
     )
 }
 
@@ -161,10 +157,9 @@ fun CompanyAssetsDetails(
     Surface(
         modifier = Modifier
             .clip(MaterialTheme.shapes.small)
-            .fillMaxWidth()
-        ,
+            .fillMaxWidth(),
         tonalElevation = 4.dp
-    ){
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
