@@ -137,6 +137,7 @@ class ChatViewModel(
                     )
                 }
                 fetchChatMessage(chatUserData = userData)
+                initSocket(chatUserData = userData)
             }
         }
     }
@@ -198,21 +199,17 @@ class ChatViewModel(
     private fun sendMessage() = viewModelScope.launch {
         sendTyping(isTyping = false)
         val message = state.value.message
-        val chatMessage = createChatMessage(
-            fromMe = true,
-            message = message
-        )
-        _state.update {
-            it.copy(
-                messages = state.value.messages.addMessage(chatMessage),
-                message = ""
-            )
-        }
+
+
 //        sendMessageUseCase(
 //            chatId = state.value.chatUserData?.chatId ?: "",
 //            message = message
 //        )
-
+        _state.update {
+            it.copy(
+                message = ""
+            )
+        }
         println("fullname ${userDataRepository.userDataFlow.firstOrNull()!!.fullName}")
         socketManager.sendMessage(
             chatId = state.value.chatUserData?.chatId ?: "",
@@ -291,14 +288,17 @@ class ChatViewModel(
         }
         viewModelScope.launch {
             socketManager.onContent.collect { content ->
-                val chatMessage = createChatMessage(
-                    fromMe = false,
-                    message = content?.content
-                )
-                _state.update {
-                    it.copy(
-                        messages = state.value.messages.addMessage(chatMessage)
+                content?.let {
+
+                    val chatMessage = createChatMessage(
+                        fromMe = content.fromUser == userDataRepository.userDataFlow.firstOrNull()!!.fullName,
+                        message = content.content
                     )
+                    _state.update {
+                        it.copy(
+                            messages = state.value.messages.addMessage(chatMessage)
+                        )
+                    }
                 }
             }
         }

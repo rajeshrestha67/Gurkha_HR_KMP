@@ -76,34 +76,27 @@ class SocketManager {
                     if (arg is JsonObject) {
                         val json = Json { ignoreUnknownKeys = true }
                         val content = json.decodeFromString<Content>(string = arg.toString())
-                        println("content $content, username $username")
-                        if (content.fromUser != username) {
-                            AppLogger.i(TAG, "socket new message $arg")
-                            _onContent.update {
-                                content
-                            }
+                        AppLogger.i(TAG, "socket new message $arg")
+                        _onContent.update {
+                            content
                         }
                     }
                 }
             }
             socket.on("$TYPING:$chatId") { args ->
                 args.firstOrNull()?.let { arg ->
-                    if (arg.toString() != username) {
-                        AppLogger.i(TAG, "socket typing")
-                        _onTyping.update {
-                            true
-                        }
+                    AppLogger.i(TAG, "socket typing")
+                    _onTyping.update {
+                        true
                     }
                 }
             }
 
             socket.on("$STOP_TYPING:$chatId") { args ->
                 args.firstOrNull()?.let { arg ->
-                    if (arg.toString() != username) {
-                        AppLogger.i(TAG, "socket typing")
-                        _onTyping.update {
-                            false
-                        }
+                    AppLogger.i(TAG, "socket stop typing")
+                    _onTyping.update {
+                        false
                     }
                 }
             }
