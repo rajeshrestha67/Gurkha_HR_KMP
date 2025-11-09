@@ -26,10 +26,18 @@ data class AttendanceRequestState(
     val assigneeError: StringResource? = null,
 
     val isRequestingAttendance: Boolean = false,
-    val radioOptions: List<StringResource> = listOf(
-        SharedRes.Strings.clockIn,
-        SharedRes.Strings.clockOut
-    ),
-    val selectedOption: StringResource = radioOptions.first(),
+    val radioOptions: List<CheckStatus> = CheckStatus.list,
+    val selectedOption: CheckStatus = radioOptions.first(),
     val attendanceRequestData: AttendanceRequestData? = null
 )
+
+enum class CheckStatus(val value: String){
+    CLOCK_IN("clock In"),
+    CLOCK_OUT("clock Out");
+
+    companion object{
+        val list : List<CheckStatus>
+            get() = entries.toList().map { it }
+    }
+
+}

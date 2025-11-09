@@ -240,7 +240,10 @@ fun DashboardScreenContent(
                 },
                 onGoToFixProfile = {
                     dashboardNavController.navigate(HomeRoute.EditProfileRoute)
-                }
+                },
+//                onGoToRequestAttendance={
+//                    dashboardNavController.navigate(HomeRoute.EditProfileRoute)
+//                }
             )
             profileScreenBuilder(
                 onLogout = onLogout,

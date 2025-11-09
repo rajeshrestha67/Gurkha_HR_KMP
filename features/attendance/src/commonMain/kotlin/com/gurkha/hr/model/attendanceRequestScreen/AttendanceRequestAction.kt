@@ -17,6 +17,6 @@ interface AttendanceRequestAction {
     data class OnUpdateAttendanceRequestData(val data: AttendanceRequestData) :
         AttendanceRequestAction
 
-    data class OnRadioOptionChange(val option: StringResource) : AttendanceRequestAction
+    data class OnRadioOptionChange(val option: CheckStatus) : AttendanceRequestAction
 
 }

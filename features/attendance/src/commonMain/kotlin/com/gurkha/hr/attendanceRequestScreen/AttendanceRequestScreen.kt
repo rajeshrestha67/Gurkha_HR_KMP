@@ -258,7 +258,7 @@ fun AttendanceRequestScreenForm(
             },
             optionLabel = { text, isSelected ->
                 Text(
-                    text = stringResource(text),
+                    text =text.value,
                     style = MaterialTheme.typography.titleMedium.copy(
                         color = if (isSelected) MaterialTheme.erpColors.primaryTextColor else MaterialTheme.erpColors.secondaryTextColor
                     ),
