@@ -65,8 +65,6 @@ class HomeScreenViewModel(
     val datePair = calendarModel.getMonthStartAndEndDate()
 
     private val _state = MutableStateFlow(HomeScreenState())
-
-    //    @OptIn(ExperimentalTime::class)
     val state = _state
         .onStart {
             fetchCurrentUser(isRefreshing = false)
@@ -124,26 +122,13 @@ class HomeScreenViewModel(
             }
 
             is HomeScreenActions.SwipeToDismiss -> {
-                _state.update {
-                    it.copy(
-                        showSwipeView = false
-                    )
-                }
                 uploadImage(uri = action.uri)
             }
 
-            HomeScreenActions.OnRefresh -> {
+            is HomeScreenActions.OnRefresh -> {
                 fetchCurrentUser(isRefreshing = true)
                 fetchAttendance(isRefreshing = true)
 
-            }
-
-            HomeScreenActions.OnCameraCancel -> {
-                _state.update {
-                    it.copy(
-                        showSwipeView = false
-                    )
-                }
             }
         }
     }
@@ -491,10 +476,6 @@ class HomeScreenViewModel(
             filePath = uri,
             type = imageName,
             onProgress = { progress ->
-                //when the image is uploading don't show the swipe button
-                _state.update {
-                    it.copy(showSwipeView = false)
-                }
                 viewModelScope.launch {
                     withContext(Dispatchers.Main.immediate) {
                         notification.showNotification(
@@ -505,6 +486,11 @@ class HomeScreenViewModel(
             }
         ).onSuccess { data ->
             AppLogger.d(tag = TAG, "Image Upload success")
+            _state.update {
+                it.copy(
+                    showSwipeView = true
+                )
+            }
 
             doAttendance(
                 forDate = LocalDate.now().toString(),
@@ -515,6 +501,11 @@ class HomeScreenViewModel(
                 tag = TAG,
                 "Image Upload failed: ${error.toErrorMessage()}"
             )
+            _state.update {
+                it.copy(
+                    showSwipeView = true
+                )
+            }
         }
     }
 

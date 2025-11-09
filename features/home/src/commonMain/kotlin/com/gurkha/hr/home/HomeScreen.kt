@@ -231,7 +231,6 @@ fun HomeScreenContent(
             onAction(HomeScreenActions.SwipeToDismiss(uri = uri))
         },
         onError = { e ->
-            onAction(HomeScreenActions.OnCameraCancel)
             println("❌ Error: ${e.message}")
         }
     )
