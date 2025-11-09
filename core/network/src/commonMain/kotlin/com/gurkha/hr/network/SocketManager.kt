@@ -51,7 +51,7 @@ class SocketManager {
             transports = TRANSPORTS
             secure = true
             query = mutableMapOf<String, String>().apply {
-                //put(SOCKET_PREFIX, socketPrefix)
+                //put(SOCKET_PREFIX, "mbank")
             }
         }
 
@@ -218,6 +218,7 @@ class SocketManager {
         private const val PATH = "/socket.io/"
         private const val SOCKET_URL = "wss://mbank.gurkhahr.com"
         private const val RECONNECTION_DELAY = 5000L
+        private const val SOCKET_PREFIX = 5000L
         private const val RECONNECTION_ATTEMPTS = 3
         private const val PRIVATE = "private"
         private const val TYPING = "typing"
