@@ -109,11 +109,25 @@ class ChatModule {
     @KoinViewModel
     fun getChatViewModel(
         fetchChatMessageUseCase: FetchChatMessageUseCase,
+        connectSocketUseCase: ConnectSocketUseCase,
+        joinRoomUseCase: JoinRoomUseCase,
+        sendMessageUseCase: SendMessageUseCase,
+        sendTypingUseCase: SendTypingUseCase,
+        sendStopTypingUseCase: SendStopTypingUseCase,
+        observeSocketEventsUseCase: ObserveSocketEventsUseCase,
+        disconnectSocketUseCase: DisconnectSocketUseCase,
         userDataRepository: UserDataRepository,
         chatEmployListUseCase: ChatEmployListUseCase
     ): ChatViewModel = ChatViewModel(
         chatEmployListUseCase = chatEmployListUseCase,
         fetchChatMessageUseCase = fetchChatMessageUseCase,
+        connectSocketUseCase = connectSocketUseCase,
+        joinRoomUseCase = joinRoomUseCase,
+        sendMessageUseCase = sendMessageUseCase,
+        sendTypingUseCase = sendTypingUseCase,
+        sendStopTypingUseCase = sendStopTypingUseCase,
+        observeSocketEventsUseCase = observeSocketEventsUseCase,
+        disconnectSocketUseCase = disconnectSocketUseCase,
         userDataRepository = userDataRepository
     )
 
@@ -130,13 +144,13 @@ class ChatModule {
 //        userDataRepository: UserDataRepository
 //    ) = ChatRoomViewModel(
 //        fetchChatMessageUseCase = fetchChatMessageUseCase,
-////        connectSocketUseCase = connectSocketUseCase,
-////        joinRoomUseCase = joinRoomUseCase,
-////        sendMessageUseCase = sendMessageUseCase,
-////        sendTypingUseCase = sendTypingUseCase,
-////        sendStopTypingUseCase = sendStopTypingUseCase,
-////        observeSocketEventsUseCase = observeSocketEventsUseCase,
-////        disconnectSocketUseCase = disconnectSocketUseCase
+//        connectSocketUseCase = connectSocketUseCase,
+//        joinRoomUseCase = joinRoomUseCase,
+//        sendMessageUseCase = sendMessageUseCase,
+//        sendTypingUseCase = sendTypingUseCase,
+//        sendStopTypingUseCase = sendStopTypingUseCase,
+//        observeSocketEventsUseCase = observeSocketEventsUseCase,
+//        disconnectSocketUseCase = disconnectSocketUseCase
 //        userDataRepository = userDataRepository
 //    )
 }

@@ -1,7 +1,6 @@
 package com.gurkha.hr.chat_room
 
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -51,7 +50,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -70,6 +68,7 @@ import com.gurkha.hr.chat_room.components.triangle.Triangle
 import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.components.isKeyboardVisible
+import com.gurkha.hr.components.paging.reachedBottom
 import com.gurkha.hr.components.platform_utils.PlatformUtils
 import com.gurkha.hr.components.textField.ERPTextField
 import com.gurkha.hr.model.ChatMessage
@@ -77,9 +76,7 @@ import com.gurkha.hr.model.ChatScreenAction
 import com.gurkha.hr.model.ChatScreenState
 import com.gurkha.hr.res.SharedRes
 import com.gurkha.model.chat.ChatUserData
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -161,8 +158,6 @@ private fun ChatBottomBar(
     message: String,
     onAction: (ChatScreenAction) -> Unit
 ) {
-    var typingJob by remember { mutableStateOf<Job?>(null) }
-    val coroutineScope = rememberCoroutineScope()
 
     Row(
         modifier = Modifier
@@ -182,20 +177,16 @@ private fun ChatBottomBar(
             hint = stringResource(resource = SharedRes.Strings.type_here),
             onValueChange = {
                 onAction(ChatScreenAction.MessageChanged(it))
-                typingJob?.cancel()
-                onAction(ChatScreenAction.OnTyping(isTyping = it.isNotEmpty()))
-                typingJob = coroutineScope.launch {
-                    delay(600)
-                    onAction(ChatScreenAction.OnTyping(isTyping = false))
-                }
             },
             onErrorStateChange = {},
             imeAction = ImeAction.Send,
             focusedBorderColor = Color.Transparent,
             unfocusedBorderColor = Color.Transparent,
-            keyboardActions = KeyboardActions(onSend = {
-                onAction(ChatScreenAction.Send)
-            })
+            keyboardActions = KeyboardActions(
+                onSend = {
+                    onAction(ChatScreenAction.Send)
+                }
+            )
         )
 
         IconButton(
@@ -356,24 +347,31 @@ private fun ChatRoomLazyColumn(
     }
     LaunchedEffect(isKeyboardOpen) {
         if (isKeyboardOpen && state.messages.isNotEmpty()) {
-            delay(100)
             val allMessages = state.messages.values.flatten()
 
-            if (allMessages.isNotEmpty()) {
+            if (listState.reachedBottom(threshold = 1f)) {
+                delay(100)
                 listState.animateScrollToItem(allMessages.lastIndex)
             }
         }
     }
 
 
+    LaunchedEffect(state.isTyping && state.message.isEmpty()) {
+        if (state.isTyping && listState.reachedBottom(threshold = 1f) || isKeyboardOpen) {
+            val allMessages = state.messages.values.flatten()
+            delay(100)
+            listState.animateScrollToItem(allMessages.lastIndex)
+        }
+    }
+
     Column(
-        modifier = modifier
+        modifier = modifier.animateContentSize()
     ) {
-        AnimatedContent(
-            modifier = Modifier.weight(1f).fillMaxWidth(),
-            targetState = state.isChatLoading
-        ) { isLoading ->
-            if (isLoading) {
+        Box(
+            modifier = Modifier.weight(1f).fillMaxWidth()
+        ) {
+            if (state.isChatLoading) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
@@ -417,17 +415,15 @@ private fun ChatRoomLazyColumn(
                         }
                     }
 
+                    if (state.isTyping) {
+                        item {
+                            TypingIndicator(
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
+                    }
                 }
             }
-        }
-
-        AnimatedVisibility(
-            visible = state.isTyping,
-            modifier = Modifier.padding(start = MaterialTheme.dimens.small3)
-        ) {
-            TypingIndicator(
-                modifier = Modifier
-            )
         }
     }
 }

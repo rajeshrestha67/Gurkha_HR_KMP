@@ -13,8 +13,6 @@ sealed interface ChatScreenAction {
     object Send : ChatScreenAction
     data class MessageChanged(val message: String) : ChatScreenAction
 
-    data class OnTyping(val isTyping: Boolean) : ChatScreenAction
-
     data object OnChatRefresh : ChatScreenAction
 
     data class UpdateCurrentEmploy(val json: String) : ChatScreenAction

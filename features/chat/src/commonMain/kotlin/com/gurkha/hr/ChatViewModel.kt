@@ -5,18 +5,26 @@ import androidx.lifecycle.viewModelScope
 import com.gurkha.hr.datastore.user_data.repository.UserDataRepository
 import com.gurkha.hr.domain.chat.mapper.getCurrentDataAndTime
 import com.gurkha.hr.domain.chat.usecase.ChatEmployListUseCase
+import com.gurkha.hr.domain.chat.usecase.ConnectSocketUseCase
+import com.gurkha.hr.domain.chat.usecase.DisconnectSocketUseCase
 import com.gurkha.hr.domain.chat.usecase.FetchChatMessageUseCase
+import com.gurkha.hr.domain.chat.usecase.JoinRoomUseCase
+import com.gurkha.hr.domain.chat.usecase.ObserveSocketEventsUseCase
+import com.gurkha.hr.domain.chat.usecase.SendMessageUseCase
+import com.gurkha.hr.domain.chat.usecase.SendStopTypingUseCase
+import com.gurkha.hr.domain.chat.usecase.SendTypingUseCase
 import com.gurkha.hr.model.ChatMessage
 import com.gurkha.hr.model.ChatScreenAction
 import com.gurkha.hr.model.ChatScreenState
 import com.gurkha.hr.model.toChatMetaData
 import com.gurkha.hr.model.toMessage
-import com.gurkha.hr.network.SocketManager
 import com.gurkha.hr.networkhelper.onError
 import com.gurkha.hr.networkhelper.onSuccess
 import com.gurkha.model.chat.ChatUserData
 import com.gurkha.model.network.toErrorMessage
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.firstOrNull
@@ -31,10 +39,17 @@ import kotlin.time.ExperimentalTime
 class ChatViewModel(
     private val chatEmployListUseCase: ChatEmployListUseCase,
     private val fetchChatMessageUseCase: FetchChatMessageUseCase,
+    private val connectSocketUseCase: ConnectSocketUseCase,
+    private val joinRoomUseCase: JoinRoomUseCase,
+    private val sendMessageUseCase: SendMessageUseCase,
+    private val sendTypingUseCase: SendTypingUseCase,
+    private val sendStopTypingUseCase: SendStopTypingUseCase,
+    private val observeSocketEventsUseCase: ObserveSocketEventsUseCase,
+    private val disconnectSocketUseCase: DisconnectSocketUseCase,
     private val userDataRepository: UserDataRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow(ChatScreenState())
-
+    private var typingJob: Job? = null
     val state = _state.onStart {
         fetchEmployList()
     }.stateIn(
@@ -45,7 +60,7 @@ class ChatViewModel(
 
     private val _navigateToChatChannel = Channel<String>()
     val navigateToChatChannel = _navigateToChatChannel.receiveAsFlow()
-    private val socketManager: SocketManager = SocketManager()
+
     fun onAction(action: ChatScreenAction) {
         when (action) {
             ChatScreenAction.ClearSearch -> {
@@ -70,20 +85,6 @@ class ChatViewModel(
                 updateChatList(query = action.query)
             }
 
-//            is ChatScreenAction.ItemClick -> {
-//
-//                val chatUserData = ChatUserData(
-//                    employeeId = action.chatItem.employeeId,
-//                    chatId = action.chatItem.chatId,
-//                    branchName = action.chatItem.branchName,
-//                    employeeName = action.chatItem.employeeName,
-//                    profileImageUrl = action.chatItem.profileImageUrl,
-//                    nameInitials = action.chatItem.nameInitials,
-//                    backgroundColor = action.chatItem.backgroundColor.value,
-//                    phoneNumber = action.chatItem.phoneNumber
-//                )
-//            }
-
             is ChatScreenAction.OnEmployeeRefresh -> {
                 fetchEmployList(isRefreshing = true)
             }
@@ -94,10 +95,15 @@ class ChatViewModel(
                         message = action.message
                     )
                 }
-            }
+                typingJob?.cancel()
+                if (action.message.isNotEmpty()) {
+                    sendTyping(true)
+                }
 
-            is ChatScreenAction.OnTyping -> {
-                sendTyping(isTyping = action.isTyping)
+                typingJob = viewModelScope.launch {
+                    delay(600)
+                    sendTyping(false)
+                }
             }
 
             is ChatScreenAction.Send -> {
@@ -126,7 +132,6 @@ class ChatViewModel(
                 viewModelScope.launch {
                     _navigateToChatChannel.send(Json.encodeToString(chatUserData))
                 }
-                // fetchChatMessage(chatUserData = chatUserData)
             }
 
             is ChatScreenAction.UpdateCurrentEmploy -> {
@@ -141,6 +146,7 @@ class ChatViewModel(
             }
         }
     }
+
 
     private fun updateChatList(query: String?) {
         _state.update {
@@ -184,13 +190,11 @@ class ChatViewModel(
     }
 
     private fun sendTyping(isTyping: Boolean) = viewModelScope.launch {
-//        _state.update {
-//            it.copy(isUserTyping = isTyping)
-//        }
+        println("sendTyping $isTyping")
         if (isTyping) {
-            //sendTypingUseCase(chatId = state.value.chatUserData?.chatId ?: "")
+            sendTypingUseCase(chatId = state.value.chatUserData?.chatId ?: "")
         } else {
-            //sendStopTypingUseCase(chatId = state.value.chatUserData?.chatId ?: "")
+            sendStopTypingUseCase(chatId = state.value.chatUserData?.chatId ?: "")
         }
 
     }
@@ -200,21 +204,14 @@ class ChatViewModel(
         sendTyping(isTyping = false)
         val message = state.value.message
 
-
-//        sendMessageUseCase(
-//            chatId = state.value.chatUserData?.chatId ?: "",
-//            message = message
-//        )
         _state.update {
             it.copy(
                 message = ""
             )
         }
-        println("fullname ${userDataRepository.userDataFlow.firstOrNull()!!.fullName}")
-        socketManager.sendMessage(
+        sendMessageUseCase(
             chatId = state.value.chatUserData?.chatId ?: "",
-            message = message,
-            fromUser = userDataRepository.userDataFlow.firstOrNull()!!.fullName
+            message = message
         )
 
     }
@@ -241,34 +238,26 @@ class ChatViewModel(
         }
     }
 
-    /*
-    private fun LinkedHashMap<String, List<ChatMessage>>.addMessage(chatMessage: ChatMessage): LinkedHashMap<String, List<ChatMessage>> { val dateKey = chatMessage.date return LinkedHashMap(this).apply { this[dateKey] = listOf(chatMessage) + (this[dateKey] ?: emptyList()) } }
-     */
     private fun initSocket(chatUserData: ChatUserData) {
+
         viewModelScope.launch {
-//            connectSocketUseCase(
-//                chatId = chatUserData.chatId,
-//                socketPrefix = "mbank"
-//            )
-            socketManager.connect(
-                username = userDataRepository.userDataFlow.firstOrNull()!!.fullName,
+            connectSocketUseCase(
                 chatId = chatUserData.chatId,
                 socketPrefix = "mbank"
             )
         }
         viewModelScope.launch {
-            socketManager.isConnected.collect {
+            observeSocketEventsUseCase.isConnected.collect {
                 if (it) {
-                    socketManager.joinRoom(
+                    joinRoomUseCase(
                         chatId = chatUserData.chatId,
-                        initiatorId = "app_mbank",
-                        fromUser = userDataRepository.userDataFlow.firstOrNull()!!.fullName
+                        initiatorId = "app_mbank"
                     )
                 }
             }
         }
         viewModelScope.launch {
-            socketManager.onTyping.collect { typing ->
+            observeSocketEventsUseCase.onTyping.collect { typing ->
                 _state.update {
                     it.copy(
                         isTyping = typing
@@ -277,7 +266,7 @@ class ChatViewModel(
             }
         }
         viewModelScope.launch {
-            socketManager.onTyping.collect { typing ->
+            observeSocketEventsUseCase.onTyping.collect { typing ->
                 println("ChatRoomViewModel typing stop")
                 _state.update {
                     it.copy(
@@ -287,7 +276,7 @@ class ChatViewModel(
             }
         }
         viewModelScope.launch {
-            socketManager.onContent.collect { content ->
+            observeSocketEventsUseCase.onContent.collect { content ->
                 content?.let {
 
                     val chatMessage = createChatMessage(
@@ -353,6 +342,11 @@ class ChatViewModel(
                 it.copy(isChatLoading = false)
             }
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        disconnectSocketUseCase()
     }
 
 }

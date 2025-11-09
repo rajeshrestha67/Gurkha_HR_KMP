@@ -10,7 +10,7 @@ class SendStopTypingUseCase(
 ) {
     suspend operator fun invoke(chatId: String) {
         val fromUser = userDataRepository.userDataFlow.firstOrNull()?.fullName ?: ""
-        chatSocketRepository.sendTyping(
+        chatSocketRepository.sendStopTyping(
             chatId = chatId,
             fromUser = fromUser
         )

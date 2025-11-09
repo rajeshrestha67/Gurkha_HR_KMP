@@ -85,18 +85,22 @@ class SocketManager {
             }
             socket.on("$TYPING:$chatId") { args ->
                 args.firstOrNull()?.let { arg ->
-                    AppLogger.i(TAG, "socket typing")
-                    _onTyping.update {
-                        true
+                    if (arg.toString() != username) {
+                        AppLogger.i(TAG, "socket typing")
+                        _onTyping.update {
+                            true
+                        }
                     }
                 }
             }
 
             socket.on("$STOP_TYPING:$chatId") { args ->
                 args.firstOrNull()?.let { arg ->
-                    AppLogger.i(TAG, "socket stop typing")
-                    _onTyping.update {
-                        false
+                    if (arg.toString() != username) {
+                        AppLogger.i(TAG, "socket stop typing")
+                        _onTyping.update {
+                            false
+                        }
                     }
                 }
             }
