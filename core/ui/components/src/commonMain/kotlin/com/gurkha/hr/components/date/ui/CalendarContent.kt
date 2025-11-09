@@ -2,8 +2,8 @@ package com.gurkha.hr.components.date.ui
 
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import com.agnepal.ambitionguru.ad_bs_calendar.ui.DateContent
 import com.gurkha.hr.components.date.model.rememberCalendarModel
 import com.gurkha.hr.components.date.state.rememberDateRangePickerState
 import com.gurkha.hr.date.data.CalendarDate
@@ -11,6 +11,7 @@ import com.gurkha.hr.date.data.CalendarDate
 
 @Composable
 fun CalendarContent(
+    selectedDate: CalendarDate? = null,
     modifier: Modifier = Modifier,
     onDateSelected: (CalendarDate) -> Unit
 ) {
@@ -27,6 +28,11 @@ fun CalendarContent(
         pageCount = { calendarModel.getNumberOfMonths() }
     )
 
+    LaunchedEffect(selectedDate) {
+        selectedDate?.let { selectedDate ->
+            state.select(selectedDate)
+        }
+    }
 
     DateContent(
         modifier = modifier,

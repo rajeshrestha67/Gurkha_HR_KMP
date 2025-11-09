@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material3.DatePickerDefaults
-import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -19,11 +18,11 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -56,6 +55,12 @@ fun ERPDateTextField(
     enabled: Boolean = true,
     rules: List<Rule>,
     error: StringResource?,
+//    defaultDateInBS: CalendarDate? = CalendarDate(
+//        year = 2082,
+//        month = 7,
+//        dayOfMonth = 22,
+//        page = 1338
+//    ),
     selectableDates: SelectableDates = DatePickerDefaults.AllDates,
     onErrorStateChange: (StringResource?) -> Unit,
     onDateSelected: (DateData) -> Unit
@@ -63,7 +68,16 @@ fun ERPDateTextField(
 
     var showDateDialog by rememberSaveable { mutableStateOf(false) }
     var displayInAd by rememberSaveable { mutableStateOf(false) }
-
+    val defaultDate = remember(value) {
+        value?.let {
+            DateData.getCalendarDateBS(it.displayValueBS)
+        }
+    }
+//    LaunchedEffect(defaultDateInBS) {
+//        defaultDateInBS?.let { selectedDate ->
+//            onDateSelected(DateData.fromDisplayBS(displayValue = "${selectedDate.year}-${selectedDate.month}-${selectedDate.dayOfMonth}"))
+//        }
+//    }
     Box(
         modifier = modifier.wrapContentHeight(),
         contentAlignment = Alignment.TopCenter
@@ -73,9 +87,7 @@ fun ERPDateTextField(
             text = if (displayInAd) value?.displayValueAD ?: "" else value?.displayValueBS ?: "",
             label = label,
             hint = hint,
-            onValueChange = {
-
-            },
+            onValueChange = {},
             enabled = enabled,
             rules = rules,
             showErrorMessage = error != null,
@@ -137,6 +149,7 @@ fun ERPDateTextField(
 //                }
 //            )
             DatePickerModalBottomSheet(
+                defaultDate = defaultDate,
                 onDismiss = {
                     showDateDialog = false
                 },
@@ -149,39 +162,10 @@ fun ERPDateTextField(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
-@Composable
-private fun DatePickerDialog(
-    onDismiss: () -> Unit,
-    initialSelectedDateMillis: Long? = null,
-    selectableDates: SelectableDates,
-    onDatePick: (DateData) -> Unit
-) {
-    val state = rememberDatePickerState(
-        initialSelectedDateMillis = initialSelectedDateMillis,
-        selectableDates = selectableDates
-    )
-    DatePickerDialog(
-        onDismissRequest = onDismiss,
-        confirmButton = {
-
-        },
-        dismissButton = {
-            ERPButton(
-                onClick = onDismiss,
-                backgroundColor = MaterialTheme.colorScheme.error,
-                text = stringResource(SharedRes.Strings.cancel)
-            )
-        }
-    ) {
-
-    }
-}
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DatePickerModalBottomSheet(
+    defaultDate: CalendarDate? = null,
     onDismiss: () -> Unit,
     onDatePick: (DateData) -> Unit
 ) {
@@ -204,6 +188,7 @@ fun DatePickerModalBottomSheet(
             modifier = Modifier.fillMaxWidth()
         ) {
             CalendarContent(
+                selectedDate = defaultDate,
                 onDateSelected = {
                     selectedDate = it
                 }

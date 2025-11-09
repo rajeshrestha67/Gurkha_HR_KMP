@@ -28,7 +28,7 @@ data class LeaveRequestScreenState(
     val isAssigneeLoading: Boolean = false,
     val isLeaveTypeLoading: Boolean = false,
 
-    val isRequestingLeave : Boolean = false,
+    val isRequestingLeave: Boolean = false,
 
     val isAssigneeFetchingError: Boolean = false,
     val isLeaveTypeFetchingError: Boolean = false,
