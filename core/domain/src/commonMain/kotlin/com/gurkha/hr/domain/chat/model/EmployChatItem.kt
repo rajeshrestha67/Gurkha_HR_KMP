@@ -15,5 +15,6 @@ data class EmployChatItem(
     val sortOrder: Int,
     val nameInitials: String,
     val backgroundColor: Color,
-    val phoneNumber: String?
+    val phoneNumber: String?,
+    val isOnline: Boolean
 )

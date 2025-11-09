@@ -284,7 +284,10 @@ private fun ChatListItem(chatItem: EmployChatItem, onClick: () -> Unit) {
                     modifier = Modifier
                         .size(size = MaterialTheme.dimens.small3)
                         .aspectRatio(ratio = 1f)
-                        .background(color = MaterialTheme.colorScheme.error, shape = CircleShape)
+                        .background(
+                            color = if (chatItem.isOnline) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
+                            shape = CircleShape
+                        )
 
                 )
                 Text(

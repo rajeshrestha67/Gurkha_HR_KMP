@@ -19,7 +19,8 @@ class KtorBiometricRemoteRepository(
         biometricToken: String,
         uid: String
     ): ERPResult<BiometricResponseDto, DataError> {
-        val requestDto = BiometricRequestDto(biometricToken = biometricToken, uid = uid)
+        val requestDto =
+            BiometricRequestDto(biometricToken = biometricToken, deviceUniqueIdentifier = uid)
 //        AppLogger.i(
 //            tag = "KtorBiometricRemoteRepository",
 //            message = "biometric request ${Json.encodeToString(requestDto)}"

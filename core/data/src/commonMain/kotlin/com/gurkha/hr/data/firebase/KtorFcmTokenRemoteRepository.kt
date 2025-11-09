@@ -20,7 +20,7 @@ class KtorFcmTokenRemoteRepository(
         fcmToken: String
     ): ERPResult<FcmTokenResponseDto, DataError> {
         val fcmTokenRequest = FcmTokenRequestDto(
-            uid = uid,
+            deviceUniqueIdentifier = uid,
             fcmToken = fcmToken
         )
         return safeCall {

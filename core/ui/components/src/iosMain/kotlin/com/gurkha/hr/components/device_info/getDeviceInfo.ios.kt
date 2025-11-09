@@ -31,7 +31,7 @@ actual fun getDeviceInfo(): DeviceInfo {
     return DeviceInfo(
         platform = "iOS",
         manufacturer = "Apple",
-        uid = "",
+        deviceUniqueIdentifier = "",
         model = model,
         osVersion = osVersion,
         sdkInt = sdkInt,
@@ -125,3 +125,6 @@ class KeychainHelper {
 }
 
  */
+actual fun getDeviceUniqueIdentifier(): String {
+    return ""
+}

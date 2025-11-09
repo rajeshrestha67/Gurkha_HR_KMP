@@ -53,6 +53,7 @@ class ChatViewModel(
     val state = _state.onStart {
         fetchEmployList()
         observeMessage()
+        connectSocketUseCase()
     }.stateIn(
         viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
@@ -144,7 +145,7 @@ class ChatViewModel(
                     )
                 }
                 fetchChatMessage(chatUserData = userData)
-                initSocket(chatUserData = userData)
+                joinChatRoom(chatUserData = userData)
             }
         }
     }
@@ -184,7 +185,32 @@ class ChatViewModel(
                 }
             }
         }
+        viewModelScope.launch {
+            observeSocketEventsUseCase.onUserStatusChange.collect { status ->
+                status?.let { userStatus ->
+                    _state.update { current ->
+                        val updatedData = state.value.chatListCache.filter { chatItem ->
+                            chatItem.employeeName.contains(
+                                other = state.value.query ?: "",
+                                ignoreCase = true
+                            )
+                        }.map { item ->
+                            if (item.chatId == status.chatId) {
+                                item.copy(isOnline = status.status)
+                            } else {
+                                item
+                            }
+                        }
+                        current.copy(
+                            chatList = updatedData,
+                            chatListCache = updatedData
+                        )
+                    }
+                }
+            }
+        }
     }
+
 
     private fun updateChatList(query: String?) {
         _state.update {
@@ -228,7 +254,6 @@ class ChatViewModel(
     }
 
     private fun sendTyping(isTyping: Boolean) = viewModelScope.launch {
-        println("sendTyping $isTyping")
         if (isTyping) {
             sendTypingUseCase(chatId = state.value.chatUserData?.chatId ?: "")
         } else {
@@ -276,15 +301,7 @@ class ChatViewModel(
         }
     }
 
-    private fun initSocket(chatUserData: ChatUserData) {
-
-        viewModelScope.launch {
-            connectSocketUseCase(
-                chatId = chatUserData.chatId,
-                socketPrefix = "mbank"
-            )
-        }
-
+    private fun joinChatRoom(chatUserData: ChatUserData) {
         viewModelScope.launch {
             observeSocketEventsUseCase.isConnected.collect {
                 if (it) {
@@ -292,6 +309,7 @@ class ChatViewModel(
                         chatId = chatUserData.chatId,
                         initiatorId = "app_mbank"
                     )
+                    observeSocketEventsUseCase(chatId = chatUserData.chatId)
                 }
             }
         }
@@ -332,7 +350,7 @@ class ChatViewModel(
 //                        .mapValues { entry ->
 //                            entry.value.reversed()
 //                        }
-                        .toList()
+
 //                        .asReversed()
                         .toMap(LinkedHashMap()),
                     metaData = data.metaData?.toChatMetaData(),

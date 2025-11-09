@@ -26,7 +26,7 @@ actual fun getDeviceInfo(): DeviceInfo {
     }
     return DeviceInfo(
         platform = "Android",
-        uid = generateId(context = context),
+        deviceUniqueIdentifier = generateId(context = context),
         manufacturer = Build.MANUFACTURER,
         model = Build.MODEL,
         osVersion = Build.VERSION.RELEASE,
@@ -45,4 +45,9 @@ private fun generateId(context: Context): String {
         context.contentResolver,
         Settings.Secure.ANDROID_ID
     )
+}
+
+actual fun getDeviceUniqueIdentifier(): String {
+    val context: Context = getKoin().get()
+    return generateId(context = context)
 }

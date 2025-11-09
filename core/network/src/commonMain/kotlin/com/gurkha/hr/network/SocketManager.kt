@@ -1,7 +1,8 @@
 package com.gurkha.hr.network
 
 import com.gurkha.hr.logger.AppLogger
-import com.gurkha.model.chat.Content
+import com.gurkha.model.chat.ContentData
+import com.gurkha.model.chat.UserStatusChangeData
 import com.piasy.kmp.socketio.socketio.IO
 import com.piasy.kmp.socketio.socketio.Socket
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,19 +18,30 @@ import kotlin.uuid.Uuid
 class SocketManager {
     var socket: Socket? = null
 
-    private val _onContent = MutableStateFlow<Content?>(null)
-    val onContent: StateFlow<Content?> = _onContent
+    private val _onContent = MutableStateFlow<ContentData?>(null)
+    val onContent: StateFlow<ContentData?> = _onContent
+
+    private val _onUserStatusChange = MutableStateFlow<UserStatusChangeData?>(null)
+    val onUserStatusChange: StateFlow<UserStatusChangeData?> = _onUserStatusChange
 
     private val _onTyping = MutableStateFlow(false)
     val onTyping: StateFlow<Boolean> = _onTyping
 
-    //    private val _onTypingStop = MutableStateFlow(Unit)
-//    val onTypingStop: StateFlow<Unit> = _onTypingStop
     private val _isConnected = MutableStateFlow(false)
     val isConnected: StateFlow<Boolean> = _isConnected
 
-    //private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-    fun connect(username: String, chatId: String, socketPrefix: String) {
+    private val json = Json {
+        encodeDefaults = true
+        isLenient = true
+        allowSpecialFloatingPointValues = true
+        allowStructuredMapKeys = true
+        prettyPrint = false
+        useArrayPolymorphism = false
+        ignoreUnknownKeys = true
+        explicitNulls = false
+    }
+
+    fun connect() {
         if (isConnected.value) {
             return
         }
@@ -40,14 +52,6 @@ class SocketManager {
             reconnectionDelay = RECONNECTION_DELAY
             transports = TRANSPORTS
             secure = true
-            query = mutableMapOf<String, String>().apply {
-                put(USERNAME, username)
-                put(SOCKET_PREFIX, socketPrefix)
-            }
-        }
-        if (socket != null && isConnected.value) {
-            switchChatListener(username = username, chatId = chatId)
-            return
         }
 
 
@@ -60,7 +64,6 @@ class SocketManager {
             socket.on(Socket.EVENT_CONNECT) {
                 AppLogger.i(TAG, "socket connected")
                 this.socket = socket
-                switchChatListener(username = username, chatId = chatId)
                 _isConnected.update {
                     true
                 }
@@ -72,8 +75,8 @@ class SocketManager {
                     false
                 }
             }
-            socket.on(Socket.EVENT_CONNECT_ERROR) {
-                AppLogger.i(TAG, "socket connection error")
+            socket.on(Socket.EVENT_CONNECT_ERROR) { args ->
+                AppLogger.i(TAG, "socket connection error ${args.firstOrNull().toString()}")
                 this.socket = null
                 _isConnected.update {
                     it
@@ -86,6 +89,10 @@ class SocketManager {
 
     }
 
+    fun observeChange(username: String, chatId: String) {
+        switchChatListener(username = username, chatId = chatId)
+    }
+
 
     private fun switchChatListener(username: String, chatId: String) {
         val s = socket ?: return
@@ -94,15 +101,17 @@ class SocketManager {
             s.off("$PRIVATE:$oldId")
             s.off("$TYPING:$oldId")
             s.off("$STOP_TYPING:$oldId")
+            s.off(USER_STATUS_CHANGE)
         }
+
         s.on("$PRIVATE:$chatId") { args ->
             args.firstOrNull()?.let { arg ->
                 if (arg is JsonObject) {
-                    val json = Json { ignoreUnknownKeys = true }
-                    val content = json.decodeFromString<Content>(string = arg.toString())
+                    val contentResponseDto =
+                        json.decodeFromString<ContentData>(string = arg.toString())
                     AppLogger.i(TAG, "socket new message $arg")
                     _onContent.update {
-                        content
+                        contentResponseDto
                     }
                 }
             }
@@ -128,10 +137,22 @@ class SocketManager {
                 }
             }
         }
+        s.on(USER_STATUS_CHANGE) { args ->
+            args.firstOrNull()?.let { arg ->
+                if (arg is JsonObject) {
+                    val userStatusChangeResponseDto =
+                        json.decodeFromString<UserStatusChangeData>(string = arg.toString())
+                    AppLogger.i(TAG, "socket on user status change $arg")
+                    _onUserStatusChange.update {
+                        userStatusChangeResponseDto
+                    }
+                }
+            }
+        }
     }
 
     fun joinRoom(chatId: String, fromUser: String, initiatorId: String) {
-        AppLogger.i(TAG, "socket room join")
+        AppLogger.i(TAG, "socket room join for user $fromUser, chat ID: $chatId")
         socket?.emit(JOIN_ROOM, buildJsonObject {
             put(CHAT_ID, chatId)
             put(FROM_USER, fromUser)
@@ -141,7 +162,7 @@ class SocketManager {
 
     @OptIn(ExperimentalUuidApi::class)
     fun sendMessage(chatId: String, fromUser: String, message: String) {
-        AppLogger.i(TAG, "socket send message")
+        AppLogger.i(TAG, "socket send message for user $fromUser, message: $message")
         val id = Uuid.random().toString()
         socket?.emit(PRIVATE_MESSAGE, buildJsonObject {
             put("id", id)
@@ -153,7 +174,7 @@ class SocketManager {
 
 
     fun sendStartTyping(chatId: String, fromUser: String) {
-        AppLogger.i(TAG, "socket send start typing")
+        AppLogger.i(TAG, "socket send start typing from user $fromUser, chat ID: $chatId")
         socket?.emit(TYPING, buildJsonObject {
             put(CHAT_ID, chatId)
             put(FROM_USER, fromUser)
@@ -161,7 +182,7 @@ class SocketManager {
     }
 
     fun sendStopTyping(chatId: String, fromUser: String) {
-        AppLogger.i(TAG, "socket send stop typing")
+        AppLogger.i(TAG, "socket send stop typing from user $fromUser, chat ID: $chatId")
         socket?.emit(STOP_TYPING, buildJsonObject {
             put(CHAT_ID, chatId)
             put(FROM_USER, fromUser)
@@ -172,17 +193,15 @@ class SocketManager {
     fun disconnect() {
         AppLogger.i(TAG, "socket closed")
         socket?.close()
-//        scope.cancel()
         socket = null
     }
 
     companion object {
         private const val CHAT_ID = "chatId"
         private const val FROM_USER = "fromUser"
-        private const val USERNAME = "username"
         private const val MESSAGE = "message"
+        private const val USER_STATUS_CHANGE = "userStatusChange"
         private const val INITIATOR_ID = "initiatorId"
-        private const val SOCKET_PREFIX = "socketPrefix"
         private const val JOIN_ROOM = "joinRoom"
         private const val PRIVATE_MESSAGE = "privateMessage"
 

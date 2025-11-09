@@ -9,6 +9,6 @@ data class BiometricResponseDto(
 
 @Serializable
 data class BiometricRequestDto(
-    val uid: String,
+    val deviceUniqueIdentifier: String,
     val biometricToken: String
 )

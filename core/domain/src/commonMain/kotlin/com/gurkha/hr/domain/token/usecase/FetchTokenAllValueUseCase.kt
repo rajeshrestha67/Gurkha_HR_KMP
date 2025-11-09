@@ -7,8 +7,7 @@ import kotlinx.coroutines.flow.Flow
 class FetchTokenAllValueUseCase(
     private val tokenRepository: TokenRepository
 ) {
-     operator fun invoke(): Flow<Token> {
-        val currentToken = tokenRepository.token
-        return currentToken
+    operator fun invoke(): Flow<Token> {
+        return tokenRepository.token
     }
 }

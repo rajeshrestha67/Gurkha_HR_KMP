@@ -8,11 +8,14 @@ class IOChatSocketRepository(
 ) : ChatSocketRepository {
 
     override val onContent = socketManager.onContent
+    override val onUserStatusChanged = socketManager.onUserStatusChange
     override val onTyping = socketManager.onTyping
     override val isConnected = socketManager.isConnected
 
-    override suspend fun connect(username: String, chatId: String, socketPrefix: String) =
-        socketManager.connect(username, chatId, socketPrefix)
+    override fun connect() = socketManager.connect()
+
+    override fun observeChange(username: String, chatId: String) =
+        socketManager.observeChange(username, chatId)
 
     override fun joinRoom(chatId: String, fromUser: String, initiatorId: String) =
         socketManager.joinRoom(chatId, fromUser, initiatorId)

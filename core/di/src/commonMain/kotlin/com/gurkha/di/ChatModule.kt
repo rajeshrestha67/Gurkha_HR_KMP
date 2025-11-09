@@ -50,11 +50,9 @@ class ChatModule {
 
     @Single
     fun getConnectSocketUseCase(
-        chatSocketRepository: ChatSocketRepository,
-        userDataRepository: UserDataRepository
+        chatSocketRepository: ChatSocketRepository
     ) = ConnectSocketUseCase(
-        chatSocketRepository = chatSocketRepository,
-        userDataRepository = userDataRepository
+        chatSocketRepository = chatSocketRepository
     )
 
     @Single
@@ -94,8 +92,14 @@ class ChatModule {
     )
 
     @Single
-    fun getObserveSocketEventsUseCase(chatSocketRepository: ChatSocketRepository) =
-        ObserveSocketEventsUseCase(chatSocketRepository)
+    fun getObserveSocketEventsUseCase(
+        chatSocketRepository: ChatSocketRepository,
+        userDataRepository: UserDataRepository
+    ) =
+        ObserveSocketEventsUseCase(
+            chatSocketRepository = chatSocketRepository,
+            userDataRepository = userDataRepository
+        )
 
     @Single
     fun getDisconnectSocketUseCase(chatSocketRepository: ChatSocketRepository) =

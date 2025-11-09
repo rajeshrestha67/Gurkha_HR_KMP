@@ -20,7 +20,8 @@ fun EmptyListItemResponseDto.toChatItem(): EmployChatItem {
         sortOrder = sortOrder ?: 0,
         nameInitials = employeeName.extractInitials(),
         backgroundColor = randomLightColor(),
-        phoneNumber = phoneNumber
+        phoneNumber = phoneNumber,
+        isOnline = false
     )
 }
 

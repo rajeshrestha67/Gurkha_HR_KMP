@@ -2,7 +2,7 @@ package com.gurkha.hr.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gurkha.hr.components.device_info.getDeviceInfo
+import com.gurkha.hr.components.device_info.getDeviceUniqueIdentifier
 import com.gurkha.hr.datastore.token.model.Token
 import com.gurkha.hr.domain.biometric.useCase.BiometricRequestUseCase
 import com.gurkha.hr.domain.settings.usecase.UpdateUserLanguageUseCase
@@ -34,7 +34,6 @@ class SettingsViewModel(
 ) : ViewModel() {
 
     var bioToken: String? = null
-    var uid = getDeviceInfo().uid
 
     private val _state = MutableStateFlow(SettingsScreenState())
     val state = _state
@@ -108,7 +107,7 @@ class SettingsViewModel(
         if (isEnable) {
             //first make the api call first and update the value in the local
             biometricRequestUseCase(
-                uid = uid,
+                uid = getDeviceUniqueIdentifier(),
                 biometricToken = bioToken ?: ""
             ).onSuccess {
                 val token = fetchTokenAllValueUseCase().firstOrNull() ?: Token()

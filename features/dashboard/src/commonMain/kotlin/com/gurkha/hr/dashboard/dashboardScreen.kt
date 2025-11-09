@@ -65,11 +65,6 @@ fun DashboardScreen(
 
 
     val showPlatform: PlatformMessage = koinInject()
-    LaunchedEffect(Unit) {
-        viewModel.action(DashboardScreenAction.OnFetchCurrentUser)
-    }
-
-
 
 
     LaunchedEffect(Unit) {
@@ -241,8 +236,13 @@ fun DashboardScreenContent(
                 onGoToFixProfile = {
                     dashboardNavController.navigate(HomeRoute.EditProfileRoute)
                 },
-                onGoToAttendanceRequestScreen = {date, clockStatus ->
-                    dashboardNavController.navigate(AttendanceRoute.AttendanceRequestScreen(date =date, clockStatus = clockStatus))
+                onGoToAttendanceRequestScreen = { date, clockStatus ->
+                    dashboardNavController.navigate(
+                        AttendanceRoute.AttendanceRequestScreen(
+                            date = date,
+                            clockStatus = clockStatus
+                        )
+                    )
                 }
             )
             profileScreenBuilder(
@@ -252,7 +252,12 @@ fun DashboardScreenContent(
             attendanceScreenBuilder(
                 navController = dashboardNavController,
                 onGoToAttendanceRequestScreen = {
-                    dashboardNavController.navigate(AttendanceRoute.AttendanceRequestScreen(date = null, clockStatus = null))
+                    dashboardNavController.navigate(
+                        AttendanceRoute.AttendanceRequestScreen(
+                            date = null,
+                            clockStatus = null
+                        )
+                    )
                 }
             )
             leaveScreenBuilder(
