@@ -7,7 +7,7 @@ import com.gurkha.hr.datastore.token.model.Token
 import com.gurkha.hr.domain.biometric.useCase.BiometricRequestUseCase
 import com.gurkha.hr.domain.settings.usecase.UpdateUserLanguageUseCase
 import com.gurkha.hr.domain.settings.usecase.UpdateUserThemeUseCase
-import com.gurkha.hr.domain.token.usecase.FetchBiometricEnableUseCase
+import com.gurkha.hr.domain.token.usecase.FetchTokenAllValueUseCase
 import com.gurkha.hr.domain.token.usecase.UpdateBiometricEnableUseCase
 import com.gurkha.hr.networkhelper.onSuccess
 import com.gurkha.hr.res.theme.EPRLanguage
@@ -28,7 +28,7 @@ import kotlin.uuid.Uuid
 class SettingsViewModel(
     private val updateUserThemeUseCase: UpdateUserThemeUseCase,
     private val updateUserLanguageUseCase: UpdateUserLanguageUseCase,
-    private val fetchBiometricEnableUseCase: FetchBiometricEnableUseCase,
+    private val fetchTokenAllValueUseCase: FetchTokenAllValueUseCase,
     private val updateBiometricEnableUseCase: UpdateBiometricEnableUseCase,
     private val biometricRequestUseCase: BiometricRequestUseCase
 ) : ViewModel() {
@@ -92,7 +92,7 @@ class SettingsViewModel(
     }
 
     private fun getBioData() = viewModelScope.launch {
-        fetchBiometricEnableUseCase().collect { token ->
+        fetchTokenAllValueUseCase().collect { token ->
             _state.update {
                 it.copy(
                     biometricEnabled = token.isBiometricEnable,
@@ -111,7 +111,7 @@ class SettingsViewModel(
                 uid = uid,
                 biometricToken = bioToken ?: ""
             ).onSuccess {
-                val token = fetchBiometricEnableUseCase().firstOrNull() ?: Token()
+                val token = fetchTokenAllValueUseCase().firstOrNull() ?: Token()
                 updateBiometricEnableUseCase(
                     token.copy(
                         isBiometricEnable = isEnable,
@@ -122,7 +122,7 @@ class SettingsViewModel(
         } else {
             println("falase $isEnable")
             //if disable then only update the value in the local
-            val token = fetchBiometricEnableUseCase().firstOrNull() ?: Token()
+            val token = fetchTokenAllValueUseCase().firstOrNull() ?: Token()
             updateBiometricEnableUseCase(
                 token.copy(
                     isBiometricEnable = isEnable,

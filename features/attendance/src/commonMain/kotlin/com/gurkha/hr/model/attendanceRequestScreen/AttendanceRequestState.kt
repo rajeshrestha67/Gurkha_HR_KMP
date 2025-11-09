@@ -1,7 +1,7 @@
 package com.gurkha.hr.model.attendanceRequestScreen
 
 import com.gurkha.hr.components.date.DateData
-import com.gurkha.hr.res.SharedRes
+import com.gurkha.hr.domain.attendance.clockStatusEnum.ClockStatus
 import com.gurkha.model.attendance.attendanceRequest.AttendanceRequestData
 import com.gurkha.model.leave.ui.AssigneeUi
 import org.jetbrains.compose.resources.StringResource
@@ -26,10 +26,8 @@ data class AttendanceRequestState(
     val assigneeError: StringResource? = null,
 
     val isRequestingAttendance: Boolean = false,
-    val radioOptions: List<StringResource> = listOf(
-        SharedRes.Strings.clockIn,
-        SharedRes.Strings.clockOut
-    ),
-    val selectedOption: StringResource = radioOptions.first(),
+    val radioOptions: List<ClockStatus> = ClockStatus.list,
+    val selectedOption: ClockStatus = radioOptions.first(),
     val attendanceRequestData: AttendanceRequestData? = null
 )
+

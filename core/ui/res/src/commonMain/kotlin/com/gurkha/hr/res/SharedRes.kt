@@ -5,6 +5,7 @@ import gurkhahr.core.ui.res.generated.resources.Poppins_Italic
 import gurkhahr.core.ui.res.generated.resources.Poppins_Medium
 import gurkhahr.core.ui.res.generated.resources.Res
 import gurkhahr.core.ui.res.generated.resources.absent
+import gurkhahr.core.ui.res.generated.resources.absent_days
 import gurkhahr.core.ui.res.generated.resources.account
 import gurkhahr.core.ui.res.generated.resources.ad
 import gurkhahr.core.ui.res.generated.resources.add_notes
@@ -585,5 +586,8 @@ object SharedRes {
 
         val please_reset_biometric = Res.string.please_reset_biometric
         val reset_biometric = Res.string.reset_biometric
+
+        val absent_days = Res.string.absent_days
+        val present_days = Res.string.present
     }
 }

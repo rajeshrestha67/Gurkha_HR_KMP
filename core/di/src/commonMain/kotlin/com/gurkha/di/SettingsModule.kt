@@ -7,7 +7,7 @@ import com.gurkha.hr.domain.biometric.repository.BiometricRemoteRepository
 import com.gurkha.hr.domain.biometric.useCase.BiometricRequestUseCase
 import com.gurkha.hr.domain.settings.usecase.UpdateUserLanguageUseCase
 import com.gurkha.hr.domain.settings.usecase.UpdateUserThemeUseCase
-import com.gurkha.hr.domain.token.usecase.FetchBiometricEnableUseCase
+import com.gurkha.hr.domain.token.usecase.FetchTokenAllValueUseCase
 import com.gurkha.hr.domain.token.usecase.UpdateBiometricEnableUseCase
 import com.gurkha.hr.domain.token.usecase.UpdateBiometricTokenUseCase
 import com.gurkha.hr.settings.SettingsViewModel
@@ -38,7 +38,7 @@ class SettingsModule {
     @Factory
     fun fetchBiometricEnableUseCase(
         tokenRepository: TokenRepository,
-    ): FetchBiometricEnableUseCase = FetchBiometricEnableUseCase(
+    ): FetchTokenAllValueUseCase = FetchTokenAllValueUseCase(
         tokenRepository = tokenRepository
     )
 
@@ -69,12 +69,12 @@ class SettingsModule {
     fun getSettingsViewModel(
         updateUserThemeUseCase: UpdateUserThemeUseCase,
         updateUserLanguageUseCase: UpdateUserLanguageUseCase,
-        fetchBiometricEnableUseCase: FetchBiometricEnableUseCase,
+        fetchTokenAllValueUseCase: FetchTokenAllValueUseCase,
         updateBiometricEnableUseCase: UpdateBiometricEnableUseCase,
         biometricRequestUseCase: BiometricRequestUseCase
     ) =
         SettingsViewModel(
-            fetchBiometricEnableUseCase = fetchBiometricEnableUseCase,
+            fetchTokenAllValueUseCase = fetchTokenAllValueUseCase,
             updateBiometricEnableUseCase = updateBiometricEnableUseCase,
             updateUserThemeUseCase = updateUserThemeUseCase,
             updateUserLanguageUseCase = updateUserLanguageUseCase,

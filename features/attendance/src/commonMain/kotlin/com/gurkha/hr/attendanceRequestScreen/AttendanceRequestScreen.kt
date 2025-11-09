@@ -64,7 +64,9 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun AttendanceRequestScreen(
     navController: NavHostController,
-    onBackPressed: () -> Unit
+    onBackPressed: () -> Unit,
+    date: String?,
+    clockStatus: String?
 ) {
     val viewModel: AttendanceRequestViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -72,6 +74,17 @@ fun AttendanceRequestScreen(
     var showFailedDialogue by remember { mutableStateOf(false) }
     var message by rememberSaveable { mutableStateOf("") }
     var sendData by remember { mutableStateOf(false) }
+
+    LaunchedEffect(date) {
+        if (date != null && clockStatus != null) {
+            viewModel.onAction(
+                AttendanceRequestAction.OnReceivedDataChange(
+                    date = date,
+                    clockStatus = clockStatus
+                )
+            )
+        }
+    }
 
     LaunchedEffect(sendData) {
         if (sendData) {
@@ -258,7 +271,7 @@ fun AttendanceRequestScreenForm(
             },
             optionLabel = { text, isSelected ->
                 Text(
-                    text = stringResource(text),
+                    text = text.value,
                     style = MaterialTheme.typography.titleMedium.copy(
                         color = if (isSelected) MaterialTheme.erpColors.primaryTextColor else MaterialTheme.erpColors.secondaryTextColor
                     ),

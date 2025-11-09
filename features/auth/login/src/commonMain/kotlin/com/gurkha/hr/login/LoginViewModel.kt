@@ -8,7 +8,7 @@ import com.gurkha.hr.domain.auth.login.usecase.LoginUseCase
 import com.gurkha.hr.domain.form.EmailValidateUseCase
 import com.gurkha.hr.domain.form.PasswordValidateUseCase
 import com.gurkha.hr.domain.splash.UpdateFirstTimeCheckUseCase
-import com.gurkha.hr.domain.token.usecase.FetchBiometricEnableUseCase
+import com.gurkha.hr.domain.token.usecase.FetchTokenAllValueUseCase
 import com.gurkha.hr.domain.token.usecase.UpdateBiometricEnableUseCase
 import com.gurkha.hr.domain.userDetail.usecase.FetchUserDetailFlowUseCase
 import com.gurkha.hr.logger.AppLogger
@@ -34,7 +34,7 @@ class LoginViewModel(
     private val emailValidateUseCase: EmailValidateUseCase,
     private val passwordValidateUseCase: PasswordValidateUseCase,
     private val updateFirstTimeCheckUseCase: UpdateFirstTimeCheckUseCase,
-    private val fetchBiometricEnableUseCase: FetchBiometricEnableUseCase,
+    private val fetchTokenAllValueUseCase: FetchTokenAllValueUseCase,
     private val fetchUserDetailFlowUseCase: FetchUserDetailFlowUseCase,
     private val updateBiometricEnableUseCase: UpdateBiometricEnableUseCase
 ) : ViewModel() {
@@ -53,7 +53,7 @@ class LoginViewModel(
     private val _resetChannel = Channel<Boolean>()
     val resetChannel = _resetChannel.receiveAsFlow()
     val state = _state.combine(
-        flow = fetchBiometricEnableUseCase(),
+        flow = fetchTokenAllValueUseCase(),
     ) { state, token ->
         bioToken = token.biometricToken
         state.copy(
@@ -191,7 +191,7 @@ class LoginViewModel(
     }
 
     private fun resetBiometric() = viewModelScope.launch {
-        val token = fetchBiometricEnableUseCase().firstOrNull() ?: Token()
+        val token = fetchTokenAllValueUseCase().firstOrNull() ?: Token()
         updateBiometricEnableUseCase(
             token.copy(
                 isBiometricEnable = false,
