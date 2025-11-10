@@ -4,7 +4,6 @@ import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -14,11 +13,14 @@ import android.os.Build
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.app.Person
+import androidx.core.app.RemoteInput
 import androidx.core.graphics.toColorInt
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.gurkha.hr.datastore.token.model.Token
 import com.gurkha.hr.datastore.token.repository.TokenRepository
+import com.gurkha.hr.logger.AppLogger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -29,12 +31,21 @@ import org.koin.android.ext.android.inject
 import java.net.HttpURLConnection
 import java.net.URL
 
+const val CHAT_CHANNEL_ID = "chat_channel"
+const val CHAT_CHANNEL_NAME = "Chat Messages"
+const val ACTION_REPLY = "chat_reply"
+const val ACTION_MARK_READ = "chat_mark_read"
+const val REMOTE_INPUT_KEY = "chat_message_input"
+
 class FirebaseService : FirebaseMessagingService() {
     val repository: TokenRepository by inject()
     val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    val messages = mutableListOf<NotificationItem>()
+
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
 
+        AppLogger.i(TAG, "Push notification received")
         remoteMessage.notification?.let { notification ->
             CoroutineScope(Dispatchers.IO).launch {
                 showNotification(
@@ -47,14 +58,151 @@ class FirebaseService : FirebaseMessagingService() {
                         this@FirebaseService,
                         1,
                         Intent(),
-                        FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
                     )
                 )
             }
+        }
+//        remoteMessage.notification?.let { notification ->
+//            messages.add(
+//                generateItem(
+//                    (notification.title ?: "").contains("123"),
+//                    (notification.title ?: ""),
+//                    (notification.body ?: "")
+//                )
+//            )
+//            createChatNotificationChannel(this)
+//            showChatNotification(
+//                context = this,
+//                notifId = 1111,
+//                messages = messages,
+//                userName = "Chirag Dangol",
+//                isMe = (notification.title ?: "").contains("123")
+//            )
+//        }
+    }
 
+    fun generateItem(
+        isYou: Boolean = false,
+        title: String,
+        message: String
+    ): NotificationItem {
+        return NotificationItem(
+            sender = title,
+            message = message,
+            person = buildPerson(title, isYou = isYou),
+            isMe = title.contains("123")
+        )
+    }
+
+    fun buildPerson(
+        name: String,
+        avatarUrl: String? = null,
+        isYou: Boolean = false
+    ): Person {
+
+        val personBuilder = Person.Builder()
+            .setName(name)
+            .setImportant(true) // gives better visibility
+
+        if (isYou) {
+            personBuilder.setKey("me")
+        } else {
+            personBuilder.setKey(name)
         }
 
+        avatarUrl?.let {
+            //val icon = IconCompat.createWithBitmap(loadBitmapFromUrl(it))
+            //personBuilder.setIcon(icon)
+        }
+
+        return personBuilder.build()
     }
+
+    fun showChatNotification(
+        context: Context,
+        notifId: Int,
+        isMe: Boolean,
+        messages: List<NotificationItem>, // Pair(username, message)
+        userName: String
+    ) {
+        val remoteInput = RemoteInput.Builder(REMOTE_INPUT_KEY)
+            .setLabel("Reply...")
+            .setAllowFreeFormInput(true)
+            .build()
+
+        // PendingIntent for reply
+        val replyIntent = Intent(context, NotificationReceiver::class.java).apply {
+            action = ACTION_REPLY
+            putExtra("notifId", notifId)
+        }
+        val replyPendingIntent = PendingIntent.getBroadcast(
+            context,
+            notifId,
+            replyIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+        )
+
+        val replyAction = NotificationCompat.Action.Builder(
+            android.R.drawable.ic_menu_send,
+            "Reply",
+            replyPendingIntent
+        ).addRemoteInput(remoteInput).build()
+
+        // Mark as read action
+        val markReadIntent = Intent(context, NotificationReceiver::class.java).apply {
+            action = ACTION_MARK_READ
+            putExtra("notifId", notifId)
+        }
+        val markReadPending = PendingIntent.getBroadcast(
+            context,
+            notifId + 1,
+            markReadIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+
+        val messagingStyle = NotificationCompat.MessagingStyle("")
+        messages.forEach { item ->
+            messagingStyle.addMessage(item.message, System.currentTimeMillis(), item.person)
+        }
+
+        val notification = NotificationCompat.Builder(context, CHAT_CHANNEL_ID)
+            .setSmallIcon(android.R.drawable.stat_notify_chat)
+            .setStyle(messagingStyle)
+            .setContentTitle("Message from $userName")
+            .setContentText(messages.last().message)
+            .addAction(replyAction)
+            .addAction(
+                NotificationCompat.Action.Builder(
+                    android.R.drawable.ic_menu_send, "Mark as read", markReadPending
+                ).build()
+            )
+            .setAutoCancel(true)
+            .build()
+
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+        NotificationManagerCompat.from(context).notify(notifId, notification)
+    }
+
+    fun createChatNotificationChannel(context: Context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                CHAT_CHANNEL_ID,
+                CHAT_CHANNEL_NAME,
+                NotificationManager.IMPORTANCE_HIGH
+            )
+            val nm = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            nm.createNotificationChannel(channel)
+        }
+    }
+
 
     override fun onNewToken(token: String) {
         super.onNewToken(token)
@@ -152,6 +300,16 @@ class FirebaseService : FirebaseMessagingService() {
 
     companion object {
         private const val CHANNEL_ID = "Normal Biometric"
+
+        private const val TAG = "FirebaseService"
     }
 
+
 }
+
+data class NotificationItem(
+    val sender: String,
+    val message: String,
+    val person: Person,
+    val isMe: Boolean
+)

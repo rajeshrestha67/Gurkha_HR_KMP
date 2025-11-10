@@ -769,7 +769,7 @@ fun LazyListScope.requestSection(
                 )
             ) {
                 rowItems.forEach { leaveItem ->
-                    if (state.isAttendanceLoading) {
+                    if (state.isAttendanceCountLoading || state.isRefreshing) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(

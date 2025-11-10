@@ -15,7 +15,6 @@ import com.gurkha.hr.domain.attendance.attendanceCountReport.useCase.AttendanceC
 import com.gurkha.hr.domain.attendance.attendanceReport.model.AttendanceData
 import com.gurkha.hr.domain.attendance.attendanceReport.usecase.AttendanceUseCase
 import com.gurkha.hr.domain.attendance.doAttendance.useCase.DoAttendanceUseCase
-import com.gurkha.hr.domain.notification.notificationCount.useCase.NotificationCountUseCase
 import com.gurkha.hr.domain.notification.unSeenNotificationCount.useCase.UnseenNotificationUseCase
 import com.gurkha.hr.domain.upComingBirthday.usecase.UpComingBirthdayUseCase
 import com.gurkha.hr.domain.upComingEvent.useCase.EventUseCase
@@ -52,7 +51,6 @@ class HomeScreenViewModel(
     private val upComingWorkAnniversaryUseCase: UpComingWorkAnniversaryUseCase,
     private val eventUseCase: EventUseCase,
     private val calendarModel: CalendarModel,
-    private val notificationCountUseCase: NotificationCountUseCase,
     private val unseenNotificationUseCase: UnseenNotificationUseCase,
     private val uploadImageUseCase: UploadImageUseCase,
     private val doAttendanceUseCase: DoAttendanceUseCase,
@@ -390,35 +388,6 @@ class HomeScreenViewModel(
             }
         }
 
-    }
-
-    private fun getTotalNotificationCount() = viewModelScope.launch {
-        _state.update {
-            it.copy(
-                isNotificationCountLoading = true
-            )
-        }
-        notificationCountUseCase(force = true).onSuccess { data ->
-            AppLogger.d(tag = TAG, "Total Notification count fetch  success")
-
-            _state.update {
-                it.copy(
-                    totalNotificationCount = data.count
-                )
-            }
-
-        }.onError { error ->
-            AppLogger.e(
-                tag = TAG,
-                "Get Total Notification failed: ${error.toErrorMessage()}"
-            )
-            _state.update {
-                it.copy(
-                    isNotificationCountLoading = false
-                )
-            }
-
-        }
     }
 
     private fun getUnseenNotificationCount() = viewModelScope.launch {

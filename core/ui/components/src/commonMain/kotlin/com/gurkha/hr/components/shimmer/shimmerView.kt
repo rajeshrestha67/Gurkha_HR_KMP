@@ -8,11 +8,11 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 
 @Composable
 fun ShimmerView(modifier: Modifier = Modifier) {
@@ -24,28 +24,32 @@ fun ShimmerView(modifier: Modifier = Modifier) {
 
 @Composable
 fun shimmerBrush(): Brush {
+    val color = MaterialTheme.colorScheme.surfaceVariant
+    val highlight = MaterialTheme.colorScheme.surface.copy(alpha = 0.35f)
+
     val shimmerColors = listOf(
-        Color.LightGray.copy(alpha = 0.6f),
-        Color.LightGray.copy(alpha = 0.2f),
-        Color.LightGray.copy(alpha = 0.6f)
+        color.copy(alpha = 0.9f),
+        highlight,
+        color.copy(alpha = 0.9f),
     )
 
-    val transition = rememberInfiniteTransition()
+    val transition = rememberInfiniteTransition(label = "shimmer")
     val translateAnim = transition.animateFloat(
-        initialValue = 0f,
-        targetValue = 1000f,
+        initialValue = -600f,
+        targetValue = 1200f,
         animationSpec = infiniteRepeatable(
             animation = tween(
-                durationMillis = 1000,
+                durationMillis = 1200,
                 easing = LinearEasing
             ),
             repeatMode = RepeatMode.Restart
-        )
+        ),
+        label = "shimmer_anim"
     )
 
     return Brush.linearGradient(
         colors = shimmerColors,
-        start = Offset(translateAnim.value, translateAnim.value),
-        end = Offset(translateAnim.value + 500f, translateAnim.value + 500f)
+        start = Offset(translateAnim.value, 0f),
+        end = Offset(translateAnim.value + 600f, 0f)
     )
 }

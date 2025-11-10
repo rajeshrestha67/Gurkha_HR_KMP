@@ -95,8 +95,8 @@ suspend inline fun HttpClient.uploadImage(
                         )
                         append(HttpHeaders.ContentDisposition, "filename=\"$updatedFileName\"")
                     })
-                    append(key = "employeeId", value =employeeId.toString() )
-                    append(key = "type", value =type )
+                    append(key = "employeeId", value = employeeId.toString())
+                    append(key = "type", value = type)
                 }
             )
         )
