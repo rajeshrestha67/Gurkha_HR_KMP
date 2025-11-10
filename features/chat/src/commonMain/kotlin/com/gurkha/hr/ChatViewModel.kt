@@ -303,10 +303,14 @@ class ChatViewModel(
 
     private fun joinChatRoom(chatUserData: ChatUserData) {
         viewModelScope.launch {
-            joinRoomUseCase(
-                chatId = chatUserData.chatId,
-                initiatorId = "app_mbank"
-            )
+            observeSocketEventsUseCase.isConnected.collect { isConnected ->
+                if (isConnected) {
+                    joinRoomUseCase(
+                        chatId = chatUserData.chatId,
+                        initiatorId = "app_mbank"
+                    )
+                }
+            }
         }
         viewModelScope.launch {
             observeSocketEventsUseCase(chatId = chatUserData.chatId)
