@@ -330,7 +330,7 @@ fun HomeScreenContent(
             horizontalAlignment = Alignment.CenterHorizontally,
             contentPadding = PaddingValues(
                 top = MaterialTheme.dimens.small2,
-                bottom = MaterialTheme.dimens.swipeToDismissHeight
+                bottom = MaterialTheme.dimens.swipeToDismissHeight + MaterialTheme.dimens.bottomBar
             )
         ) {
             //    Notification part

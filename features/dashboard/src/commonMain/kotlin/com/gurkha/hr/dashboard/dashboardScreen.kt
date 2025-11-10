@@ -14,7 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Support
+import androidx.compose.material.icons.automirrored.filled.ContactSupport
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -69,7 +69,7 @@ private const val TAG = "DashboardScreen"
 fun DashboardScreen(
     onLogout: () -> Unit,
     onChatClick: () -> Unit,
-    onBirthdayUser:(json: String)-> Unit
+    onBirthdayUser: (json: String) -> Unit
 
 ) {
     val viewModel: DashboardViewModel = koinViewModel()
@@ -110,7 +110,7 @@ fun DashboardScreenContent(
     onChatClick: () -> Unit,
     onLogout: () -> Unit,
     onAction: (DashboardScreenAction) -> Unit,
-    onBirthdayUser:(json: String)-> Unit
+    onBirthdayUser: (json: String) -> Unit
 ) {
 
 
@@ -128,8 +128,15 @@ fun DashboardScreenContent(
                 DashboardRoute.ProfileRoute::class.qualifiedName,
                 DashboardRoute.AttendanceRoute::class.qualifiedName,
                 DashboardRoute.LeaveRoute::class.qualifiedName,
-                DashboardRoute.NoteRoute::class.qualifiedName -> true // show bottom bar
-                else -> false // hide bottom bar
+                DashboardRoute.NoteRoute::class.qualifiedName -> {
+                    showFloatingButton = true
+                    true // show bottom bar
+                }
+
+                else -> {
+                    showFloatingButton = false
+                    false // hide bottom bar
+                }
             }
         }
     }
@@ -353,7 +360,7 @@ fun DashboardScreenContent(
                     }
                 ) {
                     Icon(
-                        imageVector = Icons.Filled.Support,
+                        imageVector = Icons.AutoMirrored.Filled.ContactSupport,
                         contentDescription = stringResource(SharedRes.Strings.support)
                     )
                 }
