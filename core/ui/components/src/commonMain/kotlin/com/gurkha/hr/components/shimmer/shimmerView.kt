@@ -24,31 +24,32 @@ fun ShimmerView(modifier: Modifier = Modifier) {
 
 @Composable
 fun shimmerBrush(): Brush {
-    val baseColor = MaterialTheme.colorScheme.surface
-    val highlightColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
+    val color = MaterialTheme.colorScheme.surfaceVariant
+    val highlight = MaterialTheme.colorScheme.surface.copy(alpha = 0.35f)
 
     val shimmerColors = listOf(
-        baseColor.copy(alpha = 0.9f),
-        highlightColor,
-        baseColor.copy(alpha = 0.9f),
+        color.copy(alpha = 0.9f),
+        highlight,
+        color.copy(alpha = 0.9f),
     )
 
-    val transition = rememberInfiniteTransition()
+    val transition = rememberInfiniteTransition(label = "shimmer")
     val translateAnim = transition.animateFloat(
-        initialValue = 0f,
-        targetValue = 1000f,
+        initialValue = -600f,
+        targetValue = 1200f,
         animationSpec = infiniteRepeatable(
             animation = tween(
-                durationMillis = 1000,
+                durationMillis = 1200,
                 easing = LinearEasing
             ),
             repeatMode = RepeatMode.Restart
-        )
+        ),
+        label = "shimmer_anim"
     )
 
     return Brush.linearGradient(
         colors = shimmerColors,
-        start = Offset(translateAnim.value, translateAnim.value),
-        end = Offset(translateAnim.value + 500f, translateAnim.value + 500f)
+        start = Offset(translateAnim.value, 0f),
+        end = Offset(translateAnim.value + 600f, 0f)
     )
 }
