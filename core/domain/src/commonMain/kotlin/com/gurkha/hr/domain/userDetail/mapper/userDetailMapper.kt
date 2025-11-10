@@ -20,7 +20,7 @@ fun UserDetailResponseDto.toData(): UserDetailData {
         employeeId = detail?.employeeId ?: 0,
         address = detail?.employeeDetails?.address ?: "N/A",
         branchName = detail?.employeeDetails?.user?.branch?.branchName ?: "",
-        dateOfBirth = detail?.employeeDetails?.dateOfBirth?.split("T")[0]  ?: "",
+        dateOfBirth = detail?.employeeDetails?.dateOfBirth?.split("T")[0] ?: "",
         gender = detail?.employeeDetails?.gender ?: "N/A",
         joinedDate = detail?.employeeDetails?.joinedDate?.split("T")[0] ?: "",
         nationality = detail?.employeeDetails?.country ?: "N/A",
@@ -28,49 +28,50 @@ fun UserDetailResponseDto.toData(): UserDetailData {
         guardianName = detail?.employeeDetails?.guardianName ?: "",
         guardianNumber = detail?.employeeDetails?.guardianNumber ?: "",
         initials = detail?.fullName?.extractInitials() ?: "",
-        isCompleteProfile = if(detail?.isCompleteProfile == "Y") true else false,
+        isCompleteProfile = if (detail?.isCompleteProfile == "Y") true else false,
         bloodGroup = detail?.employeeDetails?.bloodGroup ?: "",
         designation = detail?.designation ?: "",
         panNumber = detail?.employeeDetails?.panNumber ?: "",
         pfNumber = detail?.employeeDetails?.pfNumber ?: "",
         bachelorImage = detail?.employeeDetails?.bachelorImageUrl?.let {
             "https://mbank.gurkhahr.com/erp-images/${it}"
-        } ,
-        branchId =detail?.employeeDetails?.user?.branch?.id ?: 0,
+        },
+        branchId = detail?.employeeDetails?.user?.branch?.id ?: 0,
         citizenshipBackImage = detail?.employeeDetails?.citizenshipBackImage?.let {
             "https://mbank.gurkhahr.com/erp-images/${it}"
-        } ,
+        },
         citizenshipFrontImage = detail?.employeeDetails?.citizenshipFrontImage?.let {
             "https://mbank.gurkhahr.com/erp-images/${it}"
-        } ,
-        departmentId = detail?.departmentId?:0,
-        designationId =detail?.designationId?: 0 ,
+        },
+        departmentId = detail?.departmentId ?: 0,
+        designationId = detail?.designationId ?: 0,
         employeeType = detail?.employeeType ?: "",
         enableImageAttendance = detail?.employeeDetails?.enableImageAttendance ?: "",
         enableManualAttendance = detail?.employeeDetails?.enableManualAttendance ?: "",
         experienceDocuments = detail?.employeeDetails?.experienceDocumentsUrl?.let {
             "https://mbank.gurkhahr.com/erp-images/${it}"
-        } ,
-        imageUrl = detail?.imageUrl ,
+        },
+        imageUrl = detail?.imageUrl,
         levelId = detail?.levelId ?: 0,
         mapId = detail?.employeeDetails?.mapId ?: 0,
         masterImage = detail?.employeeDetails?.masterImageUrl?.let {
             "https://mbank.gurkhahr.com/erp-images/${it}"
-        } ,
+        },
         nationalId = detail?.employeeDetails?.nationalIdImage?.let {
             "https://mbank.gurkhahr.com/erp-images/${it}"
-        } ,
+        },
         panImage = detail?.employeeDetails?.panImage?.let {
             "https://mbank.gurkhahr.com/erp-images/${it}"
         },
         password = "",
         plusTwoImage = detail?.employeeDetails?.plusTwoImage?.let {
             "https://mbank.gurkhahr.com/erp-images/${it}"
-        } ,
+        },
         profileId = detail?.profileId ?: detail?.employeeDetails?.profileId ?: 0,
         slcDocument = detail?.employeeDetails?.slcDocumentUrl?.let {
             "https://mbank.gurkhahr.com/erp-images/${it}"
-        }
+        },
+        roles = detail?.roles ?: emptyList()
     )
 }
 
@@ -117,6 +118,7 @@ fun UserData.toDetail(): UserDetailData {
         profileId =  profileId,
         slcDocument = slcDocument,
         userProfileUrl = userProfileUrl,
+        roles = roles ?: emptyList()
     )
 }
 

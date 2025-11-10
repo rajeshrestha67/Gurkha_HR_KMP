@@ -309,13 +309,14 @@ fun HomeScreenContent(
         derivedStateOf { (!isScrolling || isAtTop || isAtEnd) && state.showSwipeView }
     }
 
-//    LaunchedEffect(shouldShowSwipeToDismiss) {
-//        onToggleFloatingActionButton(shouldShowSwipeToDismiss)
-//    }
+
+    val showSupportChatIcon by remember(state.showSupportChatIcon) {
+        derivedStateOf { (!isScrolling || isAtTop || isAtEnd) && state.showSupportChatIcon }
+    }
 
     //cause the shouldShowSwipeToDismiss is not true when there is holiday
-    LaunchedEffect(state.isFetchingSupportList) {
-        onToggleFloatingActionButton(!state.isFetchingSupportList)
+    LaunchedEffect(showSupportChatIcon) {
+        onToggleFloatingActionButton(showSupportChatIcon)
     }
 
     Box(

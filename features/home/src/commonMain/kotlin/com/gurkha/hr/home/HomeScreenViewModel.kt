@@ -316,7 +316,9 @@ class HomeScreenViewModel(
                     userProfileUrl = data.userProfileUrl,
                     employeeId = data.employeeId,
                     isProfileComplete = data.isCompleteProfile,
-                    isRefreshing = false
+                    isRefreshing = false,
+                    showSupportChatIcon = data.roles.contains("HRM_SUPER_ADMIN") || data.roles.contains("HRM_SUPPORT_FOLLOWUP") ||data.roles.contains("HRM_SUPPORT_FOLLOWUP_CREATE")
+
                 )
             }
             //only fetch the total count after the current userdata fetch cause we need the employee id
