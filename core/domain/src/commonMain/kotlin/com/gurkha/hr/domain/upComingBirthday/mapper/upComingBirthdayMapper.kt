@@ -14,7 +14,12 @@ fun UserUpComingBirthdayDetailDto.toData(): List<UpComingBirthdayData> {
             designationName = it.designationName ?: "",
             branchName = it.branchName ?: "",
             imageUrl = it.imageUrl ?: "",
-            initials = it.fullName?.extractInitials() ?: ""
+            initials = it.fullName?.extractInitials() ?: "",
+            employeeId = it.id?.toLong() ?: 0L,
+            chatId = it.chatId ?: "",
+            employeeName = it.fullName ?: "",
+            profileImageUrl = it.imageUrl ?: "",
+            phoneNumber = it.phoneNumber ?: ""
         )
     } ?: emptyList()
 }

@@ -7,6 +7,7 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -348,7 +349,8 @@ fun HomeScreenContent(
             birthDaySection(
                 state = state,
                 onViewAllClick = onViewAllClick,
-                birthdayTitle = birthdayTitle
+                birthdayTitle = birthdayTitle,
+                onAction = onAction
             )
 
             // anniversary Section
@@ -442,7 +444,8 @@ fun LazyListScope.anniversarySection(
                             UpComingCard(
                                 fullName = item.fullName,
                                 imageUrl = item.imageUrl,
-                                designationName = item.designationName
+                                designationName = item.designationName,
+                                onChatClicked = {}
                             )
                         }
                     }
@@ -457,7 +460,8 @@ fun LazyListScope.anniversarySection(
 fun LazyListScope.birthDaySection(
     state: HomeScreenState,
     onViewAllClick: (String?, String) -> Unit,
-    birthdayTitle: String
+    birthdayTitle: String,
+    onAction: (HomeScreenActions) -> Unit
 ) {
     val dataToSend = Json.encodeToString<List<ViewAllUi>>(state.upComingBirthday.toUi())
     val title = Json.encodeToString<String>(birthdayTitle)
@@ -508,6 +512,9 @@ fun LazyListScope.birthDaySection(
                                 fullName = item.fullName,
                                 imageUrl = item.imageUrl,
                                 designationName = item.designationName,
+                                onChatClicked = {
+                                    onAction(HomeScreenActions.OnSpecificUserClicked(item))
+                                }
                             )
                         }
                     }
@@ -978,6 +985,7 @@ fun UpComingCard(
     imageUrl: String,
     fullName: String,
     designationName: String,
+    onChatClicked:()-> Unit
 ) {
     Column(
         modifier = Modifier.widthIn(min = MaterialTheme.dimens.eventWidth)
@@ -986,6 +994,9 @@ fun UpComingCard(
                 MaterialTheme.colorScheme.primary.copy(
                     alpha = 0.1f
                 )
+            )
+            .clickable(
+                onClick = onChatClicked
             )
             .padding(
                 vertical = MaterialTheme.dimens.small2,

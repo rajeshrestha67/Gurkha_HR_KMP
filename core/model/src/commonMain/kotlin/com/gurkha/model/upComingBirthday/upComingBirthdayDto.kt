@@ -76,8 +76,9 @@ data class UserDetailDto(
     val pfNumber: String? = null,
     val dashainBonus: Double? = null,
     val assignedAmountList: List<AssignedAmountDto>? = null,
-    val sst: Double? = null,
-    val cit: Double? = null
+    val chatId: String? = null,
+    val sst: String? = null,
+    val cit: String? = null
 )
 
 @Serializable

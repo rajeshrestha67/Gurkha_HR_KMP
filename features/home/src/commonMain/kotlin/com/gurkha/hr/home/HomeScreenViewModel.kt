@@ -30,16 +30,20 @@ import com.gurkha.hr.model.home.toUI
 import com.gurkha.hr.networkhelper.onError
 import com.gurkha.hr.networkhelper.onSuccess
 import com.gurkha.hr.res.SharedRes
+import com.gurkha.model.chat.ChatUserData
 import com.gurkha.model.network.toErrorMessage
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.LocalDate
+import kotlinx.serialization.json.Json
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -61,6 +65,9 @@ class HomeScreenViewModel(
     private var isAlreadyClockIn: Boolean = false
 
     val datePair = calendarModel.getMonthStartAndEndDate()
+
+    private val _navigateToChatChannel = Channel<String>()
+    val navigateToChatChannel = _navigateToChatChannel.receiveAsFlow()
 
     private val _state = MutableStateFlow(HomeScreenState())
     val state = _state
@@ -127,6 +134,22 @@ class HomeScreenViewModel(
                 fetchCurrentUser(isRefreshing = true)
                 fetchAttendance(isRefreshing = true)
 
+            }
+
+            is HomeScreenActions.OnSpecificUserClicked -> {
+                val chatUserData = ChatUserData(
+                    employeeId = action.user.employeeId,
+                    chatId = action.user.chatId,
+                    branchName = action.user.branchName,
+                    employeeName = action.user.employeeName,
+                    profileImageUrl = action.user.profileImageUrl,
+                    nameInitials = action.user.initials,
+                    backgroundColor = 1741253453336u,
+                    phoneNumber = action.user.phoneNumber
+                )
+                viewModelScope.launch {
+                    _navigateToChatChannel.send(Json.encodeToString(chatUserData))
+                }
             }
         }
     }

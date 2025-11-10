@@ -6,5 +6,10 @@ data class UpComingBirthdayData(
     val designationName : String,
     val branchName : String,
     val imageUrl : String,
-    val initials: String
+    val initials: String,
+    val employeeId: Long,
+    val chatId: String,
+    val employeeName: String,
+    val profileImageUrl: String,
+    val phoneNumber: String,
 )
