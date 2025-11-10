@@ -110,13 +110,20 @@ fun HomeScreen(
     onViewAllClick: (String?, String) -> Unit,
     onGoToFixProfile: () -> Unit,
     onToggleFloatingActionButton: (Boolean) -> Unit,
-    onGoToAttendanceRequestScreen: (String?, String?) -> Unit
+    onGoToAttendanceRequestScreen: (String?, String?) -> Unit,
+    onBirthdayUser:(json: String)-> Unit
 ) {
     val viewModel: HomeScreenViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
     val anniversaryTitle = stringResource(SharedRes.Strings.work_anniversaries)
     val birthdayTitle = stringResource(SharedRes.Strings.upcoming_birthday)
     val eventTitle = stringResource(SharedRes.Strings.upcoming_events)
+
+    LaunchedEffect(Unit){
+        viewModel.navigateToChatChannel.collect {
+            onBirthdayUser(it)
+        }
+    }
 
 
     Scaffold(
@@ -445,7 +452,8 @@ fun LazyListScope.anniversarySection(
                                 fullName = item.fullName,
                                 imageUrl = item.imageUrl,
                                 designationName = item.designationName,
-                                onChatClicked = {}
+                                onChatClicked = {},
+                                backgroundColor = item.backgroundColor
                             )
                         }
                     }
@@ -510,11 +518,12 @@ fun LazyListScope.birthDaySection(
                         items(state.upComingBirthday) { item ->
                             UpComingCard(
                                 fullName = item.fullName,
-                                imageUrl = item.imageUrl,
+                                imageUrl = item.imageUrl ?: "",
                                 designationName = item.designationName,
                                 onChatClicked = {
                                     onAction(HomeScreenActions.OnSpecificUserClicked(item))
-                                }
+                                },
+                                backgroundColor = item.backgroundColor
                             )
                         }
                     }
@@ -984,6 +993,7 @@ fun LazyListScope.eventSection(
 fun UpComingCard(
     imageUrl: String,
     fullName: String,
+    backgroundColor: Color,
     designationName: String,
     onChatClicked:()-> Unit
 ) {
@@ -1016,7 +1026,7 @@ fun UpComingCard(
                 nameInitials = fullName.extractInitials(),
                 size = MaterialTheme.dimens.medium3,
                 shape = CircleShape,
-                background = MaterialTheme.erpColors.imageBackgroundColor,
+                background = backgroundColor,
                 borderWidth = 0.dp,
                 borderColor = Color.Transparent,
                 ratio = 1f

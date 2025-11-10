@@ -8,7 +8,8 @@ import com.gurkha.hr.route.AppRoute
 
 fun NavGraphBuilder.dashboardScreenBuilder(
     navController: NavHostController,
-    onChatClick: () -> Unit
+    onChatClick: () -> Unit,
+    onBirthdayUser:(json: String)-> Unit
 ) {
     composable<AppRoute.DashboardRoute> {
         DashboardScreen(
@@ -17,7 +18,8 @@ fun NavGraphBuilder.dashboardScreenBuilder(
                     popUpTo(AppRoute.DashboardRoute) { inclusive = true }
                 }
             },
-            onChatClick = onChatClick
+            onChatClick = onChatClick,
+            onBirthdayUser = onBirthdayUser
         )
     }
 }

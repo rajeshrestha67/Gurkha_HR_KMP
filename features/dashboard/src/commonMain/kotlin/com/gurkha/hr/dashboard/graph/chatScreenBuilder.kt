@@ -14,7 +14,6 @@ import com.gurkha.hr.chat_room.ChatRoomScreen
 import com.gurkha.hr.components.sharedViewModel.koinNavGraphViewModel
 import com.gurkha.hr.dashboard.route.ChatGraphRoute
 import com.gurkha.hr.dashboard.route.ChatRoute
-import com.gurkha.hr.home.HomeScreenViewModel
 
 fun NavGraphBuilder.chatScreenBuilder(
     navController: NavHostController
@@ -31,6 +30,7 @@ fun NavGraphBuilder.chatScreenBuilder(
                     navController.navigate(ChatRoute.ChatRoom(json))
                 }
             }
+
             ChatListScreen(
                 state = state,
                 onAction = viewModel::onAction,

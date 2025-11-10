@@ -82,7 +82,6 @@ class ProfileScreenViewModel(
             )
         }
         userDetailUseCase().onSuccess { data ->
-            println("dataProfile $data")
             _state.update {
                 it.copy(
                     isProfileLoading = false,

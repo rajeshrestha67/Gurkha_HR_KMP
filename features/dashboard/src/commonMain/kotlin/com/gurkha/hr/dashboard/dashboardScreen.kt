@@ -68,7 +68,9 @@ private const val TAG = "DashboardScreen"
 @Composable
 fun DashboardScreen(
     onLogout: () -> Unit,
-    onChatClick: () -> Unit
+    onChatClick: () -> Unit,
+    onBirthdayUser:(json: String)-> Unit
+
 ) {
     val viewModel: DashboardViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -95,7 +97,8 @@ fun DashboardScreen(
         state = state,
         onLogout = onLogout,
         onAction = viewModel::action,
-        onChatClick = onChatClick
+        onChatClick = onChatClick,
+        onBirthdayUser = onBirthdayUser
     )
 
 }
@@ -106,7 +109,8 @@ fun DashboardScreenContent(
     state: DashboardScreenState,
     onChatClick: () -> Unit,
     onLogout: () -> Unit,
-    onAction: (DashboardScreenAction) -> Unit
+    onAction: (DashboardScreenAction) -> Unit,
+    onBirthdayUser:(json: String)-> Unit
 ) {
 
 
@@ -289,7 +293,8 @@ fun DashboardScreenContent(
                                 clockStatus = clockStatus
                             )
                         )
-                    }
+                    },
+                    onBirthdayUser = onBirthdayUser
                 )
                 profileScreenBuilder(
                     onLogout = onLogout,

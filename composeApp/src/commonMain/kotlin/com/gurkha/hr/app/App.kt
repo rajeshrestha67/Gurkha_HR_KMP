@@ -62,7 +62,11 @@ fun AppScreen(isFirstTime: Boolean) {
                 navController = navController,
                 onChatClick = {
                     navController.navigate(ChatRoute.ChatList)
-                })
+                },
+                onBirthdayUser = {json ->
+                    navController.navigate(ChatRoute.ChatRoom(json = json))
+                }
+            )
 
             chatScreenBuilder(
                 navController = navController

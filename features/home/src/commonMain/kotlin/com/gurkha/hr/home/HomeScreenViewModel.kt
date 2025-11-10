@@ -1,5 +1,6 @@
 package com.gurkha.hr.home
 
+import androidx.compose.material3.MaterialTheme
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gurkha.hr.components.permissions.ProgressNotification
@@ -142,9 +143,9 @@ class HomeScreenViewModel(
                     chatId = action.user.chatId,
                     branchName = action.user.branchName,
                     employeeName = action.user.employeeName,
-                    profileImageUrl = action.user.profileImageUrl,
+                    profileImageUrl = action.user.imageUrl,
                     nameInitials = action.user.initials,
-                    backgroundColor = 1741253453336u,
+                    backgroundColor = action.user.backgroundColor.value,
                     phoneNumber = action.user.phoneNumber
                 )
                 viewModelScope.launch {
