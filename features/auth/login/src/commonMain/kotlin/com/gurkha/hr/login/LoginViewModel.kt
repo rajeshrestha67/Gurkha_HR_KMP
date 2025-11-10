@@ -146,21 +146,21 @@ class LoginViewModel(
             username = state.value.username,
             password = state.value.password
         ).onSuccess { data ->
-            _state.update {
-                it.copy(isLoading = false)
-            }
             _successChannel.send(true)
             AppLogger.i(TAG, "login: api response $data")
 
             if (previousEmail != null && state.value.username != previousEmail) {
                 resetBiometric()
             }
-        }.onError { error ->
             _state.update {
                 it.copy(isLoading = false)
             }
+        }.onError { error ->
             _errorChannel.send(error.toErrorMessage())
             AppLogger.e(TAG, "login: api response", error)
+            _state.update {
+                it.copy(isLoading = false)
+            }
         }
     }
 

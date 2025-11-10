@@ -107,7 +107,7 @@ fun HomeScreen(
     onNotificationClick: () -> Unit,
     onViewAllClick: (String?, String) -> Unit,
     onGoToFixProfile: () -> Unit,
-    onGoToAttendanceRequestScreen:(String?, String?)-> Unit
+    onGoToAttendanceRequestScreen: (String?, String?) -> Unit
 ) {
     val viewModel: HomeScreenViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -204,7 +204,7 @@ fun HomeScreen(
                     anniversaryTitle = anniversaryTitle,
                     onGoToFixProfile = onGoToFixProfile,
                     eventTitle = eventTitle,
-                    onGoToAttendanceRequestScreen=onGoToAttendanceRequestScreen
+                    onGoToAttendanceRequestScreen = onGoToAttendanceRequestScreen
                 )
             }
         )
@@ -222,7 +222,7 @@ fun HomeScreenContent(
     anniversaryTitle: String,
     onGoToFixProfile: () -> Unit,
     eventTitle: String,
-    onGoToAttendanceRequestScreen:(String?, String?)-> Unit
+    onGoToAttendanceRequestScreen: (String?, String?) -> Unit
 ) {
     var showPermissionModal by remember { mutableStateOf(false) }
 
@@ -354,7 +354,7 @@ fun HomeScreenContent(
             // attendance list
             attendanceSection(
                 state = state,
-                onGoToAttendanceRequestScreen=onGoToAttendanceRequestScreen
+                onGoToAttendanceRequestScreen = onGoToAttendanceRequestScreen
             )
 
         }
@@ -501,7 +501,7 @@ fun LazyListScope.birthDaySection(
 
 fun LazyListScope.attendanceSection(
     state: HomeScreenState,
-    onGoToAttendanceRequestScreen:(String?, String?)-> Unit
+    onGoToAttendanceRequestScreen: (String?, String?) -> Unit
 ) {
     item(key = "attendance_title") {
         TitleBar(
@@ -537,7 +537,7 @@ fun LazyListScope.attendanceSection(
 @Composable
 private fun AttendanceHistoryItem(
     item: AttendanceHistoryItemUI,
-    onGoToAttendanceRequestScreen:(String?, String?)-> Unit
+    onGoToAttendanceRequestScreen: (String?, String?) -> Unit
 
 ) {
     var showMore by rememberSaveable { mutableStateOf(false) }
@@ -547,8 +547,7 @@ private fun AttendanceHistoryItem(
             .padding(
                 horizontal = MaterialTheme.dimens.small3
             )
-            .clip(MaterialTheme.shapes.small)
-        ,
+            .clip(MaterialTheme.shapes.small),
         tonalElevation = 4.dp
     ) {
         Box(
@@ -592,7 +591,7 @@ private fun AttendanceHistoryItem(
 
                                 //send the status base on the time
                                 val date = Json.encodeToString(dateToSend)
-                                val clockStatus = if(item.clockInTime == "--:--")
+                                val clockStatus = if (item.clockInTime == "--:--")
                                     Json.encodeToString(ClockStatus.CLOCK_IN)
                                 else
                                     Json.encodeToString(ClockStatus.CLOCK_OUT)
@@ -758,7 +757,7 @@ fun LazyListScope.requestSection(
                 )
             ) {
                 rowItems.forEach { leaveItem ->
-                    if (state.isAttendanceLoading) {
+                    if (state.isAttendanceCountLoading || state.isRefreshing) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(
@@ -910,7 +909,7 @@ fun AttendanceItemContent(
 fun LazyListScope.eventSection(
     state: HomeScreenState,
     onViewAllClick: (String?, String) -> Unit,
-    eventTitle : String
+    eventTitle: String
 ) {
     val data = Json.encodeToString<List<ViewAllUi>>(state.upComingEvent.toUi())
     val title = Json.encodeToString<String>(eventTitle)
@@ -923,7 +922,7 @@ fun LazyListScope.eventSection(
                         end = MaterialTheme.dimens.small1
                     ),
                 onViewAll = {
-                    onViewAllClick(data,title)
+                    onViewAllClick(data, title)
                 },
                 title = SharedRes.Strings.upcoming_events,
                 subTitle = SharedRes.Strings.view_all
@@ -956,7 +955,7 @@ fun LazyListScope.eventSection(
                         contentPadding = PaddingValues(horizontal = MaterialTheme.dimens.small3),
                         verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
                     ) {
-                        items(state.upComingEvent.take(n=3)) { item ->
+                        items(state.upComingEvent.take(n = 3)) { item ->
                             EventCard(
                                 item = item
                             )
@@ -1078,7 +1077,7 @@ fun EventCard(
         )
 
         Text(
-            text = "${item.fromDateBs }  to  ${ item.toDateBs}",
+            text = "${item.fromDateBs}  to  ${item.toDateBs}",
             style = MaterialTheme.typography.titleSmall.copy(
                 color = MaterialTheme.erpColors.primaryTextColor
             )

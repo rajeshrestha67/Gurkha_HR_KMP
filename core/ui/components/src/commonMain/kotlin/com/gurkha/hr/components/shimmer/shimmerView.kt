@@ -8,11 +8,11 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 
 @Composable
 fun ShimmerView(modifier: Modifier = Modifier) {
@@ -24,10 +24,13 @@ fun ShimmerView(modifier: Modifier = Modifier) {
 
 @Composable
 fun shimmerBrush(): Brush {
+    val baseColor = MaterialTheme.colorScheme.surface
+    val highlightColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
+
     val shimmerColors = listOf(
-        Color.LightGray.copy(alpha = 0.6f),
-        Color.LightGray.copy(alpha = 0.2f),
-        Color.LightGray.copy(alpha = 0.6f)
+        baseColor.copy(alpha = 0.9f),
+        highlightColor,
+        baseColor.copy(alpha = 0.9f),
     )
 
     val transition = rememberInfiniteTransition()

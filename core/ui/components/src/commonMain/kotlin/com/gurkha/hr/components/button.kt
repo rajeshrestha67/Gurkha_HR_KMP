@@ -27,7 +27,7 @@ fun ERPButton(
     onClick: () -> Unit,
     text: String,
     backgroundColor: Color = MaterialTheme.colorScheme.primary,
-    textColor: Color = Color.White,
+    textColor: Color = MaterialTheme.colorScheme.onPrimary,
     shape: Shape = MaterialTheme.shapes.medium,
     isLoading: Boolean = false,
     leadingIcon: @Composable (() -> Unit)? = null,
@@ -36,11 +36,13 @@ fun ERPButton(
     disableBackgroundColor: Color = Color.Gray,
     disableTextColor: Color = MaterialTheme.colorScheme.onBackground,
     border: BorderStroke = BorderStroke(0.dp, Color.Transparent),
-    textStyle: TextStyle = MaterialTheme.typography.bodyMedium
+    textStyle: TextStyle = MaterialTheme.typography.bodyMedium.copy(
+        color = textColor
+    )
 ) {
     Button(
         enabled = enabled,
-        modifier = modifier.height(48.dp),
+        modifier = modifier.height(MaterialTheme.dimens.medium3),
         onClick = onClick,
         colors = ButtonDefaults.buttonColors().copy(
             containerColor = backgroundColor,
@@ -59,15 +61,15 @@ fun ERPButton(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(48.dp),
+                        .height(MaterialTheme.dimens.medium3),
                     contentAlignment = Alignment.Center
                 ) {
                     CircularProgressIndicator(
-                        modifier = Modifier.size(24.dp),
+                        modifier = Modifier.size(MaterialTheme.dimens.medium1),
                         trackColor = backgroundColor,
                         strokeCap = StrokeCap.Round,
                         strokeWidth = 1.dp,
-                        color = Color.White
+                        color = MaterialTheme.colorScheme.onPrimary
                     )
                 }
             } else {
