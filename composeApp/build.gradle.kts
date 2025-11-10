@@ -65,6 +65,7 @@ kotlin {
             implementation(projects.features.profile)
             implementation(projects.features.settings)
             implementation(projects.core.model)
+            implementation(projects.core.domain)
             implementation(projects.core.logger)
             implementation(projects.core.persistance.datastore)
 

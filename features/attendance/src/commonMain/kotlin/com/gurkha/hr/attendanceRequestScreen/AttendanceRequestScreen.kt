@@ -139,6 +139,9 @@ fun AttendanceRequestScreen(
         message = message,
         sendData = {
             sendData = true
+        },
+        onDismiss = {
+            showFailedDialogue =false
         }
     )
 
@@ -153,7 +156,8 @@ fun AttendanceRequestScreenContent(
     showSuccessDialogue: Boolean,
     showFailedDialogue: Boolean,
     message: String,
-    sendData: (Boolean) -> Unit
+    sendData: (Boolean) -> Unit,
+    onDismiss:()-> Unit
 ) {
 
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -215,7 +219,8 @@ fun AttendanceRequestScreenContent(
                 onSendData = {
                     sendData(true)
                 },
-                keyboardController = keyboardController
+                keyboardController = keyboardController,
+                onDismiss = onDismiss
             )
         }
 
@@ -233,7 +238,8 @@ fun AttendanceRequestScreenForm(
     showFailedDialogue: Boolean,
     message: String,
     onSendData: () -> Unit,
-    keyboardController: SoftwareKeyboardController?
+    keyboardController: SoftwareKeyboardController?,
+    onDismiss:()-> Unit
 ) {
 
     Column(
@@ -406,7 +412,7 @@ fun AttendanceRequestScreenForm(
                 text = message,
                 promptType = PromptType.FAILED,
                 buttonText = SharedRes.Strings.cancel,
-                onBackPressed = onBackClicked
+                onBackPressed = onDismiss
             )
         }
     }
