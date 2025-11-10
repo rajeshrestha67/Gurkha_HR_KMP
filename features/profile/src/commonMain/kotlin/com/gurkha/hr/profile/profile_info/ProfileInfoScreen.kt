@@ -136,7 +136,6 @@ fun ProfileInfoContainer(
     state: ProfileInfoScreenState,
     onAction: (ProfileInfoViewAction) -> Unit
 ) {
-    //val infoList = InfoList.list.map { stringResource(it.title) }
 
     LazyColumn(
         modifier = modifier,
@@ -347,10 +346,8 @@ fun ProfileInfoRow(
 @Composable
 fun HeaderSection(
     title: StringResource
-
 ) {
     HeaderSectionStyle(text = title)
-
 }
 
 
@@ -365,7 +362,9 @@ fun HeaderSectionStyle(text: StringResource) {
                 vertical = MaterialTheme.dimens.small2,
             ),
         text = stringResource(text),
-        style = MaterialTheme.typography.titleLarge
+        style = MaterialTheme.typography.titleLarge.copy(
+            color = MaterialTheme.colorScheme.primary
+        )
 
     )
 }

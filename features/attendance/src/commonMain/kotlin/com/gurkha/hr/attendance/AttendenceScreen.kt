@@ -288,6 +288,7 @@ fun LazyListScope.attendanceResult(
                 ShimmerView(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .clip(shape = MaterialTheme.shapes.medium)
                         .height(MaterialTheme.dimens.bottomBar)
                 )
             }

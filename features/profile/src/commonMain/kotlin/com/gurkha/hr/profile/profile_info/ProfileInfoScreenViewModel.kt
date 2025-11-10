@@ -86,7 +86,7 @@ class ProfileInfoScreenViewModel(
                         personalDetails = listOf(
                             ProfileInfo(
                                 name = SharedRes.Strings.date_of_birth,
-                                value = userDetail.dateOfBirth
+                                value = userDetail.dateOfBirth.ifEmpty { "N/A" }
                             ),
                             ProfileInfo(
                                 name = SharedRes.Strings.gender,
