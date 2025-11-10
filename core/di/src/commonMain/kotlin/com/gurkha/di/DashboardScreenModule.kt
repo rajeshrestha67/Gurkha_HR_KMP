@@ -3,6 +3,7 @@ package com.gurkha.di
 import com.gurkha.hr.dashboard.DashboardViewModel
 import com.gurkha.hr.data.firebase.KtorFcmTokenRemoteRepository
 import com.gurkha.hr.data.userDetail.KtorUserDetailRemoteRepository
+import com.gurkha.hr.datastore.token.repository.TokenRepository
 import com.gurkha.hr.datastore.user_data.repository.UserDataRepository
 import com.gurkha.hr.domain.token.repository.FcmTokenRepository
 import com.gurkha.hr.domain.token.usecase.FetchTokenAllValueUseCase
@@ -28,9 +29,11 @@ class DashboardScreenModule {
 
     @Factory
     fun postFcmTokenUseCase(
-        fcmTokenRepository: FcmTokenRepository
+        fcmTokenRepository: FcmTokenRepository,
+        tokenRepository: TokenRepository
     ): PostFcmTokenUseCase = PostFcmTokenUseCase(
-        fcmTokenRepository = fcmTokenRepository
+        fcmTokenRepository = fcmTokenRepository,
+        tokenRepository=tokenRepository
     )
 
     @Factory
@@ -48,11 +51,9 @@ class DashboardScreenModule {
     fun getDashboardViewModel(
         authState: AuthState,
         postFcmTokenUseCase: PostFcmTokenUseCase,
-        fetchTokenAllValueUseCase: FetchTokenAllValueUseCase
     ) = DashboardViewModel(
         authState = authState,
         postFcmTokenUseCase = postFcmTokenUseCase,
-        fetchTokenAllValueUseCase = fetchTokenAllValueUseCase
     )
 
 }

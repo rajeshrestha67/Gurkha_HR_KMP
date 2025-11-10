@@ -24,9 +24,9 @@ import kotlinx.coroutines.launch
 class DashboardViewModel(
     private val authState: AuthState,
     private val postFcmTokenUseCase: PostFcmTokenUseCase,
-    private val fetchTokenAllValueUseCase: FetchTokenAllValueUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(DashboardScreenState())
+
 
     var sessionExpired: StateFlow<Boolean> = authState.sessionExpired
     val state = _state
@@ -58,11 +58,7 @@ class DashboardViewModel(
     }
 
     private fun postFcmToken() = viewModelScope.launch {
-        val fcmToken = fetchTokenAllValueUseCase().firstOrNull()?.fcmToken
-
         postFcmTokenUseCase(
-            fcmToken = fcmToken ?: "",
-            uid = getDeviceUniqueIdentifier()
         ).onSuccess {
             AppLogger.d(tag = TAG, message = "successFully posted the fcm token")
         }.onError { error ->
