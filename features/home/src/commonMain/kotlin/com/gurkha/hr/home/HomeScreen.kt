@@ -48,6 +48,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -107,6 +108,7 @@ fun HomeScreen(
     onNotificationClick: () -> Unit,
     onViewAllClick: (String?, String) -> Unit,
     onGoToFixProfile: () -> Unit,
+    onToggleFloatingActionButton: (Boolean) -> Unit,
     onGoToAttendanceRequestScreen: (String?, String?) -> Unit
 ) {
     val viewModel: HomeScreenViewModel = koinViewModel()
@@ -204,6 +206,7 @@ fun HomeScreen(
                     anniversaryTitle = anniversaryTitle,
                     onGoToFixProfile = onGoToFixProfile,
                     eventTitle = eventTitle,
+                    onToggleFloatingActionButton = onToggleFloatingActionButton,
                     onGoToAttendanceRequestScreen = onGoToAttendanceRequestScreen
                 )
             }
@@ -222,6 +225,7 @@ fun HomeScreenContent(
     anniversaryTitle: String,
     onGoToFixProfile: () -> Unit,
     eventTitle: String,
+    onToggleFloatingActionButton: (Boolean) -> Unit,
     onGoToAttendanceRequestScreen: (String?, String?) -> Unit
 ) {
     var showPermissionModal by remember { mutableStateOf(false) }
@@ -295,6 +299,10 @@ fun HomeScreenContent(
 
     val shouldShowSwipeToDismiss by remember(state.showSwipeView) {
         derivedStateOf { (!isScrolling || isAtTop || isAtEnd) && state.showSwipeView }
+    }
+
+    LaunchedEffect(shouldShowSwipeToDismiss) {
+        onToggleFloatingActionButton(shouldShowSwipeToDismiss)
     }
 
     Box(

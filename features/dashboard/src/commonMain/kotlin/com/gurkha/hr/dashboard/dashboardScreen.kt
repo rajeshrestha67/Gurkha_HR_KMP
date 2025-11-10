@@ -1,14 +1,22 @@
 package com.gurkha.hr.dashboard
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Support
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarItem
@@ -20,6 +28,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -27,6 +36,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.gurkha.hr.components.AnimatedNavHost
 import com.gurkha.hr.components.PlatformMessage
+import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.navigationBar.ERPNavigationBar
 import com.gurkha.hr.components.permissions.POST_NOTIFICATIONS_PERMISSION
 import com.gurkha.hr.components.permissions.rememberRequestPermission
@@ -99,6 +109,10 @@ fun DashboardScreenContent(
     onAction: (DashboardScreenAction) -> Unit
 ) {
 
+
+    var showFloatingButton by remember { mutableStateOf(false) }
+
+    var needExtraPaddingForFloatingButton by remember { mutableStateOf(true) }
     var bottomBarState by remember {
         mutableStateOf(true)
     }
@@ -152,12 +166,35 @@ fun DashboardScreenContent(
     LaunchedEffect(currentRoute) {
         if (currentRoute != null) {
             val destination = when (currentRoute) {
-                DashboardRoute.HomeRoute::class.qualifiedName -> DashboardRoute.HomeRoute
-                DashboardRoute.ProfileRoute::class.qualifiedName -> DashboardRoute.ProfileRoute
-                DashboardRoute.AttendanceRoute::class.qualifiedName -> DashboardRoute.AttendanceRoute
-                DashboardRoute.LeaveRoute::class.qualifiedName -> DashboardRoute.LeaveRoute
-                DashboardRoute.NoteRoute::class.qualifiedName -> DashboardRoute.NoteRoute
-                else -> DashboardRoute.HomeRoute
+                DashboardRoute.HomeRoute::class.qualifiedName -> {
+                    needExtraPaddingForFloatingButton = true
+                    DashboardRoute.HomeRoute
+                }
+
+                DashboardRoute.ProfileRoute::class.qualifiedName -> {
+                    needExtraPaddingForFloatingButton = false
+                    DashboardRoute.ProfileRoute
+                }
+
+                DashboardRoute.AttendanceRoute::class.qualifiedName -> {
+                    needExtraPaddingForFloatingButton = true
+                    DashboardRoute.AttendanceRoute
+                }
+
+                DashboardRoute.LeaveRoute::class.qualifiedName -> {
+                    needExtraPaddingForFloatingButton = true
+                    DashboardRoute.LeaveRoute
+                }
+
+                DashboardRoute.NoteRoute::class.qualifiedName -> {
+                    needExtraPaddingForFloatingButton = true
+                    DashboardRoute.NoteRoute
+                }
+
+                else -> {
+                    needExtraPaddingForFloatingButton = true
+                    DashboardRoute.HomeRoute
+                }
             }
             onAction(DashboardScreenAction.OnChangeScreen(destination))
         }
@@ -210,78 +247,114 @@ fun DashboardScreenContent(
                     }
                 }
             }
-
         }
     ) { paddingValues ->
 
-        AnimatedNavHost(
-            modifier = Modifier.padding(paddingValues).fillMaxSize(),
-            navController = dashboardNavController,
-            startDestination = DashboardRoute.HomeRoute,
+
+        Box(
+            modifier = Modifier
+                .padding(paddingValues)
+                .fillMaxSize()
+                .animateContentSize(),
         ) {
-            homeScreenBuilder(
+            AnimatedNavHost(
+                modifier = Modifier.fillMaxSize(),
                 navController = dashboardNavController,
-                topAppBarScrollBehavior = topScrollBehavior,
-                onChatClick = onChatClick,
-                onViewAllClick = { eventsJson, title ->
-                    eventsJson?.let {
+                startDestination = DashboardRoute.HomeRoute,
+            ) {
+                homeScreenBuilder(
+                    navController = dashboardNavController,
+                    topAppBarScrollBehavior = topScrollBehavior,
+                    onChatClick = onChatClick,
+                    onViewAllClick = { eventsJson, title ->
+                        eventsJson?.let {
+                            dashboardNavController.navigate(
+                                HomeRoute.ViewAllRoute(
+                                    json = eventsJson,
+                                    title = title
+                                )
+                            )
+                        }
+                    },
+                    onGoToFixProfile = {
+                        dashboardNavController.navigate(HomeRoute.EditProfileRoute)
+                    },
+                    onToggleFloatingActionButton = { show ->
+                        showFloatingButton = show
+                    },
+                    onGoToAttendanceRequestScreen = { date, clockStatus ->
                         dashboardNavController.navigate(
-                            HomeRoute.ViewAllRoute(
-                                json = eventsJson,
-                                title = title
+                            AttendanceRoute.AttendanceRequestScreen(
+                                date = date,
+                                clockStatus = clockStatus
                             )
                         )
                     }
-                },
-                onGoToFixProfile = {
-                    dashboardNavController.navigate(HomeRoute.EditProfileRoute)
-                },
-                onGoToAttendanceRequestScreen = { date, clockStatus ->
-                    dashboardNavController.navigate(
-                        AttendanceRoute.AttendanceRequestScreen(
-                            date = date,
-                            clockStatus = clockStatus
+                )
+                profileScreenBuilder(
+                    onLogout = onLogout,
+                    navController = dashboardNavController
+                )
+                attendanceScreenBuilder(
+                    navController = dashboardNavController,
+                    onGoToAttendanceRequestScreen = {
+                        dashboardNavController.navigate(
+                            AttendanceRoute.AttendanceRequestScreen(
+                                date = null,
+                                clockStatus = null
+                            )
                         )
-                    )
-                }
-            )
-            profileScreenBuilder(
-                onLogout = onLogout,
-                navController = dashboardNavController
-            )
-            attendanceScreenBuilder(
-                navController = dashboardNavController,
-                onGoToAttendanceRequestScreen = {
-                    dashboardNavController.navigate(
-                        AttendanceRoute.AttendanceRequestScreen(
-                            date = null,
-                            clockStatus = null
-                        )
-                    )
-                }
-            )
-            leaveScreenBuilder(
-                navController = dashboardNavController,
-                onGoToLeaveRequestPage = {
-                    dashboardNavController.navigate(LeaveRoute.LeaveRequestPageRoute)
-                }
-            )
-
-            noteScreenBuilder(
-                navController = dashboardNavController,
-                onGoToAddNotesScreen = { noteJson ->
-                    dashboardNavController.navigate(NoteRoute.AddNoteRoute(json = noteJson))
-                },
-                onGoToDetailNotesScreen = { noteJson ->
-                    noteJson?.let {
-                        dashboardNavController.navigate(NoteRoute.DetailNoteRoute(json = noteJson))
                     }
-                },
-            )
+                )
+                leaveScreenBuilder(
+                    navController = dashboardNavController,
+                    onGoToLeaveRequestPage = {
+                        dashboardNavController.navigate(LeaveRoute.LeaveRequestPageRoute)
+                    }
+                )
 
-            settingsScreenBuilder(
-                navController = dashboardNavController
-            )
+                noteScreenBuilder(
+                    navController = dashboardNavController,
+                    onGoToAddNotesScreen = { noteJson ->
+                        dashboardNavController.navigate(NoteRoute.AddNoteRoute(json = noteJson))
+                    },
+                    onGoToDetailNotesScreen = { noteJson ->
+                        noteJson?.let {
+                            dashboardNavController.navigate(NoteRoute.DetailNoteRoute(json = noteJson))
+                        }
+                    },
+                )
+
+                settingsScreenBuilder(
+                    navController = dashboardNavController
+                )
+            }
+
+            AnimatedVisibility(
+                visible = showFloatingButton,
+                enter = slideInVertically(initialOffsetY = { it }) + fadeIn(),
+                exit = slideOutVertically(targetOffsetY = { it }) + fadeOut(),
+                modifier = Modifier
+                    .padding(MaterialTheme.dimens.small3)
+                    .animateContentSize()
+                    .padding(
+                        bottom = if (needExtraPaddingForFloatingButton) MaterialTheme.dimens.swipeToDismissHeight else MaterialTheme.dimens.small3
+                    )
+                    .align(Alignment.BottomEnd)
+            ) {
+                FloatingActionButton(
+                    onClick = {
+                        //onChatClick()
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Support,
+                        contentDescription = stringResource(SharedRes.Strings.support)
+                    )
+                }
+            }
+
+
         }
     }
 }

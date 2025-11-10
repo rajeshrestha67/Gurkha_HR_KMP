@@ -19,8 +19,9 @@ fun NavGraphBuilder.homeScreenBuilder(
     onChatClick: () -> Unit,
     topAppBarScrollBehavior: TopAppBarScrollBehavior,
     onViewAllClick: (String?, String) -> Unit,
-    onGoToFixProfile:()-> Unit,
-    onGoToAttendanceRequestScreen:(String?, String?)-> Unit
+    onGoToFixProfile: () -> Unit,
+    onToggleFloatingActionButton: (Boolean) -> Unit,
+    onGoToAttendanceRequestScreen: (String?, String?) -> Unit
 ) {
 
     composable<DashboardRoute.HomeRoute> {
@@ -32,6 +33,7 @@ fun NavGraphBuilder.homeScreenBuilder(
                 navController.navigate(route = HomeRoute.NotificationRoute)
             },
             onGoToFixProfile = onGoToFixProfile,
+            onToggleFloatingActionButton = onToggleFloatingActionButton,
             onGoToAttendanceRequestScreen = onGoToAttendanceRequestScreen
         )
     }
