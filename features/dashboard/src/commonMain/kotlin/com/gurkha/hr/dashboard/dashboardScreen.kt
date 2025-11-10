@@ -335,10 +335,10 @@ fun DashboardScreenContent(
                 enter = slideInVertically(initialOffsetY = { it }) + fadeIn(),
                 exit = slideOutVertically(targetOffsetY = { it }) + fadeOut(),
                 modifier = Modifier
-                    .padding(MaterialTheme.dimens.small3)
                     .animateContentSize()
                     .padding(
-                        bottom = if (needExtraPaddingForFloatingButton) MaterialTheme.dimens.swipeToDismissHeight else MaterialTheme.dimens.small3
+                        bottom = if (needExtraPaddingForFloatingButton) (MaterialTheme.dimens.swipeToDismissHeight + MaterialTheme.dimens.small3) else MaterialTheme.dimens.small3,
+                        end = MaterialTheme.dimens.small3
                     )
                     .align(Alignment.BottomEnd)
             ) {

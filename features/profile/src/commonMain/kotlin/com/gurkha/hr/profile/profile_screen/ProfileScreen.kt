@@ -191,8 +191,10 @@ fun ProfileScreenContainer(
     LazyColumn(
         modifier = modifier,
         contentPadding = PaddingValues(
-            horizontal = MaterialTheme.dimens.small3,
-            vertical = MaterialTheme.dimens.small2
+            start = MaterialTheme.dimens.small3,
+            end = MaterialTheme.dimens.small3,
+            top = MaterialTheme.dimens.small2,
+            bottom = MaterialTheme.dimens.small2 + MaterialTheme.dimens.swipeToDismissHeight
         )
     ) {
 
