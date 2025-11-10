@@ -209,7 +209,6 @@ LeaveRequestScreenViewModel(
                         assigneeError = null
                     )
                 }
-
                 _dataChannel.send(
                     LeaveRequestData(
                         startDate = state.value.startDate?.displayValueAD ?: "",
@@ -229,17 +228,6 @@ LeaveRequestScreenViewModel(
                     assigneeId = state.value.assignee?.value?.toInt() ?: 0,
                     reason = state.value.reason,
                 )
-
-                _state.update {
-                    it.copy(
-                        startDate = null,
-                        endDate = null,
-                        leaveDuration = null,
-                        leaveType = null,
-                        assignee = null,
-                        reason = ""
-                    )
-                }
             }
         }
     }
@@ -312,6 +300,12 @@ LeaveRequestScreenViewModel(
             _state.update {
                 it.copy(
                     isRequestingLeave = false,
+                    startDate = null,
+                    endDate = null,
+                    leaveDuration = null,
+                    leaveType = null,
+                    assignee = null,
+                    reason = ""
                 )
             }
             _successChannel.send(data.message)

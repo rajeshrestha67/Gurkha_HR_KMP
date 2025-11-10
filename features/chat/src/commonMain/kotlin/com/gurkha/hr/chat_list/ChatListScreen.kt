@@ -57,8 +57,6 @@ fun ChatListScreen(
 ) {
 //    val viewModel = koinViewModel<ChatListViewModel>()
 //    val state by viewModel.state.collectAsStateWithLifecycle()
-
-
     ChatListScreenContent(
         onBackPressed = onBackPressed,
         state = state,

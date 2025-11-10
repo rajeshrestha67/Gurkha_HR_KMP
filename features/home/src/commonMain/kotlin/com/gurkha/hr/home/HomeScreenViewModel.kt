@@ -1,5 +1,6 @@
 package com.gurkha.hr.home
 
+import androidx.compose.material3.MaterialTheme
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gurkha.hr.components.permissions.ProgressNotification
@@ -16,6 +17,7 @@ import com.gurkha.hr.domain.attendance.attendanceReport.model.AttendanceData
 import com.gurkha.hr.domain.attendance.attendanceReport.usecase.AttendanceUseCase
 import com.gurkha.hr.domain.attendance.doAttendance.useCase.DoAttendanceUseCase
 import com.gurkha.hr.domain.notification.unSeenNotificationCount.useCase.UnseenNotificationUseCase
+import com.gurkha.hr.domain.support.useCase.SupportListFetchUseCase
 import com.gurkha.hr.domain.upComingBirthday.usecase.UpComingBirthdayUseCase
 import com.gurkha.hr.domain.upComingEvent.useCase.EventUseCase
 import com.gurkha.hr.domain.upComingWorkAnniversaries.useCase.UpComingWorkAnniversaryUseCase
@@ -30,16 +32,20 @@ import com.gurkha.hr.model.home.toUI
 import com.gurkha.hr.networkhelper.onError
 import com.gurkha.hr.networkhelper.onSuccess
 import com.gurkha.hr.res.SharedRes
+import com.gurkha.model.chat.ChatUserData
 import com.gurkha.model.network.toErrorMessage
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.LocalDate
+import kotlinx.serialization.json.Json
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -54,13 +60,17 @@ class HomeScreenViewModel(
     private val unseenNotificationUseCase: UnseenNotificationUseCase,
     private val uploadImageUseCase: UploadImageUseCase,
     private val doAttendanceUseCase: DoAttendanceUseCase,
-    private val attendanceCountReportUseCase: AttendanceCountReportUseCase
+    private val attendanceCountReportUseCase: AttendanceCountReportUseCase,
+    private val supportListFetchUseCase : SupportListFetchUseCase
 ) : ViewModel() {
     private val notification = ProgressNotification()
 
     private var isAlreadyClockIn: Boolean = false
 
     val datePair = calendarModel.getMonthStartAndEndDate()
+
+    private val _navigateToChatChannel = Channel<String>()
+    val navigateToChatChannel = _navigateToChatChannel.receiveAsFlow()
 
     private val _state = MutableStateFlow(HomeScreenState())
     val state = _state
@@ -73,6 +83,7 @@ class HomeScreenViewModel(
             fetchUpComingEvents()
             getUnseenNotificationCount()
             getAttendanceTotalCountReport()
+            fetchSupportList()
         }
         .stateIn(
             scope = viewModelScope,
@@ -127,6 +138,22 @@ class HomeScreenViewModel(
                 fetchCurrentUser(isRefreshing = true)
                 fetchAttendance(isRefreshing = true)
 
+            }
+
+            is HomeScreenActions.OnSpecificUserClicked -> {
+                val chatUserData = ChatUserData(
+                    employeeId = action.user.employeeId,
+                    chatId = action.user.chatId,
+                    branchName = action.user.branchName,
+                    employeeName = action.user.employeeName,
+                    profileImageUrl = action.user.imageUrl,
+                    nameInitials = action.user.initials,
+                    backgroundColor = action.user.backgroundColor.value,
+                    phoneNumber = action.user.phoneNumber
+                )
+                viewModelScope.launch {
+                    _navigateToChatChannel.send(Json.encodeToString(chatUserData))
+                }
             }
         }
     }
@@ -556,6 +583,29 @@ class HomeScreenViewModel(
                 tag = TAG,
                 "Attendance Count Report Fetch failed: ${error.toErrorMessage()}"
             )
+        }
+    }
+
+    private fun fetchSupportList()=viewModelScope.launch {
+        _state.update {
+            it.copy(
+                isFetchingSupportList = true
+            )
+        }
+        supportListFetchUseCase().onSuccess {
+            _state.update {
+                it.copy(
+                    isFetchingSupportList = false
+                )
+            }
+            AppLogger.d(tag = TAG, "Support List Fetch success")
+        }.onError { error ->
+            _state.update {
+                it.copy(
+                    isFetchingSupportList = false
+                )
+            }
+            AppLogger.e(tag = TAG, "Support List Fetch error",error)
         }
     }
 }

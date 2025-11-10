@@ -24,11 +24,13 @@ fun NavGraphBuilder.chatScreenBuilder(
         composable<ChatRoute.ChatList> {
             val viewModel = navController.koinNavGraphViewModel<ChatViewModel, ChatGraphRoute>()
             val state by viewModel.state.collectAsStateWithLifecycle()
+
             LaunchedEffect(Unit) {
                 viewModel.navigateToChatChannel.collect { json ->
                     navController.navigate(ChatRoute.ChatRoom(json))
                 }
             }
+
             ChatListScreen(
                 state = state,
                 onAction = viewModel::onAction,

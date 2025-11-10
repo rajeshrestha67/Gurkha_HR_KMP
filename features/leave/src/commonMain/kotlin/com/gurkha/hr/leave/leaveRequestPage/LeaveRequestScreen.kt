@@ -123,6 +123,9 @@ fun LeaveRequestScreen(
         messageToShow = messageToShow,
         onSendData = {
             sendData = true
+        },
+        onDismiss ={
+            showFailedDialogue = false
         }
     )
 
@@ -138,7 +141,8 @@ fun LeaveRequestPageContent(
     showSuccessDialogue: Boolean,
     showFailedDialogue: Boolean,
     messageToShow: String,
-    onSendData: () -> Unit
+    onSendData: () -> Unit,
+    onDismiss: ()-> Unit
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val isKeyboardOpen by isKeyboardVisible()
@@ -199,7 +203,8 @@ fun LeaveRequestPageContent(
                     showFailedDialogue = showFailedDialogue,
                     messageToShow = messageToShow,
                     onSendData = onSendData,
-                    keyboardController = keyboardController
+                    keyboardController = keyboardController,
+                    onDismiss = onDismiss
                 )
             }
         }
@@ -219,7 +224,8 @@ fun LeaveRequestScreenForm(
     showFailedDialogue: Boolean,
     messageToShow: String,
     onSendData: () -> Unit,
-    keyboardController: SoftwareKeyboardController?
+    keyboardController: SoftwareKeyboardController?,
+    onDismiss:()-> Unit
 ) {
 
     Column(
@@ -375,7 +381,7 @@ fun LeaveRequestScreenForm(
                 text = messageToShow,
                 onBackPressed = {
                     onSendData()
-                    onBackPressed
+//                    onBackPressed
                 }
             )
         }
@@ -384,7 +390,7 @@ fun LeaveRequestScreenForm(
             PromptModalBottomSheet(
                 promptType = PromptType.FAILED,
                 text = messageToShow,
-                onBackPressed = onBackPressed
+                onBackPressed = onDismiss
             )
         }
     }

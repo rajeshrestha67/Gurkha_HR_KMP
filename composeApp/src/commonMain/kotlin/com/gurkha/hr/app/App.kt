@@ -13,6 +13,7 @@ import com.gurkha.hr.components.locale.erpAppLocale
 import com.gurkha.hr.components.statusBar.StatusBarView
 import com.gurkha.hr.dashboard.graph.chatScreenBuilder
 import com.gurkha.hr.dashboard.route.ChatRoute
+import com.gurkha.hr.domain.chat.ChatTypeEnum
 import com.gurkha.hr.graph.dashboardScreenBuilder
 import com.gurkha.hr.graph.loginScreenBuilder
 import com.gurkha.hr.graph.onBoardingBuilder
@@ -62,7 +63,11 @@ fun AppScreen(isFirstTime: Boolean) {
                 navController = navController,
                 onChatClick = {
                     navController.navigate(ChatRoute.ChatList)
-                })
+                },
+                onBirthdayUser = {json ->
+                    navController.navigate(ChatRoute.ChatRoom(json = json))
+                }
+            )
 
             chatScreenBuilder(
                 navController = navController

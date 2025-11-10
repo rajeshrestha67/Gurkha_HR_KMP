@@ -201,7 +201,10 @@ fun AddNoteScreen(
             onSendData = {
                 sendData = true
             },
-            keyboardController=keyboardController
+            keyboardController=keyboardController,
+            onDismiss = {
+                showErrorDialogue = false
+            }
         )
     }
 
@@ -218,7 +221,8 @@ fun AddNoteScreenContent(
     showSuccessDialogue: Boolean,
     onBackClicked: () -> Unit,
     onSendData: () -> Unit,
-    keyboardController: SoftwareKeyboardController?
+    keyboardController: SoftwareKeyboardController?,
+    onDismiss:()-> Unit
 ) {
     Column(
         modifier = modifier
@@ -285,7 +289,7 @@ fun AddNoteScreenContent(
     if (showErrorDialogue) {
         PromptModalBottomSheet(
             promptType = PromptType.FAILED,
-            onBackPressed = onBackClicked,
+            onBackPressed = onDismiss,
             text = messageToShow
         )
     }

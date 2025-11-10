@@ -41,7 +41,5 @@ object EndPoint {
     const val BIOMETRIC_REQUEST_END_POINT="/api/notifications/save-biometric-token"
 
     const val POST_FCM_TOKEN_END_POINT="api/notifications/save-fcm-token"
-
-
-
+    const val SUPPORT_LIST_END_POINT="api/chat/support"
 }

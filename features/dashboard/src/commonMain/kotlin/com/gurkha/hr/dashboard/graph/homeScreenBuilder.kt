@@ -21,7 +21,9 @@ fun NavGraphBuilder.homeScreenBuilder(
     onViewAllClick: (String?, String) -> Unit,
     onGoToFixProfile: () -> Unit,
     onToggleFloatingActionButton: (Boolean) -> Unit,
-    onGoToAttendanceRequestScreen: (String?, String?) -> Unit
+    onGoToAttendanceRequestScreen: (String?, String?) -> Unit,
+    onBirthdayUser:(json: String)-> Unit
+
 ) {
 
     composable<DashboardRoute.HomeRoute> {
@@ -34,7 +36,8 @@ fun NavGraphBuilder.homeScreenBuilder(
             },
             onGoToFixProfile = onGoToFixProfile,
             onToggleFloatingActionButton = onToggleFloatingActionButton,
-            onGoToAttendanceRequestScreen = onGoToAttendanceRequestScreen
+            onGoToAttendanceRequestScreen = onGoToAttendanceRequestScreen,
+            onBirthdayUser = onBirthdayUser
         )
     }
 

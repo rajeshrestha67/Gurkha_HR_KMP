@@ -240,6 +240,9 @@ class AttendanceViewModel(
                 else currentState.currentTapItem,
                 isRequestingAttendance = false,
             )
+
+
+
         }
     }
 

@@ -1,6 +1,7 @@
 package com.gurkha.hr.model.home
 
 import coil3.Uri
+import com.gurkha.hr.domain.upComingBirthday.model.UpComingBirthdayData
 
 sealed interface HomeScreenActions {
     data object OnCheckInClicked : HomeScreenActions
@@ -16,4 +17,5 @@ sealed interface HomeScreenActions {
     data class SwipeToDismiss(val uri: String) : HomeScreenActions
     data object OnRefresh : HomeScreenActions
 
+    data class OnSpecificUserClicked(val user: UpComingBirthdayData) : HomeScreenActions
 }

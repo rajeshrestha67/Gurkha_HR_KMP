@@ -212,15 +212,6 @@ class AttendanceRequestViewModel(
                 )
                 _dataChannel.send(data)
                 requestAttendance()
-                _state.update {
-                    it.copy(
-                        date = null,
-                        clockInTime = null,
-                        clockOutTime = null,
-                        assignee = null,
-                        reason = null
-                    )
-                }
             }
         }
     }

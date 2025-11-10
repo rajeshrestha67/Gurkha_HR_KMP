@@ -7,6 +7,7 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -109,13 +110,20 @@ fun HomeScreen(
     onViewAllClick: (String?, String) -> Unit,
     onGoToFixProfile: () -> Unit,
     onToggleFloatingActionButton: (Boolean) -> Unit,
-    onGoToAttendanceRequestScreen: (String?, String?) -> Unit
+    onGoToAttendanceRequestScreen: (String?, String?) -> Unit,
+    onBirthdayUser:(json: String)-> Unit
 ) {
     val viewModel: HomeScreenViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
     val anniversaryTitle = stringResource(SharedRes.Strings.work_anniversaries)
     val birthdayTitle = stringResource(SharedRes.Strings.upcoming_birthday)
     val eventTitle = stringResource(SharedRes.Strings.upcoming_events)
+
+    LaunchedEffect(Unit){
+        viewModel.navigateToChatChannel.collect {
+            onBirthdayUser(it)
+        }
+    }
 
 
     Scaffold(
@@ -301,8 +309,13 @@ fun HomeScreenContent(
         derivedStateOf { (!isScrolling || isAtTop || isAtEnd) && state.showSwipeView }
     }
 
-    LaunchedEffect(shouldShowSwipeToDismiss) {
-        onToggleFloatingActionButton(shouldShowSwipeToDismiss)
+//    LaunchedEffect(shouldShowSwipeToDismiss) {
+//        onToggleFloatingActionButton(shouldShowSwipeToDismiss)
+//    }
+
+    //cause the shouldShowSwipeToDismiss is not true when there is holiday
+    LaunchedEffect(state.isFetchingSupportList) {
+        onToggleFloatingActionButton(!state.isFetchingSupportList)
     }
 
     Box(
@@ -348,7 +361,8 @@ fun HomeScreenContent(
             birthDaySection(
                 state = state,
                 onViewAllClick = onViewAllClick,
-                birthdayTitle = birthdayTitle
+                birthdayTitle = birthdayTitle,
+                onAction = onAction
             )
 
             // anniversary Section
@@ -442,7 +456,9 @@ fun LazyListScope.anniversarySection(
                             UpComingCard(
                                 fullName = item.fullName,
                                 imageUrl = item.imageUrl,
-                                designationName = item.designationName
+                                designationName = item.designationName,
+                                onChatClicked = {},
+                                backgroundColor = item.backgroundColor
                             )
                         }
                     }
@@ -457,7 +473,8 @@ fun LazyListScope.anniversarySection(
 fun LazyListScope.birthDaySection(
     state: HomeScreenState,
     onViewAllClick: (String?, String) -> Unit,
-    birthdayTitle: String
+    birthdayTitle: String,
+    onAction: (HomeScreenActions) -> Unit
 ) {
     val dataToSend = Json.encodeToString<List<ViewAllUi>>(state.upComingBirthday.toUi())
     val title = Json.encodeToString<String>(birthdayTitle)
@@ -506,8 +523,12 @@ fun LazyListScope.birthDaySection(
                         items(state.upComingBirthday) { item ->
                             UpComingCard(
                                 fullName = item.fullName,
-                                imageUrl = item.imageUrl,
+                                imageUrl = item.imageUrl ?: "",
                                 designationName = item.designationName,
+                                onChatClicked = {
+                                    onAction(HomeScreenActions.OnSpecificUserClicked(item))
+                                },
+                                backgroundColor = item.backgroundColor
                             )
                         }
                     }
@@ -977,7 +998,9 @@ fun LazyListScope.eventSection(
 fun UpComingCard(
     imageUrl: String,
     fullName: String,
+    backgroundColor: Color,
     designationName: String,
+    onChatClicked:()-> Unit
 ) {
     Column(
         modifier = Modifier.widthIn(min = MaterialTheme.dimens.eventWidth)
@@ -986,6 +1009,9 @@ fun UpComingCard(
                 MaterialTheme.colorScheme.primary.copy(
                     alpha = 0.1f
                 )
+            )
+            .clickable(
+                onClick = onChatClicked
             )
             .padding(
                 vertical = MaterialTheme.dimens.small2,
@@ -1005,7 +1031,7 @@ fun UpComingCard(
                 nameInitials = fullName.extractInitials(),
                 size = MaterialTheme.dimens.medium3,
                 shape = CircleShape,
-                background = MaterialTheme.erpColors.imageBackgroundColor,
+                background = backgroundColor,
                 borderWidth = 0.dp,
                 borderColor = Color.Transparent,
                 ratio = 1f

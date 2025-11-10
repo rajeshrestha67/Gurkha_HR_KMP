@@ -133,7 +133,6 @@ class ChatViewModel(
                 )
                 viewModelScope.launch {
                     _navigateToChatChannel.send(Json.encodeToString(chatUserData))
-
                 }
             }
 
