@@ -10,6 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import com.gurkha.hr.components.AnimatedNavHost
 import com.gurkha.hr.components.AppTheme
 import com.gurkha.hr.components.locale.erpAppLocale
+import com.gurkha.hr.components.statusBar.StatusBarView
 import com.gurkha.hr.dashboard.graph.chatScreenBuilder
 import com.gurkha.hr.dashboard.route.ChatRoute
 import com.gurkha.hr.graph.dashboardScreenBuilder
@@ -35,7 +36,7 @@ fun App(
     AppTheme(
         selectedThemeMode = state.userThemeMode
     ) {
-
+        StatusBarView()
         AppScreen(
             isFirstTime = isFirstTime
         )

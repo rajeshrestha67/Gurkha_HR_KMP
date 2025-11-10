@@ -85,6 +85,7 @@ class NotificationViewModel(
                 updateOffset()
                 _state.update {
                     it.copy(
+                        isRefreshing = false,
                         isNotificationLoading = false,
                         notificationGrouped = grouped,
                         notifications = data,

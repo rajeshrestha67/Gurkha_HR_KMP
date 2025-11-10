@@ -1,6 +1,6 @@
 package com.gurkha.hr.domain.token.usecase
 
-import com.gurkha.hr.components.device_info.getDeviceInfo
+import com.gurkha.hr.components.device_info.getDeviceUniqueIdentifier
 import com.gurkha.hr.datastore.token.repository.TokenRepository
 import com.gurkha.hr.domain.token.mapper.toData
 import com.gurkha.hr.domain.token.model.FcmTokenData
@@ -10,7 +10,6 @@ import com.gurkha.hr.networkhelper.map
 import com.gurkha.model.network.DataError
 import kotlinx.coroutines.flow.firstOrNull
 
-private val uid = getDeviceInfo().uid
 
 class PostFcmTokenUseCase(
     private val fcmTokenRepository: FcmTokenRepository,
@@ -22,7 +21,7 @@ class PostFcmTokenUseCase(
         val fcmToken = tokenRepository.token.firstOrNull()?.fcmToken ?: ""
         return fcmTokenRepository.postFcmToken(
             fcmToken = fcmToken,
-            uid = uid
+            uid = getDeviceUniqueIdentifier()
         ).map {
             it.toData()
         }

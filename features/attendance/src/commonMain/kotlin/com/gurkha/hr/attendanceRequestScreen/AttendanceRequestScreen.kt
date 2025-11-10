@@ -32,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -159,7 +160,6 @@ fun AttendanceRequestScreenContent(
     val isKeyboardOpen by isKeyboardVisible()
     val focusManager = LocalFocusManager.current
 
-
     Scaffold(
         modifier = Modifier.fillMaxSize().imePadding()
             .hideKeyboardOnTap(
@@ -194,9 +194,11 @@ fun AttendanceRequestScreenContent(
             )
         },
     ) { contentPadding ->
-
         Box(
-            modifier = Modifier.fillMaxSize().padding(paddingValues = contentPadding),
+            modifier = Modifier.fillMaxSize().padding(paddingValues = contentPadding).hideKeyboardOnTap(
+                focusManager = focusManager,
+                keyboardController = keyboardController
+            ),
         ) {
             if (state.isRequestingAttendance) {
                 LoadingScreen()
@@ -212,7 +214,8 @@ fun AttendanceRequestScreenContent(
                 message = message,
                 onSendData = {
                     sendData(true)
-                }
+                },
+                keyboardController = keyboardController
             )
         }
 
@@ -229,7 +232,8 @@ fun AttendanceRequestScreenForm(
     showSuccessDialogue: Boolean,
     showFailedDialogue: Boolean,
     message: String,
-    onSendData: () -> Unit
+    onSendData: () -> Unit,
+    keyboardController: SoftwareKeyboardController?
 ) {
 
     Column(
@@ -346,6 +350,7 @@ fun AttendanceRequestScreenForm(
             imeAction = ImeAction.Send,
             keyboardActions = KeyboardActions(
                 onSend = {
+                    keyboardController?.hide()
                     onAction(AttendanceRequestAction.OnSubmit)
                 }
             ),
@@ -367,8 +372,11 @@ fun AttendanceRequestScreenForm(
             ERPButton(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
+                    println("keyboard $keyboardController")
+                    keyboardController?.hide()
                     onAction(AttendanceRequestAction.OnSubmit)
                 },
+                isLoading = state.isRequestingAttendance,
                 text = stringResource(SharedRes.Strings.submit),
             )
             Spacer(modifier = Modifier.width(MaterialTheme.dimens.small3))

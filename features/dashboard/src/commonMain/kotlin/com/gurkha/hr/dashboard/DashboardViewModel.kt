@@ -27,7 +27,6 @@ class DashboardViewModel(
 ) : ViewModel() {
     private val _state = MutableStateFlow(DashboardScreenState())
 
-
     var sessionExpired: StateFlow<Boolean> = authState.sessionExpired
     val state = _state
         .onStart {

@@ -1,5 +1,6 @@
 package com.gurkha.hr.viewAllScreen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -14,6 +16,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -32,6 +35,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gurkha.hr.components.ProfilePicture
 import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.erpColors
+import com.gurkha.hr.domain.upComingEvent.model.EventData
 import com.gurkha.hr.model.viewAll.ViewAllScreenAction
 import com.gurkha.hr.model.viewAll.ViewAllScreenState
 import com.gurkha.hr.res.SharedRes
@@ -111,7 +115,7 @@ fun ViewAllScreenContent(
         state.data?.let {
             items(state.data) { item ->
                 if (state.title == eventTitle){
-                    EventBox(item = item)
+                    EventCard(item = item)
                 }else{
                     ResultBox(item = item)
                 }
@@ -189,48 +193,60 @@ fun ResultBox(
 
 
 @Composable
-fun EventBox(
+fun EventCard(
     item: ViewAllUi
 ) {
-    Surface(
-        modifier = Modifier.fillMaxWidth()
-            .clip(shape = MaterialTheme.shapes.small),
-        tonalElevation = 4.dp,
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(shape = MaterialTheme.shapes.small)
+            .background(
+                MaterialTheme.colorScheme.primary.copy(
+                    alpha = 0.1f
+                )
+            )
+            .padding(
+                vertical = MaterialTheme.dimens.small2,
+                horizontal = MaterialTheme.dimens.small3
+            ),
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small1)
 
-        ) {
-        Row(
+    ) {
+        Column(
             modifier = Modifier.fillMaxWidth()
-                .clip(shape = MaterialTheme.shapes.small)
-                .padding(all = MaterialTheme.dimens.small2),
-            verticalAlignment = Alignment.Top,
-            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
         ) {
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2),
-            ) {
-
-                Text(
-                    text = item.title ?: "", style = MaterialTheme.typography.titleMedium.copy(
-                        color = MaterialTheme.erpColors.primaryTextColor
-                    )
+            Text(
+                text = stringResource(SharedRes.Strings.date),
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    color = MaterialTheme.erpColors.darkPrimaryTextColor
                 )
-
-                Text(
-                    text = "From : ${item.fromDate} To : ${item.toDate}",
-                    style = MaterialTheme.typography.titleSmall.copy(
-                        color = MaterialTheme.erpColors.primaryTextColor
-                    )
+            )
+            Text(
+                text = "${item.fromDate} - ${item.toDate}",
+                style = MaterialTheme.typography.bodySmall.copy(
+                    color = MaterialTheme.erpColors.primaryTextColor
                 )
-
-                Text(
-                    "${stringResource(SharedRes.Strings.description)} : ${item.description}",
-                    style = MaterialTheme.typography.titleSmall.copy(
-                        color = MaterialTheme.erpColors.primaryTextColor
-                    )
-                )
-            }
+            )
         }
+
+        HorizontalDivider(
+            modifier = Modifier.padding(vertical = MaterialTheme.dimens.small1)
+                .height(MaterialTheme.dimens.extraSmall)
+        )
+
+        Text(
+            text = item.title ?: "",
+            style = MaterialTheme.typography.bodyMedium.copy(
+                color = MaterialTheme.erpColors.darkPrimaryTextColor
+            )
+        )
+
+        Text(
+            text = item.description ?: "",
+            style = MaterialTheme.typography.bodyMedium.copy(
+                color = MaterialTheme.erpColors.primaryTextColor
+            )
+        )
     }
 }
 

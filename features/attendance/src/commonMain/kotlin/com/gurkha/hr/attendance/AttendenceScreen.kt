@@ -225,8 +225,8 @@ fun AttendanceBox(
                 shape = MaterialTheme.shapes.medium
             )
             .clip(shape = MaterialTheme.shapes.medium)
-            .background(item.backgroundColor)
             .heightIn(min = MaterialTheme.dimens.leaveBoxHeight)
+            .background(color = item.backgroundColor)
             .clickable(onClick = {})
             .padding(MaterialTheme.dimens.small2),
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small1)
@@ -327,7 +327,6 @@ fun LazyItemScope.ResultBox(
                     vertical = MaterialTheme.dimens.small1
                 )
                 .clip(MaterialTheme.shapes.medium)
-                .background(MaterialTheme.erpColors.highLightColor)
                 .padding(MaterialTheme.dimens.small2)
                 .animateItem(
                     tween(300),

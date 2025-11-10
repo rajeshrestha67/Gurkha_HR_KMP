@@ -107,7 +107,7 @@ fun HomeScreen(
     onNotificationClick: () -> Unit,
     onViewAllClick: (String?, String) -> Unit,
     onGoToFixProfile: () -> Unit,
-    onGoToAttendanceRequestScreen:(String?, String?)-> Unit
+    onGoToAttendanceRequestScreen: (String?, String?) -> Unit
 ) {
     val viewModel: HomeScreenViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -204,7 +204,7 @@ fun HomeScreen(
                     anniversaryTitle = anniversaryTitle,
                     onGoToFixProfile = onGoToFixProfile,
                     eventTitle = eventTitle,
-                    onGoToAttendanceRequestScreen=onGoToAttendanceRequestScreen
+                    onGoToAttendanceRequestScreen = onGoToAttendanceRequestScreen
                 )
             }
         )
@@ -222,7 +222,7 @@ fun HomeScreenContent(
     anniversaryTitle: String,
     onGoToFixProfile: () -> Unit,
     eventTitle: String,
-    onGoToAttendanceRequestScreen:(String?, String?)-> Unit
+    onGoToAttendanceRequestScreen: (String?, String?) -> Unit
 ) {
     var showPermissionModal by remember { mutableStateOf(false) }
 
@@ -353,7 +353,7 @@ fun HomeScreenContent(
             // attendance list
             attendanceSection(
                 state = state,
-                onGoToAttendanceRequestScreen=onGoToAttendanceRequestScreen
+                onGoToAttendanceRequestScreen = onGoToAttendanceRequestScreen
             )
 
         }
@@ -388,11 +388,14 @@ fun LazyListScope.anniversarySection(
 ) {
     val data = Json.encodeToString<List<ViewAllUi>>(state.upComingWorkAnniversary.toUi())
     val title = Json.encodeToString<String>(anniversaryTitle)
-    if(state.upComingWorkAnniversary.isNotEmpty()){
+    if (state.upComingWorkAnniversary.isNotEmpty()) {
         item(key = "anniversary title") {
             TitleBar(
                 modifier = Modifier.fillMaxWidth()
-                    .padding(start = MaterialTheme.dimens.small3, end = MaterialTheme.dimens.small1),
+                    .padding(
+                        start = MaterialTheme.dimens.small3,
+                        end = MaterialTheme.dimens.small1
+                    ),
                 onViewAll = { onViewAllClick(data, title) },
                 title = SharedRes.Strings.work_anniversaries,
                 subTitle = SharedRes.Strings.view_all
@@ -451,12 +454,15 @@ fun LazyListScope.birthDaySection(
     val dataToSend = Json.encodeToString<List<ViewAllUi>>(state.upComingBirthday.toUi())
     val title = Json.encodeToString<String>(birthdayTitle)
 
-    if(state.upComingBirthday.isNotEmpty()){
+    if (state.upComingBirthday.isNotEmpty()) {
 
         item(key = "birthday") {
             TitleBar(
                 modifier = Modifier.fillMaxWidth()
-                    .padding(start = MaterialTheme.dimens.small3, end = MaterialTheme.dimens.small1),
+                    .padding(
+                        start = MaterialTheme.dimens.small3,
+                        end = MaterialTheme.dimens.small1
+                    ),
                 onViewAll = { onViewAllClick(dataToSend, title) },
                 title = SharedRes.Strings.upcoming_birthday,
                 subTitle = SharedRes.Strings.view_all
@@ -507,7 +513,7 @@ fun LazyListScope.birthDaySection(
 
 fun LazyListScope.attendanceSection(
     state: HomeScreenState,
-    onGoToAttendanceRequestScreen:(String?, String?)-> Unit
+    onGoToAttendanceRequestScreen: (String?, String?) -> Unit
 ) {
     item(key = "attendance_title") {
         TitleBar(
@@ -543,7 +549,7 @@ fun LazyListScope.attendanceSection(
 @Composable
 private fun AttendanceHistoryItem(
     item: AttendanceHistoryItemUI,
-    onGoToAttendanceRequestScreen:(String?, String?)-> Unit
+    onGoToAttendanceRequestScreen: (String?, String?) -> Unit
 
 ) {
     var showMore by rememberSaveable { mutableStateOf(false) }
@@ -553,8 +559,7 @@ private fun AttendanceHistoryItem(
             .padding(
                 horizontal = MaterialTheme.dimens.small3
             )
-            .clip(MaterialTheme.shapes.small)
-        ,
+            .clip(MaterialTheme.shapes.small),
         tonalElevation = 4.dp
     ) {
         Box(
@@ -598,7 +603,7 @@ private fun AttendanceHistoryItem(
 
                                 //send the status base on the time
                                 val date = Json.encodeToString(dateToSend)
-                                val clockStatus = if(item.clockInTime == "--:--")
+                                val clockStatus = if (item.clockInTime == "--:--")
                                     Json.encodeToString(ClockStatus.CLOCK_IN)
                                 else
                                     Json.encodeToString(ClockStatus.CLOCK_OUT)
@@ -916,7 +921,7 @@ fun AttendanceItemContent(
 fun LazyListScope.eventSection(
     state: HomeScreenState,
     onViewAllClick: (String?, String) -> Unit,
-    eventTitle : String
+    eventTitle: String
 ) {
     val data = Json.encodeToString<List<ViewAllUi>>(state.upComingEvent.toUi())
     val title = Json.encodeToString<String>(eventTitle)
@@ -929,48 +934,33 @@ fun LazyListScope.eventSection(
                         end = MaterialTheme.dimens.small1
                     ),
                 onViewAll = {
-                    onViewAllClick(data,title)
+                    onViewAllClick(data, title)
                 },
                 title = SharedRes.Strings.upcoming_events,
                 subTitle = SharedRes.Strings.view_all
             )
         }
-        item(key = "event list") {
-            when {
-                state.isEventLoading -> {
-                    Row(
-                        modifier = Modifier.fillMaxWidth()
-                            .padding(horizontal = MaterialTheme.dimens.small3),
-                        horizontalArrangement = Arrangement.spacedBy(
-                            MaterialTheme.dimens.small2, alignment = Alignment.Start
-                        )
-                    ) {
-                        repeat(2) {
-                            ShimmerView(
-                                modifier = Modifier.size(MaterialTheme.dimens.bottomBar)
-                                    .clip(MaterialTheme.shapes.small)
-                            )
-                        }
-                    }
 
+        when {
+            state.isEventLoading -> {
+                items(3) {
+                    ShimmerView(
+                        modifier = Modifier.size(MaterialTheme.dimens.bottomBar)
+                            .clip(MaterialTheme.shapes.small)
+                    )
                 }
+            }
 
-                else -> {
-                    LazyColumn(
-                        modifier = Modifier.fillMaxWidth()
-                            .height(MaterialTheme.dimens.chartHeight),
-                        contentPadding = PaddingValues(horizontal = MaterialTheme.dimens.small3),
-                        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
-                    ) {
-                        items(state.upComingEvent.take(n=3)) { item ->
-                            EventCard(
-                                item = item
-                            )
-                        }
-                    }
+            else -> {
+                items(state.upComingEvent.take(n = 3)) { item ->
+                    EventCard(
+                        item = item
+                    )
                 }
             }
         }
+
+
     }
 }
 
@@ -1063,6 +1053,9 @@ fun EventCard(
 ) {
     Column(
         modifier = Modifier
+            .padding(
+                horizontal = MaterialTheme.dimens.small3
+            )
             .fillMaxWidth()
             .clip(shape = MaterialTheme.shapes.small)
             .background(
@@ -1077,34 +1070,41 @@ fun EventCard(
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small1)
 
     ) {
-        Text(
-            text = item.name,
-            style = MaterialTheme.typography.titleMedium.copy(
-                color = MaterialTheme.erpColors.darkPrimaryTextColor
-            )
-        )
-        Text(
-            text = "${item.fromDateBs }  to  ${ item.toDateBs}",
-            style = MaterialTheme.typography.labelMedium.copy(
-                color = MaterialTheme.erpColors.primaryTextColor
-            )
-        )
-
-        HorizontalDivider(
-            modifier = Modifier.padding(vertical = MaterialTheme.dimens.small2)
-                .height(MaterialTheme.dimens.extraSmall)
-        )
-
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
-            text = item.description,
-                style = MaterialTheme.typography.titleMedium.copy(
+                text = stringResource(SharedRes.Strings.date),
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    color = MaterialTheme.erpColors.darkPrimaryTextColor
+                )
+            )
+            Text(
+                text = "${item.fromDateBs} - ${item.toDateBs}",
+                style = MaterialTheme.typography.bodySmall.copy(
                     color = MaterialTheme.erpColors.primaryTextColor
                 )
             )
         }
+
+        HorizontalDivider(
+            modifier = Modifier.padding(vertical = MaterialTheme.dimens.small1)
+                .height(MaterialTheme.dimens.extraSmall)
+        )
+
+        Text(
+            text = item.name,
+            style = MaterialTheme.typography.bodyMedium.copy(
+                color = MaterialTheme.erpColors.darkPrimaryTextColor
+            )
+        )
+
+        Text(
+            text = item.description,
+            style = MaterialTheme.typography.bodyMedium.copy(
+                color = MaterialTheme.erpColors.primaryTextColor
+            )
+        )
     }
 }
 

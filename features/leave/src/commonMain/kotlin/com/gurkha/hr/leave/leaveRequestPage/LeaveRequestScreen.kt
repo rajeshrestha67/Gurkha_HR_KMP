@@ -31,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
@@ -139,7 +140,6 @@ fun LeaveRequestPageContent(
     messageToShow: String,
     onSendData: () -> Unit
 ) {
-
     val keyboardController = LocalSoftwareKeyboardController.current
     val isKeyboardOpen by isKeyboardVisible()
     val focusManager = LocalFocusManager.current
@@ -198,7 +198,8 @@ fun LeaveRequestPageContent(
                     showSuccessDialogue = showSuccessDialogue,
                     showFailedDialogue = showFailedDialogue,
                     messageToShow = messageToShow,
-                    onSendData = onSendData
+                    onSendData = onSendData,
+                    keyboardController = keyboardController
                 )
             }
         }
@@ -217,7 +218,8 @@ fun LeaveRequestScreenForm(
     showSuccessDialogue: Boolean,
     showFailedDialogue: Boolean,
     messageToShow: String,
-    onSendData: () -> Unit
+    onSendData: () -> Unit,
+    keyboardController: SoftwareKeyboardController?
 ) {
 
     Column(
@@ -335,6 +337,7 @@ fun LeaveRequestScreenForm(
             imeAction = ImeAction.Send,
             keyboardActions = KeyboardActions(
                 onSend = {
+                    keyboardController?.hide()
                     onAction(LeaveRequestScreenAction.Submit)
                 }
             ),
@@ -352,8 +355,10 @@ fun LeaveRequestScreenForm(
             ERPButton(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
+                    keyboardController?.hide()
                     onAction(LeaveRequestScreenAction.Submit)
                 },
+                isLoading = state.isRequestingLeave,
                 text = stringResource(SharedRes.Strings.submit),
             )
             Spacer(modifier = Modifier.width(MaterialTheme.dimens.small3))

@@ -39,6 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -199,7 +200,8 @@ fun AddNoteScreen(
             onBackClicked = onBackClicked,
             onSendData = {
                 sendData = true
-            }
+            },
+            keyboardController=keyboardController
         )
     }
 
@@ -215,7 +217,8 @@ fun AddNoteScreenContent(
     messageToShow: String,
     showSuccessDialogue: Boolean,
     onBackClicked: () -> Unit,
-    onSendData: () -> Unit
+    onSendData: () -> Unit,
+    keyboardController: SoftwareKeyboardController?
 ) {
     Column(
         modifier = modifier
@@ -260,8 +263,10 @@ fun AddNoteScreenContent(
                     .fillMaxWidth().padding(top = MaterialTheme.dimens.medium1),
                 text = stringResource(SharedRes.Strings.edit_notes),
                 onClick = {
+                    keyboardController?.hide()
                     onAction(AddNotesAction.UpdateNote)
-                }
+                },
+                isLoading = state.isUpdating
             )
         } else {
             ERPButton(
@@ -269,8 +274,10 @@ fun AddNoteScreenContent(
                     .fillMaxWidth().padding(top = MaterialTheme.dimens.medium1),
                 text = stringResource(SharedRes.Strings.add_notes),
                 onClick = {
+                    keyboardController?.hide()
                     onAction(AddNotesAction.OnSubmit)
-                }
+                },
+                isLoading = state.isAdding
             )
         }
     }
@@ -384,8 +391,11 @@ fun NoteFormField(
     onAction: (AddNotesAction) -> Unit,
     state: AddNotesState,
     onToggle: () -> Unit,
-    isEvent: Boolean
+    isEvent: Boolean,
+
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     Column(
         modifier = Modifier.padding(vertical = MaterialTheme.dimens.small3),
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3)
@@ -406,17 +416,25 @@ fun NoteFormField(
 
         ERPTextField(
             text = state.description,
-            label = stringResource(SharedRes.Strings.reason),
-            hint = stringResource(SharedRes.Strings.enterReason),
+            label = stringResource(SharedRes.Strings.description),
+            hint = stringResource(SharedRes.Strings.enter_description),
             onValueChange = {
                 onAction(AddNotesAction.OnDescriptionChange(it))
             },
-            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Send),
+            imeAction = ImeAction.Send,
             rules = FormValidate.requiredValidationRules,
             error = state.descriptionError,
             onErrorStateChange = {},
             keyboardActions = KeyboardActions(
                 onSend = {
+                    if(state.isEdit){
+                        keyboardController?.hide()
+                        onAction(AddNotesAction.UpdateNote)
+                    }else{
+                        keyboardController?.hide()
+                        onAction(AddNotesAction.OnSubmit)
+
+                    }
                 }
             ),
             height = MaterialTheme.dimens.chartHeight
