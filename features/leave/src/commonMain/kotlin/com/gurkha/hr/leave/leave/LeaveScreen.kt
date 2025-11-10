@@ -142,8 +142,10 @@ fun LeaveScreenContent(
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3),
         horizontalAlignment = Alignment.CenterHorizontally,
         contentPadding = PaddingValues(
-            vertical = MaterialTheme.dimens.small2,
-            horizontal = MaterialTheme.dimens.small3,
+            top = MaterialTheme.dimens.small2,
+            bottom = MaterialTheme.dimens.bottomBar,
+            start = MaterialTheme.dimens.small3,
+            end = MaterialTheme.dimens.small3
         ),
     ) {
 //        show the 4 leave options

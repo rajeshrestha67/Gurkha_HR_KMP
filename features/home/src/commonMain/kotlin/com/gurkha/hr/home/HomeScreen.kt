@@ -111,7 +111,7 @@ fun HomeScreen(
     onGoToFixProfile: () -> Unit,
     onToggleFloatingActionButton: (Boolean) -> Unit,
     onGoToAttendanceRequestScreen: (String?, String?) -> Unit,
-    onBirthdayUser:(json: String)-> Unit
+    onBirthdayUser: (json: String) -> Unit
 ) {
     val viewModel: HomeScreenViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -119,7 +119,7 @@ fun HomeScreen(
     val birthdayTitle = stringResource(SharedRes.Strings.upcoming_birthday)
     val eventTitle = stringResource(SharedRes.Strings.upcoming_events)
 
-    LaunchedEffect(Unit){
+    LaunchedEffect(Unit) {
         viewModel.navigateToChatChannel.collect {
             onBirthdayUser(it)
         }
@@ -1000,7 +1000,7 @@ fun UpComingCard(
     fullName: String,
     backgroundColor: Color,
     designationName: String,
-    onChatClicked:()-> Unit
+    onChatClicked: () -> Unit
 ) {
     Column(
         modifier = Modifier.widthIn(min = MaterialTheme.dimens.eventWidth)
