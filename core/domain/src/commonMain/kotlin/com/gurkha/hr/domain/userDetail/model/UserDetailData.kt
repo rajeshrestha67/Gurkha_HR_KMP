@@ -42,5 +42,5 @@ data class UserDetailData(
     val nationality: String,
     val initials: String,
     val isCompleteProfile: Boolean,
-
+    val roles : List<String>
 )

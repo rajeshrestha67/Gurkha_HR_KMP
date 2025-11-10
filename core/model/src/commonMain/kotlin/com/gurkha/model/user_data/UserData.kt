@@ -45,4 +45,5 @@ data class UserData(
     val profileId: Int = 0,
     val slcDocument: String? = null,
     val userProfileUrl: String? = null,
+    val roles : List<String>? = null
 )
