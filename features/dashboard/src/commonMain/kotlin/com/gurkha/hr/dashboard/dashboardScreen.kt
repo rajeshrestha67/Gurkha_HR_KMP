@@ -115,6 +115,7 @@ fun DashboardScreenContent(
 
 
     var showFloatingButton by remember { mutableStateOf(false) }
+    var showFloatingOnNavigationChange by remember { mutableStateOf(false) }
 
     var needExtraPaddingForFloatingButton by remember { mutableStateOf(true) }
     var bottomBarState by remember {
@@ -129,13 +130,13 @@ fun DashboardScreenContent(
                 DashboardRoute.AttendanceRoute::class.qualifiedName,
                 DashboardRoute.LeaveRoute::class.qualifiedName,
                 DashboardRoute.NoteRoute::class.qualifiedName -> {
-                    showFloatingButton = true
-                    true // show bottom bar
+                    showFloatingOnNavigationChange = true
+                    true
                 }
 
                 else -> {
-                    showFloatingButton = false
-                    false // hide bottom bar
+                    showFloatingOnNavigationChange = false
+                    false
                 }
             }
         }
@@ -343,7 +344,7 @@ fun DashboardScreenContent(
             }
 
             AnimatedVisibility(
-                visible = showFloatingButton,
+                visible = showFloatingButton && showFloatingOnNavigationChange,
                 enter = slideInVertically(initialOffsetY = { it }) + fadeIn(),
                 exit = slideOutVertically(targetOffsetY = { it }) + fadeOut(),
                 modifier = Modifier
@@ -365,8 +366,6 @@ fun DashboardScreenContent(
                     )
                 }
             }
-
-
         }
     }
 }
