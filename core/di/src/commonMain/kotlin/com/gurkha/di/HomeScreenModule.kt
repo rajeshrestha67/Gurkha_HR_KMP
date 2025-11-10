@@ -2,6 +2,7 @@ package com.gurkha.di
 
 import com.gurkha.hr.data.attendance.KtorAttendanceRemoteRepository
 import com.gurkha.hr.data.notification.KtorNotificationRemoteRepository
+import com.gurkha.hr.data.support.KtorSupportListRepository
 import com.gurkha.hr.data.upComingBirthday.KtorUpComingBirthdayRemoteRepository
 import com.gurkha.hr.data.upComingEvent.KtorEventRemoteRepository
 import com.gurkha.hr.data.upComingWorkAnniversary.KtorUpComingWorkAnniversaryRemoteRepository
@@ -19,6 +20,8 @@ import com.gurkha.hr.domain.notification.notificationCount.useCase.NotificationC
 import com.gurkha.hr.domain.notification.notificationData.repository.NotificationRemoteRepository
 import com.gurkha.hr.domain.notification.notificationData.useCase.NotificationUseCase
 import com.gurkha.hr.domain.notification.unSeenNotificationCount.useCase.UnseenNotificationUseCase
+import com.gurkha.hr.domain.support.repository.SupportListRemoteRepository
+import com.gurkha.hr.domain.support.useCase.SupportListFetchUseCase
 import com.gurkha.hr.domain.upComingBirthday.repository.UpComingBirthdayRemoteRepository
 import com.gurkha.hr.domain.upComingBirthday.usecase.UpComingBirthdayUseCase
 import com.gurkha.hr.domain.upComingEvent.repository.EventRemoteRepository
@@ -40,6 +43,9 @@ import org.koin.core.annotation.Module
 class HomeScreenModule {
     @Factory(binds = [AttendanceRemoteRepository::class])
     fun attendanceRepository(httpClient: HttpClient) = KtorAttendanceRemoteRepository(httpClient)
+
+    @Factory(binds = [SupportListRemoteRepository::class])
+    fun supportListRemoteRepository(httpClient: HttpClient)= KtorSupportListRepository(httpClient = httpClient)
 
     @Factory(binds = [EventRemoteRepository::class])
     fun eventRemoteRepository(httpClient: HttpClient) = KtorEventRemoteRepository(httpClient)
@@ -70,6 +76,14 @@ class HomeScreenModule {
     ): NotificationUseCase = NotificationUseCase(
         notificationRemoteRepository = notificationRemoteRepository,
     )
+
+    @Factory
+    fun supportListFetchUseCase(
+        supportListRemoteRepository: SupportListRemoteRepository
+    ): SupportListFetchUseCase = SupportListFetchUseCase(
+        supportListRemoteRepository = supportListRemoteRepository
+    )
+
 
 
     @Factory
@@ -159,7 +173,8 @@ class HomeScreenModule {
         unseenNotificationUseCase: UnseenNotificationUseCase,
         uploadImageUseCase: UploadImageUseCase,
         doAttendanceUseCase: DoAttendanceUseCase,
-        attendanceCountReportUseCase: AttendanceCountReportUseCase
+        attendanceCountReportUseCase: AttendanceCountReportUseCase,
+        supportListFetchUseCase: SupportListFetchUseCase
     ): HomeScreenViewModel = HomeScreenViewModel(
         attendanceUseCase = attendanceUseCase,
         userDetailUseCase = userDetailUseCase,
@@ -170,7 +185,8 @@ class HomeScreenModule {
         unseenNotificationUseCase = unseenNotificationUseCase,
         uploadImageUseCase = uploadImageUseCase,
         doAttendanceUseCase = doAttendanceUseCase,
-        attendanceCountReportUseCase = attendanceCountReportUseCase
+        attendanceCountReportUseCase = attendanceCountReportUseCase,
+        supportListFetchUseCase = supportListFetchUseCase
     )
 
     @KoinViewModel

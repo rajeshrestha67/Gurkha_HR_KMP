@@ -309,8 +309,13 @@ fun HomeScreenContent(
         derivedStateOf { (!isScrolling || isAtTop || isAtEnd) && state.showSwipeView }
     }
 
-    LaunchedEffect(shouldShowSwipeToDismiss) {
-        onToggleFloatingActionButton(shouldShowSwipeToDismiss)
+//    LaunchedEffect(shouldShowSwipeToDismiss) {
+//        onToggleFloatingActionButton(shouldShowSwipeToDismiss)
+//    }
+
+    //cause the shouldShowSwipeToDismiss is not true when there is holiday
+    LaunchedEffect(state.isFetchingSupportList) {
+        onToggleFloatingActionButton(!state.isFetchingSupportList)
     }
 
     Box(

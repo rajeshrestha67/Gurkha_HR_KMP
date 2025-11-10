@@ -54,7 +54,9 @@ data class HomeScreenState(
 
     val isRefreshing : Boolean = false,
 
-    val isAttendanceCountLoading : Boolean = false
+    val isAttendanceCountLoading : Boolean = false,
+
+    val isFetchingSupportList: Boolean = false
 )
 
 data class RequestItem(

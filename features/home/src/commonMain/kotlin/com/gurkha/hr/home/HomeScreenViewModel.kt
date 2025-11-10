@@ -17,6 +17,7 @@ import com.gurkha.hr.domain.attendance.attendanceReport.model.AttendanceData
 import com.gurkha.hr.domain.attendance.attendanceReport.usecase.AttendanceUseCase
 import com.gurkha.hr.domain.attendance.doAttendance.useCase.DoAttendanceUseCase
 import com.gurkha.hr.domain.notification.unSeenNotificationCount.useCase.UnseenNotificationUseCase
+import com.gurkha.hr.domain.support.useCase.SupportListFetchUseCase
 import com.gurkha.hr.domain.upComingBirthday.usecase.UpComingBirthdayUseCase
 import com.gurkha.hr.domain.upComingEvent.useCase.EventUseCase
 import com.gurkha.hr.domain.upComingWorkAnniversaries.useCase.UpComingWorkAnniversaryUseCase
@@ -59,7 +60,8 @@ class HomeScreenViewModel(
     private val unseenNotificationUseCase: UnseenNotificationUseCase,
     private val uploadImageUseCase: UploadImageUseCase,
     private val doAttendanceUseCase: DoAttendanceUseCase,
-    private val attendanceCountReportUseCase: AttendanceCountReportUseCase
+    private val attendanceCountReportUseCase: AttendanceCountReportUseCase,
+    private val supportListFetchUseCase : SupportListFetchUseCase
 ) : ViewModel() {
     private val notification = ProgressNotification()
 
@@ -81,6 +83,7 @@ class HomeScreenViewModel(
             fetchUpComingEvents()
             getUnseenNotificationCount()
             getAttendanceTotalCountReport()
+            fetchSupportList()
         }
         .stateIn(
             scope = viewModelScope,
@@ -580,6 +583,29 @@ class HomeScreenViewModel(
                 tag = TAG,
                 "Attendance Count Report Fetch failed: ${error.toErrorMessage()}"
             )
+        }
+    }
+
+    private fun fetchSupportList()=viewModelScope.launch {
+        _state.update {
+            it.copy(
+                isFetchingSupportList = true
+            )
+        }
+        supportListFetchUseCase().onSuccess {
+            _state.update {
+                it.copy(
+                    isFetchingSupportList = false
+                )
+            }
+            AppLogger.d(tag = TAG, "Support List Fetch success")
+        }.onError { error ->
+            _state.update {
+                it.copy(
+                    isFetchingSupportList = false
+                )
+            }
+            AppLogger.e(tag = TAG, "Support List Fetch error",error)
         }
     }
 }
