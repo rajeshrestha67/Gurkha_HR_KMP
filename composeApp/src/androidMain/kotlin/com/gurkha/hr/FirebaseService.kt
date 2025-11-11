@@ -47,8 +47,8 @@ class FirebaseService : FirebaseMessagingService() {
             message = "Push notification received, title: ${remoteMessage.notification?.title}, body: ${remoteMessage.notification?.body}, data ${remoteMessage.data}"
         )
 
-        val action: String? = remoteMessage.data["action"] ?: "attendanceRejected"
-        val type: String? = remoteMessage.data["type"] ?: "attendance"
+        val action: String? = remoteMessage.data["action"]
+        val type: String? = remoteMessage.data["type"]
         val channelID = when (type) {
             "leave" -> LEAVE_CHANNEL_ID
             else -> ATTENDANCE_CHANNEL_ID
