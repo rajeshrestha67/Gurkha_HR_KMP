@@ -22,7 +22,7 @@ fun NavGraphBuilder.dashboardScreenBuilder(
             isApproved = isApproved,
             onLogout = {
                 navController.navigate(AppRoute.LoginRoute) {
-                    popUpTo(AppRoute.DashboardRoute) { inclusive = true }
+                    popUpTo(AppRoute.DashboardRoute()) { inclusive = true }
                 }
             },
             onChatClick = onChatClick,
