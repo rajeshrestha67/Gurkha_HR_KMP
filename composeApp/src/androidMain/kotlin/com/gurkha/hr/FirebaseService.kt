@@ -30,12 +30,9 @@ import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.inject
 import java.net.HttpURLConnection
 import java.net.URL
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
-const val CHAT_CHANNEL_ID = "chat_channel"
-const val CHAT_CHANNEL_NAME = "Chat Messages"
-const val ACTION_REPLY = "chat_reply"
-const val ACTION_MARK_READ = "chat_mark_read"
-const val REMOTE_INPUT_KEY = "chat_message_input"
 
 class FirebaseService : FirebaseMessagingService() {
     val repository: TokenRepository by inject()
@@ -45,24 +42,55 @@ class FirebaseService : FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
 
-        AppLogger.i(TAG, "Push notification received")
-        remoteMessage.notification?.let { notification ->
-            CoroutineScope(Dispatchers.IO).launch {
-                showNotification(
-                    context = this@FirebaseService,
-                    title = notification.title ?: "",
-                    body = notification.body ?: "",
-                    notifyId = 1,
-                    imageUrl = notification.imageUrl?.toString(),
-                    pendingIntent = PendingIntent.getActivity(
-                        this@FirebaseService,
-                        1,
-                        Intent(),
-                        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-                    )
-                )
-            }
+        AppLogger.i(
+            tag = TAG,
+            message = "Push notification received, title: ${remoteMessage.notification?.title}, body: ${remoteMessage.notification?.body}, data ${remoteMessage.data}"
+        )
+
+        val action: String? = remoteMessage.data["action"] ?: "attendanceRejected"
+        val type: String? = remoteMessage.data["type"] ?: "attendance"
+        val channelID = when (type) {
+            "leave" -> LEAVE_CHANNEL_ID
+            else -> ATTENDANCE_CHANNEL_ID
         }
+        val channelName = when (type) {
+            "leave" -> LEAVE_CHANNEL_NAME
+            else -> ATTENDANCE_CHANNEL_NAME
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                channelID,
+                channelName,
+                NotificationManager.IMPORTANCE_HIGH
+            )
+            val nm = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            nm.createNotificationChannel(channel)
+        }
+        createNotification(
+            channelID = channelID,
+            title = remoteMessage.notification?.title,
+            message = remoteMessage.notification?.body,
+            action = action,
+            type = type
+        )
+//        remoteMessage.notification?.let { notification ->
+//            CoroutineScope(Dispatchers.IO).launch {
+//                showNotification(
+//                    context = this@FirebaseService,
+//                    title = notification.title ?: "",
+//                    body = notification.body ?: "",
+//                    notifyId = 1,
+//                    imageUrl = notification.imageUrl?.toString(),
+//                    pendingIntent = PendingIntent.getActivity(
+//                        this@FirebaseService,
+//                        1,
+//                        Intent(),
+//                        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+//                    )
+//                )
+//            }
+//        }
 //        remoteMessage.notification?.let { notification ->
 //            messages.add(
 //                generateItem(
@@ -80,6 +108,54 @@ class FirebaseService : FirebaseMessagingService() {
 //                isMe = (notification.title ?: "").contains("123")
 //            )
 //        }
+    }
+
+
+    @OptIn(ExperimentalTime::class)
+    fun createNotification(
+        channelID: String,
+        title: String?,
+        message: String?,
+        action: String?,
+        type: String?
+    ) {
+        val intent = Intent(this, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            putExtra(ACTION, action)
+            putExtra(TYPE, type)
+        }
+
+        val pendingIntent = PendingIntent.getActivity(
+            this,
+            0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val notification = NotificationCompat.Builder(this, channelID)
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setContentTitle(title)
+            .setContentText(message)
+            .setAutoCancel(true)
+            .setContentIntent(pendingIntent)
+            .build()
+
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return
+        }
+        NotificationManagerCompat.from(this)
+            .notify(Clock.System.now().nanosecondsOfSecond, notification)
     }
 
     fun generateItem(
@@ -302,6 +378,20 @@ class FirebaseService : FirebaseMessagingService() {
         private const val CHANNEL_ID = "Normal Biometric"
 
         private const val TAG = "FirebaseService"
+        private const val LEAVE_CHANNEL_ID = "leave_channel"
+        private const val ATTENDANCE_CHANNEL_ID = "attendance_channel"
+        const val LEAVE_CHANNEL_NAME = "Leave Notifications"
+        const val ATTENDANCE_CHANNEL_NAME = "Attendance Notifications"
+
+        const val CHAT_CHANNEL_ID = "chat_channel"
+        const val CHAT_CHANNEL_NAME = "Chat Messages"
+        const val ACTION_REPLY = "chat_reply"
+        const val ACTION_MARK_READ = "chat_mark_read"
+        const val REMOTE_INPUT_KEY = "chat_message_input"
+
+        const val TYPE = "type"
+        const val ACTION = "action"
+
     }
 
 

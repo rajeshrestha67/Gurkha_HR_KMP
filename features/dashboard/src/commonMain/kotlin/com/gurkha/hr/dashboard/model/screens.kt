@@ -26,12 +26,12 @@ object DashboardScreens {
         ),
         DashboardScreen(
             SharedRes.Strings.my_attendance,
-            DashboardRoute.AttendanceRoute,
+            DashboardRoute.AttendanceRoute(),
             Icons.Filled.CalendarViewMonth
         ),
         DashboardScreen(
             SharedRes.Strings.leave,
-            DashboardRoute.LeaveRoute,
+            DashboardRoute.LeaveRoute(),
             Icons.Filled.EditCalendar
         ),
         DashboardScreen(

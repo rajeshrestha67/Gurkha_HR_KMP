@@ -6,6 +6,9 @@ import android.content.Intent
 import android.util.Log
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.RemoteInput
+import com.gurkha.hr.FirebaseService.Companion.ACTION_MARK_READ
+import com.gurkha.hr.FirebaseService.Companion.ACTION_REPLY
+import com.gurkha.hr.FirebaseService.Companion.REMOTE_INPUT_KEY
 
 class NotificationReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {

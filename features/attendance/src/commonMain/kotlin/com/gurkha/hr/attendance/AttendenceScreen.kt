@@ -48,6 +48,7 @@ import com.gurkha.hr.domain.attendance.attendanceStatus.model.AttendanceStatusDa
 import com.gurkha.hr.model.attendanceScreen.AttendanceAction
 import com.gurkha.hr.model.attendanceScreen.AttendanceItem
 import com.gurkha.hr.model.attendanceScreen.AttendanceScreenState
+import com.gurkha.hr.model.attendanceScreen.TabItemsEnums
 import com.gurkha.hr.model.attendanceScreen.backgroundColor
 import com.gurkha.hr.model.attendanceScreen.outlineColor
 import com.gurkha.hr.res.SharedRes
@@ -57,6 +58,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AttendanceScreen(
+    isApproved: Boolean?,
     navController: NavHostController,
     onGoToAttendanceRequestScreen: () -> Unit
 ) {
@@ -74,7 +76,15 @@ fun AttendanceScreen(
             viewModel.onAction(AttendanceAction.OnUpdateAttendanceJsonData(json))
         }
     }
-
+    LaunchedEffect(isApproved) {
+        isApproved?.let {
+            viewModel.onAction(
+                AttendanceAction.OnStatusChange(
+                    if (it) TabItemsEnums.APPROVED else TabItemsEnums.REJECTED
+                )
+            )
+        }
+    }
     AttendanceScreenMain(
         onGoToAttendanceRequestScreen = onGoToAttendanceRequestScreen,
         state = state,
@@ -139,6 +149,8 @@ fun AttendanceContent(
     state: AttendanceScreenState,
     onAction: (AttendanceAction) -> Unit
 ) {
+
+
     LazyColumn(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small3),

@@ -13,7 +13,6 @@ import com.gurkha.hr.components.locale.erpAppLocale
 import com.gurkha.hr.components.statusBar.StatusBarView
 import com.gurkha.hr.dashboard.graph.chatScreenBuilder
 import com.gurkha.hr.dashboard.route.ChatRoute
-import com.gurkha.hr.domain.chat.ChatTypeEnum
 import com.gurkha.hr.graph.dashboardScreenBuilder
 import com.gurkha.hr.graph.loginScreenBuilder
 import com.gurkha.hr.graph.onBoardingBuilder
@@ -26,7 +25,9 @@ import kotlin.time.ExperimentalTime
 @Composable
 @Preview
 fun App(
-    isFirstTime: Boolean
+    isFirstTime: Boolean,
+    navigateToLeave: Boolean?,
+    isApproved: Boolean?
 ) {
 
     val appViewModel: AppViewModel = koinViewModel<AppViewModel>()
@@ -38,8 +39,11 @@ fun App(
         selectedThemeMode = state.userThemeMode
     ) {
         StatusBarView()
+
         AppScreen(
-            isFirstTime = isFirstTime
+            isFirstTime = isFirstTime,
+            navigateToLeave = navigateToLeave,
+            isApproved = isApproved
         )
 
     }
@@ -47,15 +51,26 @@ fun App(
 
 @OptIn(ExperimentalTime::class)
 @Composable
-fun AppScreen(isFirstTime: Boolean) {
+fun AppScreen(
+    isFirstTime: Boolean,
+    navigateToLeave: Boolean?,
+    isApproved: Boolean?
+) {
 
     val navController = rememberNavController()
+
+
+    val startDestination = when {
+        isFirstTime -> AppRoute.OnBoardingRoute
+        navigateToLeave != null -> AppRoute.DashboardRoute(navigateToLeave, isApproved)
+        else -> AppRoute.LoginRoute
+    }
 
     key(erpAppLocale) {
         AnimatedNavHost(
             modifier = Modifier.fillMaxSize(),
             navController = navController,
-            startDestination = if (isFirstTime) AppRoute.OnBoardingRoute else AppRoute.LoginRoute
+            startDestination = startDestination
         ) {
             onBoardingBuilder(navController = navController)
             loginScreenBuilder(navController = navController)
@@ -64,7 +79,7 @@ fun AppScreen(isFirstTime: Boolean) {
                 onChatClick = {
                     navController.navigate(ChatRoute.ChatList)
                 },
-                onBirthdayUser = {json ->
+                onBirthdayUser = { json ->
                     navController.navigate(ChatRoute.ChatRoom(json = json))
                 }
             )

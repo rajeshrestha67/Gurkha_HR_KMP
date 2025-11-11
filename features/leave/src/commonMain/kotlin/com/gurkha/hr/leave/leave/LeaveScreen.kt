@@ -51,6 +51,7 @@ import com.gurkha.hr.domain.leave.leaveReport.model.LeaveReportData
 import com.gurkha.hr.leave.model.leave.LeaveItem
 import com.gurkha.hr.leave.model.leave.LeaveScreenAction
 import com.gurkha.hr.leave.model.leave.LeaveScreenState
+import com.gurkha.hr.leave.model.leave.LeaveStatusEnum
 import com.gurkha.hr.leave.model.leave.backgroundColor
 import com.gurkha.hr.leave.model.leave.outlineColor
 import com.gurkha.hr.res.SharedRes
@@ -61,6 +62,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LeaveScreen(
+    isApproved: Boolean?,
     navController: NavHostController,
     onGoToLeaveRequestPage: (String?) -> Unit,
 ) {
@@ -74,6 +76,7 @@ fun LeaveScreen(
         ?.getStateFlow<String?>("data", null)
         ?.collectAsStateWithLifecycle()
 
+
     LaunchedEffect(result?.value) {
         val json = result?.value
         if (!json.isNullOrBlank()) {
@@ -82,6 +85,16 @@ fun LeaveScreen(
             leaveListState.animateScrollToItem(state.currentTapItem.result.lastIndex + 1)
         }
 
+    }
+
+    LaunchedEffect(isApproved) {
+        isApproved?.let {
+            viewModel.onAction(
+                LeaveScreenAction.OnStatusChange(
+                    if (it) LeaveStatusEnum.APPROVED else LeaveStatusEnum.REJECTED
+                )
+            )
+        }
     }
     Scaffold(
         modifier = Modifier.fillMaxSize(),

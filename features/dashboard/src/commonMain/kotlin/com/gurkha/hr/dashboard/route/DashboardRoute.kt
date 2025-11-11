@@ -8,13 +8,13 @@ sealed interface DashboardRoute {
     data object HomeRoute : DashboardRoute
 
     @Serializable
-    data object AttendanceRoute : DashboardRoute
+    data class AttendanceRoute(val isApproved: Boolean? = null) : DashboardRoute
 
     @Serializable
     data object ProfileRoute : DashboardRoute
 
     @Serializable
-    data object LeaveRoute : DashboardRoute
+    data class LeaveRoute(val isApproved: Boolean? = null) : DashboardRoute
 
     @Serializable
     data object NoteRoute : DashboardRoute

@@ -3,6 +3,7 @@ package com.gurkha.hr.dashboard.graph
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import com.gurkha.hr.dashboard.route.DashboardRoute
 import com.gurkha.hr.dashboard.route.LeaveRoute
 import com.gurkha.hr.leave.leave.LeaveScreen
@@ -15,7 +16,9 @@ fun NavGraphBuilder.leaveScreenBuilder(
 ) {
 
     composable<DashboardRoute.LeaveRoute> {
+        val isApproved = it.toRoute<DashboardRoute.LeaveRoute>().isApproved
         LeaveScreen(
+            isApproved = isApproved,
             navController = navController,
             onGoToLeaveRequestPage = onGoToLeaveRequestPage
         )

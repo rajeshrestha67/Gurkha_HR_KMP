@@ -67,6 +67,8 @@ private const val TAG = "DashboardScreen"
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun DashboardScreen(
+    navigateToLeave: Boolean?,
+    isApproved: Boolean?,
     onLogout: () -> Unit,
     onChatClick: () -> Unit,
     onBirthdayUser: (json: String) -> Unit
@@ -98,7 +100,9 @@ fun DashboardScreen(
         onLogout = onLogout,
         onAction = viewModel::action,
         onChatClick = onChatClick,
-        onBirthdayUser = onBirthdayUser
+        onBirthdayUser = onBirthdayUser,
+        navigateToLeave = navigateToLeave,
+        isApproved = isApproved
     )
 
 }
@@ -106,6 +110,8 @@ fun DashboardScreen(
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun DashboardScreenContent(
+    navigateToLeave: Boolean?,
+    isApproved: Boolean?,
     state: DashboardScreenState,
     onChatClick: () -> Unit,
     onLogout: () -> Unit,
@@ -124,7 +130,8 @@ fun DashboardScreenContent(
     val dashboardNavController = rememberNavController()
     LaunchedEffect(dashboardNavController) {
         dashboardNavController.addOnDestinationChangedListener { _, destination, _ ->
-            bottomBarState = when (destination.route) {
+
+            bottomBarState = when (destination.route?.substringBefore('?')) {
                 DashboardRoute.HomeRoute::class.qualifiedName,
                 DashboardRoute.ProfileRoute::class.qualifiedName,
                 DashboardRoute.AttendanceRoute::class.qualifiedName,
@@ -177,7 +184,7 @@ fun DashboardScreenContent(
     }
     LaunchedEffect(currentRoute) {
         if (currentRoute != null) {
-            val destination = when (currentRoute) {
+            val destination = when (currentRoute.substringBefore('?')) {
                 DashboardRoute.HomeRoute::class.qualifiedName -> {
                     needExtraPaddingForFloatingButton = true
                     DashboardRoute.HomeRoute
@@ -190,12 +197,12 @@ fun DashboardScreenContent(
 
                 DashboardRoute.AttendanceRoute::class.qualifiedName -> {
                     needExtraPaddingForFloatingButton = true
-                    DashboardRoute.AttendanceRoute
+                    DashboardRoute.AttendanceRoute()
                 }
 
                 DashboardRoute.LeaveRoute::class.qualifiedName -> {
                     needExtraPaddingForFloatingButton = true
-                    DashboardRoute.LeaveRoute
+                    DashboardRoute.LeaveRoute()
                 }
 
                 DashboardRoute.NoteRoute::class.qualifiedName -> {
@@ -262,7 +269,15 @@ fun DashboardScreenContent(
         }
     ) { paddingValues ->
 
-
+        LaunchedEffect(navigateToLeave) {
+            navigateToLeave?.let {
+                dashboardNavController.navigate(
+                    route = if (it) DashboardRoute.LeaveRoute(isApproved) else DashboardRoute.AttendanceRoute(
+                        isApproved
+                    )
+                )
+            }
+        }
         Box(
             modifier = Modifier
                 .padding(paddingValues)

@@ -14,7 +14,9 @@ fun NavGraphBuilder.attendanceScreenBuilder(
     onGoToAttendanceRequestScreen: () -> Unit
 ) {
     composable<DashboardRoute.AttendanceRoute> {
+        val isApproved = it.toRoute<DashboardRoute.AttendanceRoute>().isApproved
         AttendanceScreen(
+            isApproved = isApproved,
             navController = navController,
             onGoToAttendanceRequestScreen = onGoToAttendanceRequestScreen
         )
