@@ -8,15 +8,18 @@ import com.gurkha.hr.attendance.AttendanceScreen
 import com.gurkha.hr.attendanceRequestScreen.AttendanceRequestScreen
 import com.gurkha.hr.dashboard.route.AttendanceRoute
 import com.gurkha.hr.dashboard.route.DashboardRoute
+import com.gurkha.hr.missedAttendanceScreen.MissedAttendanceScreen
 
 fun NavGraphBuilder.attendanceScreenBuilder(
     navController: NavHostController,
-    onGoToAttendanceRequestScreen: () -> Unit
+    onGoToAttendanceRequestScreen: () -> Unit,
+    onGoToMissedAttendanceScreen: () -> Unit
 ) {
     composable<DashboardRoute.AttendanceRoute> {
         AttendanceScreen(
             navController = navController,
-            onGoToAttendanceRequestScreen = onGoToAttendanceRequestScreen
+            onGoToAttendanceRequestScreen = onGoToAttendanceRequestScreen,
+            onGoToMissedAttendanceScreen = onGoToMissedAttendanceScreen
         )
     }
 
@@ -31,5 +34,9 @@ fun NavGraphBuilder.attendanceScreenBuilder(
             date = date,
             clockStatus = clockStatus
         )
+    }
+
+    composable<AttendanceRoute.MissedAttendanceScreen>{
+        MissedAttendanceScreen()
     }
 }

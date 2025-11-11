@@ -14,16 +14,18 @@ import com.gurkha.hr.chat_room.ChatRoomScreen
 import com.gurkha.hr.components.sharedViewModel.koinNavGraphViewModel
 import com.gurkha.hr.dashboard.route.ChatGraphRoute
 import com.gurkha.hr.dashboard.route.ChatRoute
+import com.gurkha.model.chat.ChatTypeEnum
 
 fun NavGraphBuilder.chatScreenBuilder(
     navController: NavHostController
 ) {
     navigation<ChatGraphRoute>(
-        startDestination = ChatRoute.ChatList
+        startDestination = ChatRoute.ChatList(chatType = ChatTypeEnum.EMPLOYEE)
     ) {
         composable<ChatRoute.ChatList> {
             val viewModel = navController.koinNavGraphViewModel<ChatViewModel, ChatGraphRoute>()
             val state by viewModel.state.collectAsStateWithLifecycle()
+            val chatType: ChatTypeEnum = it.toRoute<ChatRoute.ChatList>().chatType
 
             LaunchedEffect(Unit) {
                 viewModel.navigateToChatChannel.collect { json ->
@@ -36,7 +38,8 @@ fun NavGraphBuilder.chatScreenBuilder(
                 onAction = viewModel::onAction,
                 onBackPressed = {
                     navController.popBackStack()
-                }
+                },
+                chatType = chatType
             )
         }
 

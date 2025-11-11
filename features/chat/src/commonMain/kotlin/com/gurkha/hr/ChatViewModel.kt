@@ -13,6 +13,8 @@ import com.gurkha.hr.domain.chat.usecase.ObserveSocketEventsUseCase
 import com.gurkha.hr.domain.chat.usecase.SendMessageUseCase
 import com.gurkha.hr.domain.chat.usecase.SendStopTypingUseCase
 import com.gurkha.hr.domain.chat.usecase.SendTypingUseCase
+import com.gurkha.hr.domain.support.mapper.toChatList
+import com.gurkha.hr.domain.support.useCase.SupportListFetchUseCase
 import com.gurkha.hr.model.ChatMessage
 import com.gurkha.hr.model.ChatScreenAction
 import com.gurkha.hr.model.ChatScreenState
@@ -20,6 +22,7 @@ import com.gurkha.hr.model.toChatMetaData
 import com.gurkha.hr.model.toMessage
 import com.gurkha.hr.networkhelper.onError
 import com.gurkha.hr.networkhelper.onSuccess
+import com.gurkha.model.chat.ChatTypeEnum
 import com.gurkha.model.chat.ChatUserData
 import com.gurkha.model.network.toErrorMessage
 import kotlinx.coroutines.Job
@@ -46,12 +49,13 @@ class ChatViewModel(
     private val sendStopTypingUseCase: SendStopTypingUseCase,
     private val observeSocketEventsUseCase: ObserveSocketEventsUseCase,
     private val disconnectSocketUseCase: DisconnectSocketUseCase,
-    private val userDataRepository: UserDataRepository
+    private val userDataRepository: UserDataRepository,
+    private val supportListFetchUseCase: SupportListFetchUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(ChatScreenState())
     private var typingJob: Job? = null
     val state = _state.onStart {
-        fetchEmployList()
+        fetchList()
         connectSocketUseCase()
         observeMessage()
     }.stateIn(
@@ -88,7 +92,7 @@ class ChatViewModel(
             }
 
             is ChatScreenAction.OnEmployeeRefresh -> {
-                fetchEmployList(isRefreshing = true)
+                fetchList(isRefreshing = true)
             }
 
             is ChatScreenAction.MessageChanged -> {
@@ -145,6 +149,14 @@ class ChatViewModel(
                 }
                 fetchChatMessage(chatUserData = userData)
                 joinChatRoom(chatUserData = userData)
+            }
+
+            is ChatScreenAction.OnChatTypeChange -> {
+                _state.update {
+                    it.copy(
+                        chatType = action.chatType
+                    )
+                }
             }
         }
     }
@@ -222,7 +234,7 @@ class ChatViewModel(
         }
     }
 
-    private fun fetchEmployList(isRefreshing: Boolean = false) = viewModelScope.launch {
+    private fun fetchList(isRefreshing: Boolean = false) = viewModelScope.launch {
         if (isRefreshing) {
             _state.update {
                 it.copy(isEmployListRefreshing = true)
@@ -232,24 +244,47 @@ class ChatViewModel(
                 it.copy(isEmployListLoading = true)
             }
         }
-        chatEmployListUseCase().onSuccess { data ->
-            _state.update {
-                it.copy(
-                    isEmployListLoading = false,
-                    isEmployListRefreshing = false,
-                    chatList = data,
-                    chatListCache = data
-                )
+
+        if (_state.value.chatType == ChatTypeEnum.EMPLOYEE){
+            chatEmployListUseCase().onSuccess { data ->
+                _state.update {
+                    it.copy(
+                        isEmployListLoading = false,
+                        isEmployListRefreshing = false,
+                        chatList = data,
+                        chatListCache = data
+                    )
+                }
+            }.onError { error ->
+                _state.update {
+                    it.copy(
+                        isEmployListLoading = false,
+                        isEmployListRefreshing = false,
+                        error = error.toErrorMessage()
+                    )
+                }
             }
-        }.onError { error ->
-            _state.update {
-                it.copy(
-                    isEmployListLoading = false,
-                    isEmployListRefreshing = false,
-                    error = error.toErrorMessage()
-                )
+        }else{
+            supportListFetchUseCase().onSuccess { data ->
+                _state.update {
+                    it.copy(
+                        isEmployListLoading = false,
+                        isEmployListRefreshing = false,
+                        chatList = data.toChatList(),
+                        chatListCache = data.toChatList()
+                    )
+                }
+            }.onError { error ->
+                _state.update {
+                    it.copy(
+                        isEmployListLoading = false,
+                        isEmployListRefreshing = false,
+                        error = error.toErrorMessage()
+                    )
+                }
             }
         }
+
     }
 
     private fun sendTyping(isTyping: Boolean) = viewModelScope.launch {
@@ -366,6 +401,7 @@ class ChatViewModel(
             }
         }
     }
+
 
     override fun onCleared() {
         super.onCleared()

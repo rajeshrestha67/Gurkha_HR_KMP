@@ -5,10 +5,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.gurkha.hr.dashboard.DashboardScreen
 import com.gurkha.hr.route.AppRoute
+import com.gurkha.model.chat.ChatTypeEnum
 
 fun NavGraphBuilder.dashboardScreenBuilder(
     navController: NavHostController,
-    onChatClick: () -> Unit,
+    onChatClick: (chatType: ChatTypeEnum) -> Unit,
     onBirthdayUser:(json: String)-> Unit
 ) {
     composable<AppRoute.DashboardRoute> {

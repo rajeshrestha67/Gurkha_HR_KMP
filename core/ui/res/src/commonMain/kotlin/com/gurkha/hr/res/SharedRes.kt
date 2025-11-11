@@ -55,6 +55,7 @@ import gurkhahr.core.ui.res.generated.resources.clockIn
 import gurkhahr.core.ui.res.generated.resources.clockOut
 import gurkhahr.core.ui.res.generated.resources.clock_in_time
 import gurkhahr.core.ui.res.generated.resources.clock_out_time
+import gurkhahr.core.ui.res.generated.resources.coming_soon
 import gurkhahr.core.ui.res.generated.resources.company_assets
 import gurkhahr.core.ui.res.generated.resources.confirm
 import gurkhahr.core.ui.res.generated.resources.confirm_password
@@ -589,5 +590,7 @@ object SharedRes {
 
         val absent_days = Res.string.absent_days
         val present_days = Res.string.present
+
+        val coming_soon = Res.string.coming_soon
     }
 }

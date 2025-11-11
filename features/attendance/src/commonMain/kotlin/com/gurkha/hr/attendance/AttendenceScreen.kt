@@ -48,6 +48,7 @@ import com.gurkha.hr.domain.attendance.attendanceStatus.model.AttendanceStatusDa
 import com.gurkha.hr.model.attendanceScreen.AttendanceAction
 import com.gurkha.hr.model.attendanceScreen.AttendanceItem
 import com.gurkha.hr.model.attendanceScreen.AttendanceScreenState
+import com.gurkha.hr.model.attendanceScreen.TabItemsEnums
 import com.gurkha.hr.model.attendanceScreen.backgroundColor
 import com.gurkha.hr.model.attendanceScreen.outlineColor
 import com.gurkha.hr.res.SharedRes
@@ -58,7 +59,8 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun AttendanceScreen(
     navController: NavHostController,
-    onGoToAttendanceRequestScreen: () -> Unit
+    onGoToAttendanceRequestScreen: () -> Unit,
+    onGoToMissedAttendanceScreen:()-> Unit
 ) {
     val viewModel: AttendanceViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -78,7 +80,8 @@ fun AttendanceScreen(
     AttendanceScreenMain(
         onGoToAttendanceRequestScreen = onGoToAttendanceRequestScreen,
         state = state,
-        onAction = viewModel::onAction
+        onAction = viewModel::onAction,
+        onGoToMissedAttendanceScreen = onGoToMissedAttendanceScreen
     )
 
 
@@ -87,6 +90,7 @@ fun AttendanceScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AttendanceScreenMain(
+    onGoToMissedAttendanceScreen: () -> Unit,
     onGoToAttendanceRequestScreen: () -> Unit,
     state: AttendanceScreenState,
     onAction: (AttendanceAction) -> Unit
@@ -123,6 +127,7 @@ fun AttendanceScreenMain(
             },
             content = {
                 AttendanceContent(
+                    onGoToMissedAttendanceScreen = onGoToMissedAttendanceScreen,
                     modifier = Modifier
                         .fillMaxSize(),
                     state = state,
@@ -135,6 +140,7 @@ fun AttendanceScreenMain(
 
 @Composable
 fun AttendanceContent(
+    onGoToMissedAttendanceScreen: () -> Unit,
     modifier: Modifier = Modifier,
     state: AttendanceScreenState,
     onAction: (AttendanceAction) -> Unit
@@ -152,8 +158,10 @@ fun AttendanceContent(
     ) {
 //        show 4 diff options for the attendance
         showAttendanceOptions(
+            onGoToMissedAttendanceScreen = onGoToMissedAttendanceScreen,
             state = state,
-            itemsPerRow = 2
+            itemsPerRow = 2,
+            onAction = onAction
         )
 
 //        show the tab
@@ -175,6 +183,8 @@ fun AttendanceContent(
 
 
 fun LazyListScope.showAttendanceOptions(
+    onGoToMissedAttendanceScreen: () -> Unit,
+    onAction: (AttendanceAction) -> Unit,
     itemsPerRow: Int,
     state: AttendanceScreenState
 ) {
@@ -196,6 +206,8 @@ fun LazyListScope.showAttendanceOptions(
                 } else {
                     rowItems.forEach { attendanceItem ->
                         AttendanceBox(
+                            onGoToMissedAttendanceScreen = onGoToMissedAttendanceScreen,
+                            onAction = onAction,
                             modifier = Modifier.weight(1f).fillMaxSize(),
                             item = attendanceItem
                         )
@@ -213,9 +225,12 @@ fun LazyListScope.showAttendanceOptions(
 
 @Composable
 fun AttendanceBox(
+    onGoToMissedAttendanceScreen: () -> Unit,
+    onAction: (AttendanceAction) -> Unit,
     modifier: Modifier = Modifier,
     item: AttendanceItem
 ) {
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -227,7 +242,13 @@ fun AttendanceBox(
             .clip(shape = MaterialTheme.shapes.medium)
             .heightIn(min = MaterialTheme.dimens.leaveBoxHeight)
             .background(color = item.backgroundColor)
-            .clickable(onClick = {})
+            .clickable(onClick = {
+                item.enum?.let {
+                    onAction(AttendanceAction.OnStatusChange(it))
+                } ?:
+                //navigate to missed attendance screen
+                onGoToMissedAttendanceScreen()
+            })
             .padding(MaterialTheme.dimens.small2),
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small1)
     ) {

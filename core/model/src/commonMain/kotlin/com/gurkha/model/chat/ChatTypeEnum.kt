@@ -1,8 +1,12 @@
-package com.gurkha.hr.domain.chat
+package com.gurkha.model.chat
 
+import kotlinx.serialization.Serializable
+
+
+@Serializable
 enum class ChatTypeEnum(val value: String) {
     EMPLOYEE("EMPLOYEE"),
-    CUSTOMER("CUSTOMER");
+    SUPPORT("SUPPORT");
 
     companion object {
         val list: List<ChatTypeEnum>

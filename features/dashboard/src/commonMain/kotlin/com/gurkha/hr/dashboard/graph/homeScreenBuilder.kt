@@ -12,11 +12,12 @@ import com.gurkha.hr.home.HomeScreen
 import com.gurkha.hr.notification.NotificationScreen
 import com.gurkha.hr.profile.edit_profile.EditProfileScreen
 import com.gurkha.hr.viewAllScreen.ViewAllScreen
+import com.gurkha.model.chat.ChatTypeEnum
 
 @OptIn(ExperimentalMaterial3Api::class)
 fun NavGraphBuilder.homeScreenBuilder(
     navController: NavHostController,
-    onChatClick: () -> Unit,
+    onChatClick: (chatType: ChatTypeEnum) -> Unit,
     topAppBarScrollBehavior: TopAppBarScrollBehavior,
     onViewAllClick: (String?, String) -> Unit,
     onGoToFixProfile: () -> Unit,

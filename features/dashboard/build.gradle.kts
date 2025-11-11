@@ -74,6 +74,7 @@ kotlin {
                 implementation(libs.androidx.lifecycle.viewmodelCompose)
                 implementation(libs.androidx.lifecycle.runtimeCompose)
                 implementation(compose.materialIconsExtended)
+                implementation(libs.jetbrians.material3)
 
 
                 implementation(libs.org.jetbrains.navigation)

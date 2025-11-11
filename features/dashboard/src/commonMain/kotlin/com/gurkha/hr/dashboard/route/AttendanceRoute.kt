@@ -6,4 +6,7 @@ import kotlinx.serialization.Serializable
 sealed interface AttendanceRoute {
     @Serializable
     data class AttendanceRequestScreen(val date: String?, val clockStatus: String?) : AttendanceRoute
+
+    @Serializable
+    data object MissedAttendanceScreen: AttendanceRoute
 }

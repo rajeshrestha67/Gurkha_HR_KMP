@@ -31,18 +31,22 @@ data class LeaveScreenState(
         LeaveItem(
             title = SharedRes.Strings.leave_balance,
             days = "-",
+            enum = null
         ),
         LeaveItem(
             title = SharedRes.Strings.leave_approved,
             days = "-",
+            enum = LeaveStatusEnum.APPROVED
         ),
         LeaveItem(
             title = SharedRes.Strings.leave_pending,
             days = "-",
+            enum = LeaveStatusEnum.PENDING
         ),
         LeaveItem(
             title = SharedRes.Strings.leave_cancelled,
             days = "-",
+            enum = LeaveStatusEnum.REJECTED
         ),
     ),
 )
@@ -55,6 +59,7 @@ data class LeaveTapItem(
 data class LeaveItem(
     val title: StringResource,
     val days: String?,
+    val enum: LeaveStatusEnum?
 )
 
 val LeaveItem.backgroundColor: Color

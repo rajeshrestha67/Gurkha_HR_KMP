@@ -173,7 +173,7 @@ private fun ProfilePictureInitialsText(
             modifier = Modifier.align(Alignment.Center),
             text = nameInitials,
             style = MaterialTheme.typography.titleLarge.copy(
-                color = MaterialTheme.erpColors.primaryTextColor
+                color = MaterialTheme.erpColors.profilePictureInitialColor
             )
         )
     }
