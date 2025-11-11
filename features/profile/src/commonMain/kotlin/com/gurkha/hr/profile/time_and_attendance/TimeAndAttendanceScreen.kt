@@ -250,14 +250,12 @@ fun TimeAndAttendanceDetails(
                                 //date also include day name so only send the date
                                 val dateToSend = item.date.split(" ")[0]
 
-                                println("dateToSend ${item.clockInTime} ${item.clockOutTime}")
 
                                 //send the status base on the time
                                 val date = Json.encodeToString(dateToSend)
                                 val clockStatus = item.clockInTime?.let {
                                     Json.encodeToString(ClockStatus.CLOCK_OUT)
-                                } ?:
-                                    Json.encodeToString(ClockStatus.CLOCK_IN)
+                                } ?: Json.encodeToString(ClockStatus.CLOCK_IN)
 
                                 onGoToAttendanceRequestScreen(date, clockStatus)
 

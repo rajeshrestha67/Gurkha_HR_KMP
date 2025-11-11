@@ -52,7 +52,6 @@ class SettingsViewModel(
                 if (action.enable) {
                     updateEnabledBiometric(true)
                 } else {
-                    println("elseExecuted")
                     bioToken = null
                     updateEnabledBiometric(false)
                 }
@@ -119,7 +118,6 @@ class SettingsViewModel(
                 )
             }
         } else {
-            println("falase $isEnable")
             //if disable then only update the value in the local
             val token = fetchTokenAllValueUseCase().firstOrNull() ?: Token()
             updateBiometricEnableUseCase(

@@ -85,11 +85,7 @@ class SocketManager {
                     false
                 }
             }
-
-
-            println("$TAG starting to listen for user status change")
             socket.on(USER_STATUS_CHANGE) { args ->
-                println("$TAG with ${args.firstOrNull()} starting to listen for user status change")
                 args.firstOrNull()?.let { arg ->
                     if (arg is JsonObject) {
                         val userStatusChangeResponseDto =
@@ -101,8 +97,6 @@ class SocketManager {
                     }
                 }
             }
-
-            println("$TAG starting to listen for chat room user list")
             socket.on(CHAT_ROOM_USER_LIST) { args ->
                 println("$TAG ${args.firstOrNull()}")
             }

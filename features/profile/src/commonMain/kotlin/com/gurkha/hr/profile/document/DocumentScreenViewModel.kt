@@ -52,7 +52,6 @@ class DocumentScreenViewModel(
     fun onAction(action: DocumentScreenAction) {
         when (action) {
             is DocumentScreenAction.OnSelectedDocument -> {
-                println("selected ${action.type}")
                 _state.update {
                     it.copy(
                         selectedDocumentType = action.type
@@ -64,7 +63,7 @@ class DocumentScreenViewModel(
                 _state.update {
                     it.copy(
                         documentList = state.value.documentList.map { item ->
-                            if(item.imageType.key == _state.value.selectedDocumentType) {
+                            if (item.imageType.key == _state.value.selectedDocumentType) {
                                 item.copy(
                                     uploadedImage = action.uri
                                 )
@@ -87,7 +86,7 @@ class DocumentScreenViewModel(
                 }
             }
 
-            is DocumentScreenAction.OnLongPressedDismiss->{
+            is DocumentScreenAction.OnLongPressedDismiss -> {
                 _state.update {
                     it.copy(
                         isLongImagePressed = false
@@ -162,23 +161,23 @@ class DocumentScreenViewModel(
                             )
 
                             3 -> item.copy(
-                                uploadedImage =  data.slcDocument
+                                uploadedImage = data.slcDocument
                             )
 
                             4 -> item.copy(
-                                uploadedImage =  data.plusTwoImage
+                                uploadedImage = data.plusTwoImage
                             )
 
                             5 -> item.copy(
-                                uploadedImage =  data.bachelorImage
+                                uploadedImage = data.bachelorImage
                             )
 
                             6 -> item.copy(
-                                uploadedImage =  data.masterImage
+                                uploadedImage = data.masterImage
                             )
 
                             7 -> item.copy(
-                                uploadedImage =  data.experienceDocuments
+                                uploadedImage = data.experienceDocuments
                             )
 
                             else -> item

@@ -128,7 +128,6 @@ fun SettingScreenContent(
                     onAction(SettingsScreenAction.OnBiometricStatusChange(false))
                 }
             }
-            println("authStatus $authStatus")
         }
     )
     val title = stringResource(SharedRes.Strings.login_verification)

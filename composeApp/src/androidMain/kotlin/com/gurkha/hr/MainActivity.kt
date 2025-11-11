@@ -49,7 +49,6 @@ class MainActivity : FragmentActivity() {
                 }
             }
             val data = intent.getIntentValue()
-            println("first ${data.first}, second ${data.second}")
             if (!showSplashScreen) {
                 App(
                     isFirstTime = navigateToOnBoarding,

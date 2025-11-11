@@ -141,7 +141,7 @@ fun AttendanceRequestScreen(
             sendData = true
         },
         onDismiss = {
-            showFailedDialogue =false
+            showFailedDialogue = false
         }
     )
 
@@ -157,7 +157,7 @@ fun AttendanceRequestScreenContent(
     showFailedDialogue: Boolean,
     message: String,
     sendData: (Boolean) -> Unit,
-    onDismiss:()-> Unit
+    onDismiss: () -> Unit
 ) {
 
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -199,10 +199,11 @@ fun AttendanceRequestScreenContent(
         },
     ) { contentPadding ->
         Box(
-            modifier = Modifier.fillMaxSize().padding(paddingValues = contentPadding).hideKeyboardOnTap(
-                focusManager = focusManager,
-                keyboardController = keyboardController
-            ),
+            modifier = Modifier.fillMaxSize().padding(paddingValues = contentPadding)
+                .hideKeyboardOnTap(
+                    focusManager = focusManager,
+                    keyboardController = keyboardController
+                ),
         ) {
             if (state.isRequestingAttendance) {
                 LoadingScreen()
@@ -239,7 +240,7 @@ fun AttendanceRequestScreenForm(
     message: String,
     onSendData: () -> Unit,
     keyboardController: SoftwareKeyboardController?,
-    onDismiss:()-> Unit
+    onDismiss: () -> Unit
 ) {
 
     Column(
@@ -378,7 +379,6 @@ fun AttendanceRequestScreenForm(
             ERPButton(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
-                    println("keyboard $keyboardController")
                     keyboardController?.hide()
                     onAction(AttendanceRequestAction.OnSubmit)
                 },
