@@ -172,14 +172,16 @@ class LeaveScreenViewModel(
                     }
                 }
             }
-            _state.update {
-                it.copy(
-                    currentTapItem = when (leaveStatus) {
-                        LeaveStatusEnum.PENDING -> it.pendingTapItem
-                        LeaveStatusEnum.APPROVED -> it.approvedTapItem
-                        else -> it.rejectedTapItem
-                    }
-                )
+            _state.update { current ->
+                if (current.leaveStatus == leaveStatus) {
+                    current.copy(
+                        currentTapItem = when (leaveStatus) {
+                            LeaveStatusEnum.PENDING -> current.pendingTapItem
+                            LeaveStatusEnum.APPROVED -> current.approvedTapItem
+                            else -> current.rejectedTapItem
+                        }
+                    )
+                } else current
             }
         }
     }

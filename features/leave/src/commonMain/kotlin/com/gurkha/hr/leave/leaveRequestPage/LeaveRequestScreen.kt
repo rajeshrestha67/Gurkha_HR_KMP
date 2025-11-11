@@ -192,7 +192,7 @@ fun LeaveRequestPageContent(
             modifier = Modifier.fillMaxSize().padding(paddingValues = paddingValues).hideKeyboardOnTap(
                 focusManager = focusManager,
                 keyboardController = keyboardController
-            ),
+            ).imePadding(),
         ) {
             if (state.isRequestingLeave) {
                 LoadingScreen()

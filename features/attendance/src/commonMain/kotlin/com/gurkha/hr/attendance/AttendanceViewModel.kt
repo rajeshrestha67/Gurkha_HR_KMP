@@ -1,6 +1,5 @@
 package com.gurkha.hr.attendance
 
-//import com.gurkha.hr.domain.attendance.attendanceRequest.useCase.AttendanceRequestUseCase
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gurkha.hr.date.data.model.CalendarModel
@@ -171,15 +170,18 @@ class AttendanceViewModel(
                     }
                 }
             }
-            _state.update {
-                it.copy(
-                    currentTapItem = when (attendanceStatus) {
-                        TabItemsEnums.PENDING -> it.pendingTapItem
-                        TabItemsEnums.APPROVED -> it.approvedTapItem
-                        else -> it.rejectedTapItem
-                    }
-                )
+            _state.update { current ->
+                if (current.selectedTab == attendanceStatus) {
+                    current.copy(
+                        currentTapItem = when (attendanceStatus) {
+                            TabItemsEnums.PENDING -> current.pendingTapItem
+                            TabItemsEnums.APPROVED -> current.approvedTapItem
+                            else -> current.rejectedTapItem
+                        }
+                    )
+                } else current
             }
+
         }.onError {
             when (attendanceStatus) {
                 TabItemsEnums.PENDING -> {
