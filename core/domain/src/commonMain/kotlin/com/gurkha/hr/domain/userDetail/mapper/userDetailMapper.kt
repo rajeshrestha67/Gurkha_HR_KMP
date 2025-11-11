@@ -47,7 +47,10 @@ fun UserDetailResponseDto.toData(): UserDetailData {
         designationId = detail?.designationId ?: 0,
         employeeType = detail?.employeeType ?: "",
         enableImageAttendance = detail?.employeeDetails?.enableImageAttendance ?: "",
-        enableManualAttendance = detail?.employeeDetails?.enableManualAttendance ?: "",
+        enableManualAttendance = !(detail?.employeeDetails?.enableManualAttendance ?: "").equals(
+            "n",
+            ignoreCase = true
+        ),
         experienceDocuments = detail?.employeeDetails?.experienceDocumentsUrl?.let {
             "https://mbank.gurkhahr.com/erp-images/${it}"
         },
@@ -98,7 +101,7 @@ fun UserData.toDetail(): UserDetailData {
         panNumber = panNumber,
         pfNumber = pfNumber,
         branchName = branchName,
-        bachelorImage =bachelorImage ,
+        bachelorImage = bachelorImage,
         branchId = branchId,
         citizenshipBackImage = citizenshipBackImage,
         citizenshipFrontImage = citizenshipFrontImage,
@@ -110,19 +113,19 @@ fun UserData.toDetail(): UserDetailData {
         imageUrl = imageUrl,
         levelId = levelId,
         mapId = mapId,
-        masterImage =masterImage,
+        masterImage = masterImage,
         nationalId = nationalId,
         panImage = panImage,
         password = password,
         plusTwoImage = plusTwoImage,
-        profileId =  profileId,
+        profileId = profileId,
         slcDocument = slcDocument,
         userProfileUrl = userProfileUrl,
         roles = roles ?: emptyList()
     )
 }
 
-fun UserDetailData.toUI(): EditProfileUI{
+fun UserDetailData.toUI(): EditProfileUI {
     return EditProfileUI(
         fullName = fullName,
         email = email,
@@ -131,10 +134,10 @@ fun UserDetailData.toUI(): EditProfileUI{
         employeeId = employeeId,
         branchName = branchName,
         address = address,
-        joinedDate = if(joinedDate.isNotBlank())DateData.fromDisplayAD(joinedDate )else null,
+        joinedDate = if (joinedDate.isNotBlank()) DateData.fromDisplayAD(joinedDate) else null,
         maritalStatus = maritalStatus,
         gender = gender,
-        dateOfBirth = if(dateOfBirth.isNotBlank())DateData.fromDisplayAD(dateOfBirth ) else null,
+        dateOfBirth = if (dateOfBirth.isNotBlank()) DateData.fromDisplayAD(dateOfBirth) else null,
         bloodGroup = bloodGroup,
         guardianName = guardianName,
         guardianPhone = guardianNumber,
@@ -142,7 +145,7 @@ fun UserDetailData.toUI(): EditProfileUI{
         employeeTypes = employeeType,
         panNumber = panNumber,
         pfNumber = pfNumber,
-    initials = initials,
+        initials = initials,
         imageUrl = imageUrl
 
     )
@@ -162,7 +165,7 @@ fun EditProfileUI.toDomain(): UpdateRequestUserDto {
     )
 }
 
-fun UpdateProfileResponseDto.toData(): UserUpdateData{
+fun UpdateProfileResponseDto.toData(): UserUpdateData {
     return UserUpdateData(
         message = message ?: ""
     )
@@ -189,7 +192,7 @@ fun EditProfileUI.toLocal(): UserData {
         panNumber = panNumber,
         pfNumber = pfNumber,
         imageUrl = imageUrl ?: "",
-        initials = initials ?:"",
+        initials = initials ?: "",
 
-    )
+        )
 }

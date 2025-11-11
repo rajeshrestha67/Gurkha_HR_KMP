@@ -16,7 +16,7 @@ data class UserDetailData(
     val email: String,
     val employeeType: String,
     val enableImageAttendance: String,
-    val enableManualAttendance: String,
+    val enableManualAttendance: Boolean,
     val experienceDocuments: String?,
     val fullName: String,
     val gender: String,
@@ -42,5 +42,5 @@ data class UserDetailData(
     val nationality: String,
     val initials: String,
     val isCompleteProfile: Boolean,
-    val roles : List<String>
+    val roles: List<String>
 )

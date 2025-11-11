@@ -309,7 +309,7 @@ fun HomeScreenContent(
     }
 
     val shouldShowSwipeToDismiss by remember(state.showSwipeView) {
-        derivedStateOf { (!isScrolling || isAtTop || isAtEnd) && state.showSwipeView }
+        derivedStateOf { (!isScrolling || isAtTop || isAtEnd) && state.showSwipeView && state.enableManualAttendance }
     }
 
 
@@ -389,6 +389,9 @@ fun HomeScreenContent(
                     showPermissionModal = false
                 }
             )
+        }
+        LaunchedEffect(Unit) {
+            println("shouldShowSwipeToDismiss $shouldShowSwipeToDismiss")
         }
         AnimatedVisibility(
             visible = shouldShowSwipeToDismiss,

@@ -1,6 +1,5 @@
 package com.gurkha.hr.home
 
-import androidx.compose.material3.MaterialTheme
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gurkha.hr.components.permissions.ProgressNotification
@@ -61,7 +60,7 @@ class HomeScreenViewModel(
     private val uploadImageUseCase: UploadImageUseCase,
     private val doAttendanceUseCase: DoAttendanceUseCase,
     private val attendanceCountReportUseCase: AttendanceCountReportUseCase,
-    private val supportListFetchUseCase : SupportListFetchUseCase
+    private val supportListFetchUseCase: SupportListFetchUseCase
 ) : ViewModel() {
     private val notification = ProgressNotification()
 
@@ -317,7 +316,10 @@ class HomeScreenViewModel(
                     employeeId = data.employeeId,
                     isProfileComplete = data.isCompleteProfile,
                     isRefreshing = false,
-                    showSupportChatIcon = data.roles.contains("HRM_SUPER_ADMIN") || data.roles.contains("HRM_SUPPORT_FOLLOWUP") ||data.roles.contains("HRM_SUPPORT_FOLLOWUP_CREATE")
+                    enableManualAttendance = data.enableManualAttendance,
+                    showSupportChatIcon = data.roles.contains("HRM_SUPER_ADMIN") || data.roles.contains(
+                        "HRM_SUPPORT_FOLLOWUP"
+                    ) || data.roles.contains("HRM_SUPPORT_FOLLOWUP_CREATE")
 
                 )
             }
@@ -525,7 +527,7 @@ class HomeScreenViewModel(
             _state.update {
                 if (isAlreadyClockIn) {
                     it.copy(
-                        showSwipeView = true,
+                        showSwipeView = state.value.enableManualAttendance,
                         requests = it.requests.updateDuration(
                             attendanceData = it.todayAttendance?.copy(
                                 clockOutTime = currentTime
@@ -534,7 +536,7 @@ class HomeScreenViewModel(
                     )
                 } else {
                     it.copy(
-                        showSwipeView = true,
+                        showSwipeView = state.value.enableManualAttendance,
                         requests = it.requests.updateDuration(
                             attendanceData = it.todayAttendance?.copy(
                                 clockInTime = currentTime
@@ -588,7 +590,7 @@ class HomeScreenViewModel(
         }
     }
 
-    private fun fetchSupportList()=viewModelScope.launch {
+    private fun fetchSupportList() = viewModelScope.launch {
         _state.update {
             it.copy(
                 isFetchingSupportList = true
@@ -607,7 +609,7 @@ class HomeScreenViewModel(
                     isFetchingSupportList = false
                 )
             }
-            AppLogger.e(tag = TAG, "Support List Fetch error",error)
+            AppLogger.e(tag = TAG, "Support List Fetch error", error)
         }
     }
 }

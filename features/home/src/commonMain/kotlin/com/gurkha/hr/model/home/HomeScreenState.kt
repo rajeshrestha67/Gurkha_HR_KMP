@@ -1,12 +1,10 @@
 package com.gurkha.hr.model.home
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.EditCalendar
 import androidx.compose.material.icons.filled.EventAvailable
 import androidx.compose.material.icons.filled.EventBusy
 import androidx.compose.material.icons.filled.LockClock
 import androidx.compose.material.icons.filled.SyncLock
-import androidx.compose.material.icons.filled.TimeToLeave
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.gurkha.hr.date.data.CalendarDate
 import com.gurkha.hr.date.data.CalendarDay
@@ -32,7 +30,7 @@ data class HomeScreenState(
     val isBirthDayLoading: Boolean = false,
     val isAnniversaryLoading: Boolean = false,
     val employeeId: Int = 0,
-    val isProfileComplete : Boolean = false,
+    val isProfileComplete: Boolean = false,
 
     val attendanceReport: List<AttendanceData> = listOf(),
     val attendanceReportHistory: List<AttendanceHistoryItemUI> = listOf(),
@@ -42,7 +40,7 @@ data class HomeScreenState(
     val calendarData: List<CalendarDay> = listOf(),
     val todayBS: CalendarDate = CalendarDate(0, 0, 0, 0),
     val selectedDay: Int = 1,
-    val showSwipeView: Boolean = true,
+    val showSwipeView: Boolean = false,
     val todayAttendance: AttendanceData? = null,
     val swipeText: StringResource = SharedRes.Strings.swipeToCheckIn,
 
@@ -54,13 +52,15 @@ data class HomeScreenState(
 
     val totalUnSeenNotification: Int = 0,
 
-    val isRefreshing : Boolean = false,
+    val isRefreshing: Boolean = false,
 
-    val isAttendanceCountLoading : Boolean = false,
+    val isAttendanceCountLoading: Boolean = false,
 
     val isFetchingSupportList: Boolean = false,
 
-    val showSupportChatIcon: Boolean = false
+    val showSupportChatIcon: Boolean = false,
+
+    val enableManualAttendance: Boolean = false
 )
 
 data class RequestItem(
