@@ -1,6 +1,7 @@
 package com.gurkha.hr.model
 
 import com.gurkha.hr.domain.chat.model.EmployChatItem
+import com.gurkha.model.chat.ChatTypeEnum
 
 sealed interface ChatScreenAction {
     object SearchClicked : ChatScreenAction
@@ -16,5 +17,7 @@ sealed interface ChatScreenAction {
     data object OnChatRefresh : ChatScreenAction
 
     data class UpdateCurrentEmploy(val json: String) : ChatScreenAction
+
+    data class OnChatTypeChange(val chatType: ChatTypeEnum): ChatScreenAction
 
 }

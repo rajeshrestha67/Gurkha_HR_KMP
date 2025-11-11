@@ -34,18 +34,23 @@ data class AttendanceScreenState(
         AttendanceItem(
             title = SharedRes.Strings.missed_attendance,
             days = "-",
+            enum = null
         ),
         AttendanceItem(
             title = SharedRes.Strings.attendance_approved,
             days = "-",
+            enum = TabItemsEnums.APPROVED
         ),
         AttendanceItem(
             title = SharedRes.Strings.attendance_pending,
             days = "-",
+            enum = TabItemsEnums.PENDING
+
         ),
         AttendanceItem(
             title = SharedRes.Strings.attendance_cancelled,
             days = "-",
+            enum = TabItemsEnums.REJECTED
         ),
     ),
 
@@ -55,6 +60,7 @@ data class AttendanceScreenState(
 data class AttendanceItem(
     val title: StringResource,
     val days: String,
+    val enum: TabItemsEnums?
 )
 
 data class AttendanceTabItem(

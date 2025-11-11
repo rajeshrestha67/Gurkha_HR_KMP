@@ -32,6 +32,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -47,13 +48,15 @@ import com.gurkha.hr.domain.chat.model.EmployChatItem
 import com.gurkha.hr.model.ChatScreenAction
 import com.gurkha.hr.model.ChatScreenState
 import com.gurkha.hr.res.SharedRes
+import com.gurkha.model.chat.ChatTypeEnum
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun ChatListScreen(
     state: ChatScreenState,
     onAction: (ChatScreenAction) -> Unit,
-    onBackPressed: () -> Unit
+    onBackPressed: () -> Unit,
+    chatType: ChatTypeEnum = ChatTypeEnum.EMPLOYEE
 ) {
 //    val viewModel = koinViewModel<ChatListViewModel>()
 //    val state by viewModel.state.collectAsStateWithLifecycle()
@@ -62,6 +65,10 @@ fun ChatListScreen(
         state = state,
         onAction = onAction
     )
+
+    LaunchedEffect(chatType) {
+        onAction(ChatScreenAction.OnChatTypeChange(chatType))
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -100,7 +107,9 @@ private fun ChatListScreenContent(
                         } else {
                             Text(
                                 modifier = Modifier.fillMaxWidth(),
-                                text = stringResource(SharedRes.Strings.chat),
+                                text = if (state.chatType == ChatTypeEnum.EMPLOYEE) stringResource(
+                                    SharedRes.Strings.chat
+                                ) else stringResource(SharedRes.Strings.support),
                                 style = MaterialTheme.typography.titleLarge.copy(
                                     color = MaterialTheme.erpColors.primaryTextColor
                                 )

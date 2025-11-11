@@ -53,8 +53,10 @@ import com.gurkha.hr.dashboard.route.DashboardRoute
 import com.gurkha.hr.dashboard.route.HomeRoute
 import com.gurkha.hr.dashboard.route.LeaveRoute
 import com.gurkha.hr.dashboard.route.NoteRoute
+import com.gurkha.hr.dashboard.route.ProfileRoute
 import com.gurkha.hr.logger.AppLogger
 import com.gurkha.hr.res.SharedRes
+import com.gurkha.model.chat.ChatTypeEnum
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.getString
@@ -70,7 +72,7 @@ fun DashboardScreen(
     navigateToLeave: Boolean?,
     isApproved: Boolean?,
     onLogout: () -> Unit,
-    onChatClick: () -> Unit,
+    onChatClick: (chatType: ChatTypeEnum) -> Unit,
     onBirthdayUser: (json: String) -> Unit
 
 ) {
@@ -113,7 +115,7 @@ fun DashboardScreenContent(
     navigateToLeave: Boolean?,
     isApproved: Boolean?,
     state: DashboardScreenState,
-    onChatClick: () -> Unit,
+    onChatClick: (chatType: ChatTypeEnum) -> Unit,
     onLogout: () -> Unit,
     onAction: (DashboardScreenAction) -> Unit,
     onBirthdayUser: (json: String) -> Unit
@@ -332,12 +334,18 @@ fun DashboardScreenContent(
                                 clockStatus = null
                             )
                         )
+                    },
+                    onGoToMissedAttendanceScreen = {
+                        dashboardNavController.navigate(AttendanceRoute.MissedAttendanceScreen)
                     }
                 )
                 leaveScreenBuilder(
                     navController = dashboardNavController,
                     onGoToLeaveRequestPage = {
                         dashboardNavController.navigate(LeaveRoute.LeaveRequestPageRoute)
+                    },
+                    onGoToAllocatedLeaveScreen = {
+                        dashboardNavController.navigate(ProfileRoute.AllocatedLeaveScreenRoute)
                     }
                 )
 
@@ -372,7 +380,7 @@ fun DashboardScreenContent(
             ) {
                 FloatingActionButton(
                     onClick = {
-                        //onChatClick()
+                        onChatClick(ChatTypeEnum.SUPPORT)
                     }
                 ) {
                     Icon(

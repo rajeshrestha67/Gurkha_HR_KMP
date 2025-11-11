@@ -189,24 +189,26 @@ fun LeaveRequestPageContent(
     ) { paddingValues ->
 
         Box(
-            modifier = Modifier.fillMaxSize().padding(paddingValues).imePadding(),
+            modifier = Modifier.fillMaxSize().padding(paddingValues = paddingValues).hideKeyboardOnTap(
+                focusManager = focusManager,
+                keyboardController = keyboardController
+            ).imePadding(),
         ) {
             if (state.isRequestingLeave) {
                 LoadingScreen()
-            } else {
-                LeaveRequestScreenForm(
-                    modifier = Modifier.fillMaxSize(),
-                    onBackPressed = onBackPressed,
-                    state = state,
-                    onAction = onAction,
-                    showSuccessDialogue = showSuccessDialogue,
-                    showFailedDialogue = showFailedDialogue,
-                    messageToShow = messageToShow,
-                    onSendData = onSendData,
-                    keyboardController = keyboardController,
-                    onDismiss = onDismiss
-                )
             }
+            LeaveRequestScreenForm(
+                modifier = Modifier.fillMaxSize(),
+                onBackPressed = onBackPressed,
+                state = state,
+                onAction = onAction,
+                showSuccessDialogue = showSuccessDialogue,
+                showFailedDialogue = showFailedDialogue,
+                messageToShow = messageToShow,
+                onSendData = onSendData,
+                keyboardController = keyboardController,
+                onDismiss = onDismiss
+            )
         }
 
     }

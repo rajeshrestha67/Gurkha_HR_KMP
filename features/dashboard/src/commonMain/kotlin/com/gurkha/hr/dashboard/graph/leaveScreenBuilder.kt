@@ -12,7 +12,8 @@ import com.gurkha.hr.leave.leaveRequestPage.LeaveRequestScreen
 
 fun NavGraphBuilder.leaveScreenBuilder(
     navController: NavHostController,
-    onGoToLeaveRequestPage: (String?) -> Unit
+    onGoToLeaveRequestPage: (String?) -> Unit,
+    onGoToAllocatedLeaveScreen: () -> Unit
 ) {
 
     composable<DashboardRoute.LeaveRoute> {
@@ -20,7 +21,8 @@ fun NavGraphBuilder.leaveScreenBuilder(
         LeaveScreen(
             isApproved = isApproved,
             navController = navController,
-            onGoToLeaveRequestPage = onGoToLeaveRequestPage
+            onGoToLeaveRequestPage = onGoToLeaveRequestPage,
+            onGoToAllocatedLeaveScreen = onGoToAllocatedLeaveScreen
         )
     }
     composable<LeaveRoute.LeaveRequestPageRoute> {

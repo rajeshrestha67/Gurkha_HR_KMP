@@ -5,6 +5,7 @@ import com.gurkha.hr.domain.chat.mapper.toChatFormattedTime
 import com.gurkha.hr.domain.chat.model.ChatMessageContent
 import com.gurkha.hr.domain.chat.model.ChatMessageMetaData
 import com.gurkha.hr.domain.chat.model.EmployChatItem
+import com.gurkha.model.chat.ChatTypeEnum
 import com.gurkha.model.chat.ChatUserData
 import kotlin.random.Random
 import kotlin.time.ExperimentalTime
@@ -25,7 +26,9 @@ data class ChatScreenState(
     val messages: LinkedHashMap<String, List<ChatMessage>> = LinkedHashMap(),
     val metaData: ChatMetaData? = null,
     val isSocketConnected: Boolean = false,
-    val isChatRefreshing: Boolean = false
+    val isChatRefreshing: Boolean = false,
+
+    val chatType: ChatTypeEnum = ChatTypeEnum.EMPLOYEE
 
 )
 

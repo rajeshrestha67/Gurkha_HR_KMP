@@ -65,6 +65,7 @@ fun LeaveScreen(
     isApproved: Boolean?,
     navController: NavHostController,
     onGoToLeaveRequestPage: (String?) -> Unit,
+    onGoToAllocatedLeaveScreen:()-> Unit
 ) {
     val viewModel: LeaveScreenViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -130,6 +131,7 @@ fun LeaveScreen(
             },
             content = {
                 LeaveScreenContent(
+                    onGoToAllocatedLeaveScreen= onGoToAllocatedLeaveScreen,
                     modifier = Modifier.fillMaxSize(),
                     state = state,
                     onAction = viewModel::onAction,
@@ -143,6 +145,7 @@ fun LeaveScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LeaveScreenContent(
+    onGoToAllocatedLeaveScreen: () -> Unit,
     modifier: Modifier = Modifier,
     state: LeaveScreenState,
     onAction: (LeaveScreenAction) -> Unit,
@@ -163,6 +166,8 @@ fun LeaveScreenContent(
     ) {
 //        show the 4 leave options
         leaveOptions(
+            onGoToAllocatedLeaveScreen = onGoToAllocatedLeaveScreen,
+            onAction = onAction,
             state = state
         )
 
@@ -181,7 +186,10 @@ fun LeaveScreenContent(
 }
 
 
-fun LazyListScope.leaveOptions(itemsPerRow: Int = 2, state: LeaveScreenState) {
+fun LazyListScope.leaveOptions(
+    onGoToAllocatedLeaveScreen: () -> Unit,
+    onAction: (LeaveScreenAction) -> Unit,
+    itemsPerRow: Int = 2, state: LeaveScreenState) {
     state.leaveItemsList.chunked(itemsPerRow).forEach { rowItems ->
         item {
             Row(
@@ -201,6 +209,8 @@ fun LazyListScope.leaveOptions(itemsPerRow: Int = 2, state: LeaveScreenState) {
                 } else {
                     rowItems.forEach { leaveItem ->
                         LeaveBox(
+                            onGoToAllocatedLeaveScreen=onGoToAllocatedLeaveScreen,
+                            onAction = onAction,
                             modifier = Modifier.weight(1f).fillMaxSize(),
                             item = leaveItem
                         )
@@ -218,6 +228,8 @@ fun LazyListScope.leaveOptions(itemsPerRow: Int = 2, state: LeaveScreenState) {
 
 @Composable
 fun LeaveBox(
+    onGoToAllocatedLeaveScreen: () -> Unit,
+    onAction: (LeaveScreenAction) -> Unit,
     modifier: Modifier = Modifier,
     item: LeaveItem
 ) {
@@ -232,7 +244,14 @@ fun LeaveBox(
             .clip(shape = MaterialTheme.shapes.medium)
             .background(item.backgroundColor)
             .heightIn(min = MaterialTheme.dimens.leaveBoxHeight)
-            .clickable(onClick = {})
+            .clickable(onClick = {
+                //if the enum is not null set selected tab as defined in the item else
+                // navigate to the allocated leave screen for the leave balance
+                item.enum?.let {
+                    onAction(LeaveScreenAction.OnStatusChange(it))
+                } ?:
+                onGoToAllocatedLeaveScreen()
+            })
             .padding(MaterialTheme.dimens.small2),
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small1)
     ) {

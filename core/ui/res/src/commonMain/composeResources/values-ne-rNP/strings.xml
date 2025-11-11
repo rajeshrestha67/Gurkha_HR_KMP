@@ -313,6 +313,8 @@
     <string name="absent_days">अनुपस्थित दिनहरू</string>
     <string name="present_days">वर्तमान दिनहरू</string>
 
+    <string name="coming_soon">सुविधा चाँडै आउँदैछ !</string>
+
     <string-array name="months">
         <item>बैशाख</item>
         <item>जेठ</item>

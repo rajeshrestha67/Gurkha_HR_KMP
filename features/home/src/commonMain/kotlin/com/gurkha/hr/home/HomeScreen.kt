@@ -91,6 +91,7 @@ import com.gurkha.hr.model.home.HomeScreenActions
 import com.gurkha.hr.model.home.HomeScreenState
 import com.gurkha.hr.model.home.RequestItem
 import com.gurkha.hr.res.SharedRes
+import com.gurkha.model.chat.ChatTypeEnum
 import com.gurkha.model.upComingBirthday.ui.ViewAllUi
 import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.StringResource
@@ -105,7 +106,7 @@ const val TAG = "Home Screen"
 @Composable
 fun HomeScreen(
     topAppBarScrollBehavior: TopAppBarScrollBehavior,
-    onChatClick: () -> Unit,
+    onChatClick: (chatType: ChatTypeEnum) -> Unit,
     onNotificationClick: () -> Unit,
     onViewAllClick: (String?, String) -> Unit,
     onGoToFixProfile: () -> Unit,
@@ -170,7 +171,9 @@ fun HomeScreen(
                         }
                     }
                 }, actions = {
-                    IconButton(onClick = onChatClick) {
+                    IconButton(onClick = {
+                        onChatClick(ChatTypeEnum.EMPLOYEE)
+                    }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.Chat,
                             contentDescription = "chat"

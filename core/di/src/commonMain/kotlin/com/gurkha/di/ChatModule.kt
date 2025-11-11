@@ -15,6 +15,7 @@ import com.gurkha.hr.domain.chat.usecase.ObserveSocketEventsUseCase
 import com.gurkha.hr.domain.chat.usecase.SendMessageUseCase
 import com.gurkha.hr.domain.chat.usecase.SendStopTypingUseCase
 import com.gurkha.hr.domain.chat.usecase.SendTypingUseCase
+import com.gurkha.hr.domain.support.useCase.SupportListFetchUseCase
 import com.gurkha.hr.network.SocketManager
 import io.ktor.client.HttpClient
 import org.koin.android.annotation.KoinViewModel
@@ -121,7 +122,8 @@ class ChatModule {
         observeSocketEventsUseCase: ObserveSocketEventsUseCase,
         disconnectSocketUseCase: DisconnectSocketUseCase,
         userDataRepository: UserDataRepository,
-        chatEmployListUseCase: ChatEmployListUseCase
+        chatEmployListUseCase: ChatEmployListUseCase,
+        supportListFetchUseCase: SupportListFetchUseCase
     ): ChatViewModel = ChatViewModel(
         chatEmployListUseCase = chatEmployListUseCase,
         fetchChatMessageUseCase = fetchChatMessageUseCase,
@@ -132,7 +134,8 @@ class ChatModule {
         sendStopTypingUseCase = sendStopTypingUseCase,
         observeSocketEventsUseCase = observeSocketEventsUseCase,
         disconnectSocketUseCase = disconnectSocketUseCase,
-        userDataRepository = userDataRepository
+        userDataRepository = userDataRepository,
+        supportListFetchUseCase = supportListFetchUseCase
     )
 
 //    @KoinViewModel

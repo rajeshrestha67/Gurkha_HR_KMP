@@ -33,7 +33,8 @@ data class ERPColorPalette(
     val box1BackgroundColor: Color = Color.Unspecified,
     val box2BackgroundColor: Color = Color.Unspecified,
     val box3BackgroundColor: Color = Color.Unspecified,
-    val box4BackgroundColor: Color = Color.Unspecified
+    val box4BackgroundColor: Color = Color.Unspecified,
+    val profilePictureInitialColor: Color = Color.Unspecified
 
 )
 
@@ -66,6 +67,7 @@ val lightERPPalette = ERPColorPalette(
     box2BackgroundColor = Color(0xFFE8F5E9),
     box3BackgroundColor = Color(0xFFF1F8E9),
     box4BackgroundColor = Color(0xFFFFEBEE),
+    profilePictureInitialColor = Color(0xFF646884),
 
 
 
@@ -99,5 +101,6 @@ val darkERPPalette = ERPColorPalette(
     box1BackgroundColor = Color(0xFF0B3D91),
     box2BackgroundColor = Color(0xFF174D1F),
     box3BackgroundColor = Color(0xFF2B3E16),
-    box4BackgroundColor = Color(0xFF7F1A1A)
+    box4BackgroundColor = Color(0xFF7F1A1A),
+    profilePictureInitialColor = Color(0xFF646884),
 )

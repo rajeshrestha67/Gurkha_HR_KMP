@@ -2,6 +2,8 @@ package com.gurkha.hr.model.home
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.EditCalendar
+import androidx.compose.material.icons.filled.EventAvailable
+import androidx.compose.material.icons.filled.EventBusy
 import androidx.compose.material.icons.filled.LockClock
 import androidx.compose.material.icons.filled.SyncLock
 import androidx.compose.material.icons.filled.TimeToLeave
@@ -83,12 +85,12 @@ enum class RequestType(
         status = SharedRes.Strings.goHome
     ),
     Leave(
-        icon = Icons.Filled.TimeToLeave,
+        icon = Icons.Filled.EventBusy,
         title = SharedRes.Strings.absent,
         status = SharedRes.Strings.totalAbsentDays
     ),
     Attendance(
-        icon = Icons.Filled.EditCalendar,
+        icon = Icons.Filled.EventAvailable,
         title = SharedRes.Strings.present,
         status = SharedRes.Strings.totalPresentDays
     );

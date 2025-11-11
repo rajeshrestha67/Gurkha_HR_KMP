@@ -129,7 +129,7 @@
     <string name="leave_balance">Leave\nBalance</string>
     <string name="leave_approved">Leave\nApproved</string>
     <string name="leave_pending">Leave\nPending</string>
-    <string name="leave_cancelled">Leave\nCancelled</string>
+    <string name="leave_cancelled">Leave\nRejected</string>
 
 
     <string name="apply_days">Apply Days</string>
@@ -137,7 +137,7 @@
 
     <string name="missed_attendance">Missed\nAttendance</string>
     <string name="attendance_approved">Attendance\nApproved</string>
-    <string name="attendance_cancelled">Attendance\nCancelled</string>
+    <string name="attendance_cancelled">Attendance\nRejected</string>
     <string name="attendance_pending">Attendance\nPending</string>
 
     <string name="no_data_found">No Data Found!</string>
@@ -309,6 +309,8 @@
 
     <string name="absent_days">Absent Days</string>
     <string name="present_days">Present Days</string>
+
+    <string name="coming_soon">Feature Coming Soon !</string>
 
     <string-array name="months">
         <item>Baisakh</item>
