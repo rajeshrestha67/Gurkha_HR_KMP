@@ -84,14 +84,15 @@ class TimeAndAttendanceViewModel(
             }
 
            is TimeAndAttendanceViewAction.Submit -> {
-                _state.update { it.copy(
-                    employeeId = action.employeeId
-                ) }
                 submit()
             }
 
             TimeAndAttendanceViewAction.OnRefresh -> {
-                onFetchData(isRefreshing = true)
+                onFetchData(
+                    fromDate = state.value.fromDate?.displayValueAD ?: datePair.first,
+                    toDate = state.value.toDate?.displayValueAD ?: datePair.second,
+                    isRefreshing = true
+                )
             }
         }
     }
@@ -134,7 +135,7 @@ class TimeAndAttendanceViewModel(
             fromDate = fromDate?.displayValueAD ?: "",
             toDate = toDate?.displayValueAD ?: "",
             attendanceStatus = attendanceStatus,
-            isRefreshing = true
+            isRefreshing = false
         )
 
     }

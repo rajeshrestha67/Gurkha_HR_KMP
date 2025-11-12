@@ -166,15 +166,28 @@ fun TimeAndAttendanceScreenContainer(
 
             }
         } else {
-            items(
-                items = state.timeAndAttendanceList,
-                key = { it.toString() },
-                itemContent = { item ->
-                    TimeAndAttendanceDetails(
-                        onAction = onAction, state = state, item = item,
-                        onGoToAttendanceRequestScreen = onGoToAttendanceRequestScreen
+            if (state.timeAndAttendanceList.isNotEmpty()) {
+                items(
+                    items = state.timeAndAttendanceList,
+                    key = { it.toString() },
+                    itemContent = { item ->
+                        TimeAndAttendanceDetails(
+                            onAction = onAction, state = state, item = item,
+                            onGoToAttendanceRequestScreen = onGoToAttendanceRequestScreen
+                        )
+                    })
+            } else {
+                item {
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            color = MaterialTheme.erpColors.primaryTextColor
+                        ),
+                        text = stringResource(SharedRes.Strings.no_data_found)
                     )
-                })
+                }
+            }
         }
     }
 }
@@ -385,9 +398,7 @@ fun DateFilter(
 
             ERPButton(
                 onClick = {
-                    onAction(TimeAndAttendanceViewAction.Submit(employeeId = state.timeAndAttendanceList[0].employeeId))
-
-
+                    onAction(TimeAndAttendanceViewAction.Submit)
                 },
                 modifier = Modifier.fillMaxWidth(),
                 text = stringResource(SharedRes.Strings.submit),
