@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -31,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gurkha.hr.components.ERPButton
@@ -307,6 +309,9 @@ fun OthersDetailContent(
             onErrorStateChange = {
 //                onAction(EditProfileViewAction.GuardianPhoneError(null))
             },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Phone
+            )
 
             )
         ERPTextField(
@@ -321,6 +326,8 @@ fun OthersDetailContent(
             onErrorStateChange = {
             },
             readOnly = true,
+            enabled = false
+
         )
         ERPTextField(
             modifier = Modifier.fillMaxWidth(),
@@ -333,6 +340,8 @@ fun OthersDetailContent(
             onErrorStateChange = {
             },
             readOnly = true,
+            enabled = false
+
 
             )
         DropDownText(
@@ -416,8 +425,7 @@ fun PersonalDetailsContent(
             onErrorStateChange = {
             },
             readOnly = true,
-
-
+            enabled = false
             )
         ERPTextField(
             modifier = Modifier.fillMaxWidth(),
@@ -430,7 +438,7 @@ fun PersonalDetailsContent(
             onErrorStateChange = {
             },
             readOnly = true,
-
+            enabled = false
             )
         ERPTextField(
             modifier = Modifier.fillMaxWidth(),
@@ -443,6 +451,7 @@ fun PersonalDetailsContent(
             onErrorStateChange = {
             },
             readOnly = true,
+            enabled = false
 
 
             )
@@ -457,6 +466,7 @@ fun PersonalDetailsContent(
             onErrorStateChange = {
             },
             readOnly = true,
+            enabled = false
 
             )
         ERPTextField(
@@ -470,6 +480,7 @@ fun PersonalDetailsContent(
             onErrorStateChange = {
             },
             readOnly = true,
+            enabled = false
 
             )
         ERPTextField(
@@ -483,6 +494,7 @@ fun PersonalDetailsContent(
             onErrorStateChange = {
             },
             readOnly = true,
+            enabled = false
 
             )
         ERPTextField(
@@ -496,6 +508,7 @@ fun PersonalDetailsContent(
             onErrorStateChange = {
             },
             readOnly = true,
+            enabled = false
 
             )
         ERPTextField(
@@ -509,6 +522,7 @@ fun PersonalDetailsContent(
             onErrorStateChange = {
             },
             readOnly = true,
+            enabled = false
 
             )
         ERPDateTextField(

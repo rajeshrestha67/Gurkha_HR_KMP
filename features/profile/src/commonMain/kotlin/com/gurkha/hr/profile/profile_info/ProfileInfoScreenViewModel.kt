@@ -108,7 +108,7 @@ class ProfileInfoScreenViewModel(
                             ),
                             ProfileInfo(
                                 name = SharedRes.Strings.guardian_phone,
-                                value = userDetail.guardianNumber.ifEmpty { "N/A" }
+                                value = userDetail.guardianName.ifEmpty { "N/A" }
                             )
                         )
                     )
