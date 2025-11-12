@@ -197,34 +197,60 @@ class AddNotesViewModel(
             }
 
             is AddNotesAction.UpdateNote -> {
-                val updateData = NoteDataUi(
-                    title = state.value.title,
-                    description = state.value.description,
-                    startTime = state.value.startTime,
-                    endTime = state.value.endTime,
-                    location = state.value.location,
-                    isEvent = state.value.isEvent.toString(),
-                    isReminder = state.value.isReminder,
-                    id = state.value.noteItemData?.id ?: 0,
-                    startDateAD = state.value.startDate.toString(),
-                    endDateAD = state.value.endDate.toString(),
-                    startDateBS = state.value.startDate.toString(),
-                    endDateBS = state.value.endDate.toString(),
-                    active = state.value.noteItemData?.active.toString(),
-                )
-                updateNotes(
-                    active = updateData.active,
-                    description = updateData.description,
-                    endTime = "",
-                    isEvent = "N",
-                    isReminder = "N",
-                    location = "",
-                    reminderMessage = "",
-                    reminderTime = "",
-                    startTime = "",
-                    title = updateData.title,
-                    id = updateData.id,
-                )
+                val titleError = requiredValidationUseCase(state.value.title)
+                val descriptionError = requiredValidationUseCase(state.value.description)
+
+                when {
+                    titleError != null -> {
+                        _state.update {
+                            it.copy(
+                                titleError = titleError
+                            )
+                        }
+                    }
+
+                    descriptionError != null -> {
+                        _state.update {
+                            it.copy(
+                                descriptionError = descriptionError
+                            )
+                        }
+                    }
+
+                    else -> {
+                        val updateData = NoteDataUi(
+                            title = state.value.title,
+                            description = state.value.description,
+                            startTime = state.value.startTime,
+                            endTime = state.value.endTime,
+                            location = state.value.location,
+                            isEvent = state.value.isEvent.toString(),
+                            isReminder = state.value.isReminder,
+                            id = state.value.noteItemData?.id ?: 0,
+                            startDateAD = state.value.startDate.toString(),
+                            endDateAD = state.value.endDate.toString(),
+                            startDateBS = state.value.startDate.toString(),
+                            endDateBS = state.value.endDate.toString(),
+                            active = state.value.noteItemData?.active.toString(),
+                        )
+
+
+                        updateNotes(
+                            active = updateData.active,
+                            description = updateData.description,
+                            endTime = "",
+                            isEvent = "N",
+                            isReminder = "N",
+                            location = "",
+                            reminderMessage = "",
+                            reminderTime = "",
+                            startTime = "",
+                            title = updateData.title,
+                            id = updateData.id,
+                        )
+                    }
+                }
+
             }
 
             is AddNotesAction.OnUpdateDataForStore -> {
