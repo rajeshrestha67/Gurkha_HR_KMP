@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,9 +30,8 @@ fun <T> ERPTabView(
     backgroundColor: Color = MaterialTheme.colorScheme.background,
     text: @Composable ((T, Boolean) -> Unit),
 ) {
-
-    var selectedTabIndex by remember { mutableStateOf(0) }
-    var previousSelectedTabIndex by remember { mutableStateOf(0) }
+    var selectedTabIndex by rememberSaveable { mutableStateOf(0) }
+    var previousSelectedTabIndex by rememberSaveable { mutableStateOf(0) }
     Box(
         modifier = modifier.fillMaxWidth().background(backgroundColor)
     ) {
