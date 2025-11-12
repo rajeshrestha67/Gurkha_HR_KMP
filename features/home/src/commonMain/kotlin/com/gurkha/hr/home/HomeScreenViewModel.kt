@@ -244,7 +244,7 @@ class HomeScreenViewModel(
                 it.copy(
                     isRefreshing = false,
                     isAttendanceLoading = false,
-                    attendanceReport = data,
+                    attendanceReport = data.reversed(),
                     todayAttendance = attendanceData,
                     showSwipeView = !(attendanceData?.isHoliday ?: false),
 

@@ -15,7 +15,7 @@ object FormValidate {
     }
 
     val requiredRule = Rule { text ->
-        if (text.isEmpty()) {
+        if (text.trim().isEmpty()) {
             SharedRes.Strings.required
         } else {
             null
@@ -24,7 +24,7 @@ object FormValidate {
 
 
     val emailRule = Rule { text ->
-        if (!text.matches(Regex("^[a-zA-Z0-9.!#\$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\$"))) {
+        if (!text.trim().matches(Regex("^[a-zA-Z0-9.!#\$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\$"))) {
             SharedRes.Strings.invalidEmailAddress
         } else {
             null
@@ -32,7 +32,7 @@ object FormValidate {
     }
 
     val upperCaseRule = Rule { text ->
-        if (!text.matches(Regex(".*[A-Z].*"))) {
+        if (!text.trim().matches(Regex(".*[A-Z].*"))) {
             SharedRes.Strings.invalidPasswordUppercase
         } else {
             null
@@ -40,7 +40,7 @@ object FormValidate {
     }
 
     val lowerCaseRule = Rule { text ->
-        if (!text.matches(Regex(".*[a-z].*"))) {
+        if (!text.trim().matches(Regex(".*[a-z].*"))) {
             SharedRes.Strings.invalidPasswordLowercase
         } else {
             null
@@ -48,21 +48,21 @@ object FormValidate {
     }
 
     val digitRule = Rule { text ->
-        if (!text.matches(Regex(".*[0-9].*"))) {
+        if (!text.trim().matches(Regex(".*[0-9].*"))) {
             SharedRes.Strings.invalidPasswordDigit
         } else {
             null
         }
     }
     val specialCharRule = Rule { text ->
-        if (!text.matches(Regex(".*[^A-Za-z0-9].*"))) {
+        if (!text.trim().matches(Regex(".*[^A-Za-z0-9].*"))) {
             SharedRes.Strings.invalidPasswordSpecialChar
         } else {
             null
         }
     }
     val passwordLengthRule = Rule { text ->
-        if (!text.matches(Regex(".{6,}"))) {
+        if (!text.trim().matches(Regex(".{6,}"))) {
             SharedRes.Strings.invalidPasswordLength
         } else {
             null
