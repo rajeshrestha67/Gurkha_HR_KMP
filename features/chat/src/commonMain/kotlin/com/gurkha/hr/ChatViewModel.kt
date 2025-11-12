@@ -228,7 +228,10 @@ class ChatViewModel(
             it.copy(
                 query = query,
                 chatList = it.chatListCache.filter { chatItem ->
-                    chatItem.employeeName.contains(query ?: "", ignoreCase = true)
+                    chatItem.employeeName.contains(
+                        query ?: "",
+                        ignoreCase = true
+                    ) || chatItem.phoneNumber?.contains(query ?: "") == true
                 }
             )
         }
@@ -245,7 +248,7 @@ class ChatViewModel(
             }
         }
 
-        if (_state.value.chatType == ChatTypeEnum.EMPLOYEE){
+        if (_state.value.chatType == ChatTypeEnum.EMPLOYEE) {
             chatEmployListUseCase().onSuccess { data ->
                 _state.update {
                     it.copy(
@@ -264,7 +267,7 @@ class ChatViewModel(
                     )
                 }
             }
-        }else{
+        } else {
             supportListFetchUseCase().onSuccess { data ->
                 _state.update {
                     it.copy(
