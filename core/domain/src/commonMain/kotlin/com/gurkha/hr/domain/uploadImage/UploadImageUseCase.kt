@@ -81,7 +81,7 @@ class UploadImageUseCase(
                     }
                     ImageUpdateDocumentType.EXPERIENCE_DOCUMENT.key ->{
                         userDataRepository.saveUserData(userData.copy(
-                            masterImage = "https://mbank.gurkhahr.com/erp-images/${filePath}"
+                            experienceDocuments = "https://mbank.gurkhahr.com/erp-images/${filePath}"
                         ))
                     }
                 }

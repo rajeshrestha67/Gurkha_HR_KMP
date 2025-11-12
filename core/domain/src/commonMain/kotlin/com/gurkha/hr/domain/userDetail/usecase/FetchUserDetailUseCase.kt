@@ -60,6 +60,7 @@ class FetchUserDetailUseCase(
                         plusTwoImage = userDetail.plusTwoImage,
                         bachelorImage = userDetail.bachelorImage ,
                         masterImage = userDetail.masterImage ,
+                        designation = userDetail.levelName,
                         experienceDocuments = userDetail.experienceDocuments
                     ) ?: UserData()
                 )

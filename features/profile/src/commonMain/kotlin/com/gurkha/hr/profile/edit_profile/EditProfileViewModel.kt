@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gurkha.hr.domain.form.RequiredValidationUseCase
 import com.gurkha.hr.domain.userDetail.mapper.toDomain
-import com.gurkha.hr.domain.userDetail.mapper.toLocal
 import com.gurkha.hr.domain.userDetail.mapper.toUI
 import com.gurkha.hr.domain.userDetail.usecase.FetchUserDetailUseCase
 import com.gurkha.hr.domain.userDetail.usecase.UpdateUserDetailUseCase
@@ -27,7 +26,7 @@ class EditProfileViewModel(
     private val fetchUserDetailUseCase: FetchUserDetailUseCase,
     private val updateUserDetailUseCase: UpdateUserDetailUseCase,
 
-) : ViewModel() {
+    ) : ViewModel() {
     private val _state = MutableStateFlow(EditProfileScreenState())
 
     private val _successChannel = Channel<String>()
