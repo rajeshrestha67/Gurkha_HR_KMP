@@ -60,7 +60,6 @@ class HomeScreenViewModel(
     private val uploadImageUseCase: UploadImageUseCase,
     private val doAttendanceUseCase: DoAttendanceUseCase,
     private val attendanceCountReportUseCase: AttendanceCountReportUseCase,
-    private val supportListFetchUseCase: SupportListFetchUseCase
 ) : ViewModel() {
     private val notification = ProgressNotification()
 
@@ -77,12 +76,10 @@ class HomeScreenViewModel(
             fetchCurrentUser(isRefreshing = false)
             fetchUpComingBirthday()
             fetchUpComingWorkAnniversary()
-            fetchAttendance(isRefreshing = false)
             fetchCalendarValue()
             fetchUpComingEvents()
             getUnseenNotificationCount()
             getAttendanceTotalCountReport()
-            fetchSupportList()
         }
         .stateIn(
             scope = viewModelScope,
@@ -304,7 +301,6 @@ class HomeScreenViewModel(
         }
         userDetailUseCase(true).onSuccess { data ->
             AppLogger.d(tag = TAG, "CurrentUser Fetch  success")
-
             _state.update {
                 it.copy(
                     isProfileLoading = false,
@@ -323,7 +319,8 @@ class HomeScreenViewModel(
 
                 )
             }
-            //only fetch the total count after the current userdata fetch cause we need the employee id
+            //only fetch after the current user is fetched other wise old employee id
+            fetchAttendance(isRefreshing = false)
         }.onError { error ->
             AppLogger.e(
                 tag = TAG,
@@ -587,29 +584,6 @@ class HomeScreenViewModel(
                 tag = TAG,
                 "Attendance Count Report Fetch failed: ${error.toErrorMessage()}"
             )
-        }
-    }
-
-    private fun fetchSupportList() = viewModelScope.launch {
-        _state.update {
-            it.copy(
-                isFetchingSupportList = true
-            )
-        }
-        supportListFetchUseCase().onSuccess {
-            _state.update {
-                it.copy(
-                    isFetchingSupportList = false
-                )
-            }
-            AppLogger.d(tag = TAG, "Support List Fetch success")
-        }.onError { error ->
-            _state.update {
-                it.copy(
-                    isFetchingSupportList = false
-                )
-            }
-            AppLogger.e(tag = TAG, "Support List Fetch error", error)
         }
     }
 }

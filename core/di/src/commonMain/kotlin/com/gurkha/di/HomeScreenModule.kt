@@ -174,7 +174,6 @@ class HomeScreenModule {
         uploadImageUseCase: UploadImageUseCase,
         doAttendanceUseCase: DoAttendanceUseCase,
         attendanceCountReportUseCase: AttendanceCountReportUseCase,
-        supportListFetchUseCase: SupportListFetchUseCase
     ): HomeScreenViewModel = HomeScreenViewModel(
         attendanceUseCase = attendanceUseCase,
         userDetailUseCase = userDetailUseCase,
@@ -186,7 +185,6 @@ class HomeScreenModule {
         uploadImageUseCase = uploadImageUseCase,
         doAttendanceUseCase = doAttendanceUseCase,
         attendanceCountReportUseCase = attendanceCountReportUseCase,
-        supportListFetchUseCase = supportListFetchUseCase
     )
 
     @KoinViewModel
