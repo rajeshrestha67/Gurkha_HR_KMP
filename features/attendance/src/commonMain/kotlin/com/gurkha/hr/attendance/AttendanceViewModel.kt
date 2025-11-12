@@ -223,8 +223,8 @@ class AttendanceViewModel(
         _state.update { currentState ->
             val updatedPendingList = currentState.pendingTapItem.result + AttendanceStatusData(
                 requestedDate = data.date,
-                clockInTime = data.clockInTime,
-                clockOutTime = data.clockOutTime,
+                clockInTime = data.clockInTime ?: "",
+                clockOutTime = data.clockOutTime ?: "",
                 requestRemarks = data.remarks,
                 assignedTo = data.assigneeId,
                 approvedRemarks = "",

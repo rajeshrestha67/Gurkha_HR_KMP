@@ -115,7 +115,7 @@ class AttendanceRequestViewModel(
                 }
             }
 
-            is AttendanceRequestAction.OnReceivedDataChange ->{
+            is AttendanceRequestAction.OnReceivedDataChange -> {
                 val collectedDate = Json.decodeFromString<String>(action.date)
 
                 val date = DateData.fromDisplayBS(collectedDate)
@@ -205,11 +205,12 @@ class AttendanceRequestViewModel(
                 }
                 val data = AttendanceRequestData(
                     assigneeId = state.value.assignee?.value.toString(),
-                    clockInTime = state.value.clockInTime ?: "",
-                    clockOutTime = state.value.clockOutTime ?: "",
+                    clockInTime = if (state.value.selectedOption == ClockStatus.CLOCK_IN) state.value.clockInTime else null,
+                    clockOutTime = if (state.value.selectedOption == ClockStatus.CLOCK_OUT) state.value.clockOutTime else null,
                     date = state.value.date?.displayValueAD ?: "",
                     remarks = state.value.reason.toString()
                 )
+                println("data $data")
                 _dataChannel.send(data)
                 requestAttendance()
             }
@@ -224,8 +225,8 @@ class AttendanceRequestViewModel(
         }
         attendanceRequestUseCase(
             assigneeId = state.value.assignee?.value?.toInt() ?: 0,
-            clockInTime = state.value.clockInTime,
-            clockOutTime = state.value.clockOutTime,
+            clockInTime = if (state.value.selectedOption == ClockStatus.CLOCK_IN) state.value.clockInTime else null,
+            clockOutTime = if (state.value.selectedOption == ClockStatus.CLOCK_OUT) state.value.clockOutTime else null,
             date = state.value.date?.displayValueAD ?: "",
             remarks = state.value.reason.toString()
         ).onSuccess { data ->

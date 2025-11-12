@@ -6,8 +6,8 @@ import kotlinx.serialization.Serializable
 data class AttendanceRequestData(
     val assigneeId: String,
     val date: String,
-    val clockInTime: String,
-    val clockOutTime: String,
+    val clockInTime: String?,
+    val clockOutTime: String?,
     val remarks: String
 )
 
