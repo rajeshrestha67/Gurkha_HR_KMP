@@ -263,14 +263,18 @@ fun MonthlyAttendanceItemsBox(
                     )
                 )
                 if (item.isPresent) {
-                    InOutText(
-                        inOrOut = "In: ",
-                        inOut = item.clockInTime
-                    )
-                    InOutText(
-                        inOrOut = "Out: ",
-                        inOut = item.clockOutTime
-                    )
+                    if(item.clockInTime.isNotEmpty()){
+                        InOutText(
+                            inOrOut = SharedRes.Strings.inText,
+                            inOut = item.clockInTime
+                        )
+                    }
+                    if(item.clockOutTime.isNotEmpty()){
+                        InOutText(
+                            inOrOut = SharedRes.Strings.outText,
+                            inOut = item.clockOutTime
+                        )
+                    }
                 }
 
             }
@@ -282,11 +286,11 @@ fun MonthlyAttendanceItemsBox(
 @Composable
 fun InOutText(
     inOut: String,
-    inOrOut: String
+    inOrOut: StringResource
 ) {
-    Row {
+    Row{
         Text(
-            text = inOrOut,
+            text = stringResource(inOrOut),
             style = MaterialTheme.typography.titleSmall.copy(
                 color = MaterialTheme.erpColors.primaryTextColor
             ),
@@ -377,8 +381,10 @@ fun DateFilterReport(
                 start = MaterialTheme.dimens.small1,
                 end = MaterialTheme.dimens.small1
             ),
-        selectedMonth = state.monthDisplay,
-        selectedYear = state.year.toString(),
+        selectedMonth = state.monthDisplay ?: "",
+        selectedYear = state.year?.let {
+            state.year.toString()
+        } ?: "",
         monthError = state.endMonthError,
         yearError = state.endYearError,
         onMonthSelected = { monthName, monthIndex ->

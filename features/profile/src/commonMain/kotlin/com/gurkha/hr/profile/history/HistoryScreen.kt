@@ -397,7 +397,9 @@ fun DateFilterHistory(
                 end = MaterialTheme.dimens.small1
             ),
         selectedMonth = state.monthDisplay,
-        selectedYear = state.year.toString(),
+        selectedYear = state.year?.let {
+            state.year.toString()
+        } ?: "",
         monthError = state.endMonthError,
         yearError = state.endYearError,
         onMonthSelected = { monthName, monthIndex ->

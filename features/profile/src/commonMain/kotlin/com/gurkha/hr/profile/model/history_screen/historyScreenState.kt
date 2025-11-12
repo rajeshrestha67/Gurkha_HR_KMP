@@ -10,9 +10,9 @@ import org.jetbrains.compose.resources.StringResource
 
 data class HistoryState(
     val isLoading: Boolean = false,
-    val monthValue: Int = 6,
-    val year: Int = 2082,
-    val monthDisplay: String = "Asoj",
+    val monthValue: Int? = null,
+    val year: Int? = null,
+    val monthDisplay: String = "",
     val historySummaryList: List<HistoryDataUI> = emptyList(),
     val employeeId: Int? = null,
 

@@ -3,7 +3,6 @@ package com.gurkha.hr.profile.history
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gurkha.hr.date.data.model.CalendarModel
-import com.gurkha.hr.date.getMonthStartAndEndDate
 import com.gurkha.hr.domain.form.RequiredValidationUseCase
 import com.gurkha.hr.domain.history.useCase.HistoryUseCase
 import com.gurkha.hr.networkhelper.onError
@@ -24,10 +23,17 @@ class HistoryViewModel(
     private val calendarModel: CalendarModel
 
 ) : ViewModel() {
+
+    private val todayMonth = calendarModel.today.month
+    private val todayYear = calendarModel.today.year
     private val _state = MutableStateFlow(HistoryState())
     val state = _state
         .onStart {
-            onFetchData(isRefreshing = false)
+            onFetchData(
+                bsMonth = todayMonth,
+                bsYear = todayYear,
+                isRefreshing = false
+            )
         }
         .stateIn(
             scope = viewModelScope,
@@ -36,7 +42,9 @@ class HistoryViewModel(
         )
 
     private fun onFetchData(
-        isRefreshing: Boolean ,
+        bsMonth: Int,
+        bsYear: Int,
+        isRefreshing: Boolean,
     ) = viewModelScope.launch {
         _state.update {
             it.copy(
@@ -46,14 +54,14 @@ class HistoryViewModel(
         }
 
         historyUseCase(
-            bsMonth = calendarModel.today.month,
-            bsYear = calendarModel.today.year
+            bsMonth = bsMonth,
+            bsYear = bsYear
         ).onSuccess { data ->
 //            AppLogger.d("HistoryViewModel", "history fetch success ${Json.encodeToString(data)}")
             _state.update {
                 it.copy(
                     isLoading = false,
-                    isRefreshing= false,
+                    isRefreshing = false,
                     historySummaryList = data.map { mData -> mData.toUI() }
                 )
             }
@@ -115,7 +123,11 @@ class HistoryViewModel(
             }
 
             is HistoryScreenViewAction.OnRefresh -> {
-                onFetchData(isRefreshing = true)
+                onFetchData(
+                    bsYear = state.value.year ?: todayYear,
+                    bsMonth = state.value.monthValue ?: todayMonth,
+                    isRefreshing = true
+                )
             }
 
         }
@@ -144,7 +156,13 @@ class HistoryViewModel(
                 }
             }
         }
-        onFetchData(isRefreshing = false)
+        if (monthPickerError == null){
+            onFetchData(
+                bsYear = state.value.year ?: todayYear,
+                bsMonth = state.value.monthValue ?: todayMonth,
+                isRefreshing = false
+            )
+        }
     }
 
 }

@@ -110,6 +110,7 @@ import gurkhahr.core.ui.res.generated.resources.history
 import gurkhahr.core.ui.res.generated.resources.holiday
 import gurkhahr.core.ui.res.generated.resources.holidays
 import gurkhahr.core.ui.res.generated.resources.home
+import gurkhahr.core.ui.res.generated.resources.`in`
 import gurkhahr.core.ui.res.generated.resources.invalid_email_address
 import gurkhahr.core.ui.res.generated.resources.invalid_password_digit
 import gurkhahr.core.ui.res.generated.resources.invalid_password_length
@@ -177,6 +178,7 @@ import gurkhahr.core.ui.res.generated.resources.ok
 import gurkhahr.core.ui.res.generated.resources.on_time
 import gurkhahr.core.ui.res.generated.resources.one
 import gurkhahr.core.ui.res.generated.resources.others
+import gurkhahr.core.ui.res.generated.resources.out
 import gurkhahr.core.ui.res.generated.resources.outline_logout_24
 import gurkhahr.core.ui.res.generated.resources.password
 import gurkhahr.core.ui.res.generated.resources.password_does_not_match
@@ -592,5 +594,9 @@ object SharedRes {
         val present_days = Res.string.present
 
         val coming_soon = Res.string.coming_soon
+
+        val inText = Res.string.`in`
+        val outText = Res.string.out
+
     }
 }

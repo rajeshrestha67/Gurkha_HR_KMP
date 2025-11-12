@@ -3,7 +3,6 @@ package com.gurkha.hr.profile.report_screen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gurkha.hr.date.data.model.CalendarModel
-import com.gurkha.hr.date.getMonthStartAndEndDate
 import com.gurkha.hr.domain.form.RequiredValidationUseCase
 import com.gurkha.hr.domain.history.useCase.HistoryUseCase
 import com.gurkha.hr.domain.reportScreen.useCase.ReportUseCase
@@ -26,11 +25,18 @@ class ReportViewModel(
 
 ) : ViewModel() {
 
+    private val todayMonth = calendarModel.today.month
+    private val todayYear = calendarModel.today.year
+
 
     private val _state = MutableStateFlow(ReportScreenState())
     val state = _state
         .onStart {
-            onFetchData(isRefreshing = false)
+            onFetchData(
+                bsYear = todayYear,
+                bsMonth = todayMonth,
+                isRefreshing = false
+            )
         }
         .stateIn(
             scope = viewModelScope,
@@ -39,7 +45,9 @@ class ReportViewModel(
         )
 
     private fun onFetchData(
-        isRefreshing : Boolean,
+        bsMonth : Int,
+        bsYear: Int,
+        isRefreshing: Boolean,
     ) = viewModelScope.launch {
         _state.update {
             it.copy(
@@ -49,10 +57,10 @@ class ReportViewModel(
         }
 
         reportUseCase(
-            bsMonth =calendarModel.today.month,
-            bsYear = calendarModel.today.year,
+            bsMonth = bsMonth,
+            bsYear = bsYear,
 
-        ).onSuccess { data ->
+            ).onSuccess { data ->
             _state.update {
                 it.copy(
                     isRefreshing = false,
@@ -96,13 +104,13 @@ class ReportViewModel(
             }
         }
         historyUseCase(
-            bsMonth = calendarModel.today.month,
-            bsYear = calendarModel.today.year
+            bsMonth = bsMonth,
+            bsYear = bsYear
         ).onSuccess { data ->
 
             _state.update {
                 it.copy(
-                    historySummaryList = data.map { mdata -> mdata.toUI() }
+                    historySummaryList = data.map { item -> item.toUI() }
                 )
             }
 
@@ -163,7 +171,11 @@ class ReportViewModel(
             }
 
             is ReportScreenViewAction.OnRefresh -> {
-                onFetchData(isRefreshing = true)
+                onFetchData(
+                    bsMonth = _state.value.monthValue ?: todayMonth,
+                    bsYear = _state.value.year ?: todayYear,
+                    isRefreshing = true
+                )
             }
         }
     }
@@ -190,7 +202,11 @@ class ReportViewModel(
                 }
             }
         }
-        onFetchData(isRefreshing = false)
+        onFetchData(
+            bsMonth = state.value.monthValue ?: todayMonth,
+            bsYear = state.value.year ?: todayYear,
+            isRefreshing = false
+        )
     }
 
 

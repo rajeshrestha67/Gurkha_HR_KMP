@@ -312,6 +312,9 @@
 
     <string name="coming_soon">Feature Coming Soon !</string>
 
+    <string name="in">In: </string>
+    <string name="out">Out: </string>
+
     <string-array name="months">
         <item>Baisakh</item>
         <item>Jestha</item>

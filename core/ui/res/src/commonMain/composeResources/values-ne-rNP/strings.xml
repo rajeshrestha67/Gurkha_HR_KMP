@@ -315,6 +315,9 @@
 
     <string name="coming_soon">सुविधा चाँडै आउँदैछ !</string>
 
+    <string name="in">भित्र: </string>
+    <string name="out">बाहिर: </string>
+
     <string-array name="months">
         <item>बैशाख</item>
         <item>जेठ</item>

@@ -6,9 +6,9 @@ import org.jetbrains.compose.resources.StringResource
 
 data class ReportScreenState(
     val isLoading: Boolean = false,
-    val monthValue: Int = 6,
-    val year: Int = 2082,
-    val monthDisplay: String = "Asoj",
+    val monthValue: Int? = null,
+    val year: Int? = null,
+    val monthDisplay: String? = null,
     val employeeId: Int? = null,
     val historySummaryList: List<HistoryDataUI> = emptyList(),
 
