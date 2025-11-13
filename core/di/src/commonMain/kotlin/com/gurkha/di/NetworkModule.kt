@@ -59,6 +59,7 @@ class NetworkModule {
         defaultRequest {
             contentType(ContentType.Application.Json)
         }
+        //install(NotificationLoggerPlugin)
     }
 
     @Factory
@@ -68,4 +69,22 @@ class NetworkModule {
     fun getAuthState(): AuthState = AuthState()
 
 }
-
+//
+//object NotificationLoggerPlugin : HttpClientPlugin<Unit, Unit> {
+//    override val key = AttributeKey<Unit>("NotificationLogger")
+//    override fun prepare(block: Unit.() -> Unit) = Unit
+//    override fun install(plugin: Unit, scope: HttpClient) {
+//        scope.sendPipeline.intercept(HttpSendPipeline.Monitoring) { request: HttpRequestBuilder ->
+//            val url = request.url.buildString()
+//            val method = request.method.value
+//            NotificationHelper.showNetworkNotification("Request: $method $url")
+//            proceed()  // important: continue the pipeline
+//        }
+//
+//        scope.receivePipeline.intercept(HttpReceivePipeline.After) { response ->
+//            val status = response.status.value
+//            val url = response.call.request.url.toString()
+//            NotificationHelper.showNetworkNotification("Response: $status from $url")
+//        }
+//    }
+//}
