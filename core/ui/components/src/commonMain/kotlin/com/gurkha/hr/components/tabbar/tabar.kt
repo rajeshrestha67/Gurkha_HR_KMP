@@ -8,6 +8,7 @@ import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,6 +33,14 @@ fun <T> ERPTabView(
 ) {
     var selectedTabIndex by rememberSaveable { mutableStateOf(0) }
     var previousSelectedTabIndex by rememberSaveable { mutableStateOf(0) }
+
+    LaunchedEffect(selectedTab) {
+        val newIndex = items.indexOf(selectedTab)
+        if (newIndex != -1 && newIndex != selectedTabIndex) {
+            selectedTabIndex = newIndex
+            previousSelectedTabIndex = newIndex
+        }
+    }
     Box(
         modifier = modifier.fillMaxWidth().background(backgroundColor)
     ) {
