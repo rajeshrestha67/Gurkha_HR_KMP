@@ -264,7 +264,7 @@ class HomeScreenViewModel(
                         }
                     }.map { data ->
                         data.toUI()
-                    },
+                    }.reversed(),
                     requests = _state.value.requests.updateDuration(
                         attendanceData = attendanceData
                     )

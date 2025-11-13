@@ -124,7 +124,7 @@ suspend fun AttendanceData.toUI(): AttendanceHistoryItemUI {
         if (isHoliday) {
             add(getString(SharedRes.Strings.holiday))
         } else if (!onLeave) {
-            var showPresent = true
+            var showPresent = (status.value == AttendanceStatus.PRESENT.value)
             if (isLate) {
                 showPresent = false
                 add(getString(SharedRes.Strings.late_in))
@@ -136,6 +136,10 @@ suspend fun AttendanceData.toUI(): AttendanceHistoryItemUI {
 
             if (showPresent) {
                 add(getString(SharedRes.Strings.present))
+            }
+
+            if(!showPresent && !isEarlyOut && !isLate){
+                add(getString(SharedRes.Strings.absent))
             }
         } else {
             add(getString(SharedRes.Strings.absent))
