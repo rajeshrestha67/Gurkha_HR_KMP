@@ -10,12 +10,10 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
-import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -28,6 +26,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.gurkha.hr.components.ERPButton
+import com.gurkha.hr.components.date.model.DatePickerDefaults
 import com.gurkha.hr.components.date.ui.CalendarContent
 import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.erpColors
@@ -35,14 +34,8 @@ import com.gurkha.hr.components.textField.ERPTextField
 import com.gurkha.hr.components.textField.Rule
 import com.gurkha.hr.date.data.CalendarDate
 import com.gurkha.hr.res.SharedRes
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.number
-import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
-import kotlin.time.Clock
-import kotlin.time.ExperimentalTime
-import kotlin.time.Instant
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,6 +53,7 @@ fun ERPDateTextField(
     onDateSelected: (DateData) -> Unit
 ) {
 
+    val a: androidx.compose.material3.SelectableDates
     var showDateDialog by rememberSaveable { mutableStateOf(false) }
     var displayInAd by rememberSaveable { mutableStateOf(false) }
     val defaultDate = remember(value) {
@@ -129,6 +123,7 @@ fun ERPDateTextField(
         if (showDateDialog) {
             DatePickerModalBottomSheet(
                 defaultDate = defaultDate,
+                selectableDates = selectableDates,
                 onDismiss = {
                     showDateDialog = false
                 },
@@ -145,6 +140,7 @@ fun ERPDateTextField(
 @Composable
 fun DatePickerModalBottomSheet(
     defaultDate: CalendarDate? = null,
+    selectableDates: SelectableDates,
     onDismiss: () -> Unit,
     onDatePick: (DateData) -> Unit
 ) {
@@ -168,6 +164,7 @@ fun DatePickerModalBottomSheet(
         ) {
             CalendarContent(
                 selectedDate = defaultDate,
+                selectableDates = selectableDates,
                 onDateSelected = {
                     selectedDate = it
                 }
@@ -204,39 +201,5 @@ fun DatePickerModalBottomSheet(
             }
         }
 
-    }
-}
-
-//date formater
-@OptIn(ExperimentalTime::class)
-fun Long.toFormattedDate(pattern: String = "yyyy-MM-dd"): String {
-    val instant = Instant.fromEpochMilliseconds(this)
-    val localDate = instant.toLocalDateTime(TimeZone.currentSystemDefault()).date
-
-    return when (pattern) {
-        "MM/dd/yyyy" -> "${
-            localDate.month.number.toString().padStart(2, '0')
-        }/${localDate.day.toString().padStart(2, '0')}/${localDate.year}"
-
-        else -> "${localDate.year}-${
-            localDate.month.number.toString().padStart(2, '0')
-        }-${localDate.day.toString().padStart(2, '0')}"
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
-val FutureAndTodayDate: RangeSelectableDates =
-    object : RangeSelectableDates(minDateMillis = Clock.System.now().toEpochMilliseconds()) {}
-
-@OptIn(ExperimentalMaterial3Api::class)
-open class RangeSelectableDates(
-    private val minDateMillis: Long? = null,
-    private val maxDateMillis: Long? = null
-) : SelectableDates {
-
-    override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-        val afterMin = minDateMillis?.let { utcTimeMillis >= it } ?: true
-        val beforeMax = maxDateMillis?.let { utcTimeMillis <= it } ?: true
-        return afterMin && beforeMax
     }
 }

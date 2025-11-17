@@ -47,7 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.date.ERPDateTextField
-import com.gurkha.hr.components.date.FutureAndTodayDate
+import com.gurkha.hr.components.date.model.DatePickerDefaults
 import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.components.shimmer.ShimmerView
@@ -377,7 +377,7 @@ fun DateFilter(
                 hint = "From Date",
                 rules = FormValidate.requiredValidationRules,
                 error = null,
-                selectableDates = FutureAndTodayDate,
+                selectableDates = DatePickerDefaults.FutureAndTodayDate,
                 onErrorStateChange = {},
                 onDateSelected = {
                     onAction(TimeAndAttendanceViewAction.fromDate(it))
@@ -389,7 +389,7 @@ fun DateFilter(
                 hint = "To Date",
                 rules = FormValidate.requiredValidationRules,
                 error = null,
-                selectableDates = FutureAndTodayDate,
+                selectableDates = DatePickerDefaults.FutureAndTodayDate,
                 onErrorStateChange = {},
                 onDateSelected = {
                     onAction(TimeAndAttendanceViewAction.toDate(it))

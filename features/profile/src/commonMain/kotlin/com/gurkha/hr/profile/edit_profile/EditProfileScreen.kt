@@ -37,7 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.date.ERPDateTextField
-import com.gurkha.hr.components.date.FutureAndTodayDate
+import com.gurkha.hr.components.date.model.DatePickerDefaults.FutureAndTodayDate
 import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.hideKeyboardOnTap
 import com.gurkha.hr.components.loadingScreen.LoadingScreen
@@ -313,7 +313,7 @@ fun OthersDetailContent(
                 keyboardType = KeyboardType.Phone
             )
 
-            )
+        )
         ERPTextField(
             modifier = Modifier.fillMaxWidth(),
             text = item.designation,
@@ -343,7 +343,7 @@ fun OthersDetailContent(
             enabled = false
 
 
-            )
+        )
         DropDownText(
             label = labelContract,
             hint = stringResource(labelContract),
@@ -392,7 +392,7 @@ fun OthersDetailContent(
                 }
             )
 
-            )
+        )
 
         SubmitButton(
             onAction = {
@@ -426,7 +426,7 @@ fun PersonalDetailsContent(
             },
             readOnly = true,
             enabled = false
-            )
+        )
         ERPTextField(
             modifier = Modifier.fillMaxWidth(),
             text = item.address,
@@ -439,7 +439,7 @@ fun PersonalDetailsContent(
             },
             readOnly = true,
             enabled = false
-            )
+        )
         ERPTextField(
             modifier = Modifier.fillMaxWidth(),
             text = item.email,
@@ -454,7 +454,7 @@ fun PersonalDetailsContent(
             enabled = false
 
 
-            )
+        )
         ERPTextField(
             modifier = Modifier.fillMaxWidth(),
             text = item.phoneNumber,
@@ -468,7 +468,7 @@ fun PersonalDetailsContent(
             readOnly = true,
             enabled = false
 
-            )
+        )
         ERPTextField(
             modifier = Modifier.fillMaxWidth(),
             text = item.branchName,
@@ -482,7 +482,7 @@ fun PersonalDetailsContent(
             readOnly = true,
             enabled = false
 
-            )
+        )
         ERPTextField(
             modifier = Modifier.fillMaxWidth(),
             text = item.employeeId.toString(),
@@ -496,7 +496,7 @@ fun PersonalDetailsContent(
             readOnly = true,
             enabled = false
 
-            )
+        )
         ERPTextField(
             modifier = Modifier.fillMaxWidth(),
             text = item.maritalStatus,
@@ -510,7 +510,7 @@ fun PersonalDetailsContent(
             readOnly = true,
             enabled = false
 
-            )
+        )
         ERPTextField(
             modifier = Modifier.fillMaxWidth(),
             text = item.gender,
@@ -524,7 +524,7 @@ fun PersonalDetailsContent(
             readOnly = true,
             enabled = false
 
-            )
+        )
         ERPDateTextField(
             modifier = Modifier.fillMaxWidth(),
             value = state.profileSummaryList?.dateOfBirth,

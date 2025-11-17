@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import com.gurkha.hr.components.date.DatePickerHorizontalPadding
 import com.gurkha.hr.components.date.MaxCalendarRows
 import com.gurkha.hr.components.date.RecommendedSizeForAccessibility
+import com.gurkha.hr.components.date.SelectableDates
 import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.components.noRippleClickable
@@ -55,7 +56,8 @@ fun DatePickerContent(
     displayedMonth: CalendarMonth,
     onDateSelectionChange: (calendarDate: CalendarDate) -> Unit,
     onDisplayedMonthChange: (calendarMonth: CalendarMonth) -> Unit,
-    calendarModel: CalendarModel
+    calendarModel: CalendarModel,
+    selectableDates: SelectableDates
 ) {
 
 
@@ -120,7 +122,8 @@ fun DatePickerContent(
                     selectedDate = selectedDate,
                     onDateSelectionChange = onDateSelectionChange,
                     onDisplayedMonthChange = onDisplayedMonthChange,
-                    calendarModel = calendarModel
+                    calendarModel = calendarModel,
+                    selectableDates = selectableDates
                 )
             }
             androidx.compose.animation.AnimatedVisibility(

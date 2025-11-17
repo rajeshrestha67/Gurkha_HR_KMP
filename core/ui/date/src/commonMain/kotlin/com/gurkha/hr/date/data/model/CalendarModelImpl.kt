@@ -7,6 +7,7 @@ import com.gurkha.hr.date.Year
 import com.gurkha.hr.date.data.CalendarDate
 import com.gurkha.hr.date.data.CalendarDay
 import com.gurkha.hr.date.data.CalendarMonth
+import com.gurkha.hr.date.data.todayInBS
 import com.gurkha.hr.date.mapNumbers
 import com.gurkha.hr.res.SharedRes
 import kotlinx.datetime.DatePeriod
@@ -18,7 +19,6 @@ import kotlinx.datetime.format
 import kotlinx.datetime.format.MonthNames
 import kotlinx.datetime.format.Padding
 import kotlinx.datetime.isoDayNumber
-import kotlinx.datetime.number
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.stringArrayResource
@@ -29,20 +29,7 @@ class CalendarModelImpl : CalendarModel() {
 
     override val today: CalendarDate
         get() {
-            val today = LocalDate.now()
-            val nepaliDate = DateConverter.adToBs(
-                year = today.year,
-                month = today.month.number,
-                day = today.day
-            )
-            return CalendarDate(
-                year = nepaliDate.year,
-                month = nepaliDate.month,
-                dayOfMonth = nepaliDate.day,
-                page = getPage(
-                    nepaliDate.year, month = nepaliDate.month
-                )
-            )
+            return CalendarDate.todayInBS()
         }
 
     override fun numberOfDaysInMonth(): List<CalendarDay> {

@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
+import com.gurkha.hr.components.date.SelectableDates
 import com.gurkha.hr.components.dimens
 import com.gurkha.hr.date.data.CalendarDate
 import com.gurkha.hr.date.data.CalendarMonth
@@ -22,7 +23,8 @@ fun HorizontalMonthsList(
     selectedDate: CalendarDate?,
     onDateSelectionChange: (date: CalendarDate) -> Unit,
     onDisplayedMonthChange: (calendarMonth: CalendarMonth) -> Unit,
-    calendarModel: CalendarModel
+    calendarModel: CalendarModel,
+    selectableDates: SelectableDates
 ) {
 
     HorizontalPager(
@@ -40,7 +42,8 @@ fun HorizontalMonthsList(
                 month = month,
                 onDateSelectionChange = onDateSelectionChange,
                 today = calendarModel.today,
-                selectedDate = selectedDate
+                selectedDate = selectedDate,
+                selectableDates = selectableDates
             )
         }
     }

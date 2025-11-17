@@ -9,11 +9,13 @@ import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.gurkha.hr.components.date.DaysInWeek
 import com.gurkha.hr.components.date.RecommendedSizeForAccessibility
+import com.gurkha.hr.components.date.SelectableDates
 import com.gurkha.hr.components.dimens
 import com.gurkha.hr.date.data.CalendarDate
 import com.gurkha.hr.date.data.CalendarMonth
@@ -27,6 +29,7 @@ fun Month(
     onDateSelectionChange: (calendarDate: CalendarDate) -> Unit,
     today: CalendarDate,
     selectedDate: CalendarDate?,
+    selectableDates: SelectableDates,
 ) {
 
     var cellIndex = 0
@@ -81,6 +84,11 @@ fun Month(
                             onClick = { onDateSelectionChange(date) },
                             isSaturday = isSaturday,
                             today = isToday,
+                            enabled = remember(date) {
+                                with(selectableDates) {
+                                    isSelectableDate(date)
+                                }
+                            }
                         ) {
                             DayItem(
                                 isBS = false,

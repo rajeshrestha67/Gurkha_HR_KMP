@@ -11,6 +11,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import com.gurkha.hr.components.date.SelectableDates
 import com.gurkha.hr.components.date.state.DatePickerStateImpl
 import com.gurkha.hr.components.dimens
 import com.gurkha.hr.date.data.CalendarDate
@@ -25,6 +26,7 @@ fun DateContent(
     state: DatePickerStateImpl,
     calendarModel: CalendarModel,
     monthPagerState: PagerState,
+    selectableDates: SelectableDates,
     onDateSelected: (CalendarDate) -> Unit
 ) {
 
@@ -77,7 +79,8 @@ fun DateContent(
                 state.displayedMonth = it
             },
             calendarModel = calendarModel,
-            monthsPagerState = monthPagerState
+            monthsPagerState = monthPagerState,
+            selectableDates = selectableDates
         )
     }
 }

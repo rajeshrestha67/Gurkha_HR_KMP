@@ -25,6 +25,7 @@ fun Day(
     selected: Boolean,
     onClick: () -> Unit,
     today: Boolean,
+    enabled: Boolean,
     isSaturday: Boolean = false,
     content: @Composable () -> Unit
 ) {
@@ -59,6 +60,7 @@ fun Day(
         modifier = modifier,
         shape = MaterialTheme.shapes.small,
         color = color,
+        enabled = enabled,
         contentColor = contentColor,
         border = if (selected || today) {
             BorderStroke(

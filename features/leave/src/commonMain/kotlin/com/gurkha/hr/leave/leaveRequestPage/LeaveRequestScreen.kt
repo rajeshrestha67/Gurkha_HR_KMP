@@ -37,8 +37,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.date.ERPDateTextField
-import com.gurkha.hr.components.date.FutureAndTodayDate
-import com.gurkha.hr.components.date.RangeSelectableDates
+import com.gurkha.hr.components.date.model.DatePickerDefaults
+import com.gurkha.hr.components.date.model.DatePickerDefaults.FutureAndTodayDate
 import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.components.hideKeyboardOnTap
@@ -49,14 +49,14 @@ import com.gurkha.hr.components.prompts.PromptType
 import com.gurkha.hr.components.textField.DropDownText
 import com.gurkha.hr.components.textField.ERPTextField
 import com.gurkha.hr.components.textField.FormValidate
+import com.gurkha.hr.date.data.CalendarDate
+import com.gurkha.hr.date.data.todayInBS
 import com.gurkha.hr.leave.model.leave_request.LeaveRequestScreenAction
 import com.gurkha.hr.leave.model.leave_request.LeaveRequestScreenState
 import com.gurkha.hr.res.SharedRes
 import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import kotlin.time.Duration.Companion.days
-import kotlin.time.DurationUnit
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -124,7 +124,7 @@ fun LeaveRequestScreen(
         onSendData = {
             sendData = true
         },
-        onDismiss ={
+        onDismiss = {
             showFailedDialogue = false
         }
     )
@@ -142,7 +142,7 @@ fun LeaveRequestPageContent(
     showFailedDialogue: Boolean,
     messageToShow: String,
     onSendData: () -> Unit,
-    onDismiss: ()-> Unit
+    onDismiss: () -> Unit
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val isKeyboardOpen by isKeyboardVisible()
@@ -189,10 +189,11 @@ fun LeaveRequestPageContent(
     ) { paddingValues ->
 
         Box(
-            modifier = Modifier.fillMaxSize().padding(paddingValues = paddingValues).hideKeyboardOnTap(
-                focusManager = focusManager,
-                keyboardController = keyboardController
-            ).imePadding(),
+            modifier = Modifier.fillMaxSize().padding(paddingValues = paddingValues)
+                .hideKeyboardOnTap(
+                    focusManager = focusManager,
+                    keyboardController = keyboardController
+                ).imePadding(),
         ) {
             if (state.isRequestingLeave) {
                 LoadingScreen()
@@ -227,7 +228,7 @@ fun LeaveRequestScreenForm(
     messageToShow: String,
     onSendData: () -> Unit,
     keyboardController: SoftwareKeyboardController?,
-    onDismiss:()-> Unit
+    onDismiss: () -> Unit
 ) {
 
     Column(
@@ -266,8 +267,8 @@ fun LeaveRequestScreenForm(
             error = state.endDateError,
             onErrorStateChange = {
             },
-            selectableDates = RangeSelectableDates(
-                minDateMillis = state.startDate?.actualValue?.plus(1.days.toLong(DurationUnit.DAYS))
+            selectableDates = DatePickerDefaults.RangeSelectableDates(
+                minDate = CalendarDate.todayInBS()
             ),
             onDateSelected = {
                 onAction(LeaveRequestScreenAction.OnEndDateChange(it))

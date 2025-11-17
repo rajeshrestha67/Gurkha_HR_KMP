@@ -39,7 +39,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.gurkha.hr.components.ERPButton
 import com.gurkha.hr.components.date.ERPDateTextField
-import com.gurkha.hr.components.date.FutureAndTodayDate
+import com.gurkha.hr.components.date.model.DatePickerDefaults
 import com.gurkha.hr.components.dimens
 import com.gurkha.hr.components.erpColors
 import com.gurkha.hr.components.hideKeyboardOnTap
@@ -266,7 +266,7 @@ fun AttendanceRequestScreenForm(
             error = state.dateError,
             onErrorStateChange = {
             },
-            selectableDates = FutureAndTodayDate,
+            selectableDates = DatePickerDefaults.FutureAndTodayDate,
             onDateSelected = {
                 onAction(AttendanceRequestAction.OnDateChange(it))
             }
