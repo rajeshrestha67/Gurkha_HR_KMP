@@ -30,28 +30,26 @@ fun Day(
     content: @Composable () -> Unit
 ) {
 
-    val color = if (today && selected) {
-        MaterialTheme.colorScheme.primary
-    } else if (today) {
-        Color.Transparent
-    } else if (isSaturday && selected) {
-        MaterialTheme.colorScheme.error
-    } else if (selected) {
-        MaterialTheme.colorScheme.primary
-    } else {
-        Color.Transparent
+    val color = when {
+        today && selected -> MaterialTheme.colorScheme.primary
+        today -> Color.Transparent
+
+        isSaturday && selected -> MaterialTheme.colorScheme.error
+        selected -> MaterialTheme.colorScheme.primary
+
+        else -> Color.Transparent
     }
 
-    val contentColor = if (today && selected) {
-        MaterialTheme.colorScheme.onPrimary
-    } else if (today) {
-        MaterialTheme.erpColors.primaryTextColor
-    } else if (selected) {
-        MaterialTheme.colorScheme.onPrimary
-    } else if (isSaturday) {
-        MaterialTheme.colorScheme.error
-    } else {
-        MaterialTheme.erpColors.primaryTextColor
+    val contentColor = when {
+        today && selected -> MaterialTheme.colorScheme.onPrimary
+        today -> MaterialTheme.erpColors.primaryTextColor
+        selected -> MaterialTheme.colorScheme.onPrimary
+
+        isSaturday && enabled -> MaterialTheme.colorScheme.error
+        isSaturday && !enabled -> MaterialTheme.colorScheme.error.copy(alpha = 0.3f)
+
+        enabled -> MaterialTheme.erpColors.primaryTextColor
+        else -> MaterialTheme.erpColors.primaryTextColor.copy(alpha = 0.3f)
     }
 
     Surface(
@@ -65,7 +63,7 @@ fun Day(
         border = if (selected || today) {
             BorderStroke(
                 width = 1.dp,
-                color = MaterialTheme.colorScheme.outline
+                color = if (isSaturday) Color.Transparent else MaterialTheme.colorScheme.outline
             )
         } else {
             null
