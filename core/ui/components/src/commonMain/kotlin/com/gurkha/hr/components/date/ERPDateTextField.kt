@@ -52,8 +52,7 @@ fun ERPDateTextField(
     onErrorStateChange: (StringResource?) -> Unit,
     onDateSelected: (DateData) -> Unit
 ) {
-
-    val a: androidx.compose.material3.SelectableDates
+    
     var showDateDialog by rememberSaveable { mutableStateOf(false) }
     var displayInAd by rememberSaveable { mutableStateOf(false) }
     val defaultDate = remember(value) {
