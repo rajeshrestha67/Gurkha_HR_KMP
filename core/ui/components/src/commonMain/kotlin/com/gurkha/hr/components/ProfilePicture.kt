@@ -41,7 +41,7 @@ fun ProfilePicture(
     onClick: () -> Unit = {}
 ) {
 
-    val context = LocalPlatformContext.current
+    /*val context = LocalPlatformContext.current
     val imageRequest = remember(context, imageUrl) {
         ImageRequest.Builder(context)
             .data(imageUrl)
@@ -101,7 +101,7 @@ fun ProfilePicture(
                 )
             }
         }
-    }
+    }*/
 //    AnimatedContent(
 //        modifier = Modifier.size(size = size)
 //            .noRippleClickable(onClick),
